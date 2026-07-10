@@ -87,13 +87,13 @@ async function registerDiscoveryFailure(failureDescription) {
   if (consecutiveFailureCount >= config.discoveryFailureAlertThreshold) {
     await alerts.systemAlert(
       "DISCOVERY",
-      "Stock discovery (Yahoo screeners) has FAILED " +
+      "Stock discovery has FAILED " +
         consecutiveFailureCount +
         " scans in a row (" +
         failureDescription +
-        "). The bot is running WATCHLIST-ONLY — it will not find any " +
-        "opportunities outside the watchlist until this recovers. The Yahoo " +
-        "endpoint may have changed shape.",
+        "). BOTH sources (Yahoo screeners AND FMP movers) are dark — the " +
+        "bot is running WATCHLIST-ONLY until at least one recovers. Check " +
+        "FMP_API_KEY validity and Yahoo status.",
     );
   }
 }
@@ -102,7 +102,8 @@ async function registerDiscoverySuccess() {
   if (consecutiveFailureCount >= config.discoveryFailureAlertThreshold) {
     await alerts.clearAlert(
       "DISCOVERY",
-      "Yahoo screeners are responding again — discovery is back online.",
+      "At least one discovery source (Yahoo screeners / FMP movers) is " +
+        "responding again — discovery is back online.",
     );
   }
   consecutiveFailureCount = 0;
@@ -234,18 +235,64 @@ async function fetchCatalystCandidates(excludeSymbols) {
   return results;
 }
 
+// ── v5.6: map an FMP mover row into the candidate shape ─────────────────────
+// FMP rows carry {symbol, name, price, change, changesPercentage} — no
+// volume, no OHLC. volumeRatio stays null, which is fine post-v5.4: the
+// prefilter passes "unknown" through and the REAL volume gate fires after
+// enrichment fills it in from eToro candles. previousClose is derived
+// from price − change so the gap math still works.
+function mapFmpRowToCandidate(row) {
+  const symbol = String(row.symbol || "").toUpperCase();
+  const currentPrice = Number(row.price);
+  const changePercent = Number(row.changesPercentage);
+  const changeDollars = Number(row.change);
+  const name = String(row.name || "");
+
+  if (!symbol || isNaN(currentPrice) || currentPrice <= 0) return null;
+  // Equities only: skip obvious funds, plus warrant/unit-style symbols
+  // (dots, dashes, or 6+ chars — FMP movers lists include those).
+  if (/ETF|Fund|Trust ETF/i.test(name)) return null;
+  if (!/^[A-Z]{1,5}$/.test(symbol)) return null;
+
+  const previousClose = !isNaN(changeDollars)
+    ? currentPrice - changeDollars
+    : null;
+
+  return {
+    symbol,
+    currentPrice,
+    previousClose,
+    dayOpen: null,
+    dayHigh: null,
+    dayLow: null,
+    volumeRatio: null, // filled in by enrichment (eToro candles)
+    averageVolume: null,
+    priceChangePercent: isNaN(changePercent) ? 0 : changePercent,
+    recentIntradayHigh: null,
+    recentIntradayLow: null,
+    vwap: null,
+    rsi: null,
+    source: "DISCOVERED",
+  };
+}
+
 // ── Public: discover movers outside the watchlist ──────────────────────────
 async function discoverOpportunities(excludeSymbols) {
   if (!config.discoveryEnabled) return [];
 
   const now = Date.now();
-  let rawRows;
+
+  // v5.6 RESTRUCTURE: Yahoo is now BEST-EFFORT, not the whole layer. Its
+  // unofficial endpoint has been hard rate-limiting ("Edge: Too Many
+  // Requests") for days at a stretch, which used to kill discovery
+  // entirely. Now FMP's real, documented gainers/actives endpoints run as
+  // an independent second source, and "discovery failed" is only declared
+  // when BOTH come back empty.
+  let yahooRows = [];
   if (cachedDiscoveries && now - cachedAt < DISCOVERY_CACHE_MS) {
-    rawRows = cachedDiscoveries;
+    yahooRows = cachedDiscoveries;
   } else {
     try {
-      // v5.1: added growth_technology_stocks + small_cap_gainers so
-      // discovery isn't ONLY "biggest raw % movers".
       const [gainers, actives, growthTech, smallCapGainers] =
         await Promise.allSettled([
           fetchScreener("day_gainers", 25),
@@ -253,7 +300,7 @@ async function discoverOpportunities(excludeSymbols) {
           fetchScreener("growth_technology_stocks", 25),
           fetchScreener("small_cap_gainers", 25),
         ]);
-      rawRows = [
+      yahooRows = [
         ...(gainers.status === "fulfilled" ? gainers.value : []),
         ...(actives.status === "fulfilled" ? actives.value : []),
         ...(growthTech.status === "fulfilled" ? growthTech.value : []),
@@ -261,23 +308,58 @@ async function discoverOpportunities(excludeSymbols) {
           ? smallCapGainers.value
           : []),
       ];
-      if (rawRows.length === 0) {
-        await registerDiscoveryFailure(
-          "screeners returned nothing — endpoint change or outage",
-        );
-        return [];
+      if (yahooRows.length > 0) {
+        cachedDiscoveries = yahooRows;
+        cachedAt = now;
       }
-      cachedDiscoveries = rawRows;
-      cachedAt = now;
-      await registerDiscoverySuccess();
-    } catch (fetchError) {
-      await registerDiscoveryFailure(fetchError.message);
-      return [];
+    } catch (yahooError) {
+      logger.warn("Yahoo screeners failed (non-fatal): " + yahooError.message);
+      yahooRows = [];
     }
+  }
+
+  // Independent second source — cached internally in fmp.js, fails open
+  const fmpMoverRows = await fmp.getMarketMovers();
+
+  if (yahooRows.length === 0 && fmpMoverRows.length === 0) {
+    await registerDiscoveryFailure(
+      "BOTH Yahoo screeners AND FMP movers returned nothing",
+    );
+    return [];
+  }
+  await registerDiscoverySuccess();
+
+  if (yahooRows.length === 0 && fmpMoverRows.length > 0) {
+    logger.info(
+      "🔭 Discovery running on FMP movers only this scan (Yahoo dark, " +
+        fmpMoverRows.length +
+        " FMP rows)",
+    );
   }
 
   const seenSymbols = new Set();
   const candidates = [];
+
+  // FMP movers pass (same quality filters as the Yahoo pass below)
+  for (const row of fmpMoverRows) {
+    const candidate = mapFmpRowToCandidate(row);
+    if (!candidate) continue;
+    if (seenSymbols.has(candidate.symbol)) continue;
+    seenSymbols.add(candidate.symbol);
+
+    if (excludeSymbols && excludeSymbols.has(candidate.symbol)) continue;
+    if (
+      candidate.currentPrice < config.discoveryMinPrice ||
+      candidate.currentPrice > config.discoveryMaxPrice
+    )
+      continue;
+    // No volume data on FMP rows, so the move itself must qualify
+    if (candidate.priceChangePercent < config.discoveryMinChangePct) continue;
+
+    candidates.push(candidate);
+  }
+
+  const rawRows = yahooRows;
 
   for (const row of rawRows) {
     if (row.quoteType && row.quoteType !== "EQUITY") continue;
@@ -326,15 +408,6 @@ async function discoverOpportunities(excludeSymbols) {
   const topDiscoveries = candidates.slice(0, config.discoveryMaxCandidates);
 
   // v5.2: NEWS-CATALYST TAGGING for ordinary (non-catalyst-sourced) movers.
-  // The review's discovery point 5 specifically asked for this: "this
-  // mover has a same-day news hit" is a meaningfully different, higher-
-  // quality signal than "this mover is up 5% with no visible reason" —
-  // distinct from the ANALYST_UPGRADE/INSIDER_BUY catalyst candidates
-  // above, which are sourced FROM a catalyst. This checks whether a plain
-  // price/volume mover ALSO has fresh news, and tags it if so. One
-  // Finnhub call per top candidate that doesn't already have a catalyst —
-  // cheap, and only runs on the handful of names that already survived
-  // every other filter, not the whole raw candidate pool.
   if (finnhub.isConfigured()) {
     for (const discovery of topDiscoveries) {
       if (discovery.catalyst) continue; // already FMP/SEC-catalyst-sourced
@@ -346,10 +419,11 @@ async function discoverOpportunities(excludeSymbols) {
         );
         if (headlines.length > 0) {
           discovery.catalyst = "NEWS_HIT";
-          discovery.catalystLabel =
-            "Same-day news: " + headlines[0].headline;
+          discovery.catalystLabel = "Same-day news: " + headlines[0].headline;
           logger.info(
-            "📰 " + discovery.symbol + " tagged NEWS_HIT: " +
+            "📰 " +
+              discovery.symbol +
+              " tagged NEWS_HIT: " +
               headlines[0].headline,
           );
         }

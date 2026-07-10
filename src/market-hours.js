@@ -93,11 +93,42 @@ function isExtendedHours() {
 }
 
 // -------------------------
+// 24/5 TRADING (eToro overnight-eligible stocks: TSLA, NVDA, AAPL, META, …)
+// -------------------------
+// eToro lets you trade a set of popular US stocks nearly around the clock,
+// 5 days a week — roughly a CONTINUOUS session from Sunday 20:00 ET through
+// Friday 20:00 ET. When DT_TRADE_24_5=true the bot's analysis/exit cycle
+// runs across that whole window instead of only 4:00–20:00 ET, so it can
+// enter and manage these names overnight like a manual trader would.
+//
+// eToro may still have brief daily maintenance breaks and only fills the
+// 24/5-eligible instruments — a non-eligible order outside regular hours
+// just fails, and the bot already alerts + retries on open failures. Read
+// straight from env to keep this module dependency-free (no config import).
+const TRADE_24_5 = process.env.DT_TRADE_24_5 === "true";
+
+function is24x5MarketOpen() {
+  // Keep US holidays closed — eligibility/fills are unreliable on holidays.
+  if (isUSMarketHoliday()) return false;
+
+  const { weekday, hour, minute } = getMarketTime();
+  const t = minutesSinceMidnight(hour, minute);
+  const SUNDAY_OPEN = 20 * 60; // Sunday 8:00 PM ET
+  const FRIDAY_CLOSE = 20 * 60; // Friday 8:00 PM ET
+
+  if (weekday === 6) return false; // Saturday — closed
+  if (weekday === 0) return t >= SUNDAY_OPEN; // Sunday — opens 8 PM ET
+  if (weekday === 5) return t < FRIDAY_CLOSE; // Friday — closes 8 PM ET
+  return true; // Mon–Thu — open all day
+}
+
 function shouldRunAnalysisCycle() {
+  if (TRADE_24_5) return is24x5MarketOpen();
   return isRegularMarketHours() || isExtendedHours();
 }
 
 function getMarketStatus() {
+  if (TRADE_24_5) return is24x5MarketOpen() ? "TRADING_24_5" : "24_5_CLOSED";
   if (isWeekendET()) return "WEEKEND_CLOSED";
   if (isUSMarketHoliday()) return "HOLIDAY_CLOSED";
   if (isRegularMarketHours()) return "REGULAR_HOURS";

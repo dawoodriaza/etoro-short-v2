@@ -142,18 +142,41 @@ const config = {
   maxCandidates: int("DT_MAX_CANDIDATES", 8),
 
   // ── Filters ───────────────────────────────────────────────────────
-  spyMinChangePctForLongs: num("DT_SPY_MIN_CHANGE_PCT", -0.3),
+  // v5.5: was -0.3 — too strict. This hard gate BLOCKED EVERY STOCK
+  // regardless of individual strength any time SPY was mildly red, which
+  // duplicated (and preempted) the per-candidate relative-strength filter
+  // in momentum-scanner.js that already does this judgment correctly.
+  spyMinChangePctForLongs: num("DT_SPY_MIN_CHANGE_PCT", -1.0),
   requireAboveVwap: bool("DT_REQUIRE_ABOVE_VWAP", true),
   maxPerSectorBucket: int("DT_MAX_PER_SECTOR_BUCKET", 2),
 
   // ── Time-of-day rules (ET) ────────────────────────────────────────
+  // 24/5 mode: trade eToro's overnight-eligible stocks around the clock
+  // (Sun 8 PM ET → Fri 8 PM ET). When ON, the session-timing gate stops
+  // blocking pre-market/overnight entries entirely — see session-timing.js
+  // and market-hours.js. Must be paired with DT_TRADE_24_5 there (same env).
+  trade24_5: bool("DT_TRADE_24_5", false),
+  // 24/5 overnight holds: when ON (and trade24_5 is ON), the Mon–Thu EOD
+  // close keeps PROFITABLE DAY positions running overnight instead of
+  // force-closing them — the 24/5 exit engine (stops/targets/trailing) keeps
+  // managing them live. Losers/flat DAY positions still close at EOD, and
+  // Friday still closes EVERYTHING for the weekend. A DAY position must be at
+  // least overnightHoldMinProfitPct in the green at EOD to be held over.
+  hold24_5Overnight: bool("DT_HOLD_24_5_OVERNIGHT", false),
+  overnightHoldMinProfitPct: num("DT_OVERNIGHT_HOLD_MIN_PROFIT_PCT", 0),
+  // Pre-market entries: OFF by default. ON = allow new entries during the
+  // pre-market window (from premarketStartHourET ET) instead of blocking
+  // until 9:30. (24/5 mode above already implies this and more.)
+  allowPremarketEntries: bool("DT_ALLOW_PREMARKET", false),
+  premarketStartHourET: int("DT_PREMARKET_START_HOUR_ET", 4),
   skipLunchChop: bool("DT_SKIP_LUNCH_CHOP", true),
   lunchStartHourET: int("DT_LUNCH_START_HOUR_ET", 11),
   lunchStartMinET: int("DT_LUNCH_START_MIN_ET", 30),
   lunchEndHourET: int("DT_LUNCH_END_HOUR_ET", 14),
   lunchEndMinET: int("DT_LUNCH_END_MIN_ET", 0),
   skipFirstMinutesAfterOpen: int("DT_SKIP_FIRST_MINUTES", 5),
-
+  sectorRotationMinChangePct: num("DT_SECTOR_ROTATION_MIN_PCT", 0.5),
+  sectorRotationMaxBonus: num("DT_SECTOR_ROTATION_MAX_BONUS", 8),
   // ── Scan & EOD ────────────────────────────────────────────────────
   scanIntervalMinutes: int("DT_SCAN_INTERVAL_MINUTES", 10),
   forceCloseMinutesBeforeClose: int("DT_FORCE_CLOSE_MINUTES_BEFORE_CLOSE", 15),

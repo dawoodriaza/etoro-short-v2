@@ -93,4 +93,89 @@ async function getRecentAnalystUpgrades() {
   }
 }
 
-module.exports = { isConfigured, getRecentAnalystUpgrades };
+// ── v5.6: MARKET MOVERS (gainers + most active) ─────────────────────────────
+// Added as a Yahoo-independent discovery source after Yahoo's unofficial
+// screener endpoint started hard rate-limiting ("Edge: Too Many Requests")
+// for days at a time, leaving discovery completely dark. FMP has REAL,
+// documented gainers/actives endpoints on the free tier.
+//
+// Defensive: FMP has TWO endpoint generations (legacy /api/v3 and newer
+// /stable). Your working analyst-upgrades code uses v3, so v3 is tried
+// first; if it errors or comes back empty, the stable style is tried.
+// Fails open to [] — never blocks discovery, just contributes nothing.
+let cachedMovers = null;
+let moversCachedAtMs = 0;
+const MOVERS_CACHE_MS = 10 * 60 * 1000; // matches the discovery scan cadence
+
+async function fetchMoversFromUrl(url, label) {
+  const response = await axios.get(url, { timeout: 12000 });
+  const rows = Array.isArray(response.data) ? response.data : [];
+  if (rows.length > 0) {
+    logger.info("📈 FMP movers (" + label + "): " + rows.length + " rows");
+  }
+  return rows;
+}
+
+// Returns raw mover rows: [{ symbol, name, price, change, changesPercentage }]
+// deduped across gainers + actives. [] if unconfigured or all endpoints fail.
+async function getMarketMovers() {
+  if (!isConfigured()) return [];
+
+  if (cachedMovers && Date.now() - moversCachedAtMs < MOVERS_CACHE_MS) {
+    return cachedMovers;
+  }
+
+  const endpointGenerations = [
+    {
+      label: "v3",
+      gainersUrl:
+        FMP_BASE_URL + "/stock_market/gainers?apikey=" + FMP_API_KEY,
+      activesUrl:
+        FMP_BASE_URL + "/stock_market/actives?apikey=" + FMP_API_KEY,
+    },
+    {
+      label: "stable",
+      gainersUrl:
+        "https://financialmodelingprep.com/stable/biggest-gainers?apikey=" +
+        FMP_API_KEY,
+      activesUrl:
+        "https://financialmodelingprep.com/stable/most-actives?apikey=" +
+        FMP_API_KEY,
+    },
+  ];
+
+  for (const generation of endpointGenerations) {
+    try {
+      const [gainersResult, activesResult] = await Promise.allSettled([
+        fetchMoversFromUrl(generation.gainersUrl, generation.label + " gainers"),
+        fetchMoversFromUrl(generation.activesUrl, generation.label + " actives"),
+      ]);
+      const combinedRows = [
+        ...(gainersResult.status === "fulfilled" ? gainersResult.value : []),
+        ...(activesResult.status === "fulfilled" ? activesResult.value : []),
+      ];
+      if (combinedRows.length === 0) continue; // try the next generation
+
+      const seenSymbols = new Set();
+      const dedupedRows = [];
+      for (const row of combinedRows) {
+        const symbol = String(row.symbol || "").toUpperCase();
+        if (!symbol || seenSymbols.has(symbol)) continue;
+        seenSymbols.add(symbol);
+        dedupedRows.push(row);
+      }
+
+      cachedMovers = dedupedRows;
+      moversCachedAtMs = Date.now();
+      return dedupedRows;
+    } catch (fetchError) {
+      logger.warn(
+        "FMP movers (" + generation.label + ") failed: " + fetchError.message,
+      );
+    }
+  }
+
+  return [];
+}
+
+module.exports = { isConfigured, getRecentAnalystUpgrades, getMarketMovers };

@@ -378,22 +378,47 @@ async function enrichCandidateFromEtoro(symbol, instrumentId) {
       candles: dailyCandles,
     };
   }
-  const averageVolume = etoroMarketData.computeAverageDailyVolume(dailyCandles);
-  const todaysCumulativeVolume = todaysBarsOnly.reduce(
-    (sum, bar) => sum + (bar.volume || 0),
-    0,
-  );
-  const volumeRatio =
-    averageVolume > 0 ? todaysCumulativeVolume / averageVolume : null;
+ const averageVolume = etoroMarketData.computeAverageDailyVolume(dailyCandles);
+ const todaysCumulativeVolume = todaysBarsOnly.reduce(
+   (sum, bar) => sum + (bar.volume || 0),
+   0,
+ );
 
-  return {
-    recentIntradayHigh: high,
-    recentIntradayLow: low,
-    vwap,
-    rsi,
-    volumeRatio,
-    averageVolume,
-  };
+ // v5.4.1 FIX: volumeRatio must compare today's volume-so-far against a
+ // TIME-OF-DAY-ADJUSTED expected volume ("relative volume" / RVOL), NOT
+ // a full day's average — comparing partial-session volume to a whole
+ // day's typical volume structurally fails almost all day.
+ const REGULAR_SESSION_MINUTES = 390; // 9:30 AM - 4:00 PM ET
+ const nowEasternString = new Date().toLocaleString("en-US", {
+   timeZone: "America/New_York",
+   hour12: false,
+   hour: "2-digit",
+   minute: "2-digit",
+ });
+ const [etHourString, etMinuteString] = nowEasternString.split(":");
+ const etHour = parseInt(etHourString);
+ const etMinute = parseInt(etMinuteString);
+ const minutesSinceOpen = Math.max(
+   5,
+   Math.min(REGULAR_SESSION_MINUTES, (etHour - 9) * 60 + (etMinute - 30)),
+ );
+ const expectedVolumeByNow =
+   averageVolume != null
+     ? averageVolume * (minutesSinceOpen / REGULAR_SESSION_MINUTES)
+     : null;
+ const volumeRatio =
+   expectedVolumeByNow > 0
+     ? todaysCumulativeVolume / expectedVolumeByNow
+     : null;
+
+ return {
+   recentIntradayHigh: high,
+   recentIntradayLow: low,
+   vwap,
+   rsi,
+   volumeRatio,
+   averageVolume,
+ };
 }
 
 async function enrichCandidate(symbol, currentPrice, knownInstrumentId) {

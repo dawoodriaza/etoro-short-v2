@@ -1,24 +1,45 @@
 {
-  "comment": "Day+Swing watchlist v5 — 'bucket' fields here are informational only now; the actual correlation guard reads src/strategies/sector-map.js (static map + Finnhub industry lookup for anything not listed there), so discovered tickers are covered too. Keep 15-20 max: sequential quotes cost ~8s/symbol.",
+  "comment": "Day+Swing watchlist v5.2 — tech-focused. Each stock has a \"night\" flag: true = eToro 24/5 overnight-eligible (bot may trade it when the US regular session is closed), false = regular/extended US hours only (bot skips it overnight so it never sends a reject-able order). Flags are BEST-EFFORT — verify in the eToro app (an instrument's trading hours are shown on its page; 24/5 names trade nearly around the clock) and flip a flag if it's wrong. A wrong 'false' just means no overnight trade (safe); a wrong 'true' means an occasional harmless overnight reject. ADRs (TSM, ASML) are set false — foreign ADRs are generally not in the US overnight session.",
   "stocks": [
-    { "symbol": "TSLA", "bucket": "ev" },
-    { "symbol": "RIVN", "bucket": "ev" },
-    { "symbol": "NVDA", "bucket": "semi" },
-    { "symbol": "TSM", "bucket": "semi" },
-    { "symbol": "AMD", "bucket": "semi" },
-    { "symbol": "SMCI", "bucket": "semi" },
-    { "symbol": "SOFI", "bucket": "fintech" },
-    { "symbol": "HOOD", "bucket": "fintech" },
-    { "symbol": "AFRM", "bucket": "fintech" },
-    { "symbol": "UPST", "bucket": "fintech" },
-    { "symbol": "PLTR", "bucket": "ai" },
-    { "symbol": "SOUN", "bucket": "ai" },
-    { "symbol": "IONQ", "bucket": "ai" },
-    { "symbol": "NBIS", "bucket": "ai" },
-    { "symbol": "RKLB", "bucket": "space" },
-    { "symbol": "RDDT", "bucket": "social" },
-    { "symbol": "SNAP", "bucket": "social" },
-    { "symbol": "META", "bucket": "mega_cap" },
-    { "symbol": "NFLX", "bucket": "mega_cap" }
+    { "symbol": "TSLA", "bucket": "ev", "night": true },
+    { "symbol": "RIVN", "bucket": "ev", "night": true },
+
+    { "symbol": "NVDA", "bucket": "semi", "night": true },
+    { "symbol": "TSM", "bucket": "semi", "night": false },
+    { "symbol": "AMD", "bucket": "semi", "night": true },
+    { "symbol": "SMCI", "bucket": "semi", "night": false },
+    { "symbol": "MU", "bucket": "semi", "night": true },
+    { "symbol": "AVGO", "bucket": "semi", "night": true },
+    { "symbol": "ARM", "bucket": "semi", "night": false },
+    { "symbol": "ASML", "bucket": "semi", "night": false },
+    { "symbol": "QCOM", "bucket": "semi", "night": true },
+    { "symbol": "MRVL", "bucket": "semi", "night": true },
+    { "symbol": "ANET", "bucket": "networking", "night": true },
+
+    { "symbol": "SOFI", "bucket": "fintech", "night": true },
+    { "symbol": "HOOD", "bucket": "fintech", "night": true },
+    { "symbol": "AFRM", "bucket": "fintech", "night": true },
+    { "symbol": "UPST", "bucket": "fintech", "night": false },
+
+    { "symbol": "PLTR", "bucket": "ai", "night": true },
+    { "symbol": "SOUN", "bucket": "ai", "night": false },
+    { "symbol": "IONQ", "bucket": "ai", "night": false },
+    { "symbol": "NBIS", "bucket": "ai", "night": false },
+
+    { "symbol": "RKLB", "bucket": "space", "night": false },
+
+    { "symbol": "RDDT", "bucket": "social", "night": false },
+    { "symbol": "SNAP", "bucket": "social", "night": true },
+
+    { "symbol": "META", "bucket": "mega_cap", "night": true },
+    { "symbol": "NFLX", "bucket": "mega_cap", "night": true },
+    { "symbol": "AAPL", "bucket": "mega_cap", "night": true },
+    { "symbol": "MSFT", "bucket": "mega_cap", "night": true },
+    { "symbol": "AMZN", "bucket": "mega_cap", "night": true },
+    { "symbol": "GOOGL", "bucket": "mega_cap", "night": true },
+
+    { "symbol": "BA", "bucket": "industrials", "night": true },
+
+    { "symbol": "DKNG", "bucket": "consumer", "night": false }
   ]
 }

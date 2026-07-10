@@ -23,10 +23,18 @@ async function forceCloseAllPositions(
   performance,
   loadPositionMeta,
   savePositionMeta,
-  mode, // 'DAY_ONLY' | 'ALL'
+  mode, // 'DAY_ONLY' | 'ALL' | 'DAY_KEEP_WINNERS'
   extraHooks, // optional { onClosed(symbol, pnlDollars, meta, exitReason) }
 ) {
-  const closeMode = mode === "ALL" ? "ALL" : "DAY_ONLY";
+  // DAY_KEEP_WINNERS (24/5): close losing/flat DAY positions, hold winners
+  // (and swings) overnight. ALL (Friday): close everything. DAY_ONLY: close
+  // all DAY positions, hold swings.
+  const closeMode =
+    mode === "ALL"
+      ? "ALL"
+      : mode === "DAY_KEEP_WINNERS"
+        ? "DAY_KEEP_WINNERS"
+        : "DAY_ONLY";
 
   let portfolio;
   try {
@@ -71,11 +79,30 @@ async function forceCloseAllPositions(
       continue;
     }
     const tradeType = positionMeta.tradeType === "SWING" ? "SWING" : "DAY";
-    if (closeMode === "DAY_ONLY" && tradeType === "SWING") {
+    const pnlPercent = (position.unrealizedProfitLossPercent || 0) * 100;
+
+    // Swings always hold overnight except on the Friday ALL close.
+    if (closeMode !== "ALL" && tradeType === "SWING") {
       logger.info(
         "EOD closer: " +
           symbol +
           " is a SWING position — holding overnight (closes Friday at latest)",
+      );
+      continue;
+    }
+    // 24/5: keep a PROFITABLE DAY position running overnight — the 24/5 exit
+    // engine keeps enforcing its stop/targets while the stock trades.
+    if (
+      closeMode === "DAY_KEEP_WINNERS" &&
+      tradeType === "DAY" &&
+      pnlPercent > config.overnightHoldMinProfitPct
+    ) {
+      logger.info(
+        "EOD closer: " +
+          symbol +
+          " is a DAY winner (+" +
+          pnlPercent.toFixed(1) +
+          "%) — holding overnight (24/5 mode; exit engine still guards it)",
       );
       continue;
     }
@@ -193,11 +220,22 @@ async function forceCloseAllPositions(
     );
   }
 
+  const headerText =
+    closeMode === "ALL"
+      ? "Friday close — ALL positions flat for the weekend"
+      : closeMode === "DAY_KEEP_WINNERS"
+        ? "End of day — losers closed, winners held overnight"
+        : "End of day — day-trade positions closed";
+  const footerText =
+    closeMode === "ALL"
+      ? "\n_No weekend exposure._"
+      : closeMode === "DAY_KEEP_WINNERS"
+        ? "\n_Winning DAY positions + swings ride overnight (24/5, exit engine still guards them). Friday closes everything._"
+        : "\n_Swing positions (if any) hold overnight — Friday closes everything._";
+
   await notifications.sendTelegramMessage(
     "🔔 *" +
-      (closeMode === "ALL"
-        ? "Friday close — ALL positions flat for the weekend"
-        : "End of day — day-trade positions closed") +
+      headerText +
       "*\n\n" +
       closedCount +
       "/" +
@@ -209,9 +247,7 @@ async function forceCloseAllPositions(
       (failedSymbols.length > 0
         ? "\n⚠️ FAILED to close: " + failedSymbols.join(", ")
         : "") +
-      (closeMode === "DAY_ONLY"
-        ? "\n_Swing positions (if any) hold overnight — Friday closes everything._"
-        : "\n_No weekend exposure._"),
+      footerText,
   );
 }
 

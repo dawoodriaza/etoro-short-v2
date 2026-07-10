@@ -25,6 +25,7 @@ require("dotenv").config();
 const { logger } = require("../logger");
 const config = require("../config");
 const { getCurrentBahrainTime } = require("../market-hours"); // ← P0 FIX
+const sectorMap = require("./sector-map"); // v5.5: for sector-rotation bucket lookup
 
 // ── Phase A: cheap pre-filter, no extra API calls ───────────────────────────
 function prefilterCandidates(quotesBySymbol) {
@@ -63,6 +64,25 @@ function prefilterCandidates(quotesBySymbol) {
 }
 
 // ── Phase B: score a candidate AFTER enrichment (real high, VWAP, RSI) ──────
+
+// v5.6.1 BUG FIX: every setup-detail string below used to do
+// `(candidate.volumeRatio || 0).toFixed(1) + "x volume"` — when volumeRatio
+// was genuinely UNKNOWN (null, e.g. a discovered micro-cap that doesn't
+// exist on eToro's instrument list, so real volume was never fetched), this
+// silently produced the literal text "0.0x volume" in the plan description
+// shown to the AI screener. The AI then read "0.0x volume" as CONFIRMED
+// ZERO trading activity — a genuine, scary red flag — and rejected the
+// plan citing "single-print pump, zero real participation," when the true
+// state was simply "we don't have this data," not "this stock traded on
+// no volume." Traced directly from real rejection reasoning in the
+// decision journal (IOTR/ZTG cited "0.0x volume" as their #1 reason,
+// every single time, for weeks). This helper tells the truth instead.
+function describeVolume(volumeRatio) {
+  return volumeRatio != null
+    ? volumeRatio.toFixed(1) + "x volume"
+    : "volume data unavailable for this ticker";
+}
+
 function detectGapAndGo(candidate) {
   const absoluteGap = Math.abs(candidate.gapPercent || 0);
   if (absoluteGap < config.gapThresholdPct) return null;
@@ -78,8 +98,8 @@ function detectGapAndGo(candidate) {
       "Gapped up " +
       absoluteGap.toFixed(1) +
       "% on " +
-      (candidate.volumeRatio || 0).toFixed(1) +
-      "x volume, holding above open",
+      describeVolume(candidate.volumeRatio) +
+      ", holding above open",
   };
 }
 
@@ -101,8 +121,7 @@ function detectBreakout(candidate) {
       "Broke above intraday high by " +
       breakoutMargin.toFixed(1) +
       "% on " +
-      (candidate.volumeRatio || 0).toFixed(1) +
-      "x volume",
+      describeVolume(candidate.volumeRatio),
   };
 }
 
@@ -127,14 +146,26 @@ function detectMomentumSurge(candidate) {
       " with " +
       (candidate.priceChangePercent || 0).toFixed(1) +
       "% move on " +
-      (candidate.volumeRatio || 0).toFixed(1) +
-      "x volume",
+      describeVolume(candidate.volumeRatio),
   };
 }
 
 // Apply VWAP trend filter + relative strength filter + regime-aware scoring,
 // then pick the best setup. Returns null if any hard filter fails.
-function scoreEnrichedCandidate(candidate, spyChangePercent, regime) {
+function scoreEnrichedCandidate(
+  candidate,
+  spyChangePercent,
+  regime,
+  sectorProxyChanges,
+) {
+  // v5.4.1: every rejection path now returns { rejected: true, rejectReason }
+  // instead of a bare null — the journal was logging one vague
+  // "failed VWAP/RS/setup scoring" for FOUR different possible causes
+  // (volume, VWAP, relative strength, no setup detected), which made a
+  // real bug (the volumeRatio miscalibration below) invisible in the logs
+  // for a full trading day before it was traced by hand. Never again —
+  // callers should check result.rejected and log result.rejectReason.
+
   // v5.4: the REAL volume hard-gate. prefilterCandidates() lets "unknown"
   // (null) volumeRatio through, since eToro's cheap quote path can't
   // supply it without a per-symbol candles call. By THIS stage,
@@ -146,7 +177,15 @@ function scoreEnrichedCandidate(candidate, spyChangePercent, regime) {
     candidate.volumeRatio != null &&
     candidate.volumeRatio < config.minVolumeRatio
   ) {
-    return null;
+    return {
+      rejected: true,
+      rejectReason:
+        "volumeRatio " +
+        candidate.volumeRatio.toFixed(2) +
+        "x below floor " +
+        config.minVolumeRatio +
+        "x",
+    };
   }
 
   // VWAP filter: only go long if price is above VWAP (intraday uptrend).
@@ -155,7 +194,7 @@ function scoreEnrichedCandidate(candidate, spyChangePercent, regime) {
     candidate.vwap != null &&
     candidate.currentPrice < candidate.vwap
   ) {
-    return null;
+    return { rejected: true, rejectReason: "below VWAP" };
   }
 
   // Relative strength filter: candidate must be leading the market, not
@@ -168,7 +207,15 @@ function scoreEnrichedCandidate(candidate, spyChangePercent, regime) {
     relativeStrength != null &&
     relativeStrength < config.minRelativeStrengthVsSpyPct
   ) {
-    return null;
+    return {
+      rejected: true,
+      rejectReason:
+        "relative strength " +
+        relativeStrength.toFixed(2) +
+        "pts below floor " +
+        config.minRelativeStrengthVsSpyPct +
+        "pts",
+    };
   }
 
   const setups = [
@@ -176,7 +223,12 @@ function scoreEnrichedCandidate(candidate, spyChangePercent, regime) {
     detectBreakout(candidate),
     detectMomentumSurge(candidate),
   ].filter(Boolean);
-  if (setups.length === 0) return null;
+  if (setups.length === 0) {
+    return {
+      rejected: true,
+      rejectReason: "no gap/breakout/momentum setup detected",
+    };
+  }
 
   const bestSetup = setups.reduce((best, setup) =>
     setup.score > best.score ? setup : best,
@@ -193,24 +245,51 @@ function scoreEnrichedCandidate(candidate, spyChangePercent, regime) {
   const regimePenalty =
     regime && regime.regime === "CHOP" ? config.chopRegimeScoreBonus : 0;
 
+  // v5.5: SECTOR ROTATION bonus — "if oil is up, Chevron should follow."
+  // A scoring TILT (like the RS bonus above), not a hard gate — a
+  // candidate in a hot sector gets a nudge, but still has to clear every
+  // other real filter on its own. Only applies if this candidate's static
+  // sector bucket is one of the mapped proxies (see sector-rotation.js)
+  // AND that proxy is actually configured/known this scan.
+  let sectorRotationBonus = 0;
+  if (sectorProxyChanges) {
+    const candidateBucket = sectorMap.getStaticBucket(candidate.symbol);
+    const proxyChangePercent = candidateBucket
+      ? sectorProxyChanges[candidateBucket]
+      : null;
+    if (
+      proxyChangePercent != null &&
+      proxyChangePercent >= config.sectorRotationMinChangePct
+    ) {
+      sectorRotationBonus = Math.min(
+        config.sectorRotationMaxBonus,
+        proxyChangePercent * 4,
+      );
+    }
+  }
+
   const finalScore = Math.min(
     100,
     Math.max(
       0,
-      bestSetup.score + vwapBonus + relativeStrengthBonus - regimePenalty,
+      bestSetup.score +
+        vwapBonus +
+        relativeStrengthBonus +
+        sectorRotationBonus -
+        regimePenalty,
     ),
   );
 
   return {
+    rejected: false,
     symbol: candidate.symbol,
     currentPrice: candidate.currentPrice,
     volumeRatio: candidate.volumeRatio,
     rsi: candidate.rsi,
     vwap: candidate.vwap,
-    aboveVwap: candidate.vwap
-      ? candidate.currentPrice >= candidate.vwap
-      : null,
+    aboveVwap: candidate.vwap ? candidate.currentPrice >= candidate.vwap : null,
     relativeStrength,
+    sectorRotationBonus, // v5.5: visible in the journal for later analysis
     regime: regime ? regime.regime : "UNKNOWN",
     ...bestSetup,
     score: finalScore,

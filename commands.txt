@@ -30,7 +30,7 @@ scp -i ~/.ssh/ssh-key-2026-06-10.key ~/Desktop/etoro-v2/src/FILENAME.js ubuntu@7
 
 
 // # 3. Restart
-// pm2 restart etoro-bot
+// pm2 restart etoro-daytrade
 
 // # 4. Verify
 // pm2 logs etoro-bot --lines 20
@@ -48,9 +48,34 @@ ps aux | grep "node.*index.js" | grep -v grep
 
 
 
-
+scp -i ~/Downloads/ssh-key-2026-07-02.key -r ~/Desktop/etoro-v2-short/src/strategies/session-timing.js ubuntu@130.110.113.198:~/etoro-v2-short/src/strategies/session-timing.js
 
 ssh -i ~/Downloads/ssh-key-2026-07-02.key ubuntu@130.110.113.198
 
 
 ssh -i ~/Downloads/ssh-key-2026-07-02.key  ~/Desktop/etoro-v2-short/src ubuntu@130.110.113.198:~/etoro-v2/src/
+
+
+
+
+ssh -i ~/Downloads/ssh-key-2026-07-02.key  ~/Desktop/etoro-v2-short/src/market-data.js ubuntu@130.110.113.198:~/etoro-v2-short/src/market-data.js
+
+
+
+ssh -i ~/Downloads/ssh-key-2026-07-02.key  ~/Desktop/etoro-v2-short/src/index.js ubuntu@130.110.113.198:~/etoro-v2-short/src/index.js
+
+ssh -i ~/Downloads/ssh-key-2026-07-02.key  ~/Desktop/etoro-v2-short/src/strategies/momentum-scanner.js ubuntu@130.110.113.198:~/etoro-v2-short/src/strategies/momentum-scanner.js
+
+
+
+
+
+
+scp -i ~/Downloads/ssh-key-2026-07-02.key  ~/Desktop/etoro-v2-short/watchlist-daytrade.js ubuntu@130.110.113.198:~/etoro-v2-short/watchlist-daytrade.js
+
+
+
+
+scp -i ~/Downloads/ssh-key-2026-07-02.key \
+~/Desktop/etoro-v2-short/watchlist-daytrade.json \
+ubuntu@130.110.113.198:~/etoro-v2-short/watchlist-daytrade.json

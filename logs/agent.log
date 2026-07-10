@@ -1,0 +1,8 @@
+[2026-07-10 14:01:37] [INFO ] EOD closer: TSLA is a DAY winner (+2.0%) — holding overnight (24/5 mode; exit engine still guards it)
+[2026-07-10 14:01:37] [INFO ] 🔔 EOD closer (DAY_KEEP_WINNERS): force-closing 2 tracked position(s)
+[2026-07-10 14:01:37] [INFO ]   ✅ Force-closed AMD [DAY] — P&L $-1.00
+[2026-07-10 14:01:37] [INFO ]   ✅ Force-closed NVDA [DAY] — P&L $0.00
+[2026-07-10 14:01:37] [INFO ] EOD closer: AMD is NOT tracked by this bot — leaving it alone (likely another bot's or a manual position)
+[2026-07-10 14:01:37] [INFO ] EOD closer: NVDA is NOT tracked by this bot — leaving it alone (likely another bot's or a manual position)
+[2026-07-10 14:01:37] [INFO ] 🔔 EOD closer (ALL): force-closing 1 tracked position(s)
+[2026-07-10 14:01:37] [INFO ]   ✅ Force-closed TSLA [DAY] — P&L $2.00

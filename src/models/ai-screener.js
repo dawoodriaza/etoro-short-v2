@@ -10,6 +10,18 @@
 // v4 design retained: the AI screens the COMPLETE TRADE PLAN and gives a
 // decisive TAKE/SKIP veto. It does NOT set prices — trade-planner geometry
 // is authoritative. One fast Haiku call per candidate.
+//
+// v5.6.1: PROMPT REWRITE. Traced from real journal data that the screener
+// was rejecting ~100% of plans over weeks — including clean watchlist
+// setups (ANET, AVGO) with unremarkable, filter-passing RSI/volume
+// numbers. Root cause: the old prompt was pure "find a reason to reject"
+// with vague, rationalization-friendly criteria ("smells like a pump",
+// "screams exhaustion") and NO counterbalancing instruction for when to
+// say TAKE. Rewritten to require CONCRETE, specific evidence for a SKIP,
+// with an explicit default-to-TAKE instruction when nothing concrete is
+// wrong. Also explicitly tells the model not to treat "volume data
+// unavailable" text as if it meant "zero volume" (see the matching fix in
+// momentum-scanner.js's describeVolume()).
 require("dotenv").config();
 const Anthropic = require("@anthropic-ai/sdk");
 const { logger } = require("../logger");
@@ -37,10 +49,19 @@ function buildScreenerPrompt(plan, currentPositions, marketContext) {
       : "n/a";
 
   return `You are a fast trading-desk risk screener. You receive ONE complete
-trade plan and must give a decisive TAKE/SKIP verdict. The plan's geometry
-(stop, targets, size) is already computed deterministically — you do NOT set
-prices. Your only job: veto plans that look like traps despite passing the
-quantitative filters.
+trade plan that has ALREADY PASSED deterministic quantitative filters —
+VWAP trend, relative strength vs SPY, RSI range, volume-ratio floor, and
+risk/reward geometry are all already enforced by code before you ever see
+this plan. The plan's price levels (stop, targets, size) are also already
+computed — you do NOT set prices.
+
+YOUR JOB, PRECISELY: catch the specific cases where the numbers technically
+pass but something concrete makes this plan untrustworthy anyway — not to
+re-litigate judgments the quantitative filters already made correctly.
+If nothing concrete is wrong, your default answer is TAKE. A clean setup
+that merely "could" fade, or that isn't a slam-dunk certainty, is NOT a
+reason to SKIP — no trade is ever certain, and requiring certainty means
+rejecting everything regardless of quality.
 
 TRADE PLAN: ${plan.symbol} (sector: ${sector})
 Type: ${plan.tradeType}${plan.tradeType === "SWING" ? " (1-10 day hold, closes Friday at latest)" : " (intraday, force-closed before US close)"} · Archetype: ${plan.archetype || "n/a"}
@@ -49,25 +70,33 @@ Setup: ${plan.setup} — ${plan.setupDetail}
 Entry $${plan.entryPrice} · Stop $${plan.stopPrice} (-${plan.stopDistancePct}%) · T1 $${plan.targetT1} · T2 $${plan.targetT2}${plan.targetT3 ? " · T3 $" + plan.targetT3 : ""}
 Risk: $${plan.riskDollars} (${plan.riskPctOfCapital}% of capital) · RRR ${plan.riskRewardRatio}
 Volatility: ${plan.volatilityBucket} (daily ATR ${plan.atrPercent != null ? plan.atrPercent + "%" : "n/a"})
-Trend read: ${plan.trendDirection} · RSI ${plan.rsi ?? "n/a"} · RS vs SPY ${plan.relativeStrength != null ? plan.relativeStrength.toFixed(2) + " pts" : "n/a"} · ${plan.aboveVwap ? "above" : "below/at"} VWAP
+Trend read: ${plan.trendDirection} · RSI ${plan.rsi ?? "n/a"} (already confirmed within acceptable range by code — do not re-reject on RSI alone unless it's genuinely extreme) · RS vs SPY ${plan.relativeStrength != null ? plan.relativeStrength.toFixed(2) + " pts" : "n/a"} · ${plan.aboveVwap ? "above" : "below/at"} VWAP
 
 MARKET CONTEXT:
 Regime: ${regimeLine} · SPY today: ${spyLine}
 ${marketContext?.regime === "CHOP" ? "NOTE: choppy tape — demand stronger evidence of follow-through." : ""}
 Currently held: ${heldSymbols}
 
-VETO CHECKLIST — SKIP if any apply:
-- The move looks exhausted (gap already faded, RSI blow-off, late-day chase)
-- Breakout into obvious resistance / prior failure level
-- Volume pattern smells like a single print or pump, not real participation
-- ${plan.tradeType === "SWING" ? "The strength looks intraday-only — no reason it persists tomorrow" : "No realistic path to T1 in the next few hours"}
-- A ${plan.source === "DISCOVERED" ? "discovered ticker you'd flag as low-quality/manipulation-prone (SPACs, penny-adjacent, meme squeeze late stage)" : "known name behaving out of character with no explanation"}
+SKIP ONLY for a CONCRETE, SPECIFIC reason — not a vague feeling:
+- The setup's OWN description states the volume is unavailable/unknown for
+  this ticker (i.e. literally says so) — that alone is NOT a red flag by
+  itself; do not treat "unavailable" as if it meant "zero." Only skip on
+  volume grounds if a REAL number is shown and it looks thin for a move
+  this size.
+- The stock is at or through a well-known, specific resistance level you
+  can name (not just "some resistance might exist somewhere")
+- This is a DISCOVERED (not watchlist) penny-priced ticker (roughly under
+  $5) with an extreme move (30%+) and no real catalyst attached — these
+  specific characteristics ARE a legitimate manipulation/pump red flag
+- A SWING plan where nothing about the move suggests it's a multi-day
+  story (pure single-session spike with no news, no trend history)
+- Something in the plan is internally inconsistent or doesn't add up
 
 Respond with JSON only, no markdown:
 {
   "decision": "TAKE" | "SKIP",
   "confidence": 1-10,
-  "reasoning": "one or two sentences, specific to THIS plan"
+  "reasoning": "one or two sentences, citing the SPECIFIC concrete fact that drove your decision"
 }`;
 }
 

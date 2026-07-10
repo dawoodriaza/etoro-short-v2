@@ -57,7 +57,7 @@ const path = require("path");
 const { logger } = require("./logger");
 const config = require("./config");
 const marketHours = require("./market-hours");
-
+const sectorRotation = require("./strategies/sector-rotation");
 const etoroClient = require("./etoro-client");
 const marketData = require("./market-data");
 const marketDataStream = require("./market-data-stream"); // v5.3
@@ -135,7 +135,7 @@ function countOpenByType(meta) {
 // -----------------------------
 // WATCHLIST
 // -----------------------------
-function loadWatchlist() {
+function loadWatchlistEntries() {
   try {
     const watchlistFilePath = path.join(
       __dirname,
@@ -144,11 +144,20 @@ function loadWatchlist() {
     const watchlistData = JSON.parse(
       fs.readFileSync(watchlistFilePath, "utf8"),
     );
-    return (watchlistData.stocks || []).map((entry) => entry.symbol);
+    return (watchlistData.stocks || []).map((entry) => ({
+      symbol: entry.symbol,
+      bucket: entry.bucket,
+      // 24/5 overnight-eligible only when explicitly flagged true.
+      night: entry.night === true,
+    }));
   } catch (loadError) {
     logger.error("Watchlist load error: " + loadError.message);
     return [];
   }
+}
+
+function loadWatchlist() {
+  return loadWatchlistEntries().map((entry) => entry.symbol);
 }
 
 function getEasternWeekday() {
@@ -313,24 +322,53 @@ async function runScanCycle() {
     }
 
     // 4. Watchlist quotes + autonomous discovery
-    const watchlist = loadWatchlist();
+    // 24/5: outside the US regular session, restrict to night-eligible names
+    // (watchlist "night": true) — non-eligible tickers just reject on eToro
+    // overnight. During regular hours the full watchlist is used.
+    const overnightMode =
+      config.trade24_5 && !marketHours.isRegularMarketHours();
+    const watchlistEntries = loadWatchlistEntries();
+    const watchlist = (
+      overnightMode
+        ? watchlistEntries.filter((entry) => entry.night)
+        : watchlistEntries
+    ).map((entry) => entry.symbol);
     if (!watchlist.length) {
-      logger.warn("Empty watchlist");
-      journal.gateBlock("WATCHLIST", "watchlist file missing or empty");
+      logger.warn(
+        overnightMode
+          ? "No night-eligible (24/5) watchlist names for this overnight scan"
+          : "Empty watchlist",
+      );
+      journal.gateBlock(
+        "WATCHLIST",
+        overnightMode
+          ? "no night-eligible names for overnight session"
+          : "watchlist file missing or empty",
+      );
       return;
+    }
+    if (overnightMode) {
+      logger.info(
+        "🌙 Overnight (24/5): scanning " +
+          watchlist.length +
+          " night-eligible name(s); discovery paused until the regular session",
+      );
     }
 
     const quotes = await marketData.fetchIntradayQuotes(watchlist);
     const watchlistCandidates = momentumScanner.prefilterCandidates(quotes);
-
-    // Discovery: movers OUTSIDE watchlist + holdings (zero TD credits)
+    const sectorProxyChanges = await sectorRotation.getSectorProxyChanges();
+    // Discovery: movers OUTSIDE watchlist + holdings (zero TD credits).
+    // Paused overnight in 24/5 mode — discovered movers can't be checked for
+    // overnight eligibility, so they'd only add reject noise.
     const trackedMeta = loadPositionMeta();
     const excludeFromDiscovery = new Set([
       ...watchlist.map((symbol) => symbol.toUpperCase()),
       ...Object.keys(trackedMeta),
     ]);
-    const discoveredCandidates =
-      await marketDiscovery.discoverOpportunities(excludeFromDiscovery);
+    const discoveredCandidates = overnightMode
+      ? []
+      : await marketDiscovery.discoverOpportunities(excludeFromDiscovery);
     journal.discoveryResult(
       discoveredCandidates.map((candidate) => candidate.symbol),
     );
@@ -407,8 +445,9 @@ async function runScanCycle() {
         candidate,
         spyChange,
         regime,
+        sectorProxyChanges,
       );
-      if (scored) {
+      if (!scored.rejected) {
         scored.atrPercent = candidate.atrPercent;
         scored.source = candidate.source || "WATCHLIST";
         scored.priceChangePercent = candidate.priceChangePercent;
@@ -418,12 +457,13 @@ async function runScanCycle() {
         journal.candidateRejected(
           candidate.symbol,
           "SCORING",
-          "failed VWAP/RS/setup scoring",
+          scored.rejectReason,
           {
             aboveVwap: candidate.vwap
               ? candidate.currentPrice >= candidate.vwap
               : null,
             rsi: candidate.rsi,
+            volumeRatio: candidate.volumeRatio,
           },
         );
       }
@@ -509,8 +549,7 @@ async function runScanCycle() {
 
     const approvedPlans = plans.filter((plan) =>
       screenResults.some(
-        (result) =>
-          result.symbol === plan.symbol && result.decision === "TAKE",
+        (result) => result.symbol === plan.symbol && result.decision === "TAKE",
       ),
     );
 
@@ -1237,10 +1276,7 @@ function startScheduler() {
   // V6: daily position review — Mon-Thu ONLY (Friday closes everything
   // anyway, so extending on Friday would be meaningless).
   new CronJob(
-    config.reviewerMinuteET +
-      " " +
-      config.reviewerHourET +
-      " * * 1-4",
+    config.reviewerMinuteET + " " + config.reviewerHourET + " * * 1-4",
     runDailyPositionReview,
     null,
     true,
@@ -1258,7 +1294,17 @@ function startScheduler() {
     forceCloseMinute + " " + forceCloseHour + " * * 1-5",
     async () => {
       const weekday = getEasternWeekday();
-      const mode = weekday === 5 && config.fridayCloseAll ? "ALL" : "DAY_ONLY";
+      // Friday → close ALL (weekend safety). Mon–Thu in 24/5 overnight-hold
+      // mode → keep winning DAY positions overnight. Otherwise → close all
+      // DAY positions (swings hold).
+      let mode;
+      if (weekday === 5 && config.fridayCloseAll) {
+        mode = "ALL";
+      } else if (config.trade24_5 && config.hold24_5Overnight) {
+        mode = "DAY_KEEP_WINNERS";
+      } else {
+        mode = "DAY_ONLY";
+      }
       await eodCloser.forceCloseAllPositions(
         etoroClient,
         notifications,
@@ -1451,9 +1497,7 @@ async function main() {
     runScanCycle();
   }
 
-  logger.info(
-    "Running (" + marketHours.getCurrentBahrainTime() + " Bahrain)",
-  );
+  logger.info("Running (" + marketHours.getCurrentBahrainTime() + " Bahrain)");
 }
 
 main();
