@@ -1,0 +1,75 @@
+=== test-1-rates-batch run at 2026-07-05T14:01:01.126Z ===
+
+Testing with instrumentIds: {
+  "AAPL": 1001,
+  "TSLA": 1002,
+  "NVDA": 1003
+}
+
+=== TEST A: single batched call — path "/market-data/rates" ===
+→ GET https://public-api.etoro.com/api/v1/market-data/rates?instrumentIds=1001,1002,1003
+  ❌ ERROR: 404 {"errorCode":"RouteNotFound","errorMessage":"Route not found"}
+
+=== TEST A: single batched call — path "/market-data/instruments/rates" ===
+→ GET https://public-api.etoro.com/api/v1/market-data/instruments/rates?instrumentIds=1001,1002,1003
+  status: 200
+  raw response: {
+  "rates": [
+    {
+      "instrumentID": 1001,
+      "ask": 308.25,
+      "bid": 308,
+      "lastExecution": 0,
+      "conversionRateAsk": 1,
+      "conversionRateBid": 1,
+      "date": "2026-07-02T23:49:24.527Z",
+      "unitMargin": 308,
+      "unitMarginAsk": 308.25,
+      "unitMarginBid": 308,
+      "priceRateID": 148014158380,
+      "bidDiscounted": 308,
+      "askDiscounted": 308.25,
+      "unitMarginBidDiscounted": 308,
+      "unitMarginAskDiscounted": 308.25
+    },
+    {
+      "instrumentID": 1002,
+      "ask": 355.6,
+      "bid": 355.2,
+      "lastExecution": 0,
+      "conversionRateAsk": 1,
+      "conversionRateBid": 1,
+      "date": "2026-07-02T23:49:43.48Z",
+      "unitMargin": 355.2,
+      "unitMarginAsk": 355.6,
+      "unitMarginBid": 355.2,
+      "priceRateID": 148014158461,
+      "bidDiscounted": 355.2,
+      "askDiscounted": 355.6,
+      "unitMarginBidDiscounted": 355.2,
+      "unitMarginAskDiscounted": 355.6
+    },
+    {
+      "instrumentID": 1003,
+      "ask": 585.48,
+      "bid": 584.66,
+      "lastExecution": 0,
+      "conversionRateAsk": 1,
+      "conversionRateBid": 1,
+      "date": "2026-07-02T23:49:52.977Z",
+      "unitMargin": 584.66,
+      "unitMarginAsk": 585.48,
+      "unitMarginBid": 584.66,
+      "priceRateID": 148014158513,
+      "bidDiscounted": 584.66,
+      "askDiscounted": 585.48,
+      "unitMarginBidDiscounted": 584.66,
+      "unitMarginAskDiscounted": 585.48
+    }
+  ]
+}
+  requested 3 instrument(s), got back 3 rate(s) in the response
+  ✅ BATCHING WORKS — got one rate per requested instrument
+
+=== CONCLUSION ===
+✅ Working path found: /market-data/instruments/rates

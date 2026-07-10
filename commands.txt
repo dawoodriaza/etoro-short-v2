@@ -1,0 +1,56 @@
+// ssh -i ~/Downloads/ssh-key-2026-07-02.key ubuntu@130.110.113.198
+// ssh -i ~/.ssh/ssh-key-2026-06-10.key ubuntu@79.72.1.221
+
+
+
+
+
+
+scp -i ~/Downloads/ssh-key-2026-07-02.key -r ~/Desktop/etoro-v2-short/src ubuntu@130.110.113.198:~/etoro-v2-short/
+
+
+
+scp -i ~/Downloads/ssh-key-2026-07-02.key -r ~/Desktop/etoro-v2-short/package.json ubuntu@130.110.113.198:~/etoro-v2-short/
+
+
+
+// # 1. Upload the changed file
+// scp -i ~/.ssh/ssh-key-2026-06-10.key ~/Desktop/etoro-v2/src/FILENAME.js ubuntu@79.72.1.221:~/etoro-v2/src/
+
+
+
+// # 1. Upload the changed file
+// scp -i ~/Downloads/ssh-key-2026-07-02.key ~/Desktop/etoro-v2-short/watchlist-daytrade.json ubuntu@130.110.113.198:~/etoro-v2-short/
+
+
+
+scp -i ~/.ssh/ssh-key-2026-06-10.key ~/Desktop/etoro-v2/src/FILENAME.js ubuntu@79.72.1.221:~/etoro-v2/src/
+
+// # 2. SSH in
+
+
+// # 3. Restart
+// pm2 restart etoro-bot
+
+// # 4. Verify
+// pm2 logs etoro-bot --lines 20
+
+
+
+pm2 status
+
+pm2 logs etoro-bot --lines 800
+ps aux | grep "node.*index.js" | grep -v grep
+
+
+
+
+
+
+
+
+
+ssh -i ~/Downloads/ssh-key-2026-07-02.key ubuntu@130.110.113.198
+
+
+ssh -i ~/Downloads/ssh-key-2026-07-02.key  ~/Desktop/etoro-v2-short/src ubuntu@130.110.113.198:~/etoro-v2/src/

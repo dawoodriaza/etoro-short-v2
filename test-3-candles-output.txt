@@ -1,0 +1,331 @@
+=== test-3-candles run at 2026-07-05T13:41:47.559Z ===
+
+Testing candles for instrumentId: 1001
+
+=== Trying interval: "OneDay" ===
+→ GET https://public-api.etoro.com/api/v1/market-data/instruments/1001/history/candles/desc/OneDay/5
+  status: 200
+  raw response: {
+  "interval": "OneDay",
+  "candles": [
+    {
+      "instrumentId": 1001,
+      "candles": [
+        {
+          "instrumentID": 1001,
+          "fromDate": "2026-07-03T00:00:00Z",
+          "open": 307.93,
+          "high": 308.25,
+          "low": 307.8,
+          "close": 308,
+          "volume": 149566
+        },
+        {
+          "instrumentID": 1001,
+          "fromDate": "2026-07-02T00:00:00Z",
+          "open": 293.91,
+          "high": 309.41,
+          "low": 293.48,
+          "close": 307.93,
+          "volume": 53487035
+        },
+        {
+          "instrumentID": 1001,
+          "fromDate": "2026-07-01T00:00:00Z",
+          "open": 288.97,
+          "high": 296.56,
+          "low": 288.29,
+          "close": 293.91,
+          "volume": 36487882
+        },
+        {
+          "instrumentID": 1001,
+          "fromDate": "2026-06-30T00:00:00Z",
+          "open": 281.32,
+          "high": 289.87,
+          "low": 280,
+          "close": 289.1,
+          "volume": 54690553
+        },
+        {
+          "instrumentID": 1001,
+          "fromDate": "2026-06-29T00:00:00Z",
+          "open": 283.96,
+          "high": 287.82,
+          "low": 279.86,
+          "close": 281.32,
+          "volume": 46117241
+        }
+      ],
+      "rangeOpen": 307.93,
+      "rangeClose": 281.32,
+      "rangeHigh": 309.41,
+      "rangeLow": 279.86,
+      "volume": 190932277
+    }
+  ]
+}
+  ✅ "OneDay" accepted — 1 candle(s) returned. Volume field present: YES
+
+=== Trying interval: "OneMinute" ===
+→ GET https://public-api.etoro.com/api/v1/market-data/instruments/1001/history/candles/desc/OneMinute/5
+  status: 200
+  raw response: {
+  "interval": "OneMinute",
+  "candles": [
+    {
+      "instrumentId": 1001,
+      "candles": [
+        {
+          "instrumentID": 1001,
+          "fromDate": "2026-07-02T23:49:00Z",
+          "open": 308,
+          "high": 308,
+          "low": 308,
+          "close": 308,
+          "volume": 461
+        },
+        {
+          "instrumentID": 1001,
+          "fromDate": "2026-07-02T23:48:00Z",
+          "open": 308.25,
+          "high": 308.25,
+          "low": 308,
+          "close": 308,
+          "volume": 30
+        },
+        {
+          "instrumentID": 1001,
+          "fromDate": "2026-07-02T23:47:00Z",
+          "open": 308.25,
+          "high": 308.25,
+          "low": 308.24,
+          "close": 308.25,
+          "volume": 108
+        },
+        {
+          "instrumentID": 1001,
+          "fromDate": "2026-07-02T23:46:00Z",
+          "open": 308.18,
+          "high": 308.25,
+          "low": 308.18,
+          "close": 308.25,
+          "volume": 349
+        },
+        {
+          "instrumentID": 1001,
+          "fromDate": "2026-07-02T23:45:00Z",
+          "open": 308.2,
+          "high": 308.21,
+          "low": 308,
+          "close": 308.18,
+          "volume": 516
+        }
+      ],
+      "rangeOpen": 308,
+      "rangeClose": 308.18,
+      "rangeHigh": 308.25,
+      "rangeLow": 308,
+      "volume": 1464
+    }
+  ]
+}
+  ✅ "OneMinute" accepted — 1 candle(s) returned. Volume field present: YES
+
+=== Trying interval: "FiveMinutes" ===
+→ GET https://public-api.etoro.com/api/v1/market-data/instruments/1001/history/candles/desc/FiveMinutes/5
+  status: 200
+  raw response: {
+  "interval": "FiveMinutes",
+  "candles": [
+    {
+      "instrumentId": 1001,
+      "candles": [
+        {
+          "instrumentID": 1001,
+          "fromDate": "2026-07-02T23:45:00Z",
+          "open": 308.2,
+          "high": 308.25,
+          "low": 308,
+          "close": 308,
+          "volume": 2109
+        },
+        {
+          "instrumentID": 1001,
+          "fromDate": "2026-07-02T23:40:00Z",
+          "open": 308,
+          "high": 308.18,
+          "low": 308,
+          "close": 308.15,
+          "volume": 1104
+        },
+        {
+          "instrumentID": 1001,
+          "fromDate": "2026-07-02T23:35:00Z",
+          "open": 308.1,
+          "high": 308.11,
+          "low": 307.95,
+          "close": 307.95,
+          "volume": 1532
+        },
+        {
+          "instrumentID": 1001,
+          "fromDate": "2026-07-02T23:30:00Z",
+          "open": 308.13,
+          "high": 308.13,
+          "low": 307.95,
+          "close": 308.1,
+          "volume": 667
+        },
+        {
+          "instrumentID": 1001,
+          "fromDate": "2026-07-02T23:25:00Z",
+          "open": 308,
+          "high": 308.15,
+          "low": 307.94,
+          "close": 308.13,
+          "volume": 1551
+        }
+      ],
+      "rangeOpen": 308.2,
+      "rangeClose": 308.13,
+      "rangeHigh": 308.25,
+      "rangeLow": 307.94,
+      "volume": 6963
+    }
+  ]
+}
+  ✅ "FiveMinutes" accepted — 1 candle(s) returned. Volume field present: YES
+
+=== Trying interval: "FifteenMinutes" ===
+→ GET https://public-api.etoro.com/api/v1/market-data/instruments/1001/history/candles/desc/FifteenMinutes/5
+  status: 200
+  raw response: {
+  "interval": "FifteenMinutes",
+  "candles": [
+    {
+      "instrumentId": 1001,
+      "candles": [
+        {
+          "instrumentID": 1001,
+          "fromDate": "2026-07-02T23:45:00Z",
+          "open": 308.2,
+          "high": 308.25,
+          "low": 308,
+          "close": 308,
+          "volume": 2109
+        },
+        {
+          "instrumentID": 1001,
+          "fromDate": "2026-07-02T23:30:00Z",
+          "open": 308.13,
+          "high": 308.18,
+          "low": 307.95,
+          "close": 308.15,
+          "volume": 3304
+        },
+        {
+          "instrumentID": 1001,
+          "fromDate": "2026-07-02T23:15:00Z",
+          "open": 308,
+          "high": 308.15,
+          "low": 307.8,
+          "close": 308.13,
+          "volume": 5025
+        },
+        {
+          "instrumentID": 1001,
+          "fromDate": "2026-07-02T23:00:00Z",
+          "open": 308.02,
+          "high": 308.25,
+          "low": 308,
+          "close": 308,
+          "volume": 2110
+        },
+        {
+          "instrumentID": 1001,
+          "fromDate": "2026-07-02T22:45:00Z",
+          "open": 308.04,
+          "high": 308.06,
+          "low": 307.93,
+          "close": 308,
+          "volume": 6427
+        }
+      ],
+      "rangeOpen": 308.2,
+      "rangeClose": 308,
+      "rangeHigh": 308.25,
+      "rangeLow": 307.8,
+      "volume": 18975
+    }
+  ]
+}
+  ✅ "FifteenMinutes" accepted — 1 candle(s) returned. Volume field present: YES
+
+=== Trying interval: "OneHour" ===
+→ GET https://public-api.etoro.com/api/v1/market-data/instruments/1001/history/candles/desc/OneHour/5
+  status: 200
+  raw response: {
+  "interval": "OneHour",
+  "candles": [
+    {
+      "instrumentId": 1001,
+      "candles": [
+        {
+          "instrumentID": 1001,
+          "fromDate": "2026-07-02T23:00:00Z",
+          "open": 308.02,
+          "high": 308.25,
+          "low": 307.8,
+          "close": 308,
+          "volume": 12579
+        },
+        {
+          "instrumentID": 1001,
+          "fromDate": "2026-07-02T22:00:00Z",
+          "open": 308.03,
+          "high": 308.2,
+          "low": 307.93,
+          "close": 308,
+          "volume": 34198
+        },
+        {
+          "instrumentID": 1001,
+          "fromDate": "2026-07-02T21:00:00Z",
+          "open": 307.93,
+          "high": 308.06,
+          "low": 307.83,
+          "close": 308.03,
+          "volume": 102714
+        },
+        {
+          "instrumentID": 1001,
+          "fromDate": "2026-07-02T20:00:00Z",
+          "open": 308.35,
+          "high": 308.5,
+          "low": 307.85,
+          "close": 307.93,
+          "volume": 15423769
+        },
+        {
+          "instrumentID": 1001,
+          "fromDate": "2026-07-02T19:00:00Z",
+          "open": 307.62,
+          "high": 309.41,
+          "low": 307.2,
+          "close": 308.34,
+          "volume": 7002731
+        }
+      ],
+      "rangeOpen": 308.02,
+      "rangeClose": 308.34,
+      "rangeHigh": 309.41,
+      "rangeLow": 307.2,
+      "volume": 22575991
+    }
+  ]
+}
+  ✅ "OneHour" accepted — 1 candle(s) returned. Volume field present: YES
+
+=== WHY THIS MATTERS ===
+If any intraday interval works AND has a volume field, that's the one missing piece (volume) that would let eToro's own API fully replace Twelve Data for the watchlist quote fetch. If only OneDay works, or no interval has volume, eToro's market-data API can only ever be a PARTIAL replacement (price + gap%, not volume-based signals).

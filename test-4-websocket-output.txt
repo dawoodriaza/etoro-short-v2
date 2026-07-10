@@ -1,0 +1,138 @@
+=== test-4-websocket run at 2026-07-05T13:09:13.799Z ===
+
+Connecting to wss://ws.etoro.com/ws ...
+✅ Connected. Sending Authenticate...
+
+--- message #1 ---
+
+
+--- message #2 ---
+{"id":"d9e3bc41-4402-4893-abb6-28a5cf02d1d9","success":true,"operation":"Authenticate"}
+Subscribing to topics: [
+  "instrument:1001",
+  "instrument:1002",
+  "instrument:1003"
+]
+
+--- message #3 ---
+{"id":"dea0aa77-f4c7-41a5-a109-9cf8c1505074","success":true,"operation":"Subscribe"}
+
+--- message #4 ---
+{"messages":[{"topic":"instrument:1001","content":"{\"InstrumentID\":\"1001\",\"IsInstrumentActive\":\"false\",\"OfficialClosingPrice\":\"308.63\",\"IsMarketOpen\":\"true\",\"ConversionRateAsk\":\"1.00000000\",\"ConversionRateBid\":\"1.00000000\",\"PriceRateID\":\"148014158380\",\"BidDiscounted\":\"308.00000000\",\"AskDiscounted\":\"308.25000000\",\"UnitMarginBidDiscounted\":\"308.00000000\",\"UnitMarginAskDiscounted\":\"308.25000000\",\"AllowBuy\":\"true\",\"AllowSell\":\"true\",\"MaxPositionUnits\":\"6713\",\"NewUnitMargin\":\"308.00000000\",\"UnitMarginAsk\":\"308.25000000\",\"UnitMarginBid\":\"308.00000000\",\"IsExchangeOpen\":\"false\",\"Ask\":\"308.25000000\",\"DelayedAsk\":\"0\",\"Bid\":\"308.00000000\",\"DelayedBid\":\"0\",\"LastExecution\":\"0.0\",\"AvailabilityReason\":\"11\",\"Date\":\"2026-07-02T23:49:24.527025Z\",\"CfdMarkupAsk\":\"0\",\"CfdMarkupBid\":\"0\",\"RealMarkupAsk\":\"0\",\"RealMarkupBid\":\"0\",\"ClosingPrices\":\"{\\\"Daily\\\":301.54,\\\"Weekly\\\":307.34,\\\"Monthly\\\":312.06}\",\"IsOfficialClosingPrice\":\"true\",\"DailyClose\":\"308.63000000\"}","id":"b4c71d48-eb58-492a-b001-aae6e0be1c04","type":"Snapshot"},{"topic":"instrument:1002","content":"{\"InstrumentID\":\"1002\",\"IsInstrumentActive\":\"false\",\"OfficialClosingPrice\":\"356.18\",\"IsMarketOpen\":\"true\",\"ConversionRateAsk\":\"1.00000000\",\"ConversionRateBid\":\"1.00000000\",\"PriceRateID\":\"148014158461\",\"BidDiscounted\":\"355.20000000\",\"AskDiscounted\":\"355.60000000\",\"UnitMarginBidDiscounted\":\"355.20000000\",\"UnitMarginAskDiscounted\":\"355.60000000\",\"AllowBuy\":\"true\",\"AllowSell\":\"true\",\"MaxPositionUnits\":\"2761\",\"NewUnitMargin\":\"355.20000000\",\"UnitMarginAsk\":\"355.60000000\",\"UnitMarginBid\":\"355.20000000\",\"IsExchangeOpen\":\"false\",\"Ask\":\"355.60000000\",\"DelayedAsk\":\"0\",\"Bid\":\"355.20000000\",\"DelayedBid\":\"0\",\"LastExecution\":\"0.0\",\"AvailabilityReason\":\"11\",\"Date\":\"2026-07-02T23:49:43.4808889Z\",\"CfdMarkupAsk\":\"0\",\"CfdMarkupBid\":\"0\",\"RealMarkupAsk\":\"0\",\"RealMarkupBid\":\"0\",\"ClosingPrices\":\"{\\\"Daily\\\":361.17,\\\"Weekly\\\":365.76,\\\"Monthly\\\":376.43}\",\"IsOfficialClosingPrice\":\"true\",\"DailyClose\":\"356.18000000\"}","id":"6b06834c-2bf3-40a3-85aa-6af73ac6b918","type":"Snapshot"},{"topic":"instrument:1003","content":"{\"InstrumentID\":\"1003\",\"IsInstrumentActive\":\"false\",\"OfficialClosingPrice\":\"582.9\",\"IsMarketOpen\":\"true\",\"ConversionRateAsk\":\"1.00000000\",\"ConversionRateBid\":\"1.00000000\",\"PriceRateID\":\"148014158513\",\"BidDiscounted\":\"584.66000000\",\"AskDiscounted\":\"585.48000000\",\"UnitMarginBidDiscounted\":\"584.66000000\",\"UnitMarginAskDiscounted\":\"585.48000000\",\"AllowBuy\":\"true\",\"AllowSell\":\"true\",\"MaxPositionUnits\":\"6957\",\"NewUnitMargin\":\"584.66000000\",\"UnitMarginAsk\":\"585.48000000\",\"UnitMarginBid\":\"584.66000000\",\"IsExchangeOpen\":\"false\",\"Ask\":\"585.48000000\",\"DelayedAsk\":\"0\",\"Bid\":\"584.66000000\",\"DelayedBid\":\"0\",\"LastExecution\":\"0.0\",\"AvailabilityReason\":\"11\",\"Date\":\"2026-07-02T23:49:52.9757748Z\",\"CfdMarkupAsk\":\"0\",\"CfdMarkupBid\":\"0\",\"RealMarkupAsk\":\"0\",\"RealMarkupBid\":\"0\",\"ClosingPrices\":\"{\\\"Daily\\\":585.39,\\\"Weekly\\\":593,\\\"Monthly\\\":632.51}\",\"IsOfficialClosingPrice\":\"true\",\"DailyClose\":\"582.90000000\"}","id":"8ee105cf-187b-40d0-a764-1a52e766b147","type":"Snapshot"}]}
+  parsed content: {
+  "InstrumentID": "1001",
+  "IsInstrumentActive": "false",
+  "OfficialClosingPrice": "308.63",
+  "IsMarketOpen": "true",
+  "ConversionRateAsk": "1.00000000",
+  "ConversionRateBid": "1.00000000",
+  "PriceRateID": "148014158380",
+  "BidDiscounted": "308.00000000",
+  "AskDiscounted": "308.25000000",
+  "UnitMarginBidDiscounted": "308.00000000",
+  "UnitMarginAskDiscounted": "308.25000000",
+  "AllowBuy": "true",
+  "AllowSell": "true",
+  "MaxPositionUnits": "6713",
+  "NewUnitMargin": "308.00000000",
+  "UnitMarginAsk": "308.25000000",
+  "UnitMarginBid": "308.00000000",
+  "IsExchangeOpen": "false",
+  "Ask": "308.25000000",
+  "DelayedAsk": "0",
+  "Bid": "308.00000000",
+  "DelayedBid": "0",
+  "LastExecution": "0.0",
+  "AvailabilityReason": "11",
+  "Date": "2026-07-02T23:49:24.527025Z",
+  "CfdMarkupAsk": "0",
+  "CfdMarkupBid": "0",
+  "RealMarkupAsk": "0",
+  "RealMarkupBid": "0",
+  "ClosingPrices": "{\"Daily\":301.54,\"Weekly\":307.34,\"Monthly\":312.06}",
+  "IsOfficialClosingPrice": "true",
+  "DailyClose": "308.63000000"
+}
+  fields present: InstrumentID, IsInstrumentActive, OfficialClosingPrice, IsMarketOpen, ConversionRateAsk, ConversionRateBid, PriceRateID, BidDiscounted, AskDiscounted, UnitMarginBidDiscounted, UnitMarginAskDiscounted, AllowBuy, AllowSell, MaxPositionUnits, NewUnitMargin, UnitMarginAsk, UnitMarginBid, IsExchangeOpen, Ask, DelayedAsk, Bid, DelayedBid, LastExecution, AvailabilityReason, Date, CfdMarkupAsk, CfdMarkupBid, RealMarkupAsk, RealMarkupBid, ClosingPrices, IsOfficialClosingPrice, DailyClose
+  parsed content: {
+  "InstrumentID": "1002",
+  "IsInstrumentActive": "false",
+  "OfficialClosingPrice": "356.18",
+  "IsMarketOpen": "true",
+  "ConversionRateAsk": "1.00000000",
+  "ConversionRateBid": "1.00000000",
+  "PriceRateID": "148014158461",
+  "BidDiscounted": "355.20000000",
+  "AskDiscounted": "355.60000000",
+  "UnitMarginBidDiscounted": "355.20000000",
+  "UnitMarginAskDiscounted": "355.60000000",
+  "AllowBuy": "true",
+  "AllowSell": "true",
+  "MaxPositionUnits": "2761",
+  "NewUnitMargin": "355.20000000",
+  "UnitMarginAsk": "355.60000000",
+  "UnitMarginBid": "355.20000000",
+  "IsExchangeOpen": "false",
+  "Ask": "355.60000000",
+  "DelayedAsk": "0",
+  "Bid": "355.20000000",
+  "DelayedBid": "0",
+  "LastExecution": "0.0",
+  "AvailabilityReason": "11",
+  "Date": "2026-07-02T23:49:43.4808889Z",
+  "CfdMarkupAsk": "0",
+  "CfdMarkupBid": "0",
+  "RealMarkupAsk": "0",
+  "RealMarkupBid": "0",
+  "ClosingPrices": "{\"Daily\":361.17,\"Weekly\":365.76,\"Monthly\":376.43}",
+  "IsOfficialClosingPrice": "true",
+  "DailyClose": "356.18000000"
+}
+  fields present: InstrumentID, IsInstrumentActive, OfficialClosingPrice, IsMarketOpen, ConversionRateAsk, ConversionRateBid, PriceRateID, BidDiscounted, AskDiscounted, UnitMarginBidDiscounted, UnitMarginAskDiscounted, AllowBuy, AllowSell, MaxPositionUnits, NewUnitMargin, UnitMarginAsk, UnitMarginBid, IsExchangeOpen, Ask, DelayedAsk, Bid, DelayedBid, LastExecution, AvailabilityReason, Date, CfdMarkupAsk, CfdMarkupBid, RealMarkupAsk, RealMarkupBid, ClosingPrices, IsOfficialClosingPrice, DailyClose
+  parsed content: {
+  "InstrumentID": "1003",
+  "IsInstrumentActive": "false",
+  "OfficialClosingPrice": "582.9",
+  "IsMarketOpen": "true",
+  "ConversionRateAsk": "1.00000000",
+  "ConversionRateBid": "1.00000000",
+  "PriceRateID": "148014158513",
+  "BidDiscounted": "584.66000000",
+  "AskDiscounted": "585.48000000",
+  "UnitMarginBidDiscounted": "584.66000000",
+  "UnitMarginAskDiscounted": "585.48000000",
+  "AllowBuy": "true",
+  "AllowSell": "true",
+  "MaxPositionUnits": "6957",
+  "NewUnitMargin": "584.66000000",
+  "UnitMarginAsk": "585.48000000",
+  "UnitMarginBid": "584.66000000",
+  "IsExchangeOpen": "false",
+  "Ask": "585.48000000",
+  "DelayedAsk": "0",
+  "Bid": "584.66000000",
+  "DelayedBid": "0",
+  "LastExecution": "0.0",
+  "AvailabilityReason": "11",
+  "Date": "2026-07-02T23:49:52.9757748Z",
+  "CfdMarkupAsk": "0",
+  "CfdMarkupBid": "0",
+  "RealMarkupAsk": "0",
+  "RealMarkupBid": "0",
+  "ClosingPrices": "{\"Daily\":585.39,\"Weekly\":593,\"Monthly\":632.51}",
+  "IsOfficialClosingPrice": "true",
+  "DailyClose": "582.90000000"
+}
+  fields present: InstrumentID, IsInstrumentActive, OfficialClosingPrice, IsMarketOpen, ConversionRateAsk, ConversionRateBid, PriceRateID, BidDiscounted, AskDiscounted, UnitMarginBidDiscounted, UnitMarginAskDiscounted, AllowBuy, AllowSell, MaxPositionUnits, NewUnitMargin, UnitMarginAsk, UnitMarginBid, IsExchangeOpen, Ask, DelayedAsk, Bid, DelayedBid, LastExecution, AvailabilityReason, Date, CfdMarkupAsk, CfdMarkupBid, RealMarkupAsk, RealMarkupBid, ClosingPrices, IsOfficialClosingPrice, DailyClose
+
+=== SUMMARY ===
+Total messages received: 4
+Unique topics seen: [
+  "instrument:1001",
+  "instrument:1002",
+  "instrument:1003"
+]
+
+Check above: did each 'instrument:<id>' message contain ONLY Ask/Bid/LastExecution/Date, or something more (OHLC/volume)? The official docs say price-only — this confirms it empirically.
+
+Connection closed (code 1000): Closing

@@ -1,0 +1,24 @@
+{
+  "comment": "Day+Swing watchlist v5 — 'bucket' fields here are informational only now; the actual correlation guard reads src/strategies/sector-map.js (static map + Finnhub industry lookup for anything not listed there), so discovered tickers are covered too. Keep 15-20 max: sequential quotes cost ~8s/symbol.",
+  "stocks": [
+    { "symbol": "TSLA", "bucket": "ev" },
+    { "symbol": "RIVN", "bucket": "ev" },
+    { "symbol": "NVDA", "bucket": "semi" },
+    { "symbol": "TSM", "bucket": "semi" },
+    { "symbol": "AMD", "bucket": "semi" },
+    { "symbol": "SMCI", "bucket": "semi" },
+    { "symbol": "SOFI", "bucket": "fintech" },
+    { "symbol": "HOOD", "bucket": "fintech" },
+    { "symbol": "AFRM", "bucket": "fintech" },
+    { "symbol": "UPST", "bucket": "fintech" },
+    { "symbol": "PLTR", "bucket": "ai" },
+    { "symbol": "SOUN", "bucket": "ai" },
+    { "symbol": "IONQ", "bucket": "ai" },
+    { "symbol": "NBIS", "bucket": "ai" },
+    { "symbol": "RKLB", "bucket": "space" },
+    { "symbol": "RDDT", "bucket": "social" },
+    { "symbol": "SNAP", "bucket": "social" },
+    { "symbol": "META", "bucket": "mega_cap" },
+    { "symbol": "NFLX", "bucket": "mega_cap" }
+  ]
+}

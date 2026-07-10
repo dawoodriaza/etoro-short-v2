@@ -1,0 +1,27 @@
+{
+  "name": "etoro-v2-short",
+  "version": "2.0.0",
+  "description": "Multi-model AI consensus trading agent for eToro — Claude",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dry-run": "set TRADING_MODE=dry_run && node src/index.js --run-now",
+    "live": "set TRADING_MODE=live && node src/index.js --run-now",
+    "test-setup": "node src/test-setup.js",
+    "test-telegram": "node src/notifications/telegram.js --test"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.24.0",
+    "@google/generative-ai": "^0.24.1",
+    "axios": "^1.7.0",
+    "cron": "^3.1.7",
+    "dotenv": "^16.4.5",
+    "node-telegram-bot-api": "^0.66.0",
+    "openai": "^4.52.0",
+    "twelvedata": "^3.0.1",
+    "uuid": "^9.0.1",
+    "winston": "^3.13.0",
+    "yahoo-finance2": "^2.11.3",
+    "ws": "^8.18.0"
+  }
+}
