@@ -82,6 +82,7 @@ const marketDiscovery = require("./discovery/market-discovery");
 const capitalManager = require("./strategies/capital-manager");
 const journal = require("./strategies/decision-journal");
 const ethicsFilter = require("./strategies/ethics-filter");
+const exitShadowTracker = require("./strategies/exit-shadow-tracker");
 const {
   escapeHtml,
   humanize,
@@ -1120,6 +1121,22 @@ async function manageOpenPositions() {
           plan: positionMeta.plan || null,
         });
 
+        // Observation only: watch what price does after a TIME-based exit
+        // (not a stop/target) to build real evidence for whether the hold
+        // window should change. Never re-enters, never affects trading.
+        if (
+          decision.reason === "TIME_EXIT_STALE" ||
+          decision.reason === "SWING_TIME_EXIT"
+        ) {
+          exitShadowTracker.startShadow(
+            symbol,
+            position.instrumentId,
+            positionMeta,
+            currentPrice,
+            decision.reason,
+          );
+        }
+
         delete meta[symbol];
         metaChanged = true;
 
@@ -1191,6 +1208,14 @@ async function runExitMonitorTick() {
   exitCheckInProgress = true;
   try {
     await manageOpenPositions();
+    // Observation-only checkpoints for prior stale exits — cheap no-op
+    // unless a checkpoint is actually due. Failures here must never affect
+    // real position management, so they're isolated in their own try/catch.
+    try {
+      await exitShadowTracker.checkPendingShadows();
+    } catch (shadowError) {
+      logger.warn("Exit-shadow check failed: " + shadowError.message);
+    }
     consecutiveExitMonitorFailures = 0;
   } catch (monitorError) {
     logger.error("Exit monitor error: " + monitorError.message);

@@ -108,6 +108,10 @@ const journal = {
         : null,
     }),
   tradeClosed: (outcome) => appendEvent("TRADE_CLOSED", outcome),
+  // Observation-only: what price did AFTER a time-based exit (see
+  // exit-shadow-tracker.js) — never affects trading, just builds evidence
+  // for whether DT_MAX_HOLD_MINUTES should change.
+  exitShadowCheckpoint: (data) => appendEvent("EXIT_SHADOW_CHECKPOINT", data),
   eodSummary: (summary) => appendEvent("EOD_SUMMARY", summary),
   error: (where, message) => appendEvent("ERROR", { where, message }),
 };
