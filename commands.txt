@@ -71,7 +71,7 @@ ssh -i ~/Downloads/ssh-key-2026-07-02.key  ~/Desktop/etoro-v2-short/src/strategi
 
 
 
-scp -i ~/Downloads/ssh-key-2026-07-02.key  ~/Desktop/etoro-v2-short/watchlist-daytrade.js ubuntu@130.110.113.198:~/etoro-v2-short/watchlist-daytrade.js
+scp -i ~/Downloads/ssh-key-2026-07-02.key  ~/Desktop/etoro-v2-short/watchlist-daytrade.json ubuntu@130.110.113.198:~/etoro-v2-short/watchlist-daytrade.json
 
 
 

@@ -8,6 +8,7 @@ require("dotenv").config();
 const fs = require("fs");
 const path = require("path");
 const { logger } = require("../logger");
+const { humanize } = require("../notifications/format-helpers");
 
 const tradeLogPath = path.join(__dirname, "../../data/trade-history.json");
 const dataDir = path.dirname(tradeLogPath);
@@ -90,7 +91,7 @@ function formatStatsForTelegram(stats) {
     .map(
       ([setup, s]) =>
         "  " +
-        setup +
+        humanize(setup) +
         ": " +
         s.wins +
         "/" +
@@ -100,7 +101,7 @@ function formatStatsForTelegram(stats) {
     )
     .join("\n");
   return (
-    "📊 *Day-Trade Performance*\n\n" +
+    "📊 <b>Day-Trade Performance</b>\n\n" +
     "Trades: " +
     stats.totalTrades +
     " (" +

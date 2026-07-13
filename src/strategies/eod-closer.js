@@ -228,15 +228,15 @@ async function forceCloseAllPositions(
         : "End of day — day-trade positions closed";
   const footerText =
     closeMode === "ALL"
-      ? "\n_No weekend exposure._"
+      ? "\n<i>No weekend exposure.</i>"
       : closeMode === "DAY_KEEP_WINNERS"
-        ? "\n_Winning DAY positions + swings ride overnight (24/5, exit engine still guards them). Friday closes everything._"
-        : "\n_Swing positions (if any) hold overnight — Friday closes everything._";
+        ? "\n<i>Winning DAY positions + swings ride overnight (24/5, exit engine still guards them). Friday closes everything.</i>"
+        : "\n<i>Swing positions (if any) hold overnight — Friday closes everything.</i>";
 
   await notifications.sendTelegramMessage(
-    "🔔 *" +
+    "🔔 <b>" +
       headerText +
-      "*\n\n" +
+      "</b>\n\n" +
       closedCount +
       "/" +
       trackedPositions.length +

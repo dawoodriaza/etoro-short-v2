@@ -25,7 +25,11 @@ async function sendTelegramMessage(text) {
   const chatId = process.env.DT_TELEGRAM_CHAT_ID;
   if (!telegramBot || !chatId) return;
   try {
-    await telegramBot.sendMessage(chatId, text, { parse_mode: "Markdown" });
+    // HTML, not legacy Markdown — Markdown treats "_" as an italic delimiter,
+    // which silently ate underscores out of every enum-style string
+    // (MOMENTUM_SURGE -> MOMENTUMSURGE, TIME_EXIT_STALE -> TIMEEXITSTALE).
+    // HTML has no such special-casing for plain text.
+    await telegramBot.sendMessage(chatId, text, { parse_mode: "HTML" });
   } catch (sendError) {
     logger.warn("Telegram send failed: " + sendError.message);
   }

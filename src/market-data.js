@@ -349,7 +349,10 @@ async function enrichCandidateFromEtoro(symbol, instrumentId) {
     "FiveMinutes",
     100, // ~8h of 5-min bars — comfortably covers a full US session
   );
-  const todayDateString = new Date().toISOString().slice(0, 10);
+  // ET date, NOT UTC (toISOString). From 8 PM ET onward UTC is already
+  // "tomorrow", so the UTC filter matched zero bars — cumulative volume
+  // read as 0 and every overnight candidate was hard-rejected on volume.
+  const todayDateString = getTodayEasternDateString();
   const todaysBarsOnly = todaysFiveMinuteBars.filter((bar) =>
     (bar.fromDate || "").startsWith(todayDateString),
   );
@@ -398,18 +401,28 @@ async function enrichCandidateFromEtoro(symbol, instrumentId) {
  const [etHourString, etMinuteString] = nowEasternString.split(":");
  const etHour = parseInt(etHourString);
  const etMinute = parseInt(etMinuteString);
- const minutesSinceOpen = Math.max(
-   5,
-   Math.min(REGULAR_SESSION_MINUTES, (etHour - 9) * 60 + (etMinute - 30)),
- );
- const expectedVolumeByNow =
-   averageVolume != null
-     ? averageVolume * (minutesSinceOpen / REGULAR_SESSION_MINUTES)
-     : null;
- const volumeRatio =
-   expectedVolumeByNow > 0
-     ? todaysCumulativeVolume / expectedVolumeByNow
-     : null;
+ const rawMinutesSinceOpen = (etHour - 9) * 60 + (etMinute - 30);
+
+ // RVOL is only meaningful DURING/AFTER a regular session with real volume.
+ // Pre-market and overnight (24/5 mode) there is no session volume yet —
+ // the old clamp-to-5-minutes math produced a ratio of ~0 there, which the
+ // scorer read as "confirmed dead volume" and hard-rejected EVERY overnight
+ // candidate. Unknown must be null (scorer treats null as "no data"), not 0.
+ let volumeRatio = null;
+ if (rawMinutesSinceOpen > 0 && todaysCumulativeVolume > 0) {
+   const minutesSinceOpen = Math.max(
+     5,
+     Math.min(REGULAR_SESSION_MINUTES, rawMinutesSinceOpen),
+   );
+   const expectedVolumeByNow =
+     averageVolume != null
+       ? averageVolume * (minutesSinceOpen / REGULAR_SESSION_MINUTES)
+       : null;
+   volumeRatio =
+     expectedVolumeByNow > 0
+       ? todaysCumulativeVolume / expectedVolumeByNow
+       : null;
+ }
 
  return {
    recentIntradayHigh: high,

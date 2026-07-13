@@ -37,6 +37,7 @@
 require("dotenv").config();
 const { logger } = require("../logger");
 const config = require("../config");
+const { escapeHtml, humanize } = require("../notifications/format-helpers");
 
 // ── Trend read (bullish / bearish / sideways) ──────────────────────────────
 function classifyTrend(candidate, spyChangePercent, regime) {
@@ -386,55 +387,79 @@ function buildTradePlan(
   return { accepted: true, plan };
 }
 
-// Human summary for Telegram (the required trade output format)
+// Human summary for Telegram (the required trade output format). HTML parse
+// mode — plain text needs no escaping except the freeform AI reasoning.
 function formatPlanForTelegram(plan, aiReasoning) {
-  return (
-    "🟢 *OPEN " +
+  const money = (value) => "$" + Number(value).toFixed(2);
+  const titleLine =
+    "🟢 <b>OPEN " +
     plan.symbol +
-    "* [" +
+    "</b> — " +
     plan.tradeType +
     " · " +
-    plan.source +
-    (plan.isFirstTimeDiscovered ? " · first trade, half size" : "") +
-    "]\n" +
-    "Setup: " +
-    plan.setup +
-    " [" +
-    plan.archetype +
-    "] (" +
-    plan.volatilityBucket +
-    " vol, " +
-    plan.trendDirection +
-    ", " +
-    plan.regime +
+    humanize(plan.source) +
+    (plan.isFirstTimeDiscovered ? " · first trade, half size" : "");
+
+  const setupLine =
+    "<b>Setup:</b> " +
+    humanize(plan.setup) +
+    " (" +
+    humanize(plan.archetype) +
     ")\n" +
-    (plan.catalystLabel ? "Catalyst: " + plan.catalystLabel + "\n" : "") +
-    "Entry $" +
-    plan.entryPrice +
-    " · Size $" +
-    plan.positionDollars +
-    "\n" +
-    "Stop $" +
-    plan.stopPrice +
+    humanize(plan.volatilityBucket) +
+    " vol · " +
+    humanize(plan.trendDirection) +
+    " · " +
+    humanize(plan.regime) +
+    " market";
+
+  const catalystLine = plan.catalystLabel
+    ? "\n📰 " + escapeHtml(plan.catalystLabel)
+    : "";
+
+  const entryLine =
+    "\n\nEntry " +
+    money(plan.entryPrice) +
+    " → Stop " +
+    money(plan.stopPrice) +
     " (-" +
     plan.stopDistancePct +
-    "%) · Risk $" +
-    plan.riskDollars +
+    "%)\n" +
+    "Size " +
+    money(plan.positionDollars) +
+    " · Risk " +
+    money(plan.riskDollars) +
     " (" +
     plan.riskPctOfCapital +
-    "% of capital)\n" +
-    "T1 $" +
-    plan.targetT1 +
-    " · T2 $" +
-    plan.targetT2 +
-    (plan.targetT3 ? " · T3 $" + plan.targetT3 : "") +
-    " · RRR " +
+    "% of capital)";
+
+  const targetsLine =
+    "\n🎯 Target 1: " +
+    money(plan.targetT1) +
+    " (sell half) · Target 2: " +
+    money(plan.targetT2) +
+    (plan.targetT3 ? " · Target 3: " + money(plan.targetT3) : "") +
+    "\nReward vs risk: " +
     plan.riskRewardRatio +
+    ":1";
+
+  const expectedLine =
+    "\n\nExpected profit if it works: +" +
+    money(plan.expectedReturnDollars);
+
+  const aiLine = aiReasoning
+    ? "\n\n<i>" + escapeHtml(aiReasoning) + "</i>"
+    : "";
+
+  return (
+    titleLine +
     "\n" +
-    "Expected at plan: +$" +
-    plan.expectedReturnDollars +
-    "\n" +
-    (aiReasoning ? "AI: " + aiReasoning : "")
+    setupLine +
+    catalystLine +
+    entryLine +
+    targetsLine +
+    expectedLine +
+    aiLine
   );
 }
 

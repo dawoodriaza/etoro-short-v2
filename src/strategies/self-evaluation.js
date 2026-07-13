@@ -13,6 +13,7 @@
 require("dotenv").config();
 const { logger } = require("../logger");
 const performance = require("./performance-tracker");
+const { escapeHtml } = require("../notifications/format-helpers");
 
 const MIN_TRADES_FOR_SUGGESTION = 15; // don't suggest changes on tiny samples
 const MIN_TRADES_FOR_SUB_ANALYSIS = 8; // regime/session breakdowns need fewer since they're narrower cuts
@@ -361,10 +362,10 @@ function generateSelfEvaluation() {
 // ── Plain-English Telegram formatting (novice-friendly, no jargon dump) ────
 function formatSelfEvaluationForTelegram(report) {
   if (!report.hasEnoughData) {
-    return "📈 *Weekly Self-Evaluation*\n\n" + report.message;
+    return "📈 <b>Weekly Self-Evaluation</b>\n\n" + escapeHtml(report.message);
   }
 
-  const lines = ["📈 *Weekly Self-Evaluation*", ""];
+  const lines = ["📈 <b>Weekly Self-Evaluation</b>", ""];
   lines.push(
     "Over the last " +
       report.totalTrades +
@@ -379,45 +380,51 @@ function formatSelfEvaluationForTelegram(report) {
   lines.push("");
 
   if (report.bySetup.length > 0) {
-    lines.push("*By setup type:*");
-    report.bySetup.forEach((f) => lines.push("• " + f.finding));
+    lines.push("<b>By setup type:</b>");
+    report.bySetup.forEach((f) => lines.push("• " + escapeHtml(f.finding)));
     lines.push("");
   }
 
   if (report.regimeFindings.length > 0) {
-    lines.push("*By market condition:*");
-    report.regimeFindings.forEach((f) => lines.push("• " + f.finding));
+    lines.push("<b>By market condition:</b>");
+    report.regimeFindings.forEach((f) =>
+      lines.push("• " + escapeHtml(f.finding)),
+    );
     lines.push("");
   }
 
   if (report.scoreAnalysis) {
-    lines.push("*Setup quality check:*");
-    lines.push("• " + report.scoreAnalysis.finding);
+    lines.push("<b>Setup quality check:</b>");
+    lines.push("• " + escapeHtml(report.scoreAnalysis.finding));
     lines.push("");
   }
 
   if (report.holdTime) {
-    lines.push("*Timing:* " + report.holdTime.finding);
+    lines.push("<b>Timing:</b> " + escapeHtml(report.holdTime.finding));
     lines.push("");
   }
 
   if (report.archetypeFindings && report.archetypeFindings.length > 0) {
-    lines.push("*By archetype:*");
-    report.archetypeFindings.forEach((f) => lines.push("• " + f.finding));
+    lines.push("<b>By archetype:</b>");
+    report.archetypeFindings.forEach((f) =>
+      lines.push("• " + escapeHtml(f.finding)),
+    );
     lines.push("");
   }
 
   if (report.extendedAnalysis) {
-    lines.push("*Daily reviewer EXTEND decisions:*");
-    lines.push("• " + report.extendedAnalysis.finding);
+    lines.push("<b>Daily reviewer EXTEND decisions:</b>");
+    lines.push("• " + escapeHtml(report.extendedAnalysis.finding));
     lines.push("");
   }
 
   if (report.suggestions.length > 0) {
     lines.push(
-      "💡 *Suggestions to consider* (nothing changes automatically — you decide):",
+      "💡 <b>Suggestions to consider</b> (nothing changes automatically — you decide):",
     );
-    report.suggestions.forEach((s, i) => lines.push(i + 1 + ". " + s));
+    report.suggestions.forEach((s, i) =>
+      lines.push(i + 1 + ". " + escapeHtml(s)),
+    );
   } else {
     lines.push(
       "No strong patterns yet — keep collecting data. Nothing concerning stands out.",

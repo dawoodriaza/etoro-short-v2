@@ -23,6 +23,7 @@ require("dotenv").config();
 const { logger } = require("../logger");
 const config = require("../config");
 const notifications = require("./telegram");
+const { escapeHtml, humanize } = require("./format-helpers");
 
 // { alertKey: { lastSentAtMs, occurrencesSinceLastSent, everSent } }
 const alertStateByKey = {};
@@ -55,9 +56,9 @@ async function systemAlert(alertKey, message) {
 
     const repeatSuffix =
       state.everSent && state.occurrencesSinceLastSent > 1
-        ? "\n_(occurred " +
+        ? "\n<i>(occurred " +
           state.occurrencesSinceLastSent +
-          " times since the last alert — problem is ONGOING)_"
+          " times since the last alert — problem is ONGOING)</i>"
         : "";
 
     state.lastSentAtMs = now;
@@ -67,7 +68,11 @@ async function systemAlert(alertKey, message) {
 
     logger.error("ALERT [" + alertKey + "]: " + message);
     await notifications.sendTelegramMessage(
-      "🚨 *SYSTEM ALERT — " + alertKey + "*\n" + message + repeatSuffix,
+      "🚨 <b>System Alert — " +
+        humanize(alertKey) +
+        "</b>\n" +
+        escapeHtml(message) +
+        repeatSuffix,
     );
   } catch (alertError) {
     // Never let alerting break trading.
@@ -85,10 +90,12 @@ async function clearAlert(alertKey, recoveryMessage) {
     delete alertStateByKey[alertKey];
     logger.info("ALERT CLEARED [" + alertKey + "]");
     await notifications.sendTelegramMessage(
-      "✅ *RECOVERED — " +
-        alertKey +
-        "*\n" +
-        (recoveryMessage || "The failing component is responding again."),
+      "✅ <b>Recovered — " +
+        humanize(alertKey) +
+        "</b>\n" +
+        escapeHtml(
+          recoveryMessage || "The failing component is responding again.",
+        ),
     );
   } catch (clearError) {
     logger.warn("Alert clear failed: " + clearError.message);

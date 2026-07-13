@@ -316,8 +316,13 @@ async function openBuyPosition(instrumentId, dollarAmount, tickerSymbol) {
       },
       { headers: buildRequestHeaders() },
     );
+    // Log the FULL raw response — we've only ever logged orderId here, which
+    // means a fill that lands smaller/larger than the requested dollarAmount
+    // (partial fill, unit rounding, a leverage/margin quirk) has been
+    // completely invisible. This makes the actual eToro response visible so
+    // a requested-vs-filled mismatch can be diagnosed from the next trade.
     logger.info(
-      `✅ Position opened: ${tickerSymbol} $${dollarAmount.toFixed(2)} — orderId: ${response.data?.orderId}`,
+      `✅ Position opened: ${tickerSymbol} requested $${dollarAmount.toFixed(2)} — raw eToro response: ${JSON.stringify(response.data)}`,
     );
     return response.data;
   });

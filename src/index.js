@@ -81,6 +81,7 @@ const tradePlanner = require("./strategies/trade-planner");
 const marketDiscovery = require("./discovery/market-discovery");
 const capitalManager = require("./strategies/capital-manager");
 const journal = require("./strategies/decision-journal");
+const { escapeHtml, humanize } = require("./notifications/format-helpers");
 
 const TIMEZONE = "America/New_York";
 
@@ -194,7 +195,7 @@ async function isTradingHaltedForNewEntries() {
         "% below peak",
     );
     await notifications.sendTelegramMessage(
-      "🛑 *DRAWDOWN CIRCUIT BREAKER TRIPPED*\n" +
+      "🛑 <b>DRAWDOWN CIRCUIT BREAKER TRIPPED</b>\n" +
         "Effective capital $" +
         breakerCheck.effective.toFixed(2) +
         " is " +
@@ -206,7 +207,7 @@ async function isTradingHaltedForNewEntries() {
         "%).\n\n" +
         "ALL NEW ENTRIES ARE HALTED. Exits and EOD closes keep running.\n" +
         "To resume after reviewing what went wrong:\n" +
-        "`ssh` into the server → `rm ~/etoro-v2-short/data/halt.flag`",
+        "SSH into the server → <code>rm ~/etoro-v2-short/data/halt.flag</code>",
     );
     return true;
   }
@@ -659,14 +660,88 @@ async function tryOpenPosition(plan, aiResult, portfolio, capitalState) {
       return;
     }
 
-    await etoroClient.openBuyPosition(
+    const openResult = await etoroClient.openBuyPosition(
       instrumentId,
       plan.positionDollars,
       plan.symbol,
     );
+    // openBuyPosition returns null when it SKIPS (size below minimum) —
+    // without this check the bot used to record a position that was never
+    // opened: phantom meta entry, false OPEN Telegram, exit engine managing
+    // a trade that doesn't exist.
+    if (!openResult) {
+      journal.candidateRejected(
+        plan.symbol,
+        "ETORO_OPEN_SKIPPED",
+        "order not placed (below minimum size)",
+      );
+      return;
+    }
 
     if (plan.source === "DISCOVERED") {
       marketDiscovery.recordTraded(plan.symbol);
+    }
+
+    // v5.7: VERIFY THE ACTUAL FILL. Before this, the bot trusted its own
+    // plan.positionDollars for meta/Telegram/journal — it never checked what
+    // eToro actually invested. Traced from a real case: SOFI was requested
+    // at $70, eToro's account showed only $1.39 actually invested, and
+    // nothing in the bot noticed or reported it. Re-fetch the portfolio and
+    // read the REAL position back so tracking matches the real account, and
+    // fire a loud alert if the fill is nowhere near what was requested.
+    let actualDollarAmount = plan.positionDollars;
+    try {
+      await etoroClient.sleep(3000); // give eToro a moment to settle the fill
+      const rawPortfolioAfterOpen = await etoroClient.fetchRawPortfolio();
+      const portfolioAfterOpen = etoroClient.parsePortfolioFromRawData(
+        rawPortfolioAfterOpen,
+      );
+      const filledPosition = (portfolioAfterOpen.openPositions || []).find(
+        (position) => position.instrumentId === instrumentId,
+      );
+      if (filledPosition && filledPosition.amountInvested > 0) {
+        actualDollarAmount = filledPosition.amountInvested;
+        const fillRatio = actualDollarAmount / plan.positionDollars;
+        if (fillRatio < 0.9 || fillRatio > 1.1) {
+          logger.warn(
+            plan.symbol +
+              ": FILL MISMATCH — requested $" +
+              plan.positionDollars +
+              " but eToro actually invested $" +
+              actualDollarAmount.toFixed(2) +
+              " (" +
+              (fillRatio * 100).toFixed(0) +
+              "% of requested)",
+          );
+          await alerts.systemAlert(
+            "FILL_MISMATCH",
+            plan.symbol +
+              ": requested $" +
+              plan.positionDollars +
+              " but eToro actually invested $" +
+              actualDollarAmount.toFixed(2) +
+              " (" +
+              (fillRatio * 100).toFixed(0) +
+              "% of requested). Position tracking now uses the REAL amount — " +
+              "check the eToro app to confirm.",
+          );
+        }
+      } else {
+        logger.warn(
+          plan.symbol +
+            ": could not find the position in the portfolio right after " +
+            "opening — meta will use the PLANNED amount ($" +
+            plan.positionDollars +
+            "); verify manually in the eToro app",
+        );
+      }
+    } catch (verifyError) {
+      logger.warn(
+        plan.symbol +
+          ": could not verify actual fill amount (" +
+          verifyError.message +
+          ") — meta will use the planned amount",
+      );
     }
 
     meta[plan.symbol.toUpperCase()] = {
@@ -687,7 +762,8 @@ async function tryOpenPosition(plan, aiResult, portfolio, capitalState) {
       setup: plan.setup,
       source: plan.source,
       confidence: aiResult ? aiResult.confidence : null,
-      dollarAmount: plan.positionDollars,
+      dollarAmount: actualDollarAmount, // REAL invested amount, not the plan
+      plannedDollarAmount: plan.positionDollars, // kept for comparison/debugging
       openedAt: Date.now(),
       plan, // full plan echoed for the journal on close
       entryConditions: {
@@ -716,13 +792,17 @@ async function tryOpenPosition(plan, aiResult, portfolio, capitalState) {
         "/" +
         plan.source +
         "] $" +
-        plan.positionDollars +
+        actualDollarAmount.toFixed(2) +
+        (actualDollarAmount !== plan.positionDollars
+          ? " (planned $" + plan.positionDollars + ")"
+          : "") +
         " stop $" +
         plan.stopPrice.toFixed(2),
     );
+    // Telegram shows the REAL invested amount eToro confirmed, not the plan.
     await notifications.sendTelegramMessage(
       tradePlanner.formatPlanForTelegram(
-        plan,
+        { ...plan, positionDollars: actualDollarAmount },
         aiResult ? aiResult.reasoning : null,
       ),
     );
@@ -787,7 +867,7 @@ async function reconcileDuplicatePositions(portfolio, meta) {
           "closed extra positionId " + duplicate.positionId,
         );
         await notifications.sendTelegramMessage(
-          "🧹 *Duplicate position auto-closed*\n" +
+          "🧹 <b>Duplicate position auto-closed</b>\n" +
             upperSymbol +
             " had multiple open positions (double-entry bug). Closed the " +
             "extra $" +
@@ -922,10 +1002,10 @@ async function manageOpenPositions() {
               : ""),
         );
         await notifications.sendTelegramMessage(
-          "🎯 *" +
+          "🎯 <b>" +
             symbol +
-            " partial exit* (" +
-            decision.reason +
+            " partial exit</b> (" +
+            humanize(decision.reason) +
             ")\nSold " +
             Math.round(decision.fraction * 100) +
             "% at +" +
@@ -1016,12 +1096,12 @@ async function manageOpenPositions() {
         );
         await notifications.sendTelegramMessage(
           (pnlDollars >= 0 ? "🟢" : "🔴") +
-            " *CLOSED " +
+            " <b>CLOSED " +
             symbol +
-            "* [" +
+            "</b> — " +
             (positionMeta.tradeType || "DAY") +
-            "] — " +
-            decision.reason +
+            " · " +
+            humanize(decision.reason) +
             "\nP&L: " +
             (pnlDollars >= 0 ? "+" : "") +
             "$" +
@@ -1205,19 +1285,19 @@ async function runDailyPositionReview() {
             : "⏸";
       reviewSummaryLines.push(
         lineEmoji +
-          " *" +
+          " <b>" +
           symbol +
-          "* (" +
+          "</b> (" +
           (pnlPercent >= 0 ? "+" : "") +
           pnlPercent.toFixed(1) +
           "%) → " +
           reviewResult.action +
           " (conf " +
           reviewResult.confidence +
-          ")\n_" +
-          reviewResult.reasoning +
-          "_\n" +
-          applied.description,
+          ")\n<i>" +
+          escapeHtml(reviewResult.reasoning) +
+          "</i>\n" +
+          escapeHtml(applied.description),
       );
 
       logger.info(
@@ -1236,12 +1316,12 @@ async function runDailyPositionReview() {
 
     if (reviewSummaryLines.length > 0) {
       await notifications.sendTelegramMessage(
-        "🔎 *Daily Position Review* (" +
+        "🔎 <b>Daily Position Review</b> (" +
           easternWeekdayName +
           ", pre-close)\n\n" +
           reviewSummaryLines.join("\n\n") +
-          "\n\n_EXTEND = holds overnight as a swing · TIGHTEN = stop pulled " +
-          "in · Friday still closes everything._",
+          "\n\n<i>EXTEND = holds overnight as a swing · TIGHTEN = stop pulled " +
+          "in · Friday still closes everything.</i>",
       );
     }
   } catch (reviewError) {
@@ -1405,7 +1485,7 @@ async function main() {
         "trades, but the watchlist pipeline is dead. Fix the file.",
     );
     await notifications.sendTelegramMessage(
-      "⚠️ *Bot started WITHOUT a watchlist* — running on discovery only. " +
+      "⚠️ <b>Bot started WITHOUT a watchlist</b> — running on discovery only. " +
         "Add watchlist-daytrade.json next to package.json and restart.",
     );
   } else {
@@ -1465,7 +1545,7 @@ async function main() {
         "data/halt.flag",
     );
     await notifications.sendTelegramMessage(
-      "🛑 *Bot started with halt.flag present* — no new entries until you " +
+      "🛑 <b>Bot started with halt.flag present</b> — no new entries until you " +
         "delete data/halt.flag on the server. Exits and EOD closes run " +
         "normally.",
     );

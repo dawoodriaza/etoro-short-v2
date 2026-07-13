@@ -55,8 +55,17 @@ function saveDailyLoss(tracker) {
   }
 }
 
+// ET trading date, not the server's local (UTC) date. The server's UTC day
+// rolls at 8 PM ET — with 24/5 trading that reset the daily loss limit
+// mid-evening, letting the bot re-lever the same night after a max-loss day.
+function todayEasternDateString() {
+  return new Date().toLocaleDateString("en-CA", {
+    timeZone: "America/New_York",
+  });
+}
+
 function recordClosedTradeResult(realizedPnlDollars) {
-  const today = new Date().toDateString();
+  const today = todayEasternDateString();
   let tracker = loadDailyLoss();
   if (tracker.date !== today) {
     tracker = { date: today, realizedLoss: 0, realizedWin: 0, tradesClosed: 0 };
@@ -74,7 +83,7 @@ function recordClosedTradeResult(realizedPnlDollars) {
 
 // F1: pass capital-manager's effectiveCapital here, NOT the static env value.
 function isDailyLossLimitHit(effectiveCapital) {
-  const today = new Date().toDateString();
+  const today = todayEasternDateString();
   const tracker = loadDailyLoss();
   if (tracker.date !== today) return false;
   const limitDollars = effectiveCapital * config.dailyLossLimitPct;
