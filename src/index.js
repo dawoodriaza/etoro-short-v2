@@ -960,6 +960,16 @@ async function manageOpenPositions() {
       metaChanged = true;
     }
 
+    // Whipsaw-confirmation state: risk-manager returns stopBreachTicks while
+    // a shallow stop breach is being confirmed; any decision WITHOUT it
+    // means price is back above the stop — reset the counter so the next
+    // breach starts a fresh confirmation from tick 1.
+    const breachTicks = decision.stopBreachTicks || 0;
+    if ((positionMeta.stopBreachTicks || 0) !== breachTicks) {
+      positionMeta.stopBreachTicks = breachTicks;
+      metaChanged = true;
+    }
+
     if (decision.action === "HOLD") continue;
 
     journal.exitDecision(

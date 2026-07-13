@@ -251,12 +251,48 @@ function decidePositionAction(meta, currentPrice) {
   return decideDayAction(meta, currentPrice, peak);
 }
 
+// ── Whipsaw confirmation for stop/floor breaches ────────────────────────────
+// Returns null when the breach should EXIT now; otherwise a HOLD decision
+// that asks the caller to bump the consecutive-breach counter. A breach
+// DEEPER than stopWickBandPct is a real breakdown — never held.
+function confirmStopBreach(meta, currentPrice, stopLevel, peak, label) {
+  const breachDepthPct = (stopLevel - currentPrice) / stopLevel;
+  const ticksSoFar = (meta.stopBreachTicks || 0) + 1;
+  if (
+    breachDepthPct < config.stopWickBandPct &&
+    ticksSoFar < config.stopConfirmTicks
+  ) {
+    return {
+      action: "HOLD",
+      reason:
+        label +
+        " touched — awaiting confirmation tick " +
+        ticksSoFar +
+        "/" +
+        config.stopConfirmTicks,
+      newPeak: peak,
+      stopBreachTicks: ticksSoFar,
+    };
+  }
+  return null; // confirmed (or deep) — caller exits
+}
+
 // ── DAY logic ────────────────────────────────────────────────────────────────
 function decideDayAction(meta, currentPrice, peak) {
   const heldMinutes = (Date.now() - (meta.openedAt || Date.now())) / 60000;
 
-  // 1. Hard stop (pre-partial)
+  // 1. Hard stop (pre-partial) — with whipsaw confirmation: a shallow poke
+  // below the stop needs a second consecutive 1-min tick before exiting,
+  // so a brief dip-and-bounce doesn't dump the position at the low.
   if (!meta.partialDone && currentPrice <= meta.stopPrice) {
+    const holdDecision = confirmStopBreach(
+      meta,
+      currentPrice,
+      meta.stopPrice,
+      peak,
+      "stop",
+    );
+    if (holdDecision) return holdDecision;
     return { action: "EXIT", reason: "STOP_LOSS", newPeak: peak };
   }
 
@@ -299,8 +335,17 @@ function decideSwingAction(meta, currentPrice, peak) {
 
   const currentFloor = meta.lockedFloor || meta.stopPrice;
 
-  // 1. Floor breach → full exit of whatever remains
+  // 1. Floor breach → full exit of whatever remains (same whipsaw
+  // confirmation as the day stop: shallow pokes need a second tick)
   if (currentPrice <= currentFloor) {
+    const holdDecision = confirmStopBreach(
+      meta,
+      currentPrice,
+      currentFloor,
+      peak,
+      "floor",
+    );
+    if (holdDecision) return holdDecision;
     const reason = meta.partialT1Done ? "SWING_FLOOR_LOCK" : "SWING_STOP";
     return { action: "EXIT", reason, newPeak: peak };
   }

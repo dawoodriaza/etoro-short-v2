@@ -128,6 +128,16 @@ const config = {
   takeProfitRunnerPct: num("DT_TAKE_PROFIT_RUNNER_PCT", 0.05),
   dailyLossLimitPct: num("DT_DAILY_LOSS_LIMIT_PCT", 0.05),
 
+  // ── Stop-loss whipsaw confirmation ────────────────────────────────
+  // A SHALLOW breach of the stop (within stopWickBandPct below it) must
+  // persist for stopConfirmTicks consecutive 1-minute exit-monitor ticks
+  // before exiting — filters the "brief dip below the stop, then bounces
+  // right back" whipsaw. A DEEP breach (beyond the band) exits immediately:
+  // that's a real breakdown, not noise. Worst-case cost of waiting: one
+  // extra minute inside the band (~stopWickBandPct of position).
+  stopConfirmTicks: int("DT_STOP_CONFIRM_TICKS", 2),
+  stopWickBandPct: num("DT_STOP_WICK_BAND_PCT", 0.005),
+
   // ── Partial scaling & trailing ────────────────────────────────────
   partialExitFraction: num("DT_PARTIAL_EXIT_FRACTION", 0.5),
   trailingStopPct: num("DT_TRAILING_STOP_PCT", 0.025),
