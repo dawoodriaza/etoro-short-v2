@@ -176,6 +176,10 @@ async function applyReviewDecision(
       if (proposedStop > positionMeta.stopPrice) {
         positionMeta.stopPrice = Number(proposedStop.toFixed(4));
       }
+      // Marks the exit-monitor's eventual STOP_LOSS/SWING_STOP as
+      // AI-attributed in the CLOSED Telegram message, not just "a guard
+      // fired" — the guard fired at a level the AI chose earlier today.
+      positionMeta.tightenedByReviewerAt = new Date().toISOString();
       return {
         applied: true,
         description:

@@ -82,7 +82,11 @@ const marketDiscovery = require("./discovery/market-discovery");
 const capitalManager = require("./strategies/capital-manager");
 const journal = require("./strategies/decision-journal");
 const ethicsFilter = require("./strategies/ethics-filter");
-const { escapeHtml, humanize } = require("./notifications/format-helpers");
+const {
+  escapeHtml,
+  humanize,
+  describeExitReason,
+} = require("./notifications/format-helpers");
 
 const TIMEZONE = "America/New_York";
 
@@ -1126,25 +1130,37 @@ async function manageOpenPositions() {
             ") P&L $" +
             pnlDollars.toFixed(2),
         );
-        await notifications.sendTelegramMessage(
-          (pnlDollars >= 0 ? "🟢" : "🔴") +
-            " <b>CLOSED " +
-            symbol +
-            "</b> — " +
-            (positionMeta.tradeType || "DAY") +
-            " · " +
-            humanize(decision.reason) +
-            "\nP&L: " +
-            (pnlDollars >= 0 ? "+" : "") +
-            "$" +
-            pnlDollars.toFixed(2) +
-            " (" +
-            (pnlPercent >= 0 ? "+" : "") +
-            pnlPercent.toFixed(1) +
-            "%) · held " +
-            heldMinutes +
-            " min",
-        );
+        {
+          const exitInfo = describeExitReason(decision.reason);
+          const tightenedNote = positionMeta.tightenedByReviewerAt
+            ? "\n🤖 <i>Stop was tightened earlier today by the AI daily review.</i>"
+            : "";
+          const extendedNote = positionMeta.extendedByReviewerAt
+            ? "\n🤖 <i>This trade was extended overnight by the AI daily review.</i>"
+            : "";
+          await notifications.sendTelegramMessage(
+            (pnlDollars >= 0 ? "🟢" : "🔴") +
+              " <b>CLOSED " +
+              symbol +
+              "</b> — " +
+              (positionMeta.tradeType || "DAY") +
+              "\n" +
+              exitInfo.trigger +
+              (exitInfo.detail ? ": " + exitInfo.detail : "") +
+              "\nP&L: " +
+              (pnlDollars >= 0 ? "+" : "") +
+              "$" +
+              pnlDollars.toFixed(2) +
+              " (" +
+              (pnlPercent >= 0 ? "+" : "") +
+              pnlPercent.toFixed(1) +
+              "%) · held " +
+              heldMinutes +
+              " min" +
+              tightenedNote +
+              extendedNote,
+          );
+        }
         await etoroClient.sleep(2000);
       } catch (exitError) {
         logger.error("Exit failed for " + symbol + ": " + exitError.message);
