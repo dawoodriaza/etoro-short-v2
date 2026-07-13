@@ -38,8 +38,6 @@
     { "symbol": "AMZN", "bucket": "mega_cap", "night": true },
     { "symbol": "GOOGL", "bucket": "mega_cap", "night": true },
 
-    { "symbol": "BA", "bucket": "industrials", "night": true },
-
-    { "symbol": "DKNG", "bucket": "consumer", "night": false }
+    { "symbol": "BA", "bucket": "industrials", "night": true }
   ]
 }

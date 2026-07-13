@@ -81,6 +81,7 @@ const tradePlanner = require("./strategies/trade-planner");
 const marketDiscovery = require("./discovery/market-discovery");
 const capitalManager = require("./strategies/capital-manager");
 const journal = require("./strategies/decision-journal");
+const ethicsFilter = require("./strategies/ethics-filter");
 const { escapeHtml, humanize } = require("./notifications/format-helpers");
 
 const TIMEZONE = "America/New_York";
@@ -394,6 +395,17 @@ async function runScanCycle() {
     const toEnrich = [];
     for (const candidate of prefiltered) {
       const upperSymbol = candidate.symbol.toUpperCase();
+      // Excluded industries (gambling/betting, alcohol, adult) are never
+      // bought — cheap static check here saves the enrichment API spend;
+      // the async industry-based check runs again in tryOpenPosition.
+      if (ethicsFilter.isBlockedStatic(upperSymbol)) {
+        journal.candidateRejected(
+          upperSymbol,
+          "ETHICS_FILTER",
+          "excluded industry (gambling/alcohol/adult)",
+        );
+        continue;
+      }
       if (heldSymbols.has(upperSymbol)) {
         journal.candidateRejected(upperSymbol, "HELD", "already holding");
         continue;
@@ -590,6 +602,16 @@ async function runScanCycle() {
 // -----------------------------
 async function tryOpenPosition(plan, aiResult, portfolio, capitalState) {
   const meta = loadPositionMeta();
+
+  // HARD GATE: never buy gambling/betting, alcohol, or adult-industry
+  // stocks — static blocklist + Finnhub industry check. This is the last
+  // line of defense and covers every entry path (watchlist + discovery).
+  const ethicsCheck = await ethicsFilter.isBlocked(plan.symbol);
+  if (ethicsCheck.blocked) {
+    logger.info(plan.symbol + " blocked: " + ethicsCheck.reason);
+    journal.candidateRejected(plan.symbol, "ETHICS_FILTER", ethicsCheck.reason);
+    return;
+  }
 
   // V5: EARNINGS BLACKOUT — never enter into a known earnings gap.
   // Unknown (no Finnhub key / API failure) → allow, but say so in the log.
