@@ -236,10 +236,21 @@ async function resolveInstrumentIdToTicker(instrumentId) {
       `${ETORO_BASE_URL}/market-data/instruments?instrumentIds=${encodeURIComponent(idKey)}`,
       { headers: buildRequestHeaders() },
     );
-    const items = response.data?.items || response.data || [];
+    // v5.8 FIX: verified live response shape is
+    // { instrumentDisplayDatas: [{ symbolFull: "DKNG", ... }] } — the old
+    // code looked for response.data.items (doesn't exist) then fell back to
+    // response.data itself (a plain object, not an array), so
+    // Array.isArray(items) was always false and this ALWAYS silently
+    // returned the raw numeric ID. Real-world impact: any held position
+    // whose ticker isn't already cached from a forward lookup (e.g. DKNG,
+    // removed from the watchlist so nothing re-resolves it) displayed as a
+    // bare number instead of its symbol — and since manageOpenPositions/
+    // eod-closer match position-meta.json by SYMBOL, that position was
+    // silently treated as UNTRACKED: no stop enforcement, no EOD close.
+    const items = response.data?.instrumentDisplayDatas || response.data?.items || [];
     const match = Array.isArray(items) ? items[0] : null;
     const ticker =
-      match?.internalSymbolFull || match?.symbolFull || match?.ticker;
+      match?.symbolFull || match?.internalSymbolFull || match?.ticker;
     if (ticker) {
       instrumentNameCache[idKey] = ticker.toUpperCase();
       logger.info(`Resolved instrumentId ${idKey} → ${ticker.toUpperCase()}`);
