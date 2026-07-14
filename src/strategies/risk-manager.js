@@ -81,6 +81,21 @@ function recordClosedTradeResult(realizedPnlDollars) {
   return tracker;
 }
 
+// Today's realized results (ET day) — used as context in the AI screener
+// prompt so it can demand stronger setups on a day that's going badly.
+function getDailyLossSnapshot() {
+  const today = todayEasternDateString();
+  const tracker = loadDailyLoss();
+  if (tracker.date !== today) {
+    return { realizedLoss: 0, realizedWin: 0, tradesClosed: 0 };
+  }
+  return {
+    realizedLoss: tracker.realizedLoss || 0,
+    realizedWin: tracker.realizedWin || 0,
+    tradesClosed: tracker.tradesClosed || 0,
+  };
+}
+
 // F1: pass capital-manager's effectiveCapital here, NOT the static env value.
 function isDailyLossLimitHit(effectiveCapital) {
   const today = todayEasternDateString();
@@ -423,6 +438,7 @@ function decideSwingAction(meta, currentPrice, peak) {
 module.exports = {
   recordClosedTradeResult,
   isDailyLossLimitHit,
+  getDailyLossSnapshot,
   calculatePositionSize,
   checkPreTradeSafety,
   computeRiskLevels,

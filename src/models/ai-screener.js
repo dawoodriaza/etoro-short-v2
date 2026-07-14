@@ -47,6 +47,25 @@ function buildScreenerPrompt(plan, currentPositions, marketContext) {
     typeof marketContext?.spyChangePercent === "number"
       ? marketContext.spyChangePercent.toFixed(2) + "%"
       : "n/a";
+  const sessionLine = marketContext?.session || "REGULAR";
+  const todayPnl = marketContext?.todayPnl;
+  const todayLine = todayPnl
+    ? todayPnl.tradesClosed +
+      " trade(s) closed today, won $" +
+      todayPnl.realizedWin.toFixed(2) +
+      " / lost $" +
+      todayPnl.realizedLoss.toFixed(2)
+    : "no trades closed yet today";
+  // v5.7: NEWS_HIT is a GENERIC headline tag (e.g. "Top stock movements in
+  // today's session") whose sentiment was never checked — presenting it as
+  // "Catalyst:" misled the model into approving VEEE (+478% pump) twice.
+  // Only ANALYST_UPGRADE / INSIDER_BUY are verified-bullish catalysts.
+  const catalystLine = plan.catalystLabel
+    ? plan.catalyst === "ANALYST_UPGRADE" || plan.catalyst === "INSIDER_BUY"
+      ? "\nCatalyst (verified " + plan.catalyst + "): " + plan.catalystLabel
+      : "\nRecent headline (GENERIC, sentiment unverified — NOT a real catalyst): " +
+        plan.catalystLabel
+    : "";
 
   return `You are a fast trading-desk risk screener. You receive ONE complete
 trade plan that has ALREADY PASSED deterministic quantitative filters —
@@ -65,7 +84,7 @@ rejecting everything regardless of quality.
 
 TRADE PLAN: ${plan.symbol} (sector: ${sector})
 Type: ${plan.tradeType}${plan.tradeType === "SWING" ? " (1-10 day hold, closes Friday at latest)" : " (intraday, force-closed before US close)"} · Archetype: ${plan.archetype || "n/a"}
-Source: ${plan.source}${plan.isFirstTimeDiscovered ? " (first-ever trade in this name — already half-sized)" : ""}${plan.catalystLabel ? "\nCatalyst: " + plan.catalystLabel : ""}
+Source: ${plan.source}${plan.isFirstTimeDiscovered ? " (first-ever trade in this name — already half-sized)" : ""}${catalystLine}
 Setup: ${plan.setup} — ${plan.setupDetail}
 Entry $${plan.entryPrice} · Stop $${plan.stopPrice} (-${plan.stopDistancePct}%) · T1 $${plan.targetT1} · T2 $${plan.targetT2}${plan.targetT3 ? " · T3 $" + plan.targetT3 : ""}
 Risk: $${plan.riskDollars} (${plan.riskPctOfCapital}% of capital) · RRR ${plan.riskRewardRatio}
@@ -73,9 +92,21 @@ Volatility: ${plan.volatilityBucket} (daily ATR ${plan.atrPercent != null ? plan
 Trend read: ${plan.trendDirection} · RSI ${plan.rsi ?? "n/a"} (already confirmed within acceptable range by code — do not re-reject on RSI alone unless it's genuinely extreme) · RS vs SPY ${plan.relativeStrength != null ? plan.relativeStrength.toFixed(2) + " pts" : "n/a"} · ${plan.aboveVwap ? "above" : "below/at"} VWAP
 
 MARKET CONTEXT:
-Regime: ${regimeLine} · SPY today: ${spyLine}
+Session: ${sessionLine} · Regime: ${regimeLine} · SPY today: ${spyLine}
+Bot's results today: ${todayLine}
 ${marketContext?.regime === "CHOP" ? "NOTE: choppy tape — demand stronger evidence of follow-through." : ""}
 Currently held: ${heldSymbols}
+
+SESSION RULE: in an OVERNIGHT/EXTENDED session, books are thinner, spreads
+wider, and momentum less reliable. A MARGINAL setup — RSI within ~4 points
+of the 78 overextended ceiling, or SIDEWAYS trend in an UNKNOWN regime, or
+volume unknown — that would be a borderline TAKE in regular hours is a
+SKIP overnight. A clean setup (trend + strong RS + healthy RSI) is still
+a TAKE overnight.
+
+BAD-DAY RULE: if the bot has 3+ closed losers and is net negative today,
+raise the bar — the tape may not fit this strategy today; approve only
+setups you'd call clearly strong, not merely acceptable.
 
 SKIP ONLY for a CONCRETE, SPECIFIC reason — not a vague feeling:
 - The setup's OWN description states the volume is unavailable/unknown for
@@ -85,12 +116,22 @@ SKIP ONLY for a CONCRETE, SPECIFIC reason — not a vague feeling:
   this size.
 - The stock is at or through a well-known, specific resistance level you
   can name (not just "some resistance might exist somewhere")
-- This is a DISCOVERED (not watchlist) penny-priced ticker (roughly under
-  $5) with an extreme move (30%+) and no real catalyst attached — these
-  specific characteristics ARE a legitimate manipulation/pump red flag
+- This is a DISCOVERED (not watchlist) lower-priced ticker (roughly under
+  $10) with an extreme move and no VERIFIED catalyst — a legitimate
+  manipulation/pump red flag. A day move beyond ~25-30% is a pump TOP
+  regardless of price, headlines, or how strong the technicals look —
+  generic "top movers today" headlines are NOT a catalyst and do not
+  excuse this.
 - A SWING plan where nothing about the move suggests it's a multi-day
   story (pure single-session spike with no news, no trend history)
 - Something in the plan is internally inconsistent or doesn't add up
+
+CALIBRATION: across many plans you should approve MOST clean watchlist
+setups in regular hours and reject most pump-profile discoveries. If you
+notice you would approve absolutely everything (or reject everything),
+you are mis-calibrated — the two rules above (SESSION, BAD-DAY) are where
+legitimate SKIPs on watchlist names come from. Be CONSISTENT: the same
+facts must always produce the same decision.
 
 Respond with JSON only, no markdown:
 {

@@ -72,6 +72,7 @@ prices — stops and targets are computed deterministically by the system.
 POSITION: ${symbol} [${positionMeta.tradeType || "DAY"}]
 Setup at entry: ${positionMeta.setup || "n/a"} — ${plan.setupDetail || "n/a"}
 Entry $${positionMeta.entryPrice} · Current $${currentPrice.toFixed(4)} (${pnlPercent >= 0 ? "+" : ""}${pnlPercent.toFixed(1)}%)
+Peak since entry: ${positionMeta.peakPrice ? "$" + positionMeta.peakPrice.toFixed(4) + " (" + (((positionMeta.peakPrice - positionMeta.entryPrice) / positionMeta.entryPrice) * 100).toFixed(1) + "% at best — compare with current: a big give-back off the peak is exhaustion evidence for TIGHTEN; holding near the peak supports EXTEND)" : "n/a"}
 Stop/floor: $${(positionMeta.lockedFloor || positionMeta.stopPrice).toFixed(4)}
 Targets: T1 $${positionMeta.targetT1}${positionMeta.targetT2 ? " · T2 $" + positionMeta.targetT2 : ""}${positionMeta.targetT3 ? " · T3 $" + positionMeta.targetT3 : ""}
 Held: ${heldDescription}

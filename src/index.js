@@ -558,6 +558,14 @@ async function runScanCycle() {
       regime: regime.regime,
       rangePct: regime.rangePct,
       spyChangePercent: spyChange,
+      // Session + today's results give the screener context it was blind
+      // to: it approved 100% of watchlist plans overnight on 2026-07-14,
+      // including RSI-76 entries in a SIDEWAYS/UNKNOWN tape, and 4 of them
+      // closed red the same day.
+      session: marketHours.isRegularMarketHours()
+        ? "REGULAR"
+        : "OVERNIGHT/EXTENDED",
+      todayPnl: riskManager.getDailyLossSnapshot(),
     };
     const screenResults = await aiScreener.screenCandidates(
       plans,
