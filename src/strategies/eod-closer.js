@@ -15,6 +15,7 @@ require("dotenv").config();
 const { logger } = require("../logger");
 const config = require("../config");
 const alerts = require("../notifications/alerts");
+const { toRealDollars } = require("../notifications/format-helpers");
 
 async function forceCloseAllPositions(
   etoroClient,
@@ -233,6 +234,7 @@ async function forceCloseAllPositions(
         ? "\n<i>Winning DAY positions + swings ride overnight (24/5, exit engine still guards them). Friday closes everything.</i>"
         : "\n<i>Swing positions (if any) hold overnight — Friday closes everything.</i>";
 
+  const realRealizedPnl = toRealDollars(totalRealizedPnl);
   await notifications.sendTelegramMessage(
     "🔔 <b>" +
       headerText +
@@ -241,9 +243,9 @@ async function forceCloseAllPositions(
       "/" +
       trackedPositions.length +
       " closed · Realized: " +
-      (totalRealizedPnl >= 0 ? "+" : "") +
+      (realRealizedPnl >= 0 ? "+" : "") +
       "$" +
-      totalRealizedPnl.toFixed(2) +
+      realRealizedPnl.toFixed(2) +
       (failedSymbols.length > 0
         ? "\n⚠️ FAILED to close: " + failedSymbols.join(", ")
         : "") +

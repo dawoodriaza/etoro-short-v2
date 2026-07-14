@@ -87,6 +87,7 @@ const {
   escapeHtml,
   humanize,
   describeExitReason,
+  toRealDollars,
 } = require("./notifications/format-helpers");
 
 const TIMEZONE = "America/New_York";
@@ -1155,6 +1156,9 @@ async function manageOpenPositions() {
           const extendedNote = positionMeta.extendedByReviewerAt
             ? "\n🤖 <i>This trade was extended overnight by the AI daily review.</i>"
             : "";
+          // P&L shown is YOUR real dollars (copy-ratio scaled) — pnlPercent
+          // is unaffected, a % return is the same in both accounts.
+          const realPnlDollars = toRealDollars(pnlDollars);
           await notifications.sendTelegramMessage(
             (pnlDollars >= 0 ? "🟢" : "🔴") +
               " <b>CLOSED " +
@@ -1165,9 +1169,9 @@ async function manageOpenPositions() {
               exitInfo.trigger +
               (exitInfo.detail ? ": " + exitInfo.detail : "") +
               "\nP&L: " +
-              (pnlDollars >= 0 ? "+" : "") +
+              (realPnlDollars >= 0 ? "+" : "") +
               "$" +
-              pnlDollars.toFixed(2) +
+              realPnlDollars.toFixed(2) +
               " (" +
               (pnlPercent >= 0 ? "+" : "") +
               pnlPercent.toFixed(1) +

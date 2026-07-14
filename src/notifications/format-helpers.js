@@ -10,6 +10,18 @@
 // "MOMENTUMSURGE", "TIME_EXIT_STALE" as "TIMEEXITSTALE". HTML parse mode
 // doesn't treat underscore as special at all, so switching removes the bug
 // at the source; humanize() then makes the enum values pleasant to read.
+const config = require("../config");
+
+// Converts an AGENT PORTFOLIO dollar amount to YOUR real dollar amount,
+// using the copy ratio (config.realAccountCapital / config.dayTradeCapital).
+// Display-only — every internal risk/sizing calculation stays in agent
+// dollars; this only touches what Telegram messages show you.
+function toRealDollars(agentDollars) {
+  if (typeof agentDollars !== "number" || isNaN(agentDollars)) return agentDollars;
+  const ratio = config.realAccountCapital / config.dayTradeCapital;
+  return agentDollars * ratio;
+}
+
 function escapeHtml(text) {
   return String(text == null ? "" : text)
     .replace(/&/g, "&amp;")
@@ -88,4 +100,4 @@ function describeExitReason(reasonCode) {
   );
 }
 
-module.exports = { escapeHtml, humanize, describeExitReason };
+module.exports = { escapeHtml, humanize, describeExitReason, toRealDollars };

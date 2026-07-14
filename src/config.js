@@ -26,7 +26,16 @@ function bool(envName, fallbackTrue) {
 
 const config = {
   // ── Capital & sizing ──────────────────────────────────────────────
+  // dayTradeCapital is the AGENT PORTFOLIO's capital — all sizing/risk/
+  // safety math runs on this number, unchanged. realAccountCapital is
+  // YOUR real eToro balance, which copies the agent portfolio proportionally
+  // (realAccountCapital / dayTradeCapital = your copy ratio). It ONLY
+  // affects display — Telegram messages show YOUR real dollars, computed
+  // from this ratio, while every internal calculation still uses the
+  // agent portfolio's real numbers. Defaults equal to dayTradeCapital
+  // (ratio 1, no scaling) so this is a no-op until explicitly configured.
   dayTradeCapital: num("DT_CAPITAL", 100),
+  realAccountCapital: num("DT_REAL_ACCOUNT_CAPITAL", num("DT_CAPITAL", 100)),
   maxPositionPct: num("DT_MAX_POSITION_PCT", 0.08), // legacy cap (kept for compat)
   maxOpenPositions: int("DT_MAX_OPEN_POSITIONS", 3), // legacy overall cap
   minimumPositionDollars: num("MINIMUM_POSITION_DOLLARS", 10),

@@ -37,7 +37,11 @@
 require("dotenv").config();
 const { logger } = require("../logger");
 const config = require("../config");
-const { escapeHtml, humanize } = require("../notifications/format-helpers");
+const {
+  escapeHtml,
+  humanize,
+  toRealDollars,
+} = require("../notifications/format-helpers");
 
 // ── Trend read (bullish / bearish / sideways) ──────────────────────────────
 function classifyTrend(candidate, spyChangePercent, regime) {
@@ -417,6 +421,9 @@ function formatPlanForTelegram(plan, aiReasoning) {
     ? "\n📰 " + escapeHtml(plan.catalystLabel)
     : "";
 
+  // Entry/Stop/Target are per-share PRICES — identical in both accounts,
+  // never scaled. Size/Risk/Expected are TOTAL DOLLAR AMOUNTS — scaled to
+  // what YOUR real account actually risks, via the copy ratio.
   const entryLine =
     "\n\nEntry " +
     money(plan.entryPrice) +
@@ -426,9 +433,9 @@ function formatPlanForTelegram(plan, aiReasoning) {
     plan.stopDistancePct +
     "%)\n" +
     "Size " +
-    money(plan.positionDollars) +
+    money(toRealDollars(plan.positionDollars)) +
     " · Risk " +
-    money(plan.riskDollars) +
+    money(toRealDollars(plan.riskDollars)) +
     " (" +
     plan.riskPctOfCapital +
     "% of capital)";
@@ -445,7 +452,7 @@ function formatPlanForTelegram(plan, aiReasoning) {
 
   const expectedLine =
     "\n\nExpected profit if it works: +" +
-    money(plan.expectedReturnDollars);
+    money(toRealDollars(plan.expectedReturnDollars));
 
   const aiLine = aiReasoning
     ? "\n\n<i>" + escapeHtml(aiReasoning) + "</i>"
