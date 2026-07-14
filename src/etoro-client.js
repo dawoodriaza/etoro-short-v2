@@ -15,36 +15,29 @@ const { logger } = require("./logger");
 
 const ETORO_BASE_URL = "https://public-api.etoro.com/api/v1";
 
-// Cache resolved instrument IDs to avoid repeated lookups
-const instrumentIdCache = {
-  AMD: 1130,
-  ASML: 1832,
-  NVDA: 1137,
-  AAPL: 1,
-  MSFT: 2,
-  TSLA: 3,
-  AMZN: 4,
-  GOOGL: 5,
-  DE: 1526,
-};
+// Cache resolved instrument IDs to avoid repeated lookups.
+//
+// v5.7 CRITICAL FIX: this used to be pre-seeded with hardcoded IDs
+// (AMD: 1130, ASML: 1832, AAPL: 1, MSFT: 2, TSLA: 3, AMZN: 4, GOOGL: 5, ...).
+// Verified live against eToro's own search API — 7 of 9 were WRONG:
+//   AMD's real ID is 1832 (the cache had AMD -> 1130, which is actually
+//   MICRON/MU); ASML's real ID is 4244 (the cache had ASML -> 1832, which
+//   is actually AMD); AAPL/MSFT/TSLA/AMZN/GOOGL were mapped to 1/2/3/4/5 —
+//   small placeholder-looking numbers that were never real eToro IDs.
+//   Every "AMD" trade this bot ever placed was ACTUALLY trading Micron.
+// Root cause: resolveTickerToInstrumentId() below returns straight from
+// this cache on a hit, with NO verification against the real ticker —
+// a wrong seed value is silently permanent for the life of the process.
+// Fix: start EMPTY. Every symbol is resolved via the live instrument
+// search on first use (already proven correct — AVGO/MRVL/MU all resolved
+// right in production) and cached correctly in memory from then on.
+const instrumentIdCache = {};
 
-// Reverse cache: instrument ID (number) -> ticker symbol (string)
-// Seeded with known eToro IDs so positions are labelled even before a lookup.
-// The bot adds to this automatically whenever it resolves a ticker.
-const instrumentNameCache = {
-  1130: "AMD",
-  1832: "ASML",
-  1137: "NVDA",
-  1: "AAPL",
-  4: "AMZN",
-  5: "GOOGL",
-  2: "MSFT",
-  3: "TSLA",
-  1145: "META",
-  1141: "QCOM",
-  1126: "INTC",
-  1138: "MU",
-};
+// Reverse cache: instrument ID (number) -> ticker symbol (string).
+// Also started EMPTY for the same reason — the old hardcoded entries here
+// were the mirror image of the same wrong IDs above. The bot populates
+// this automatically and correctly whenever it resolves a ticker.
+const instrumentNameCache = {};
 
 // ── Request helpers ────────────────────────────────────────────────────────
 
