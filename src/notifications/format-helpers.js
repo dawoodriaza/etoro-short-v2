@@ -51,6 +51,11 @@ const EXIT_REASON_INFO = {
     trigger: "🛑 Stop-Loss Guard",
     detail: "price hit the protective stop before any profit was banked",
   },
+  BREAKEVEN_STOP: {
+    trigger: "⚖️ Breakeven Guard",
+    detail:
+      "trade was well in profit earlier, so the stop had been raised to entry — closed at roughly breakeven instead of a loss",
+  },
   TRAILING_STOP: {
     trigger: "📉 Trailing-Stop Guard",
     detail: "price pulled back from its peak far enough to trigger the trailing stop on the runner",

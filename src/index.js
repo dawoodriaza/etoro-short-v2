@@ -392,11 +392,18 @@ async function runScanCycle() {
     const portfolio = etoroClient.parsePortfolioFromRawData(rawPortfolio);
     await etoroClient.labelPositionsWithTickers(portfolio);
 
-    const heldSymbols = new Set(
-      (portfolio.openPositions || []).map((position) =>
+    // Held = eToro's SETTLED positions ∪ the bot's own meta. The portfolio
+    // list alone is not enough: overnight/pre-market orders can take minutes
+    // to settle into positions[], and during that lag the same symbol was
+    // re-bought on the next scan (confirmed: AVGO/MRVL/MU all double-entered
+    // on 2026-07-14, band-aided after the fact by the duplicate closer).
+    // Meta is written the moment an order is placed, so it can't lag.
+    const heldSymbols = new Set([
+      ...(portfolio.openPositions || []).map((position) =>
         (position.symbol || "").toUpperCase(),
       ),
-    );
+      ...Object.keys(trackedMeta).map((symbol) => symbol.toUpperCase()),
+    ]);
 
     const toEnrich = [];
     for (const candidate of prefiltered) {
@@ -686,6 +693,47 @@ async function tryOpenPosition(plan, aiResult, portfolio, capitalState) {
         "instrument not found on eToro",
       );
       return;
+    }
+
+    // LIVE SPREAD GUARD: a wide bid/ask spread is an instant loss on fill
+    // (BRAI realized -4.0% in one minute against a -2.9% stop — the extra
+    // ~1% was spread). Check the live rate right before committing money.
+    // Fail-open: if the rate can't be fetched, the trade proceeds — the
+    // liquidity floor and discovery caps remain the outer defenses.
+    if (etoroMarketData.isConfigured()) {
+      try {
+        const ratesByInstrumentId = await etoroMarketData.fetchBatchedRates([
+          instrumentId,
+        ]);
+        const liveRate = ratesByInstrumentId[instrumentId];
+        if (liveRate && liveRate.ask > 0 && liveRate.bid > 0) {
+          const midPrice = (liveRate.ask + liveRate.bid) / 2;
+          const spreadFraction = (liveRate.ask - liveRate.bid) / midPrice;
+          if (spreadFraction > config.maxSpreadPct) {
+            logger.info(
+              plan.symbol +
+                " blocked: live spread " +
+                (spreadFraction * 100).toFixed(2) +
+                "% exceeds the " +
+                (config.maxSpreadPct * 100).toFixed(2) +
+                "% cap — entering would start the trade at an instant loss",
+            );
+            journal.candidateRejected(
+              plan.symbol,
+              "SPREAD_GUARD",
+              "live spread " + (spreadFraction * 100).toFixed(2) + "%",
+            );
+            return;
+          }
+        }
+      } catch (spreadError) {
+        logger.warn(
+          plan.symbol +
+            ": spread check failed (" +
+            spreadError.message +
+            ") — proceeding without it",
+        );
+      }
     }
 
     const openResult = await etoroClient.openBuyPosition(

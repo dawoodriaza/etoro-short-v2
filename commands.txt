@@ -83,3 +83,7 @@ ubuntu@130.110.113.198:~/etoro-v2-short/watchlist-daytrade.json
 
 
 grep EXIT_SHADOW_CHECKPOINT ~/etoro-v2-short/data/journal/decisions-*.jsonl
+
+
+
+scp -i ~/Downloads/ssh-key-2026-07-02.key  ~/Desktop/etoro-v2-short/.env ubuntu@130.110.113.198:~/etoro-v2-short/.env

@@ -355,6 +355,9 @@ async function discoverOpportunities(excludeSymbols) {
       continue;
     // No volume data on FMP rows, so the move itself must qualify
     if (candidate.priceChangePercent < config.discoveryMinChangePct) continue;
+    // A move BEYOND the max is a pump top, not a momentum entry — chasing
+    // +40%+ movers bought BRAI at the top and stopped out in one minute.
+    if (candidate.priceChangePercent > config.discoveryMaxChangePct) continue;
 
     candidates.push(candidate);
   }
@@ -383,6 +386,8 @@ async function discoverOpportunities(excludeSymbols) {
       candidate.volumeRatio >= config.discoveryMinRelVolume;
     if (!isRealMover && !isVolumeSurge) continue;
     if (candidate.priceChangePercent < 0) continue;
+    // Same pump-top cap as the FMP path above.
+    if (candidate.priceChangePercent > config.discoveryMaxChangePct) continue;
 
     candidates.push(candidate);
   }

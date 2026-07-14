@@ -173,11 +173,15 @@ async function checkPreTradeSafety(
     };
   }
 
+  // No pyramiding — checked against BOTH the settled portfolio and the
+  // bot's own meta (meta catches orders eToro hasn't settled into the
+  // positions list yet; that lag caused real double-entries overnight).
   if (
     openPositions.some(
       (position) =>
         (position.symbol || "").toUpperCase() === symbol.toUpperCase(),
-    )
+    ) ||
+    (positionMetaBySymbol && positionMetaBySymbol[symbol.toUpperCase()])
   ) {
     return { allowed: false, reason: symbol + " already held — no pyramiding" };
   }
@@ -281,19 +285,37 @@ function confirmStopBreach(meta, currentPrice, stopLevel, peak, label) {
 function decideDayAction(meta, currentPrice, peak) {
   const heldMinutes = (Date.now() - (meta.openedAt || Date.now())) / 60000;
 
+  // BREAKEVEN RATCHET (pre-partial): once the position has covered 60% of
+  // the way to Target 1 (measured on the persisted PEAK, so it stays armed
+  // after a pullback), the stop rises to entry — a trade that got
+  // meaningfully green can no longer round-trip into a loss. Directly fixes
+  // the observed "was in profit, then sold at a loss" pattern (NVDA/HOOD/
+  // QCOM on 2026-07-14 all peaked green and closed red).
+  const breakevenArmed =
+    !meta.partialDone &&
+    meta.targetT1 &&
+    peak >= meta.entryPrice + 0.6 * (meta.targetT1 - meta.entryPrice);
+  const effectiveStop = breakevenArmed
+    ? Math.max(meta.stopPrice, meta.entryPrice)
+    : meta.stopPrice;
+
   // 1. Hard stop (pre-partial) — with whipsaw confirmation: a shallow poke
   // below the stop needs a second consecutive 1-min tick before exiting,
   // so a brief dip-and-bounce doesn't dump the position at the low.
-  if (!meta.partialDone && currentPrice <= meta.stopPrice) {
+  if (!meta.partialDone && currentPrice <= effectiveStop) {
     const holdDecision = confirmStopBreach(
       meta,
       currentPrice,
-      meta.stopPrice,
+      effectiveStop,
       peak,
-      "stop",
+      breakevenArmed ? "breakeven stop" : "stop",
     );
     if (holdDecision) return holdDecision;
-    return { action: "EXIT", reason: "STOP_LOSS", newPeak: peak };
+    return {
+      action: "EXIT",
+      reason: breakevenArmed ? "BREAKEVEN_STOP" : "STOP_LOSS",
+      newPeak: peak,
+    };
   }
 
   // 2. Trailing on the runner (post-partial), floored at breakeven

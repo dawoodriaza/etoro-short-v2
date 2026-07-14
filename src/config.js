@@ -82,6 +82,13 @@ const config = {
   // TIGHTEN: new stop = currentPrice × (1 − stopDistance × this factor)
   reviewerTightenStopFactor: num("DT_REVIEWER_TIGHTEN_FACTOR", 0.5),
 
+  // ── LIVE SPREAD GUARD AT ENTRY ────────────────────────────────────
+  // Just before opening, the live bid/ask spread is checked; wider than
+  // this fraction of price → entry blocked. A wide spread is an instant
+  // loss on fill (BRAI: -2.9% stop but -4.0% realized in ONE minute — the
+  // extra ~1% was spread). Fail-open if the rate can't be fetched.
+  maxSpreadPct: num("DT_MAX_SPREAD_PCT", 0.01),
+
   // ── v5.1: LIQUIDITY / SPREAD FLOOR ────────────────────────────────
   // Reject entries where average daily dollar volume is below this floor —
   // thin names get wide spreads and bad fills on a small position. Only
@@ -119,6 +126,10 @@ const config = {
   discoveryEnabled: bool("DT_DISCOVERY_ENABLED", true),
   discoveryMaxCandidates: int("DT_DISCOVERY_MAX_CANDIDATES", 6),
   discoveryMinChangePct: num("DT_DISCOVERY_MIN_CHANGE_PCT", 3.0),
+  // Upper bound on the day's move for a DISCOVERED candidate. A stock
+  // already up 40%+ is a pump top, not a momentum entry — BRAI (+45%)
+  // stopped out in ONE MINUTE at -4% on 2026-07-14; VEEE showed +478%.
+  discoveryMaxChangePct: num("DT_DISCOVERY_MAX_CHANGE_PCT", 25),
   discoveryMinPrice: num("DT_DISCOVERY_MIN_PRICE", 2),
   discoveryMaxPrice: num("DT_DISCOVERY_MAX_PRICE", 500),
   discoveryMinRelVolume: num("DT_DISCOVERY_MIN_REL_VOLUME", 2.0),
