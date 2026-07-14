@@ -166,14 +166,20 @@ function scoreEnrichedCandidate(
   // for a full trading day before it was traced by hand. Never again —
   // callers should check result.rejected and log result.rejectReason.
 
-  // v5.4: the REAL volume hard-gate. prefilterCandidates() lets "unknown"
-  // (null) volumeRatio through, since eToro's cheap quote path can't
-  // supply it without a per-symbol candles call. By THIS stage,
-  // enrichCandidate() has run and volumeRatio should be a real number
-  // (from eToro candles, or Twelve Data as fallback) — now we enforce the
-  // actual threshold, restoring the original hard-gate behavior at the
-  // correct pipeline stage instead of losing it.
+  // v5.4: the REAL volume gate — but v5.8: HARD only for DISCOVERED names.
+  // Measured live on 2026-07-14: NVDA computed RVOL 0.78x on a +3% semi day
+  // and the 1.5x hard floor rejected the ENTIRE watchlist all afternoon,
+  // every scan. Two structural reasons: (1) demanding a 1.5x SURGE means
+  // ordinary strong days never qualify; (2) expected volume is pro-rata
+  // linear while real volume is front-loaded at the open, so the computed
+  // ratio decays below 1 by midday even on above-average days.
+  // The floor's real job is catching fake moves in unknown DISCOVERED
+  // tickers — hand-picked watchlist names keep volume as a SCORE input
+  // (bonus for surges via the setup detectors, small penalty below-average
+  // applied in the final score below) rather than a kill switch.
+  const isDiscoveredCandidate = (candidate.source || "WATCHLIST") === "DISCOVERED";
   if (
+    isDiscoveredCandidate &&
     candidate.volumeRatio != null &&
     candidate.volumeRatio < config.minVolumeRatio
   ) {
@@ -184,7 +190,7 @@ function scoreEnrichedCandidate(
         candidate.volumeRatio.toFixed(2) +
         "x below floor " +
         config.minVolumeRatio +
-        "x",
+        "x (hard gate for discovered tickers)",
     };
   }
 
@@ -245,6 +251,17 @@ function scoreEnrichedCandidate(
   const regimePenalty =
     regime && regime.regime === "CHOP" ? config.chopRegimeScoreBonus : 0;
 
+  // v5.8: below-average volume is a score PENALTY for watchlist names (the
+  // hard floor above only applies to discovered tickers). A move on thin
+  // participation is less trustworthy — but not auto-disqualifying for a
+  // hand-picked liquid name. 10 points at 0.99x, scaling to 20 at 0.5x.
+  const lowVolumePenalty =
+    !isDiscoveredCandidate &&
+    candidate.volumeRatio != null &&
+    candidate.volumeRatio < 1.0
+      ? Math.min(20, 10 + (1.0 - candidate.volumeRatio) * 20)
+      : 0;
+
   // v5.5: SECTOR ROTATION bonus — "if oil is up, Chevron should follow."
   // A scoring TILT (like the RS bonus above), not a hard gate — a
   // candidate in a hot sector gets a nudge, but still has to clear every
@@ -276,7 +293,8 @@ function scoreEnrichedCandidate(
         vwapBonus +
         relativeStrengthBonus +
         sectorRotationBonus -
-        regimePenalty,
+        regimePenalty -
+        lowVolumePenalty,
     ),
   );
 
