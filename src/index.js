@@ -1178,12 +1178,19 @@ async function manageOpenPositions() {
           plan: positionMeta.plan || null,
         });
 
-        // Observation only: watch what price does after a TIME-based exit
-        // (not a stop/target) to build real evidence for whether the hold
-        // window should change. Never re-enters, never affects trading.
+        // Observation only: watch what price does after a DISCRETIONARY
+        // exit — time-based cleanups AND the early profit-protection guards
+        // (aged-trade harvest, breakeven ratchet). These are exactly the
+        // exits where "would it have hit Target 1 if held?" is the open
+        // question; the +30/60/120-min checkpoints turn that from a guess
+        // into journal evidence. Hard stops and targets are NOT shadowed —
+        // those exits aren't discretionary. Never re-enters, never affects
+        // trading.
         if (
           decision.reason === "TIME_EXIT_STALE" ||
-          decision.reason === "SWING_TIME_EXIT"
+          decision.reason === "SWING_TIME_EXIT" ||
+          decision.reason === "AGED_PROFIT_PROTECT" ||
+          decision.reason === "BREAKEVEN_STOP"
         ) {
           exitShadowTracker.startShadow(
             symbol,
