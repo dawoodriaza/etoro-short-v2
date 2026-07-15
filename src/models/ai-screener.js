@@ -98,15 +98,24 @@ ${marketContext?.regime === "CHOP" ? "NOTE: choppy tape — demand stronger evid
 Currently held: ${heldSymbols}
 
 SESSION RULE: in an OVERNIGHT/EXTENDED session, books are thinner, spreads
-wider, and momentum less reliable. A MARGINAL setup — RSI within ~4 points
-of the 78 overextended ceiling, or SIDEWAYS trend in an UNKNOWN regime, or
-volume unknown — that would be a borderline TAKE in regular hours is a
-SKIP overnight. A clean setup (trend + strong RS + healthy RSI) is still
-a TAKE overnight.
+wider, and momentum less reliable — so demand REAL warning signals before
+entering. IMPORTANT: overnight, volume data is ALWAYS unavailable (no
+session volume exists yet to measure) and the regime is ALWAYS UNKNOWN
+(it needs 45+ minutes of the regular session) — these two are the NORMAL
+STATE of an overnight scan, NOT warning signals, and must never be cited
+(alone or "combined with" each other) as a reason to SKIP. Overnight
+marginality means an ACTUAL signal: RSI within ~4 points of the 78
+overextended ceiling, or SIDEWAYS trend, or weak relative strength
+(under ~1 pt vs SPY). One or more of those → SKIP overnight. None of
+those → a BULLISH-trend setup with healthy RSI and solid RS is a TAKE,
+overnight or not.
 
-BAD-DAY RULE: if the bot has 3+ closed losers and is net negative today,
-raise the bar — the tape may not fit this strategy today; approve only
-setups you'd call clearly strong, not merely acceptable.
+BAD-DAY RULE: applies ONLY when BOTH are true: 3 or more closed losing
+trades today AND net negative on the day. When it applies, raise the bar —
+approve only setups you'd call clearly strong. When it does NOT apply
+(fewer than 3 losers, or the day is net positive), do not mention today's
+P&L in your reasoning at all — a small red number with 1-2 closes is
+normal variance, not a signal.
 
 SKIP ONLY for a CONCRETE, SPECIFIC reason — not a vague feeling:
 - The setup's OWN description states the volume is unavailable/unknown for

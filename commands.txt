@@ -58,13 +58,13 @@ ssh -i ~/Downloads/ssh-key-2026-07-02.key  ~/Desktop/etoro-v2-short/src ubuntu@1
 
 
 
-ssh -i ~/Downloads/ssh-key-2026-07-02.key  ~/Desktop/etoro-v2-short/src/market-data.js ubuntu@130.110.113.198:~/etoro-v2-short/src/market-data.js
+scp -i ~/Downloads/ssh-key-2026-07-02.key  ~/Desktop/etoro-v2-short/src/market-data.js ubuntu@130.110.113.198:~/etoro-v2-short/src/market-data.js
 
 
 
-ssh -i ~/Downloads/ssh-key-2026-07-02.key  ~/Desktop/etoro-v2-short/src/index.js ubuntu@130.110.113.198:~/etoro-v2-short/src/index.js
+scp -i ~/Downloads/ssh-key-2026-07-02.key  ~/Desktop/etoro-v2-short/src/index.js ubuntu@130.110.113.198:~/etoro-v2-short/src/index.js
 
-ssh -i ~/Downloads/ssh-key-2026-07-02.key  ~/Desktop/etoro-v2-short/src/strategies/momentum-scanner.js ubuntu@130.110.113.198:~/etoro-v2-short/src/strategies/momentum-scanner.js
+scp -i ~/Downloads/ssh-key-2026-07-02.key  ~/Desktop/etoro-v2-short/src/strategies/momentum-scanner.js ubuntu@130.110.113.198:~/etoro-v2-short/src/strategies/momentum-scanner.js
 
 
 
@@ -87,3 +87,17 @@ grep EXIT_SHADOW_CHECKPOINT ~/etoro-v2-short/data/journal/decisions-*.jsonl
 
 
 scp -i ~/Downloads/ssh-key-2026-07-02.key  ~/Desktop/etoro-v2-short/.env ubuntu@130.110.113.198:~/etoro-v2-short/.env
+
+
+
+
+
+
+scp -i ~/Downloads/ssh-key-2026-07-02.key ~/Desktop/etoro-v2-short/src/config.js ubuntu@130.110.113.198:~/etoro-v2-short/src/config.js
+scp -i ~/Downloads/ssh-key-2026-07-02.key ~/Desktop/etoro-v2-short/src/strategies/risk-manager.js ubuntu@130.110.113.198:~/etoro-v2-short/src/strategies/risk-manager.js
+scp -i ~/Downloads/ssh-key-2026-07-02.key ~/Desktop/etoro-v2-short/src/notifications/format-helpers.js ubuntu@130.110.113.198:~/etoro-v2-short/src/notifications/format-helpers.js
+
+
+
+
+scp -i ~/Downloads/ssh-key-2026-07-02.key  ~/Desktop/etoro-v2-short/src/index.js ubuntu@130.110.113.198:~/etoro-v2-short/src/index.js
