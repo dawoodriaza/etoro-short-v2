@@ -333,12 +333,25 @@ function decideDayAction(meta, currentPrice, peak) {
     };
   }
 
-  // 2. Trailing on the runner (post-partial), floored at breakeven
+  // 2. Trailing on the runner (post-partial), floored at breakeven.
+  // AGED RUNNER TIGHTENING: the trail is a fixed 2.5% off peak with NO time
+  // decay — under 24/5 DAY_KEEP_WINNERS a green runner can be held overnight
+  // repeatedly (it stays tradeType DAY, never gets a swing-style max-hold
+  // cap) and could drift for days on a wide 2.5% leash. Once the trade is
+  // aged (same agedTradeMinutes threshold as the pre-partial guard), the
+  // trail tightens to agedTrailPct — an old runner gets harvested on a much
+  // smaller pullback instead of riding an unlimited-time wide stop.
   if (meta.partialDone) {
-    const trailStop = peak * (1 - config.trailingStopPct);
+    const isAgedRunner = heldMinutes >= config.agedTradeMinutes;
+    const trailPct = isAgedRunner ? config.agedTrailPct : config.trailingStopPct;
+    const trailStop = peak * (1 - trailPct);
     const effectiveTrail = Math.max(trailStop, meta.entryPrice);
     if (currentPrice <= effectiveTrail) {
-      return { action: "EXIT", reason: "TRAILING_STOP", newPeak: peak };
+      return {
+        action: "EXIT",
+        reason: isAgedRunner ? "AGED_PROFIT_PROTECT" : "TRAILING_STOP",
+        newPeak: peak,
+      };
     }
     return { action: "HOLD", reason: "trailing runner", newPeak: peak };
   }
