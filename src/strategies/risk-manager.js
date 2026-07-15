@@ -355,6 +355,27 @@ function decideDayAction(meta, currentPrice, peak) {
     };
   }
 
+  // 3b. AGED-TRADE PROFIT GUARD: an old position whose peak showed a real
+  // gain must not round-trip into a loss while waiting for Target 1. Once
+  // held agedTradeMinutes+, if peak >= agedMinPeakPct, exit when price
+  // falls to peak×(1−agedTrailPct) — floored at breakeven. A trade still
+  // making new highs is untouched (the trail hangs below the rising peak);
+  // this only harvests OLD trades as they fade. Fixes the observed AVGO
+  // pattern: peaked +0.43%, no mechanism below the breakeven-ratchet arm
+  // level, time-exited -0.2% at minute 151.
+  if (heldMinutes >= config.agedTradeMinutes) {
+    const peakGainFraction = (peak - meta.entryPrice) / meta.entryPrice;
+    if (peakGainFraction >= config.agedMinPeakPct) {
+      const agedFloor = Math.max(
+        meta.entryPrice,
+        peak * (1 - config.agedTrailPct),
+      );
+      if (currentPrice <= agedFloor) {
+        return { action: "EXIT", reason: "AGED_PROFIT_PROTECT", newPeak: peak };
+      }
+    }
+  }
+
   // 4. Time-based exit: stale and not working
   if (
     heldMinutes >= config.maxHoldMinutes &&

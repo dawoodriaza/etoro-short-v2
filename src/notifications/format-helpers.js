@@ -60,6 +60,11 @@ const EXIT_REASON_INFO = {
     trigger: "📉 Trailing-Stop Guard",
     detail: "price pulled back from its peak far enough to trigger the trailing stop on the runner",
   },
+  AGED_PROFIT_PROTECT: {
+    trigger: "⏳ Aged-Trade Profit Guard",
+    detail:
+      "the trade was getting old and had already peaked in profit — took what was left as it faded rather than letting it turn into a loss",
+  },
   TIME_EXIT_STALE: {
     trigger: "⏱️ Time-Based Cleanup",
     detail: "held past the max time window without enough profit to justify staying in",

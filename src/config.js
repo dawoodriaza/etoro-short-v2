@@ -148,6 +148,18 @@ const config = {
   takeProfitRunnerPct: num("DT_TAKE_PROFIT_RUNNER_PCT", 0.05),
   dailyLossLimitPct: num("DT_DAILY_LOSS_LIMIT_PCT", 0.05),
 
+  // ── Aged-trade profit guard (DAY, pre-Target-1) ───────────────────
+  // Between entry and Target 1 the bot used to have NO profit mechanism:
+  // a trade could peak +0.4% and still time-exit red hours later (real
+  // case: AVGO peaked +0.43%, closed -0.2% at minute 151). After a trade
+  // is agedTradeMinutes old, if its PEAK showed at least agedMinPeakPct
+  // gain, it exits when price falls to peak×(1−agedTrailPct), never below
+  // breakeven — harvesting what's there instead of round-tripping. A trade
+  // still climbing is untouched (the trail follows the rising peak).
+  agedTradeMinutes: int("DT_AGED_TRADE_MINUTES", 75),
+  agedMinPeakPct: num("DT_AGED_MIN_PEAK_PCT", 0.003),
+  agedTrailPct: num("DT_AGED_TRAIL_PCT", 0.0035),
+
   // ── Stop-loss whipsaw confirmation ────────────────────────────────
   // A SHALLOW breach of the stop (within stopWickBandPct below it) must
   // persist for stopConfirmTicks consecutive 1-minute exit-monitor ticks
