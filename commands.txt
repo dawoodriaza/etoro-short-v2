@@ -101,3 +101,78 @@ scp -i ~/Downloads/ssh-key-2026-07-02.key ~/Desktop/etoro-v2-short/src/notificat
 
 
 scp -i ~/Downloads/ssh-key-2026-07-02.key  ~/Desktop/etoro-v2-short/src/index.js ubuntu@130.110.113.198:~/etoro-v2-short/src/index.js
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+////////////////////////////
+
+
+
+
+
+
+
+
+scp -i ~/Downloads/ssh-key-2026-07-02.key ~/Desktop/etoro-v2-short/.env ubuntu@130.110.113.198:~/etoro-v2-short/.env
+scp -i ~/Downloads/ssh-key-2026-07-02.key ~/Desktop/etoro-v2-short/package.json ubuntu@130.110.113.198:~/etoro-v2-short/package.json
+scp -i ~/Downloads/ssh-key-2026-07-02.key ~/Desktop/etoro-v2-short/package-lock.json ubuntu@130.110.113.198:~/etoro-v2-short/package-lock.json
+scp -i ~/Downloads/ssh-key-2026-07-02.key ~/Desktop/etoro-v2-short/watchlist-daytrade.json ubuntu@130.110.113.198:~/etoro-v2-short/watchlist-daytrade.json
+scp -i ~/Downloads/ssh-key-2026-07-02.key ~/Desktop/etoro-v2-short/diagnose.js ubuntu@130.110.113.198:~/etoro-v2-short/diagnose.js
+scp -i ~/Downloads/ssh-key-2026-07-02.key ~/Desktop/etoro-v2-short/check-portfolio.js ubuntu@130.110.113.198:~/etoro-v2-short/check-portfolio.js
+scp -i ~/Downloads/ssh-key-2026-07-02.key ~/Desktop/etoro-v2-short/log-to-file.js ubuntu@130.110.113.198:~/etoro-v2-short/log-to-file.js
+
+scp -i ~/Downloads/ssh-key-2026-07-02.key ~/Desktop/etoro-v2-short/src/config.js ubuntu@130.110.113.198:~/etoro-v2-short/src/config.js
+scp -i ~/Downloads/ssh-key-2026-07-02.key ~/Desktop/etoro-v2-short/src/etoro-client.js ubuntu@130.110.113.198:~/etoro-v2-short/src/etoro-client.js
+scp -i ~/Downloads/ssh-key-2026-07-02.key ~/Desktop/etoro-v2-short/src/index.js ubuntu@130.110.113.198:~/etoro-v2-short/src/index.js
+scp -i ~/Downloads/ssh-key-2026-07-02.key ~/Desktop/etoro-v2-short/src/logger.js ubuntu@130.110.113.198:~/etoro-v2-short/src/logger.js
+scp -i ~/Downloads/ssh-key-2026-07-02.key ~/Desktop/etoro-v2-short/src/market-data-stream.js ubuntu@130.110.113.198:~/etoro-v2-short/src/market-data-stream.js
+scp -i ~/Downloads/ssh-key-2026-07-02.key ~/Desktop/etoro-v2-short/src/market-data.js ubuntu@130.110.113.198:~/etoro-v2-short/src/market-data.js
+scp -i ~/Downloads/ssh-key-2026-07-02.key ~/Desktop/etoro-v2-short/src/market-hours.js ubuntu@130.110.113.198:~/etoro-v2-short/src/market-hours.js
+
+scp -i ~/Downloads/ssh-key-2026-07-02.key ~/Desktop/etoro-v2-short/src/data-sources/etoro-market-data.js ubuntu@130.110.113.198:~/etoro-v2-short/src/data-sources/etoro-market-data.js
+scp -i ~/Downloads/ssh-key-2026-07-02.key ~/Desktop/etoro-v2-short/src/data-sources/finnhub.js ubuntu@130.110.113.198:~/etoro-v2-short/src/data-sources/finnhub.js
+scp -i ~/Downloads/ssh-key-2026-07-02.key ~/Desktop/etoro-v2-short/src/data-sources/fmp.js ubuntu@130.110.113.198:~/etoro-v2-short/src/data-sources/fmp.js
+scp -i ~/Downloads/ssh-key-2026-07-02.key ~/Desktop/etoro-v2-short/src/data-sources/fred.js ubuntu@130.110.113.198:~/etoro-v2-short/src/data-sources/fred.js
+scp -i ~/Downloads/ssh-key-2026-07-02.key ~/Desktop/etoro-v2-short/src/data-sources/sec-edgar.js ubuntu@130.110.113.198:~/etoro-v2-short/src/data-sources/sec-edgar.js
+
+scp -i ~/Downloads/ssh-key-2026-07-02.key ~/Desktop/etoro-v2-short/src/discovery/market-discovery.js ubuntu@130.110.113.198:~/etoro-v2-short/src/discovery/market-discovery.js
+
+scp -i ~/Downloads/ssh-key-2026-07-02.key ~/Desktop/etoro-v2-short/src/models/ai-position-reviewer.js ubuntu@130.110.113.198:~/etoro-v2-short/src/models/ai-position-reviewer.js
+scp -i ~/Downloads/ssh-key-2026-07-02.key ~/Desktop/etoro-v2-short/src/models/ai-screener.js ubuntu@130.110.113.198:~/etoro-v2-short/src/models/ai-screener.js
+
+scp -i ~/Downloads/ssh-key-2026-07-02.key ~/Desktop/etoro-v2-short/src/notifications/alerts.js ubuntu@130.110.113.198:~/etoro-v2-short/src/notifications/alerts.js
+scp -i ~/Downloads/ssh-key-2026-07-02.key ~/Desktop/etoro-v2-short/src/notifications/format-helpers.js ubuntu@130.110.113.198:~/etoro-v2-short/src/notifications/format-helpers.js
+scp -i ~/Downloads/ssh-key-2026-07-02.key ~/Desktop/etoro-v2-short/src/notifications/telegram.js ubuntu@130.110.113.198:~/etoro-v2-short/src/notifications/telegram.js
+
+scp -i ~/Downloads/ssh-key-2026-07-02.key ~/Desktop/etoro-v2-short/src/strategies/capital-manager.js ubuntu@130.110.113.198:~/etoro-v2-short/src/strategies/capital-manager.js
+scp -i ~/Downloads/ssh-key-2026-07-02.key ~/Desktop/etoro-v2-short/src/strategies/cooldown-tracker.js ubuntu@130.110.113.198:~/etoro-v2-short/src/strategies/cooldown-tracker.js
+scp -i ~/Downloads/ssh-key-2026-07-02.key ~/Desktop/etoro-v2-short/src/strategies/decision-journal.js ubuntu@130.110.113.198:~/etoro-v2-short/src/strategies/decision-journal.js
+scp -i ~/Downloads/ssh-key-2026-07-02.key ~/Desktop/etoro-v2-short/src/strategies/eod-closer.js ubuntu@130.110.113.198:~/etoro-v2-short/src/strategies/eod-closer.js
+scp -i ~/Downloads/ssh-key-2026-07-02.key ~/Desktop/etoro-v2-short/src/strategies/ethics-filter.js ubuntu@130.110.113.198:~/etoro-v2-short/src/strategies/ethics-filter.js
+scp -i ~/Downloads/ssh-key-2026-07-02.key ~/Desktop/etoro-v2-short/src/strategies/exit-shadow-tracker.js ubuntu@130.110.113.198:~/etoro-v2-short/src/strategies/exit-shadow-tracker.js
+scp -i ~/Downloads/ssh-key-2026-07-02.key ~/Desktop/etoro-v2-short/src/strategies/market-regime.js ubuntu@130.110.113.198:~/etoro-v2-short/src/strategies/market-regime.js
+scp -i ~/Downloads/ssh-key-2026-07-02.key ~/Desktop/etoro-v2-short/src/strategies/momentum-scanner.js ubuntu@130.110.113.198:~/etoro-v2-short/src/strategies/momentum-scanner.js
+scp -i ~/Downloads/ssh-key-2026-07-02.key ~/Desktop/etoro-v2-short/src/strategies/performance-tracker.js ubuntu@130.110.113.198:~/etoro-v2-short/src/strategies/performance-tracker.js
+scp -i ~/Downloads/ssh-key-2026-07-02.key ~/Desktop/etoro-v2-short/src/strategies/risk-manager.js ubuntu@130.110.113.198:~/etoro-v2-short/src/strategies/risk-manager.js
+scp -i ~/Downloads/ssh-key-2026-07-02.key ~/Desktop/etoro-v2-short/src/strategies/sector-map.js ubuntu@130.110.113.198:~/etoro-v2-short/src/strategies/sector-map.js
+scp -i ~/Downloads/ssh-key-2026-07-02.key ~/Desktop/etoro-v2-short/src/strategies/sector-rotation.js ubuntu@130.110.113.198:~/etoro-v2-short/src/strategies/sector-rotation.js
+scp -i ~/Downloads/ssh-key-2026-07-02.key ~/Desktop/etoro-v2-short/src/strategies/self-evaluation.js ubuntu@130.110.113.198:~/etoro-v2-short/src/strategies/self-evaluation.js
+scp -i ~/Downloads/ssh-key-2026-07-02.key ~/Desktop/etoro-v2-short/src/strategies/session-timing.js ubuntu@130.110.113.198:~/etoro-v2-short/src/strategies/session-timing.js
+scp -i ~/Downloads/ssh-key-2026-07-02.key ~/Desktop/etoro-v2-short/src/strategies/trade-planner.js ubuntu@130.110.113.198:~/etoro-v2-short/src/strategies/trade-planner.js

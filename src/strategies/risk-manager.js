@@ -68,12 +68,22 @@ function recordClosedTradeResult(realizedPnlDollars) {
   const today = todayEasternDateString();
   let tracker = loadDailyLoss();
   if (tracker.date !== today) {
-    tracker = { date: today, realizedLoss: 0, realizedWin: 0, tradesClosed: 0 };
+    tracker = {
+      date: today,
+      realizedLoss: 0,
+      realizedWin: 0,
+      tradesClosed: 0,
+      losingTrades: 0,
+    };
   }
   tracker.tradesClosed = (tracker.tradesClosed || 0) + 1;
   if (realizedPnlDollars < 0) {
     tracker.realizedLoss =
       (tracker.realizedLoss || 0) + Math.abs(realizedPnlDollars);
+    // Loser COUNT, not just dollars — the AI screener's BAD-DAY RULE is
+    // defined as "3+ losing trades AND net negative", and without this
+    // count the rule's condition couldn't be evaluated by anyone.
+    tracker.losingTrades = (tracker.losingTrades || 0) + 1;
   } else {
     tracker.realizedWin = (tracker.realizedWin || 0) + realizedPnlDollars;
   }
@@ -83,16 +93,30 @@ function recordClosedTradeResult(realizedPnlDollars) {
 
 // Today's realized results (ET day) — used as context in the AI screener
 // prompt so it can demand stronger setups on a day that's going badly.
+// badDayRuleApplies is computed HERE, deterministically — the model was
+// previously told the rule's threshold but not given the loser count, so
+// it guessed (and misapplied the rule on a -$6 day with 1-2 closes).
 function getDailyLossSnapshot() {
   const today = todayEasternDateString();
   const tracker = loadDailyLoss();
   if (tracker.date !== today) {
-    return { realizedLoss: 0, realizedWin: 0, tradesClosed: 0 };
+    return {
+      realizedLoss: 0,
+      realizedWin: 0,
+      tradesClosed: 0,
+      losingTrades: 0,
+      badDayRuleApplies: false,
+    };
   }
+  const realizedLoss = tracker.realizedLoss || 0;
+  const realizedWin = tracker.realizedWin || 0;
+  const losingTrades = tracker.losingTrades || 0;
   return {
-    realizedLoss: tracker.realizedLoss || 0,
-    realizedWin: tracker.realizedWin || 0,
+    realizedLoss,
+    realizedWin,
     tradesClosed: tracker.tradesClosed || 0,
+    losingTrades,
+    badDayRuleApplies: losingTrades >= 3 && realizedWin - realizedLoss < 0,
   };
 }
 

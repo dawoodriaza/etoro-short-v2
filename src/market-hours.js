@@ -1,5 +1,12 @@
 // src/market-hours.js — reused as-is from the long-term bot, plus a Bahrain
 // time helper for console logging (Bahrain time only, 12-hour AM/PM format).
+//
+// dotenv MUST be loaded here, not inherited: TRADE_24_5 below is read from
+// process.env at MODULE LOAD time. Without this line it only worked because
+// index.js happened to load dotenv earlier in its require chain — any
+// standalone script requiring this module first would silently get 24/5
+// mode OFF and revert the analysis window to 4 AM-8 PM ET.
+require("dotenv").config();
 
 const ET_TIME_ZONE = "America/New_York";
 

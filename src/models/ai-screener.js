@@ -49,13 +49,22 @@ function buildScreenerPrompt(plan, currentPositions, marketContext) {
       : "n/a";
   const sessionLine = marketContext?.session || "REGULAR";
   const todayPnl = marketContext?.todayPnl;
+  // The BAD-DAY RULE's applicability is computed DETERMINISTICALLY in
+  // risk-manager (3+ losing closes AND net negative) and stated to the
+  // model as a fact — it is not the model's job to do the arithmetic.
+  const badDayApplies = !!todayPnl?.badDayRuleApplies;
   const todayLine = todayPnl
     ? todayPnl.tradesClosed +
-      " trade(s) closed today, won $" +
+      " trade(s) closed today (" +
+      (todayPnl.losingTrades || 0) +
+      " losers), won $" +
       todayPnl.realizedWin.toFixed(2) +
       " / lost $" +
-      todayPnl.realizedLoss.toFixed(2)
-    : "no trades closed yet today";
+      todayPnl.realizedLoss.toFixed(2) +
+      " — BAD-DAY RULE " +
+      (badDayApplies ? "IS IN EFFECT" : "does NOT apply") +
+      " (computed by code, not for you to re-derive)"
+    : "no trades closed yet today — BAD-DAY RULE does NOT apply";
   // v5.7: NEWS_HIT is a GENERIC headline tag (e.g. "Top stock movements in
   // today's session") whose sentiment was never checked — presenting it as
   // "Catalyst:" misled the model into approving VEEE (+478% pump) twice.
@@ -110,12 +119,11 @@ overextended ceiling, or SIDEWAYS trend, or weak relative strength
 those → a BULLISH-trend setup with healthy RSI and solid RS is a TAKE,
 overnight or not.
 
-BAD-DAY RULE: applies ONLY when BOTH are true: 3 or more closed losing
-trades today AND net negative on the day. When it applies, raise the bar —
-approve only setups you'd call clearly strong. When it does NOT apply
-(fewer than 3 losers, or the day is net positive), do not mention today's
-P&L in your reasoning at all — a small red number with 1-2 closes is
-normal variance, not a signal.
+BAD-DAY RULE: whether it applies is COMPUTED BY CODE and stated on the
+"Bot's results today" line above — do not re-derive it yourself. If it
+says IS IN EFFECT, raise the bar: approve only setups you'd call clearly
+strong. If it says does NOT apply, do not mention today's P&L in your
+reasoning at all — a small red number is normal variance, not a signal.
 
 SKIP ONLY for a CONCRETE, SPECIFIC reason — not a vague feeling:
 - The setup's OWN description states the volume is unavailable/unknown for
