@@ -113,11 +113,16 @@ session volume exists yet to measure) and the regime is ALWAYS UNKNOWN
 (it needs 45+ minutes of the regular session) — these two are the NORMAL
 STATE of an overnight scan, NOT warning signals, and must never be cited
 (alone or "combined with" each other) as a reason to SKIP. Overnight
-marginality means an ACTUAL signal: RSI within ~4 points of the 78
-overextended ceiling, or SIDEWAYS trend, or weak relative strength
-(under ~1 pt vs SPY). One or more of those → SKIP overnight. None of
-those → a BULLISH-trend setup with healthy RSI and solid RS is a TAKE,
-overnight or not.
+marginality means an ACTUAL signal, with EXACT thresholds — do not invent
+different ones:
+  · RSI 74 or higher (the overextended ceiling is 78 — RSI 66 is NOT
+    "near the ceiling"; never claim a lower ceiling like 70)
+  · SIDEWAYS trend read
+  · relative strength UNDER 1.0 pt vs SPY (1.2-1.8 pts is adequate — never
+    invent a higher bar like "1.5 needed overnight")
+One or more of those → SKIP overnight. None of those → a BULLISH-trend
+setup with healthy RSI and solid RS is a TAKE, overnight or not. If your
+reasoning cites a threshold, it must be one of the numbers above.
 
 BAD-DAY RULE: whether it applies is COMPUTED BY CODE and stated on the
 "Bot's results today" line above — do not re-derive it yourself. If it
