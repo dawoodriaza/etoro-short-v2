@@ -51,7 +51,14 @@ function startShadow(symbol, instrumentId, positionMeta, exitPrice, exitReason) 
     tradeType: positionMeta.tradeType || "DAY",
     exitReason,
     exitPrice,
-    targetT1: positionMeta.targetT1 || null,
+    // The RELEVANT next target: for a post-partial runner, Target 1 was
+    // already banked, so "would it have hit T1" is trivially/misleadingly
+    // true (the peak already exceeded it) — the honest counterfactual for
+    // a runner is Target 2. Confirmed live: AAPL/MSFT runner exits showed
+    // false "WOULD-HAVE-HIT-T1" flags despite capturing 80%+ of their MFE.
+    targetT1: positionMeta.partialDone
+      ? positionMeta.targetT2 || null
+      : positionMeta.targetT1 || null,
     stopPrice: positionMeta.stopPrice || null,
     exitedAtMs: Date.now(),
     checkpointsDoneMinutes: [],

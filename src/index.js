@@ -1189,6 +1189,7 @@ async function manageOpenPositions() {
         if (
           decision.reason === "TIME_EXIT_STALE" ||
           decision.reason === "SWING_TIME_EXIT" ||
+          decision.reason === "MFE_GIVEBACK" ||
           decision.reason === "AGED_PROFIT_PROTECT" ||
           decision.reason === "BREAKEVEN_STOP"
         ) {

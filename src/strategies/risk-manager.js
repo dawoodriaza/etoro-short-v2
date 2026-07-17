@@ -323,64 +323,90 @@ function confirmStopBreach(meta, currentPrice, stopLevel, peak, label) {
 // ── DAY logic ────────────────────────────────────────────────────────────────
 function decideDayAction(meta, currentPrice, peak) {
   const heldMinutes = (Date.now() - (meta.openedAt || Date.now())) / 60000;
+  const entryPrice = meta.entryPrice;
 
-  // BREAKEVEN RATCHET (pre-partial): once the position has covered 60% of
-  // the way to Target 1 (measured on the persisted PEAK, so it stays armed
-  // after a pullback), the stop rises to entry — a trade that got
-  // meaningfully green can no longer round-trip into a loss. Directly fixes
-  // the observed "was in profit, then sold at a loss" pattern (NVDA/HOOD/
-  // QCOM on 2026-07-14 all peaked green and closed red).
-  const breakevenArmed =
-    !meta.partialDone &&
-    meta.targetT1 &&
-    peak >= meta.entryPrice + 0.6 * (meta.targetT1 - meta.entryPrice);
-  const effectiveStop = breakevenArmed
-    ? Math.max(meta.stopPrice, meta.entryPrice)
-    : meta.stopPrice;
+  // ── MFE GIVEBACK ENGINE ──────────────────────────────────────────────
+  // Replaces three overlapping mechanisms (breakeven ratchet, age-gated
+  // profit guard, dual runner trail) with ONE volatility-adjusted rule.
+  // Forensic evidence that drove this redesign (2026-07-16/17 journal):
+  //   - SNAP exited -1.7% via the age-gated guard: it peaked green early,
+  //     but protection lay DORMANT until minute 75 while the profit decayed
+  //     into a loss. Arming must be MFE-based, not age-based.
+  //   - AAPL runner captured +2.4% of a +2.92% peak (82% retention) — the
+  //     retention concept works; it just needs to scale with the stock's
+  //     own volatility instead of a fixed trail.
+  // Rule: once the position's best gain (MFE, from persisted peakPrice)
+  // reaches an ATR-scaled arming threshold, an exit floor tracks the peak:
+  //   allowed giveback = min((1-retention) × MFE, givebackCap × dailyATR)
+  //   floor = entry + (MFE - allowed giveback), never below breakeven.
+  // A trade making new highs lifts its own floor; a fading trade gets
+  // harvested while most of its best profit still exists. No fixed
+  // percentages: both the arming bar and the giveback cap scale with the
+  // stock's daily ATR (fallbacks apply only when ATR was unavailable).
+  const atrPercent =
+    (meta.entryConditions && meta.entryConditions.atrPercent) != null
+      ? meta.entryConditions.atrPercent
+      : meta.plan && meta.plan.atrPercent != null
+        ? meta.plan.atrPercent
+        : null;
+  const atrFraction = atrPercent != null ? atrPercent / 100 : null;
+  const mfeGainFraction = (peak - entryPrice) / entryPrice;
+  const armThreshold = Math.max(
+    config.mfeArmMinPct,
+    atrFraction != null ? atrFraction * config.mfeArmAtrFraction : 0,
+  );
+  const mfeArmed = mfeGainFraction >= armThreshold;
+  let mfeFloor = null;
+  if (mfeArmed) {
+    const allowedGiveback = Math.min(
+      mfeGainFraction * (1 - config.mfeRetention),
+      atrFraction != null
+        ? atrFraction * config.mfeGivebackAtrCap
+        : config.mfeGivebackFallbackPct,
+    );
+    mfeFloor = Math.max(
+      entryPrice,
+      entryPrice * (1 + mfeGainFraction - allowedGiveback),
+    );
+  }
 
   // 1. Hard stop (pre-partial) — with whipsaw confirmation: a shallow poke
   // below the stop needs a second consecutive 1-min tick before exiting,
   // so a brief dip-and-bounce doesn't dump the position at the low.
-  if (!meta.partialDone && currentPrice <= effectiveStop) {
+  if (!meta.partialDone && currentPrice <= meta.stopPrice) {
     const holdDecision = confirmStopBreach(
       meta,
       currentPrice,
-      effectiveStop,
+      meta.stopPrice,
       peak,
-      breakevenArmed ? "breakeven stop" : "stop",
+      "stop",
     );
     if (holdDecision) return holdDecision;
-    return {
-      action: "EXIT",
-      reason: breakevenArmed ? "BREAKEVEN_STOP" : "STOP_LOSS",
-      newPeak: peak,
-    };
+    return { action: "EXIT", reason: "STOP_LOSS", newPeak: peak };
   }
 
-  // 2. Trailing on the runner (post-partial), floored at breakeven.
-  // AGED RUNNER TIGHTENING: the trail is a fixed 2.5% off peak with NO time
-  // decay — under 24/5 DAY_KEEP_WINNERS a green runner can be held overnight
-  // repeatedly (it stays tradeType DAY, never gets a swing-style max-hold
-  // cap) and could drift for days on a wide 2.5% leash. Once the trade is
-  // aged (same agedTradeMinutes threshold as the pre-partial guard), the
-  // trail tightens to agedTrailPct — an old runner gets harvested on a much
-  // smaller pullback instead of riding an unlimited-time wide stop.
+  // 2. MFE floor breach — applies pre- AND post-partial, immediately on
+  // arming (no age gate). Exits the position (or the runner) while most of
+  // its best profit is still intact.
+  if (mfeFloor != null && currentPrice <= mfeFloor) {
+    return { action: "EXIT", reason: "MFE_GIVEBACK", newPeak: peak };
+  }
+
+  // 3. Runner fallback trail (post-partial): only matters when the MFE
+  // engine couldn't arm (ATR unknown AND peak under the minimum) — keeps
+  // the runner from ever being fully unprotected. Floored at breakeven.
   if (meta.partialDone) {
-    const isAgedRunner = heldMinutes >= config.agedTradeMinutes;
-    const trailPct = isAgedRunner ? config.agedTrailPct : config.trailingStopPct;
-    const trailStop = peak * (1 - trailPct);
-    const effectiveTrail = Math.max(trailStop, meta.entryPrice);
-    if (currentPrice <= effectiveTrail) {
-      return {
-        action: "EXIT",
-        reason: isAgedRunner ? "AGED_PROFIT_PROTECT" : "TRAILING_STOP",
-        newPeak: peak,
-      };
+    const fallbackTrail = Math.max(
+      peak * (1 - config.trailingStopPct),
+      entryPrice,
+    );
+    if (currentPrice <= fallbackTrail) {
+      return { action: "EXIT", reason: "TRAILING_STOP", newPeak: peak };
     }
     return { action: "HOLD", reason: "trailing runner", newPeak: peak };
   }
 
-  // 3. Target 1 → sell half, trail rest
+  // 4. Target 1 → sell half, the MFE engine manages the rest
   const dayTarget = meta.targetT1 || meta.targetPrice;
   if (dayTarget && currentPrice >= dayTarget) {
     return {
@@ -392,31 +418,11 @@ function decideDayAction(meta, currentPrice, peak) {
     };
   }
 
-  // 3b. AGED-TRADE PROFIT GUARD: an old position whose peak showed a real
-  // gain must not round-trip into a loss while waiting for Target 1. Once
-  // held agedTradeMinutes+, if peak >= agedMinPeakPct, exit when price
-  // falls to peak×(1−agedTrailPct) — floored at breakeven. A trade still
-  // making new highs is untouched (the trail hangs below the rising peak);
-  // this only harvests OLD trades as they fade. Fixes the observed AVGO
-  // pattern: peaked +0.43%, no mechanism below the breakeven-ratchet arm
-  // level, time-exited -0.2% at minute 151.
-  if (heldMinutes >= config.agedTradeMinutes) {
-    const peakGainFraction = (peak - meta.entryPrice) / meta.entryPrice;
-    if (peakGainFraction >= config.agedMinPeakPct) {
-      const agedFloor = Math.max(
-        meta.entryPrice,
-        peak * (1 - config.agedTrailPct),
-      );
-      if (currentPrice <= agedFloor) {
-        return { action: "EXIT", reason: "AGED_PROFIT_PROTECT", newPeak: peak };
-      }
-    }
-  }
-
-  // 4. Time-based exit: stale and not working
+  // 5. Time-based exit: stale and not working (loser cleanup — winners are
+  // the MFE engine's job)
   if (
     heldMinutes >= config.maxHoldMinutes &&
-    currentPrice < meta.entryPrice * 1.005
+    currentPrice < entryPrice * 1.005
   ) {
     return { action: "EXIT", reason: "TIME_EXIT_STALE", newPeak: peak };
   }

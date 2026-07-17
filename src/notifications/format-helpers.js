@@ -60,6 +60,11 @@ const EXIT_REASON_INFO = {
     trigger: "📉 Trailing-Stop Guard",
     detail: "price pulled back from its peak far enough to trigger the trailing stop on the runner",
   },
+  MFE_GIVEBACK: {
+    trigger: "💎 Profit-Keeper Guard",
+    detail:
+      "the trade gave back too much of its best profit (volatility-adjusted limit) — banked what was left instead of letting it decay further",
+  },
   AGED_PROFIT_PROTECT: {
     trigger: "⏳ Aged-Trade Profit Guard",
     detail:

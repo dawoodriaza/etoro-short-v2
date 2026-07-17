@@ -148,17 +148,20 @@ const config = {
   takeProfitRunnerPct: num("DT_TAKE_PROFIT_RUNNER_PCT", 0.05),
   dailyLossLimitPct: num("DT_DAILY_LOSS_LIMIT_PCT", 0.05),
 
-  // ── Aged-trade profit guard (DAY, pre-Target-1) ───────────────────
-  // Between entry and Target 1 the bot used to have NO profit mechanism:
-  // a trade could peak +0.4% and still time-exit red hours later (real
-  // case: AVGO peaked +0.43%, closed -0.2% at minute 151). After a trade
-  // is agedTradeMinutes old, if its PEAK showed at least agedMinPeakPct
-  // gain, it exits when price falls to peak×(1−agedTrailPct), never below
-  // breakeven — harvesting what's there instead of round-tripping. A trade
-  // still climbing is untouched (the trail follows the rising peak).
-  agedTradeMinutes: int("DT_AGED_TRADE_MINUTES", 75),
-  agedMinPeakPct: num("DT_AGED_MIN_PEAK_PCT", 0.003),
-  agedTrailPct: num("DT_AGED_TRAIL_PCT", 0.0035),
+  // ── MFE GIVEBACK ENGINE (DAY exits) ───────────────────────────────
+  // One volatility-adjusted profit-protection rule (replaces the breakeven
+  // ratchet, the age-gated profit guard, and the tightened runner trail —
+  // see risk-manager.js for the forensic evidence). Arms as soon as the
+  // trade's best gain (MFE) reaches mfeArmAtrFraction of the stock's own
+  // daily ATR (floored at mfeArmMinPct when ATR is small/unknown). Once
+  // armed: allowed giveback from the peak =
+  //   min((1 - mfeRetention) × MFE, mfeGivebackAtrCap × dailyATR)
+  // and the exit floor never sits below breakeven.
+  mfeArmAtrFraction: num("DT_MFE_ARM_ATR_FRACTION", 0.25),
+  mfeArmMinPct: num("DT_MFE_ARM_MIN_PCT", 0.003),
+  mfeRetention: num("DT_MFE_RETENTION", 0.6),
+  mfeGivebackAtrCap: num("DT_MFE_GIVEBACK_ATR_CAP", 0.3),
+  mfeGivebackFallbackPct: num("DT_MFE_GIVEBACK_FALLBACK_PCT", 0.005),
 
   // ── Stop-loss whipsaw confirmation ────────────────────────────────
   // A SHALLOW breach of the stop (within stopWickBandPct below it) must
