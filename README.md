@@ -52,3 +52,4 @@ node test-4-websocket.js         # what does the live WebSocket feed actually co
 
 Paste me the full console output from all 4 and I'll tell you exactly what,
 if anything, is worth building into the bot.
+# etoro-short-v2
