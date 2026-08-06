@@ -41,6 +41,7 @@ const {
   escapeHtml,
   humanize,
   toRealDollars,
+  formatDualAmount,
 } = require("../notifications/format-helpers");
 
 // ── Trend read (bullish / bearish / sideways) ──────────────────────────────
@@ -189,6 +190,33 @@ function buildTradePlan(
   const entryPrice = candidate.currentPrice;
   if (!entryPrice || entryPrice <= 0) {
     return { accepted: false, rejectReason: "no valid entry price" };
+  }
+
+  // ══════════════════════════════════════════════════════════════════════
+  // v7.4 — MINIMUM CONVICTION SCORE.
+  //
+  // The single highest-impact filter found in the 114-trade audit. Every
+  // score band below 80 lost money; the three of them cost $476.24 while
+  // the 80+ band made $166.68. The system was already computing this
+  // number at entry and trading against it anyway.
+  //
+  // Rejected here rather than later so the reason is named in the decision
+  // journal — a silent filter is one nobody can evaluate afterwards.
+  // ══════════════════════════════════════════════════════════════════════
+  if (
+    config.minEntryScore > 0 &&
+    typeof candidate.score === "number" &&
+    candidate.score < config.minEntryScore
+  ) {
+    return {
+      accepted: false,
+      rejectReason:
+        "score " +
+        candidate.score.toFixed(0) +
+        " below the entry floor of " +
+        config.minEntryScore +
+        " (every score band under 80 lost money across 114 audited trades)",
+    };
   }
 
   const {
@@ -432,10 +460,12 @@ function formatPlanForTelegram(plan, aiReasoning) {
     " (-" +
     plan.stopDistancePct +
     "%)\n" +
+    // v7.3: show YOUR amount and the bot's, so a Telegram message can
+    // always be reconciled against the logs/ledger (which are agent dollars).
     "Size " +
-    money(toRealDollars(plan.positionDollars)) +
+    formatDualAmount(plan.positionDollars) +
     " · Risk " +
-    money(toRealDollars(plan.riskDollars)) +
+    formatDualAmount(plan.riskDollars) +
     " (" +
     plan.riskPctOfCapital +
     "% of capital)";
@@ -451,8 +481,8 @@ function formatPlanForTelegram(plan, aiReasoning) {
     ":1";
 
   const expectedLine =
-    "\n\nExpected profit if it works: +" +
-    money(toRealDollars(plan.expectedReturnDollars));
+    "\n\nExpected profit if it works: " +
+    formatDualAmount(plan.expectedReturnDollars, { signed: true });
 
   const aiLine = aiReasoning
     ? "\n\n<i>" + escapeHtml(aiReasoning) + "</i>"

@@ -21,6 +21,7 @@ const alerts = require("./notifications/alerts");
 const marketDataStream = require("./market-data-stream"); // v5.3: optional Alpaca stream
 const etoroMarketData = require("./data-sources/etoro-market-data"); // v5.4: primary source
 const etoroClient = require("./etoro-client"); // v5.4: for instrumentId resolution
+const marketHours = require("./market-hours"); // P0 fix: single ET clock source
 
 const TWELVE_DATA_KEY = process.env.TWELVE_DATA_API_KEY;
 
@@ -392,16 +393,14 @@ async function enrichCandidateFromEtoro(symbol, instrumentId) {
  // a full day's average — comparing partial-session volume to a whole
  // day's typical volume structurally fails almost all day.
  const REGULAR_SESSION_MINUTES = 390; // 9:30 AM - 4:00 PM ET
- const nowEasternString = new Date().toLocaleString("en-US", {
-   timeZone: "America/New_York",
-   hour12: false,
-   hour: "2-digit",
-   minute: "2-digit",
- });
- const [etHourString, etMinuteString] = nowEasternString.split(":");
- const etHour = parseInt(etHourString);
- const etMinute = parseInt(etMinuteString);
- const rawMinutesSinceOpen = (etHour - 9) * 60 + (etMinute - 30);
+ // P0 FIX (2026-07-27): this used to parse `hour12: false` locally. On the
+ // production server's Node 20 that returns hour 24 at 00:xx ET, making
+ // rawMinutesSinceOpen ~900. That is > 0, so the pre-market guard below
+ // was bypassed and RVOL compared a few midnight prints against a FULL
+ // day's expected volume — an artificially crushed ratio that penalised
+ // (watchlist) or hard-rejected (discovered) every candidate for that
+ // hour. Now uses the single fixed helper in market-hours.js.
+ const rawMinutesSinceOpen = marketHours.getMinutesSinceEasternOpen();
 
  // RVOL is only meaningful DURING/AFTER a regular session with real volume.
  // Pre-market and overnight (24/5 mode) there is no session volume yet —

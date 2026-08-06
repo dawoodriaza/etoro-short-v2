@@ -232,6 +232,284 @@ const config = {
   chopRangeThresholdPct: num("DT_CHOP_RANGE_THRESHOLD_PCT", 0.5),
   chopRegimeScoreBonus: num("DT_CHOP_REGIME_SCORE_PENALTY", 15),
   slippageBufferPct: num("DT_SLIPPAGE_BUFFER_PCT", 0.001),
+
+  // ── v6 (2026-07-21, review-driven upgrade) ────────────────────────
+  //
+  // GHOST-POSITION RECONCILIATION: position-meta.json can silently diverge
+  // from eToro's real portfolio (a position closes via stop/target/manual
+  // action while the bot's own exit path never runs — e.g. a crash between
+  // the eToro close call and the meta delete). A meta entry with NO
+  // matching live eToro position, older than this grace window (protects
+  // against genuine order-settlement lag on a JUST-opened position), is
+  // cleared as a "ghost" — otherwise it permanently blocks re-entry (the
+  // no-pyramiding guard) and inflates the day/swing slot count forever.
+  ghostPositionGraceMinutes: int("DT_GHOST_GRACE_MINUTES", 5),
+
+  // RECOVERY-AWARE TIME EXITS: TIME_EXIT_STALE (DAY) and SWING_TIME_EXIT
+  // (SWING) used to fire purely on the clock, with no read on whether the
+  // position was actually stabilizing/recovering. Both now check a short
+  // recent-price trend before force-exiting a LOSING/flat position, and
+  // grant ONE bounded grace extension if the trend looks like a recovery —
+  // never unlimited, and the hard stop-loss/floor remains fully live and
+  // unaffected throughout any extension.
+  recoveryCheckEnabled: bool("DT_RECOVERY_CHECK_ENABLED", true),
+  recoveryCheckMinSamples: int("DT_RECOVERY_MIN_SAMPLES", 3),
+  recoveryCheckMinSlopePct: num("DT_RECOVERY_MIN_SLOPE_PCT", 0.05),
+  dayStaleGraceExtensionMinutes: int("DT_DAY_STALE_GRACE_MINUTES", 45),
+  swingTimeExitGraceExtensionDays: num("DT_SWING_TIME_GRACE_DAYS", 3),
+
+  // PROFIT-STALL LOCK: if a DAY position is in profit but hasn't made a new
+  // peak (high-water mark) in this many minutes, lock in gains with a
+  // partial exit — UNLESS the short-term trend still looks like it's about
+  // to make a new high, in which case the stall check just re-arms instead
+  // of exiting. This is distinct from the existing MFE-giveback engine
+  // (which reacts to giving back PRICE from the peak); this reacts to
+  // flatlining WITHOUT necessarily giving anything back.
+  profitStallEnabled: bool("DT_PROFIT_STALL_ENABLED", true),
+  profitStallMinMinutes: int("DT_PROFIT_STALL_MIN_MINUTES", 45),
+  profitStallMinProfitPct: num("DT_PROFIT_STALL_MIN_PROFIT_PCT", 0.4),
+  profitStallLockFraction: num("DT_PROFIT_STALL_LOCK_FRACTION", 0.5),
+
+  // VOLATILITY-SCALED TIME BUDGETS: a HIGH-ATR name should show its hand
+  // fast; a LOW-ATR name legitimately needs longer to develop. Multiplies
+  // config.maxHoldMinutes / swingMaxHoldDays by bucket before the
+  // stale/time-exit checks apply. MEDIUM bucket is always ×1 (the
+  // configured default values ARE the medium-bucket numbers).
+  timeBudgetLowVolMultiplier: num("DT_TIME_BUDGET_LOW_VOL_MULT", 1.5),
+  timeBudgetHighVolMultiplier: num("DT_TIME_BUDGET_HIGH_VOL_MULT", 0.7),
+
+  // RE-ENTRY JUSTIFICATION (averaging-down / re-buy discipline): this bot
+  // never pyramids (no scale-in on an OPEN position — held symbols are
+  // always excluded from candidates), so "averaging down" in practice means
+  // RE-ENTERING a symbol shortly after it closed for a LOSS. A loss-close
+  // now gets a LONGER cooldown than a normal exit, and re-entry inside that
+  // window requires a meaningfully STRONGER setup than the one that lost
+  // (higher score), not just "a setup re-fired."
+  lossCooldownMultiplier: num("DT_LOSS_COOLDOWN_MULTIPLIER", 2.0),
+  lossReentryMinScoreImprovement: num("DT_LOSS_REENTRY_MIN_SCORE_IMPROVEMENT", 15),
+
+  // PRE-OPEN / OPEN-VOLATILITY BUY BLACKOUT: blocks NEW entries only (never
+  // exits/EOD closes) from (open - N min) to (open + M min) ET, but ONLY
+  // when SPY/market conditions are actually weak — a strong tape trades
+  // through the open just fine. Matters most in 24/5 mode (DT_TRADE_24_5),
+  // which otherwise bypasses every session-timing gate entirely.
+  preOpenBlackoutEnabled: bool("DT_PRE_OPEN_BLACKOUT_ENABLED", true),
+  preOpenBlackoutMinutesBefore: int("DT_PRE_OPEN_BLACKOUT_BEFORE_MIN", 60),
+  postOpenBlackoutMinutesAfter: int("DT_POST_OPEN_BLACKOUT_AFTER_MIN", 30),
+  // "Weak" = SPY change at/below this, OR VIX-aware regime already read as
+  // bearish-ish (reuses spyMinChangePctForLongs as the floor by default so
+  // there's one source of truth for "SPY is weak").
+  preOpenBlackoutSpyWeakPct: num(
+    "DT_PRE_OPEN_BLACKOUT_SPY_WEAK_PCT",
+    num("DT_SPY_MIN_CHANGE_PCT", -1.0),
+  ),
+
+  // LIVE CAPITAL RECONCILIATION: effectiveCapital was purely a local ledger
+  // (base + cumulative realized P&L), never checked against the REAL eToro
+  // agent-portfolio equity. If they drift beyond this tolerance (deposits,
+  // withdrawals, a missed/ghost close, manual intervention), the ledger is
+  // corrected to match the live account and the correction is logged/alerted
+  // — never silent.
+  capitalReconciliationTolerancePct: num(
+    "DT_CAPITAL_RECONCILE_TOLERANCE_PCT",
+    0.01,
+  ),
+
+  // REAL-TIME EXIT WATCHDOG (eToro WebSocket): the 1-minute exit-monitor
+  // tick is already fast, but a live tick stream closes even that gap for
+  // the disaster case — an estimated hard-stop-level breach triggers an
+  // IMMEDIATE off-cycle exit-monitor run instead of waiting up to 60s.
+  // Ticks only TRIGGER a check; eToro's own P&L via REST remains the source
+  // of truth for the actual close decision (identical philosophy to the
+  // sibling long-term bot's etoro-price-stream.js).
+  priceStreamEnabled: bool("DT_PRICE_STREAM_ENABLED", true),
+  priceStreamHardStopMultiplier: num("DT_PRICE_STREAM_HARD_STOP_MULT", 1.5),
+
+  // ── v7 (2026-07-25, AI decision-layer rewrite) ────────────────────
+  //
+  // MARKET BRIEF (src/strategies/market-context.js): one compact macro
+  // block, built once per scan and shared by BOTH AI prompts. Costs one
+  // extra batched rates call per marketBriefIndexCacheMinutes plus a
+  // 6h-cached FRED series. Disable to fall back to the v6 behaviour
+  // (SPY % + regime word only) without touching code.
+  marketBriefEnabled: bool("DT_MARKET_BRIEF_ENABLED", true),
+  marketBriefIndexCacheMinutes: int("DT_MARKET_BRIEF_INDEX_CACHE_MIN", 10),
+  // Below this many quoted names, watchlist breadth is reported as
+  // unavailable rather than computed from a sample too small to mean
+  // anything (3 names "60% advancing" is noise, not breadth).
+  marketBriefMinBreadthSample: int("DT_MARKET_BRIEF_MIN_BREADTH_SAMPLE", 5),
+  // Below this many available signals, risk tone is UNKNOWN rather than
+  // guessed — an honest abstention beats a confident coin-flip.
+  marketBriefMinToneSignals: int("DT_MARKET_BRIEF_MIN_TONE_SIGNALS", 3),
+
+  // AI OUTPUT BUDGETS. Both prompts now emit short structured reasoning
+  // fields BEFORE their verdict (the decision is generated last, so it is
+  // conditioned on the evidence the model just wrote out). That costs more
+  // output tokens than v6's bare verdict+reasoning, so the old max_tokens
+  // of 300 would truncate mid-JSON and fail the parse.
+  screenerMaxTokens: int("DT_SCREENER_MAX_TOKENS", 600),
+  reviewerMaxTokens: int("DT_REVIEWER_MAX_TOKENS", 900),
+
+  // SCREENER CONFIDENCE FLOOR: a TAKE carrying confidence below this is
+  // downgraded to SKIP in code. Deliberately permissive by default (only
+  // 1-3 of 10 blocked) — this bot has a documented history of the screener
+  // rejecting nearly everything, and a tight floor here would recreate it.
+  // Raise toward 6-7 only if the journal shows low-confidence TAKEs losing.
+  screenerMinConfidenceToTake: int("DT_SCREENER_MIN_CONF_TAKE", 4),
+
+  // REVIEWER — DYNAMIC TRADE MANAGEMENT. v6 gave the daily reviewer three
+  // actions (EXTEND / HOLD / TIGHTEN); v7 adds banking a partial and
+  // closing outright, each behind its own confidence floor and its own
+  // deterministic guardrails in applyReviewDecision(). Every floor is
+  // enforced in CODE, never trusted to the prompt.
+  reviewerAllowTakePartial: bool("DT_REVIEWER_ALLOW_TAKE_PARTIAL", true),
+  reviewerTakePartialFraction: num("DT_REVIEWER_TAKE_PARTIAL_FRACTION", 0.5),
+  reviewerMinConfidenceToTakePartial: int("DT_REVIEWER_MIN_CONF_PARTIAL", 6),
+  // CLOSE is the most destructive action the reviewer can request, so it
+  // carries the highest bar. Every AI-initiated close is also registered
+  // with the exit-shadow tracker, so "was the AI right to bail?" becomes
+  // measurable evidence instead of an opinion.
+  reviewerAllowClose: bool("DT_REVIEWER_ALLOW_CLOSE", true),
+  reviewerMinConfidenceToClose: int("DT_REVIEWER_MIN_CONF_CLOSE", 7),
+  // Floor for a TIGHTEN driven by the reviewer's own stated maximum
+  // acceptable drawdown. Without it, a model that answers "0.3%" would
+  // place the stop inside normal spread and guarantee an instant stop-out.
+  reviewerTightenMinStopPct: num("DT_REVIEWER_TIGHTEN_MIN_STOP_PCT", 0.005),
+
+  // ── v7.1 (2026-07-27) — production bug fixes found in live pm2 logs ──
+  //
+  // GROSS EXPOSURE CAP. Per-position caps cannot bound the book:
+  // maxPositionPctDay 0.35 × maxDayPositions 3 = 105% of capital by
+  // construction. On 2026-07-27 the bot opened 5 positions in one scan
+  // totalling 125% of effective capital. This caps the SUM of everything
+  // open. Set to 0 to disable.
+  maxTotalExposurePct: num("DT_MAX_TOTAL_EXPOSURE_PCT", 0.9),
+
+  // RE-ENTRY BAR CEILING. momentum-scanner caps scores at 100, so
+  // "priorScore + 15" becomes unreachable above 85 and silently bans a
+  // symbol forever (AMD lost at 88, needed 103, was rejected 13 times in
+  // three hours). The bar is clamped to this reachable maximum.
+  reentryMaxRequiredScore: num("DT_REENTRY_MAX_REQUIRED_SCORE", 90),
+
+  // SESSION-AWARE TIME BUDGETS. maxHoldMinutes is a REGULAR-SESSION
+  // number; measuring it on the wall clock kills pre-market positions that
+  // never got a single minute of the session they were sized for (SNAP,
+  // RIVN and AVGO all died this way on the Monday pre-market of
+  // 2026-07-27, and TIME_EXIT_STALE is 71% of all exits ever made).
+  // When true, the DAY hold budget is spent in real trading minutes only.
+  sessionAwareTimeBudgets: bool("DT_SESSION_AWARE_TIME_BUDGETS", true),
+  // Absolute wall-clock backstop, as a multiple of maxHoldMinutes, so a
+  // position opened before a weekend (when session minutes never accrue)
+  // still cannot be held indefinitely. 90min × 8 = 12h by default.
+  maxHoldWallClockCeilingMultiplier: num("DT_MAX_HOLD_CEILING_MULT", 8),
+
+  // UNCONFIRMED-POSITION GRACE. eToro's portfolio feed often does not show
+  // a position immediately after opening. The short ghost grace now
+  // applies only to positions eToro has shown us at least once; a position
+  // never confirmed gets this longer window before anything is cleared.
+  unconfirmedPositionGraceMinutes: int("DT_UNCONFIRMED_GRACE_MINUTES", 30),
+
+  // OWNER DEPOSITS / WITHDRAWALS. Money the owner moves in or out is not
+  // trading P&L. Without this, withdrawing $3,000 from a $9,300 account
+  // with a $10,032 peak reads as a 37% drawdown against a 15% limit and
+  // halts the bot; and the capital floor (a fraction of the .env base)
+  // would keep sizing against money no longer in the account.
+  //
+  // A drift beyond capitalTransferDetectPct is treated as a transfer: the
+  // capital base moves with it and the peak is scaled PROPORTIONALLY,
+  // which leaves the drawdown percentage unchanged — so a transfer can
+  // neither trip the breaker nor hide an existing breach. Smaller drifts
+  // keep the old conservative handling (correct the ledger, never lower
+  // the peak), since those are more likely an untracked/ghost close.
+  //
+  // For an exact, declared transfer use:  node src/capital-adjust.js -3000
+  capitalAutoDetectTransfers: bool("DT_CAPITAL_AUTO_DETECT_TRANSFERS", true),
+  capitalTransferDetectPct: num("DT_CAPITAL_TRANSFER_DETECT_PCT", 0.05),
+  // v7.3: how many CONSECUTIVE checks must show the same large drift before
+  // the capital base is rewritten. Added after a single bad equity reading
+  // (cash reserved for two queued orders) was converted into a $6,596.66
+  // phantom withdrawal on 2026-07-31. A real transfer persists; an artefact
+  // does not. Money movement is never urgent — waiting is free, acting on a
+  // false positive destroys the capital baseline silently.
+  capitalTransferConfirmCycles: int("DT_CAPITAL_TRANSFER_CONFIRM_CYCLES", 3),
+
+  // ── v7.2 (2026-07-27) — LIVE POSITION INTEGRITY ────────────────────
+  //
+  // SELF-HEALING SYNC. dollarAmount and entryPrice were written once at
+  // open and never re-checked. Measured live: META was tracked at $2,150
+  // while eToro actually held $1,113.74 — 93% wrong, for four hours.
+  // These tolerances decide when the bot corrects its own record against
+  // the real account. Amount drift is common (partial fills), so it is a
+  // straight correction; an entry-price drift additionally rescales the
+  // stop/target geometry so the intended risk percentage is preserved.
+  positionSyncAmountTolerancePct: num("DT_POSITION_SYNC_AMOUNT_TOL", 0.02),
+  // 0.05%. Deliberately tight: the largest entry drift measured on the live
+  // account was QCOM at 0.097% (tracked $170.735 vs a real $170.90), which
+  // put the derived price $0.16 away from the truth against a stop only
+  // $3.80 wide. A 0.2% threshold would have ignored every real case seen.
+  // eToro's openRate is static once filled, so correcting it cannot churn.
+  positionSyncEntryTolerancePct: num("DT_POSITION_SYNC_ENTRY_TOL", 0.0005),
+
+  // UNTRACKED POSITIONS. A live position with no meta entry used to be
+  // skipped silently by both the exit monitor and the EOD closer — no
+  // stop, no exit, no alert, forever. If the bot previously ghost-cleared
+  // that symbol and it reappears within this window, its saved plan is
+  // restored automatically (that is the RIVN scenario).
+  readoptWindowMinutes: int("DT_READOPT_WINDOW_MINUTES", 720), // 12h
+
+  // Positions the bot never opened (a manual trade, say) are ALERTED on
+  // but not touched, because closing someone else's deliberate trade is
+  // not the bot's business. Turn this on to have it adopt and protect
+  // them instead, using the percentage stop below.
+  adoptForeignPositions: bool("DT_ADOPT_FOREIGN_POSITIONS", false),
+  adoptedPositionStopPct: num("DT_ADOPTED_POSITION_STOP_PCT", 0.03),
+
+  // ── v7.4 (2026-08-06) — EDGE FILTERS FROM THE 114-TRADE AUDIT ──────
+  //
+  // MINIMUM ENTRY SCORE. Measured across 114 closed trades, every score
+  // band below 80 lost money and the three of them cost $476.24 combined:
+  //
+  //     score  0-49 : 27 trades  48% win  -$97.01
+  //     score 50-64 : 24 trades  38% win  -$218.92
+  //     score 65-79 : 18 trades  50% win  -$160.31
+  //     score 80+   : 45 trades  60% win  +$166.68   <- the only profitable band
+  //
+  // Note the score correlates only 0.157 with P&L as a CONTINUOUS value
+  // but behaves strongly as a THRESHOLD — it carries information at its
+  // extreme and noise everywhere else. So it is used as a gate here, not
+  // as a ranking. Set to 0 to disable.
+  //
+  // CAVEAT worth remembering: 80 is defensible because the effect is
+  // monotonic across four bands and the mechanism is plausible, NOT
+  // because the number is precise. It is fitted to 114 observations
+  // against ~135 tunables. Re-derive it once the replay harness exists.
+  minEntryScore: num("DT_MIN_ENTRY_SCORE", 80),
+
+  // OVERNIGHT DEAD ZONE (Eastern time). The audit tested whether the
+  // score gate alone rescues 24/5 trading. It rescues every session
+  // EXCEPT this one:
+  //
+  //     00:00-04:00 ET, score 80+ :  3 trades   0% win  -$27.07/trade
+  //     04:00-09:00 ET, score 80+ :  5 trades  80% win  +$12.25/trade
+  //     09:00-16:00 ET, score 80+ : 32 trades  59% win   +$3.46/trade
+  //     16:00-24:00 ET, score 80+ :  5 trades  80% win  +$15.17/trade
+  //
+  // All 16 overnight trades lost money regardless of score; high-score
+  // ones lost FASTEST. Deep overnight has no liquidity to move a position
+  // in your favour, volume data is unavailable, and the regime classifier
+  // is definitionally blind. So 24/5 stays ON — only this window closes.
+  //
+  // Blocks NEW ENTRIES only. Exits, stops and EOD closes are untouched.
+  overnightDeadZoneEnabled: bool("DT_OVERNIGHT_DEAD_ZONE", true),
+  overnightDeadZoneStartHourET: int("DT_DEAD_ZONE_START_ET", 0),
+  overnightDeadZoneEndHourET: int("DT_DEAD_ZONE_END_ET", 4),
+
+  // LIVE VOLATILITY via VXX (eToro instrumentId 3163), replacing the
+  // 1-3 day stale FRED VIX close as the real-time volatility read. VXX
+  // rising while SPY falls = volatility genuinely expanding right now,
+  // which is actionable in a way that a two-day-old VIX print is not.
+  // FRED is retained as the slow absolute-level reference.
+  vxxExpansionPct: num("DT_VXX_EXPANSION_PCT", 3.0),
 };
 
 module.exports = config;

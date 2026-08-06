@@ -25,48 +25,84 @@ function isConfigured() {
   return FRED_API_KEY.length > 0;
 }
 
-let cachedVix = null;
-let cachedAtMs = 0;
-const CACHE_MS = 6 * 60 * 60 * 1000; // VIXCLS updates once/day — 6h cache is plenty
+const CACHE_MS = 6 * 60 * 60 * 1000; // daily series — a 6h cache is plenty
 
-// Returns the latest available VIX close, or null if unconfigured/unavailable.
-async function getLatestVix() {
-  if (!isConfigured()) return null;
+// { SERIES_ID: { atMs, points: [{date, value}] } }
+const seriesCache = {};
 
-  if (cachedVix != null && Date.now() - cachedAtMs < CACHE_MS) {
-    return cachedVix;
+// v7: shared fetcher. Returns the most recent `wanted` NUMERIC observations,
+// newest first — FRED emits "." for days a series has no print (holidays,
+// not-yet-published), so the caller must never assume observations[0] is a
+// number. Returns [] on any failure: every caller degrades to "unavailable"
+// rather than blocking a scan on a macro nicety.
+async function fetchRecentNumericObservations(seriesId, wanted) {
+  if (!isConfigured()) return [];
+
+  const cached = seriesCache[seriesId];
+  if (cached && Date.now() - cached.atMs < CACHE_MS) {
+    return cached.points.slice(0, wanted);
   }
 
   try {
     const response = await axios.get(FRED_BASE_URL, {
       params: {
-        series_id: "VIXCLS",
+        series_id: seriesId,
         api_key: FRED_API_KEY,
         file_type: "json",
         sort_order: "desc",
-        limit: 5, // a few, in case the most recent point(s) are "."  (no data yet)
+        limit: Math.max(10, wanted * 5), // headroom for "." gaps
       },
       timeout: 10000,
     });
-    const observations = response.data?.observations || [];
-    const latestNumeric = observations.find(
-      (observation) => observation.value && observation.value !== ".",
-    );
-    if (!latestNumeric) return null;
+    const points = (response.data?.observations || [])
+      .filter((observation) => observation.value && observation.value !== ".")
+      .map((observation) => ({
+        date: observation.date,
+        value: parseFloat(observation.value),
+      }))
+      .filter((point) => !isNaN(point.value));
 
-    const vixValue = parseFloat(latestNumeric.value);
-    if (isNaN(vixValue)) return null;
+    if (points.length === 0) return [];
 
-    cachedVix = vixValue;
-    cachedAtMs = Date.now();
-    logger.info(
-      "VIX (FRED, " + latestNumeric.date + "): " + vixValue.toFixed(2),
-    );
-    return vixValue;
+    seriesCache[seriesId] = { atMs: Date.now(), points };
+    return points.slice(0, wanted);
   } catch (fetchError) {
-    logger.warn("FRED VIX fetch failed: " + fetchError.message);
-    return null;
+    logger.warn(
+      "FRED " + seriesId + " fetch failed (non-fatal): " + fetchError.message,
+    );
+    return [];
   }
 }
 
-module.exports = { isConfigured, getLatestVix };
+// Returns the latest available VIX close, or null if unconfigured/unavailable.
+async function getLatestVix() {
+  const points = await fetchRecentNumericObservations("VIXCLS", 1);
+  if (points.length === 0) return null;
+  logger.info("VIX (FRED, " + points[0].date + "): " + points[0].value.toFixed(2));
+  return points[0].value;
+}
+
+// v7: 10-YEAR TREASURY YIELD (series DGS10) + its 1-session change in basis
+// points. Rates are the single macro variable that reliably re-prices whole
+// sectors intraday — financials tend to like a rising 10y, long-duration
+// growth/tech tends to dislike it. That is a real, checkable relationship
+// this bot can act on, unlike the monthly macro prints (CPI/GDP/employment),
+// which are weeks stale by the time a day-trade scan runs and would only
+// give the model something vague to rationalise with.
+//
+// Returns { value, changeBps, asOf } or null. changeBps is null when only a
+// single observation is available (so the model is never shown a fabricated
+// zero change).
+async function getTenYearYield() {
+  const points = await fetchRecentNumericObservations("DGS10", 2);
+  if (points.length === 0) return null;
+
+  const changeBps =
+    points.length >= 2
+      ? Number(((points[0].value - points[1].value) * 100).toFixed(1))
+      : null;
+
+  return { value: points[0].value, changeBps, asOf: points[0].date };
+}
+
+module.exports = { isConfigured, getLatestVix, getTenYearYield };

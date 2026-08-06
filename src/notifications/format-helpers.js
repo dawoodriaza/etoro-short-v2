@@ -22,6 +22,54 @@ function toRealDollars(agentDollars) {
   return agentDollars * ratio;
 }
 
+// v7.3 — THE ONE WAY TO PRINT MONEY IN A TELEGRAM MESSAGE.
+//
+// Takes an AGENT-account dollar figure and renders YOUR amount first, with
+// the bot-account figure in brackets:  "$114.63 (bot $3275.00)"
+//
+// Why both: before this, the trade messages were scaled to the real account
+// while every system alert printed raw agent dollars. The same position
+// therefore appeared as "$114.63" in one message and "$3275.00" in the
+// next, which made a genuine incident (a phantom withdrawal on 2026-07-31)
+// far harder to read than it needed to be. Showing one number hides which
+// account you are looking at; showing both makes it unambiguous and keeps
+// Telegram reconcilable against the logs, portfolio-check and the ledger —
+// all of which report agent dollars.
+//
+// When no separate real-account allocation is configured the ratio is 1 and
+// the bracket is omitted, so single-account users see no clutter.
+//
+// v7.5: the bot-dollar bracket is now OFF by default — every Telegram
+// figure shows only the real (copy-account) amount, per explicit request.
+// Pass { includeBotAmount: true } at a call site that specifically needs
+// the bracket back (e.g. for debugging a fill-mismatch investigation).
+//
+// NOTE: a few of these strings are also written to the log file verbatim —
+// systemAlert() in alerts.js logs the exact same text it sends to Telegram.
+// Those specific log lines (fill-mismatch/ghost/untracked-position alerts)
+// will therefore show real-account dollars too, while the rest of the log
+// file (position sizing, plan lines, scan output — none of which call this
+// helper) continues to show bot-account dollars as before.
+function formatDualAmount(agentDollars, options = {}) {
+  if (typeof agentDollars !== "number" || isNaN(agentDollars)) {
+    return String(agentDollars);
+  }
+  const ratio = config.realAccountCapital / config.dayTradeCapital;
+  const signed = options.signed === true;
+  const includeBotAmount = options.includeBotAmount === true;
+  const render = (value) =>
+    (signed && value >= 0 ? "+$" : value < 0 ? "-$" : "$") +
+    Math.abs(value).toFixed(2);
+
+  if (!Number.isFinite(ratio) || Math.abs(ratio - 1) < 1e-9) {
+    return render(agentDollars);
+  }
+  const realAmount = render(agentDollars * ratio);
+  return includeBotAmount
+    ? realAmount + " (bot " + render(agentDollars) + ")"
+    : realAmount;
+}
+
 function escapeHtml(text) {
   return String(text == null ? "" : text)
     .replace(/&/g, "&amp;")
@@ -115,4 +163,10 @@ function describeExitReason(reasonCode) {
   );
 }
 
-module.exports = { escapeHtml, humanize, describeExitReason, toRealDollars };
+module.exports = {
+  escapeHtml,
+  humanize,
+  describeExitReason,
+  toRealDollars,
+  formatDualAmount,
+};

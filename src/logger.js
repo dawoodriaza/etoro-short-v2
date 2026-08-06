@@ -9,6 +9,50 @@ const winston = require("winston");
 const path = require("path");
 const fs = require("fs");
 
+// v7.5 — LOG TIMESTAMPS IN THE OPERATOR'S TIMEZONE, NOT SERVER UTC.
+//
+// The server's system clock is Etc/UTC (verified via `timedatectl`), and
+// winston.format.timestamp() stamps every line from that clock. Every log
+// line in this file has therefore always been printed in UTC — three hours
+// behind what every "X Bahrain" message in the console output implied.
+//
+// Reuses the same DT_LOG_TIMEZONE the rest of the bot already uses for its
+// "Bahrain" labels (see market-hours.js), read directly from process.env
+// rather than requiring config.js — this module must stay dependency-free
+// so nothing can create a require cycle through it.
+const LOG_DISPLAY_TIME_ZONE = process.env.DT_LOG_TIMEZONE || "Asia/Bahrain";
+
+function formatLogTimestamp() {
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: LOG_DISPLAY_TIME_ZONE,
+    hourCycle: "h23",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+  })
+    .formatToParts(new Date())
+    .reduce((acc, part) => {
+      acc[part.type] = part.value;
+      return acc;
+    }, {});
+  return (
+    parts.year +
+    "-" +
+    parts.month +
+    "-" +
+    parts.day +
+    " " +
+    parts.hour +
+    ":" +
+    parts.minute +
+    ":" +
+    parts.second
+  );
+}
+
 const logDirectory = path.join(__dirname, "../logs");
 if (!fs.existsSync(logDirectory))
   fs.mkdirSync(logDirectory, { recursive: true });
@@ -20,7 +64,7 @@ if (!fs.existsSync(dataDirectory))
 // ── Log format ─────────────────────────────────────────────────────────────
 
 const timestampedFormat = winston.format.combine(
-  winston.format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
+  winston.format.timestamp({ format: formatLogTimestamp }),
   winston.format.errors({ stack: true }),
   winston.format.printf(({ timestamp, level, message, ...metadata }) => {
     const extraData = Object.keys(metadata).length

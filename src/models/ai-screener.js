@@ -1,177 +1,263 @@
 // src/models/ai-screener.js
 //
-// v5 (2026-07-04): failure ALERTING added. The screener is fail-closed
-// (an unscreened plan is never traded — correct), but before v5 a dead
-// Anthropic key / network problem meant every plan silently became SKIP
-// and the bot just... stopped trading, with only warn-level log lines.
-// Now: any screener error fires a throttled Telegram system alert, and if
-// EVERY plan in a batch errored, a batch-level alert fires too.
+// THE ENTRY RISK GATE. One fast Haiku call per fully-formed trade plan,
+// returning a decisive TAKE/SKIP veto. The AI never sets prices — trade
+// planner geometry is authoritative.
 //
-// v4 design retained: the AI screens the COMPLETE TRADE PLAN and gives a
-// decisive TAKE/SKIP veto. It does NOT set prices — trade-planner geometry
-// is authoritative. One fast Haiku call per candidate.
+// ═══════════════════════════════════════════════════════════════════════
+// v7 (2026-07-25) — FULL PROMPT REWRITE.
 //
-// v5.6.1: PROMPT REWRITE. Traced from real journal data that the screener
-// was rejecting ~100% of plans over weeks — including clean watchlist
-// setups (ANET, AVGO) with unremarkable, filter-passing RSI/volume
-// numbers. Root cause: the old prompt was pure "find a reason to reject"
-// with vague, rationalization-friendly criteria ("smells like a pump",
-// "screams exhaustion") and NO counterbalancing instruction for when to
-// say TAKE. Rewritten to require CONCRETE, specific evidence for a SKIP,
-// with an explicit default-to-TAKE instruction when nothing concrete is
-// wrong. Also explicitly tells the model not to treat "volume data
-// unavailable" text as if it meant "zero volume" (see the matching fix in
-// momentum-scanner.js's describeVolume()).
+// WHY THE ROLE IS "RISK OFFICER", NOT "PORTFOLIO MANAGER":
+//   This call answers one binary question about one already-sized,
+//   already-priced plan. Casting it as a portfolio manager would invite
+//   it to re-do work it cannot do here — sizing, target selection,
+//   portfolio construction — and every such invitation historically
+//   turned into a rationalised rejection. The PM role lives in
+//   ai-position-reviewer.js, where the model genuinely manages open risk
+//   across a book. Matching the role to the actual decision is what makes
+//   an institutional framing help rather than hurt.
+//
+// STRUCTURAL CHANGES FROM v6:
+//   1. SYSTEM/USER SPLIT. Everything invariant (role, method, decision
+//      rules, output contract) moved to a `system` string that is byte-
+//      identical for every candidate in a scan. Everything that varies
+//      (the evidence) is the user turn. This separates instruction from
+//      data, which is what stops the model treating a data quirk as a
+//      new instruction.
+//   2. REASONING BEFORE VERDICT. The response JSON emits evidence checks
+//      and three separated reads FIRST and `decision` LAST. JSON is
+//      generated top-to-bottom, so the verdict is conditioned on reasoning
+//      the model has already committed to in writing. This is deliberately
+//      cheaper than extended thinking (~60 output tokens vs 1024+ minimum
+//      thinking budget) and it lands in the journal, where thinking tokens
+//      would not.
+//   3. EXPLICIT `disqualifier` SLOT. The model must name the single
+//      concrete blocking fact or write null. This directly targets the
+//      v5.6.1 pathology (~100% rejection on vague, rationalisation-shaped
+//      objections): a SKIP now requires filling a named-fact slot, and a
+//      null disqualifier with a TAKE is the natural, low-effort path.
+//   4. EVIDENCE SUFFICIENCY IS A FIELD, NOT A HOPE. `unavailableData`
+//      forces the model to enumerate what it could NOT see before it
+//      reasons, so absent data is stated rather than imagined.
+//   5. CONFIDENCE MUST BE EXPLAINED. A bare 1-10 integer is unfalsifiable;
+//      `confidenceRationale` makes the number auditable in the journal.
+//
+// EVERY v5.x/v6 BEHAVIOURAL FIX IS PRESERVED — each was traced from real
+// production misbehaviour and dropping one would regress the bot:
+//   · exact overnight thresholds (the model invented stricter ones)
+//   · BAD-DAY rule computed in code and stated as fact
+//   · "volume unavailable" must never be read as "zero volume"
+//   · verified catalyst vs generic headline
+//   · discovered-microcap pump profile
+//   · default-to-TAKE when nothing concrete is wrong
 require("dotenv").config();
 const Anthropic = require("@anthropic-ai/sdk");
 const { logger } = require("../logger");
+const config = require("../config");
 const { sectorBucketFor } = require("../strategies/risk-manager");
+// NOTE: market-context is deliberately NOT required here. The brief is built
+// once per scan in index.js and passed in as context.briefText — importing it
+// would add a needless require edge into etoro-client from a leaf module, and
+// this codebase has already been bitten once by a circular require (see the
+// v5 header in momentum-scanner.js, which silently killed every scan cycle).
 const alerts = require("../notifications/alerts");
 
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
-function buildScreenerPrompt(plan, currentPositions, marketContext) {
+// ── SYSTEM PROMPT ──────────────────────────────────────────────────────────
+// Invariant across every candidate in a scan. Keep it that way: anything
+// varying per candidate belongs in the user turn.
+const SCREENER_SYSTEM_PROMPT = `You are the entry risk officer on a systematic trading desk, holding the final veto on trade plans that already cleared the desk's quantitative filters.
+
+ALREADY ENFORCED IN CODE — settled, do not re-litigate: VWAP trend, relative strength vs SPY, RSI band, volume floor, risk/reward geometry, sizing, stop and target placement, sector caps, cooldowns. Re-arguing these is the most common failure in this seat. In particular, RSI is already confirmed inside the acceptable band — never reject on RSI alone unless it is genuinely extreme.
+
+YOUR ONLY QUESTION: is there a concrete, nameable fact making this plan untrustworthy DESPITE passing them?
+Yes -> SKIP and name it. No -> TAKE. "Could fade" is not a reason: no trade is certain, and demanding certainty rejects everything.
+
+METHOD — assess separately, then decide:
+- MARKET: does the tape support new long risk? Use TONE, index alignment, breadth, volatility. Indices disagreeing is a caution, not a veto.
+- TECHNICAL: does the setup hold on its own evidence — trend, RSI, relative strength, VWAP, volume?
+- RISK: does geometry and exposure fit — stop vs this stock's ATR, size, sector already held, event proximity?
+- DECIDE: market and risk can veto a good chart; a good chart cannot rescue a bad market read.
+
+EVIDENCE RULES:
+- "unavailable"/"unknown"/"n/a" means THE DESK COULD NOT MEASURE IT — not zero, and never itself a reason to skip.
+- Never invent a price level, news event, earnings date, analyst action or peer move. Any numeric threshold you cite must be printed in this prompt.
+- You have no browsing and no memory of prior scans.
+- List what you needed but did not get in unavailableData; if it is load-bearing, lower confidence rather than guessing.
+
+CONSISTENCY: identical evidence must always produce an identical verdict. Apply thresholds as written, not by feel; let confidence carry uncertainty, not the verdict.
+
+CONFIDENCE 1-10 describes the strength of the EVIDENCE, not how much you like the trade: 1-3 thin or contradictory, 4-5 workable, 6-7 clean and factors agree, 8-10 strong alignment.
+
+A SKIP REQUIRES ONE OF THESE, stated concretely:
+- Named specific overhead resistance the plan must clear.
+- Pump profile: a DISCOVERED ticker under ~$10 with an extreme move and no VERIFIED catalyst. A day move beyond ~25-30% is a pump top regardless of price, headline or technicals; generic "top movers" headlines are not catalysts.
+- A SWING plan with no multi-day story — lone intraday spike, no trend history, no catalyst.
+- A REAL printed volume number that is thin for a move this size. Never merely-unavailable volume.
+- The session rule or bad-day rule in the user message applies.
+- The plan contradicts itself.
+
+CALIBRATION: across many plans, approve most clean watchlist setups in regular hours and reject most pump-profile discoveries. Approving everything and rejecting everything are both miscalibrations.
+
+OUTPUT — JSON only, no markdown, no text outside the object, fields in this order:
+{"unavailableData":"fields you needed but were not given, or: none","marketRead":"<=15 words","technicalRead":"<=15 words","riskRead":"<=15 words","disqualifier":"the ONE concrete blocking fact, or null","decision":"TAKE"|"SKIP","confidence":1-10,"confidenceRationale":"<=20 words naming what set this"}
+disqualifier must be null whenever decision is TAKE.`;
+
+// ── USER TURN: the evidence for ONE candidate ──────────────────────────────
+function buildScreenerEvidence(plan, currentPositions, context) {
   const heldSymbols =
     (currentPositions || []).map((position) => position.symbol).join(", ") ||
     "none";
   const sector = sectorBucketFor(plan.symbol);
-  const regimeLine = marketContext?.regime
-    ? marketContext.regime +
-      " market (SPY range " +
-      (marketContext.rangePct != null
-        ? marketContext.rangePct.toFixed(2) + "%"
-        : "n/a") +
-      ")"
-    : "unknown";
-  const spyLine =
-    typeof marketContext?.spyChangePercent === "number"
-      ? marketContext.spyChangePercent.toFixed(2) + "%"
-      : "n/a";
-  const sessionLine = marketContext?.session || "REGULAR";
-  const todayPnl = marketContext?.todayPnl;
-  // The BAD-DAY RULE's applicability is computed DETERMINISTICALLY in
-  // risk-manager (3+ losing closes AND net negative) and stated to the
-  // model as a fact — it is not the model's job to do the arithmetic.
+
+  // v5.7 preserved: NEWS_HIT is a GENERIC headline tag whose sentiment was
+  // never checked. Presenting it as "Catalyst:" once got a +478% pump
+  // approved twice. Only ANALYST_UPGRADE / INSIDER_BUY are verified.
+  const isVerifiedCatalyst =
+    plan.catalyst === "ANALYST_UPGRADE" || plan.catalyst === "INSIDER_BUY";
+  const catalystLine = plan.catalystLabel
+    ? isVerifiedCatalyst
+      ? "Catalyst (VERIFIED " + plan.catalyst + "): " + plan.catalystLabel
+      : "Headline (GENERIC, sentiment unverified — NOT a catalyst): " +
+        plan.catalystLabel
+    : "Catalyst: none";
+
+  // v6 preserved: the BAD-DAY rule's applicability is computed
+  // DETERMINISTICALLY in risk-manager (3+ losing closes AND net negative)
+  // and stated as a fact. It is not the model's job to do the arithmetic.
+  const todayPnl = context?.todayPnl;
   const badDayApplies = !!todayPnl?.badDayRuleApplies;
   const todayLine = todayPnl
     ? todayPnl.tradesClosed +
-      " trade(s) closed today (" +
+      " closed today (" +
       (todayPnl.losingTrades || 0) +
       " losers), won $" +
       todayPnl.realizedWin.toFixed(2) +
       " / lost $" +
-      todayPnl.realizedLoss.toFixed(2) +
-      " — BAD-DAY RULE " +
-      (badDayApplies ? "IS IN EFFECT" : "does NOT apply") +
-      " (computed by code, not for you to re-derive)"
-    : "no trades closed yet today — BAD-DAY RULE does NOT apply";
-  // v5.7: NEWS_HIT is a GENERIC headline tag (e.g. "Top stock movements in
-  // today's session") whose sentiment was never checked — presenting it as
-  // "Catalyst:" misled the model into approving VEEE (+478% pump) twice.
-  // Only ANALYST_UPGRADE / INSIDER_BUY are verified-bullish catalysts.
-  const catalystLine = plan.catalystLabel
-    ? plan.catalyst === "ANALYST_UPGRADE" || plan.catalyst === "INSIDER_BUY"
-      ? "\nCatalyst (verified " + plan.catalyst + "): " + plan.catalystLabel
-      : "\nRecent headline (GENERIC, sentiment unverified — NOT a real catalyst): " +
-        plan.catalystLabel
-    : "";
+      todayPnl.realizedLoss.toFixed(2)
+    : "no trades closed yet today";
 
-  return `You are a fast trading-desk risk screener. You receive ONE complete
-trade plan that has ALREADY PASSED deterministic quantitative filters —
-VWAP trend, relative strength vs SPY, RSI range, volume-ratio floor, and
-risk/reward geometry are all already enforced by code before you ever see
-this plan. The plan's price levels (stop, targets, size) are also already
-computed — you do NOT set prices.
+  const sectorMomentum = context?.brief
+    ? describeSectorMomentum(context.brief, sector)
+    : "unavailable";
 
-YOUR JOB, PRECISELY: catch the specific cases where the numbers technically
-pass but something concrete makes this plan untrustworthy anyway — not to
-re-litigate judgments the quantitative filters already made correctly.
-If nothing concrete is wrong, your default answer is TAKE. A clean setup
-that merely "could" fade, or that isn't a slam-dunk certainty, is NOT a
-reason to SKIP — no trade is ever certain, and requiring certainty means
-rejecting everything regardless of quality.
+  const briefBlock = context?.briefText || "MARKET BRIEF: unavailable.";
 
-TRADE PLAN: ${plan.symbol} (sector: ${sector})
-Type: ${plan.tradeType}${plan.tradeType === "SWING" ? " (1-10 day hold, closes Friday at latest)" : " (intraday, force-closed before US close)"} · Archetype: ${plan.archetype || "n/a"}
-Source: ${plan.source}${plan.isFirstTimeDiscovered ? " (first-ever trade in this name — already half-sized)" : ""}${catalystLine}
+  const sessionLine = context?.session || "REGULAR";
+  const isOvernight = sessionLine !== "REGULAR";
+
+  return `${briefBlock}
+SESSION: ${sessionLine}
+DESK RESULTS TODAY: ${todayLine}
+BAD-DAY RULE: ${badDayApplies ? "IN EFFECT — approve only setups you would call clearly strong" : "does NOT apply — do not mention today's P&L in your reasoning; a small red number is normal variance"} (computed in code; do not re-derive)
+CURRENTLY HELD: ${heldSymbols}
+${isOvernight ? buildSessionRuleBlock() : ""}
+── INSTRUMENT: ${plan.symbol} ──
+Sector: ${sector} · sector momentum today: ${sectorMomentum}
+Source: ${plan.source}${plan.isFirstTimeDiscovered ? " (first-ever trade in this name — already half-sized)" : ""}
+Daily ATR: ${plan.atrPercent != null ? plan.atrPercent + "% (volatility bucket " + plan.volatilityBucket + ")" : "unavailable"}
+Avg dollar volume: ${plan.averageDollarVolume != null ? "$" + Number(plan.averageDollarVolume).toLocaleString("en-US") : "unavailable"}
+${catalystLine}
+
+── TECHNICAL ──
 Setup: ${plan.setup} — ${plan.setupDetail}
+Trend read: ${plan.trendDirection} · RSI ${plan.rsi ?? "unavailable"} · RS vs SPY ${plan.relativeStrength != null ? plan.relativeStrength.toFixed(2) + " pts" : "unavailable"} · ${plan.aboveVwap ? "above" : "below/at"} VWAP
+Desk score: ${plan.score != null ? Number(plan.score).toFixed(0) + "/100" : "unavailable"}
+
+── PLAN GEOMETRY (fixed — you do not set these) ──
+Type: ${plan.tradeType}${plan.tradeType === "SWING" ? " (1-10 day hold, closes Friday at latest)" : " (intraday, force-closed before the US close)"} · Archetype: ${plan.archetype || "n/a"}
 Entry $${plan.entryPrice} · Stop $${plan.stopPrice} (-${plan.stopDistancePct}%) · T1 $${plan.targetT1} · T2 $${plan.targetT2}${plan.targetT3 ? " · T3 $" + plan.targetT3 : ""}
-Risk: $${plan.riskDollars} (${plan.riskPctOfCapital}% of capital) · RRR ${plan.riskRewardRatio}
-Volatility: ${plan.volatilityBucket} (daily ATR ${plan.atrPercent != null ? plan.atrPercent + "%" : "n/a"})
-Trend read: ${plan.trendDirection} · RSI ${plan.rsi ?? "n/a"} (already confirmed within acceptable range by code — do not re-reject on RSI alone unless it's genuinely extreme) · RS vs SPY ${plan.relativeStrength != null ? plan.relativeStrength.toFixed(2) + " pts" : "n/a"} · ${plan.aboveVwap ? "above" : "below/at"} VWAP
+Risk $${plan.riskDollars} (${plan.riskPctOfCapital}% of capital) · RRR ${plan.riskRewardRatio}
 
-MARKET CONTEXT:
-Session: ${sessionLine} · Regime: ${regimeLine} · SPY today: ${spyLine}
-Bot's results today: ${todayLine}
-${marketContext?.regime === "CHOP" ? "NOTE: choppy tape — demand stronger evidence of follow-through." : ""}
-Currently held: ${heldSymbols}
-
-SESSION RULE: in an OVERNIGHT/EXTENDED session, books are thinner, spreads
-wider, and momentum less reliable — so demand REAL warning signals before
-entering. IMPORTANT: overnight, volume data is ALWAYS unavailable (no
-session volume exists yet to measure) and the regime is ALWAYS UNKNOWN
-(it needs 45+ minutes of the regular session) — these two are the NORMAL
-STATE of an overnight scan, NOT warning signals, and must never be cited
-(alone or "combined with" each other) as a reason to SKIP. Overnight
-marginality means an ACTUAL signal, with EXACT thresholds — do not invent
-different ones:
-  · RSI 74 or higher (the overextended ceiling is 78 — RSI 66 is NOT
-    "near the ceiling"; never claim a lower ceiling like 70)
-  · SIDEWAYS trend read
-  · relative strength UNDER 1.0 pt vs SPY (1.2-1.8 pts is adequate — never
-    invent a higher bar like "1.5 needed overnight")
-One or more of those → SKIP overnight. None of those → a BULLISH-trend
-setup with healthy RSI and solid RS is a TAKE, overnight or not. If your
-reasoning cites a threshold, it must be one of the numbers above.
-
-BAD-DAY RULE: whether it applies is COMPUTED BY CODE and stated on the
-"Bot's results today" line above — do not re-derive it yourself. If it
-says IS IN EFFECT, raise the bar: approve only setups you'd call clearly
-strong. If it says does NOT apply, do not mention today's P&L in your
-reasoning at all — a small red number is normal variance, not a signal.
-
-SKIP ONLY for a CONCRETE, SPECIFIC reason — not a vague feeling:
-- The setup's OWN description states the volume is unavailable/unknown for
-  this ticker (i.e. literally says so) — that alone is NOT a red flag by
-  itself; do not treat "unavailable" as if it meant "zero." Only skip on
-  volume grounds if a REAL number is shown and it looks thin for a move
-  this size.
-- The stock is at or through a well-known, specific resistance level you
-  can name (not just "some resistance might exist somewhere")
-- This is a DISCOVERED (not watchlist) lower-priced ticker (roughly under
-  $10) with an extreme move and no VERIFIED catalyst — a legitimate
-  manipulation/pump red flag. A day move beyond ~25-30% is a pump TOP
-  regardless of price, headlines, or how strong the technicals look —
-  generic "top movers today" headlines are NOT a catalyst and do not
-  excuse this.
-- A SWING plan where nothing about the move suggests it's a multi-day
-  story (pure single-session spike with no news, no trend history)
-- Something in the plan is internally inconsistent or doesn't add up
-
-CALIBRATION: across many plans you should approve MOST clean watchlist
-setups in regular hours and reject most pump-profile discoveries. If you
-notice you would approve absolutely everything (or reject everything),
-you are mis-calibrated — the two rules above (SESSION, BAD-DAY) are where
-legitimate SKIPs on watchlist names come from. Be CONSISTENT: the same
-facts must always produce the same decision.
-
-Respond with JSON only, no markdown:
-{
-  "decision": "TAKE" | "SKIP",
-  "confidence": 1-10,
-  "reasoning": "one or two sentences, citing the SPECIFIC concrete fact that drove your decision"
-}`;
+Return the JSON verdict for ${plan.symbol}.`;
 }
 
-async function screenCandidate(plan, currentPositions, marketContext) {
+// v6 preserved verbatim in substance: exact thresholds. The model repeatedly
+// invented stricter ones ("RSI 66 is near the ceiling", "1.5 RS needed
+// overnight") and rejected clean setups on numbers nobody configured.
+function buildSessionRuleBlock() {
+  return `
+SESSION RULE (overnight only): thinner books, so demand a REAL warning signal. Overnight, volume is ALWAYS unavailable and regime ALWAYS UNKNOWN — that is the NORMAL STATE of an overnight scan, never a warning sign, alone or combined.
+An overnight SKIP requires one of these EXACT conditions; do not invent others:
+- RSI >= 74 (the overextended ceiling is 78; RSI 66 is NOT "near the ceiling" — never claim a lower ceiling such as 70)
+- trend read is SIDEWAYS
+- relative strength strictly under 1.0 pt vs SPY (1.2-1.8 is adequate — never invent a higher bar such as 1.5)
+None present -> a BULLISH setup with healthy RSI and solid RS is a TAKE, overnight or not.
+`;
+}
+
+// Stock-specific market context: is this name's own sector leading or lagging
+// right now? Answers item 13's "evaluate a stock within its sector's context"
+// using data the scan already computed.
+function describeSectorMomentum(brief, sectorBucket) {
+  if (!brief || !sectorBucket) return "unavailable";
+  const leader = (brief.sectorLeaders || []).find(
+    (entry) => entry.bucket === sectorBucket,
+  );
+  if (leader) {
+    return "LEADING (" + leader.changePct.toFixed(2) + "% proxy move)";
+  }
+  const laggard = (brief.sectorLaggards || []).find(
+    (entry) => entry.bucket === sectorBucket,
+  );
+  if (laggard) {
+    return "LAGGING (" + laggard.changePct.toFixed(2) + "% proxy move)";
+  }
+  return "no decisive proxy move (or no mapped proxy for this sector)";
+}
+
+// ── Response parsing ───────────────────────────────────────────────────────
+//
+// v7: hardened. In v6 a stray sentence, a markdown fence variant, or a
+// response truncated by max_tokens threw inside JSON.parse, and because the
+// screener is fail-closed that meant the plan was silently SKIPPED. With
+// every plan in a scan hitting the same failure at once, the bot simply
+// stopped trading while looking healthy. Extracting the outermost JSON
+// object first survives every one of those cases that is actually
+// recoverable, and a genuine failure still fails closed — but now says so.
+function extractJsonObject(rawText) {
+  if (!rawText) return null;
+  const withoutFences = rawText.replace(/```(?:json)?/gi, "").trim();
+  const firstBrace = withoutFences.indexOf("{");
+  const lastBrace = withoutFences.lastIndexOf("}");
+  if (firstBrace === -1 || lastBrace <= firstBrace) return null;
+  try {
+    return JSON.parse(withoutFences.slice(firstBrace, lastBrace + 1));
+  } catch {
+    return null;
+  }
+}
+
+function clampConfidence(rawConfidence) {
+  const parsed = parseInt(rawConfidence, 10);
+  if (isNaN(parsed)) return 5;
+  return Math.min(10, Math.max(1, parsed));
+}
+
+// Collapse the structured reads into one journal/Telegram-friendly line,
+// so the existing consumers of `reasoning` keep working unchanged.
+function composeReasoning(parsed) {
+  const parts = [
+    parsed.disqualifier ? "BLOCKER: " + parsed.disqualifier : null,
+    parsed.marketRead ? "Market: " + parsed.marketRead : null,
+    parsed.technicalRead ? "Technical: " + parsed.technicalRead : null,
+    parsed.riskRead ? "Risk: " + parsed.riskRead : null,
+    parsed.confidenceRationale ? "Confidence: " + parsed.confidenceRationale : null,
+  ].filter(Boolean);
+  return parts.join(" · ");
+}
+
+async function screenCandidate(plan, currentPositions, context) {
   try {
     const response = await anthropic.messages.create({
       model: "claude-haiku-4-5",
-      max_tokens: 300,
+      max_tokens: config.screenerMaxTokens,
+      system: SCREENER_SYSTEM_PROMPT,
       messages: [
         {
           role: "user",
-          content: buildScreenerPrompt(plan, currentPositions, marketContext),
+          content: buildScreenerEvidence(plan, currentPositions, context),
         },
       ],
     });
@@ -181,14 +267,59 @@ async function screenCandidate(plan, currentPositions, marketContext) {
       .map((block) => block.text)
       .join("");
 
-    const cleaned = text.replace(/```json|```/g, "").trim();
-    const parsed = JSON.parse(cleaned);
+    const parsed = extractJsonObject(text);
+    if (!parsed || (parsed.decision !== "TAKE" && parsed.decision !== "SKIP")) {
+      throw new Error(
+        "unparseable screener response" +
+          (response.stop_reason === "max_tokens"
+            ? " (hit max_tokens — raise DT_SCREENER_MAX_TOKENS)"
+            : ""),
+      );
+    }
+
+    const confidence = clampConfidence(parsed.confidence);
+
+    // Confidence floor enforced in CODE, not trusted to the prompt.
+    if (parsed.decision === "TAKE" && confidence < config.screenerMinConfidenceToTake) {
+      logger.info(
+        "🤖 " +
+          plan.symbol +
+          ": TAKE at confidence " +
+          confidence +
+          " is below floor " +
+          config.screenerMinConfidenceToTake +
+          " — downgraded to SKIP",
+      );
+      return {
+        symbol: plan.symbol,
+        decision: "SKIP",
+        confidence,
+        reasoning:
+          "Low-confidence TAKE (" +
+          confidence +
+          "/10) downgraded by confidence floor · " +
+          composeReasoning(parsed),
+        analysis: parsed,
+        errored: false,
+      };
+    }
 
     return {
       symbol: plan.symbol,
-      decision: parsed.decision === "TAKE" ? "TAKE" : "SKIP",
-      confidence: Math.min(10, Math.max(1, parseInt(parsed.confidence) || 5)),
-      reasoning: parsed.reasoning || "",
+      decision: parsed.decision,
+      confidence,
+      reasoning: composeReasoning(parsed),
+      // Structured fields kept intact for the decision journal — this is
+      // what makes the reasoning auditable after the fact instead of a
+      // sentence that scrolled past in a log.
+      analysis: {
+        unavailableData: parsed.unavailableData || "none",
+        marketRead: parsed.marketRead || "",
+        technicalRead: parsed.technicalRead || "",
+        riskRead: parsed.riskRead || "",
+        disqualifier: parsed.disqualifier || null,
+        confidenceRationale: parsed.confidenceRationale || "",
+      },
       errored: false,
     };
   } catch (screenError) {
@@ -208,10 +339,10 @@ async function screenCandidate(plan, currentPositions, marketContext) {
 }
 
 // Screen multiple PLANS in parallel (one Haiku call each).
-async function screenCandidates(plans, currentPositions, marketContext) {
+async function screenCandidates(plans, currentPositions, context) {
   if (!plans || plans.length === 0) return [];
   const results = await Promise.all(
-    plans.map((plan) => screenCandidate(plan, currentPositions, marketContext)),
+    plans.map((plan) => screenCandidate(plan, currentPositions, context)),
   );
 
   const erroredResults = results.filter((result) => result.errored);
@@ -229,7 +360,6 @@ async function screenCandidates(plans, currentPositions, marketContext) {
         "new positions while this persists. Check ANTHROPIC_API_KEY / network.",
     );
   } else if (results.length > 0) {
-    // Screener produced real answers → clear any prior screener alert
     await alerts.clearAlert(
       "AI_SCREENER",
       "AI entry screener is responding again (" +
@@ -240,13 +370,16 @@ async function screenCandidates(plans, currentPositions, marketContext) {
 
   const taken = results.filter((result) => result.decision === "TAKE");
   logger.info(
-    "🤖 AI screener: " +
-      taken.length +
-      "/" +
-      results.length +
-      " plans approved",
+    "🤖 AI screener: " + taken.length + "/" + results.length + " plans approved",
   );
   return results;
 }
 
-module.exports = { screenCandidates };
+module.exports = {
+  screenCandidates,
+  // Exported for tests and for token measurement.
+  buildScreenerEvidence,
+  extractJsonObject,
+  describeSectorMomentum,
+  SCREENER_SYSTEM_PROMPT,
+};

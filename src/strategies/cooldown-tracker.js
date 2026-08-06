@@ -4,6 +4,22 @@
 // window. Prevents whipsaw: a stock that just stopped you out is often still
 // choppy, and immediately re-entering on the next scan because a setup
 // re-fires is how cooldown-less bots bleed out on a single volatile name.
+//
+// v6 (2026-07-21, review-driven upgrade) — LOSS-AWARE COOLDOWN + RE-ENTRY
+// JUSTIFICATION. This bot never pyramids (no scale-in on an open position —
+// held symbols are always excluded from new candidates), so "averaging
+// down without justification" in practice means RE-ENTERING a symbol
+// shortly after it closed for a LOSS. Two changes:
+//   1. A loss-close now gets a LONGER cooldown than a normal exit
+//      (config.lossCooldownMultiplier × the base window).
+//   2. Even after that window expires, re-entry into a symbol that just
+//      lost requires a MEANINGFULLY STRONGER setup than the one that lost
+//      (score improvement of config.lossReentryMinScoreImprovement) — "the
+//      setup re-fired" alone is not justification to re-buy a stock that
+//      just cost money. getReentryJustification() exposes this for the
+//      caller to check once the new candidate's score is actually computed
+//      (scoring happens after the cheap pre-filter stage this module's
+//      other function is called from, so it can't be checked in one step).
 require("dotenv").config();
 const fs = require("fs");
 const path = require("path");
@@ -33,29 +49,122 @@ function saveCooldowns(cooldowns) {
   }
 }
 
+// Normalizes a stored record — older entries are a bare epoch-ms number
+// (pre-v6 format); newer ones are { exitAtMs, wasLoss, scoreAtExit }.
+function normalizeRecord(record) {
+  if (record == null) return null;
+  if (typeof record === "number") {
+    return { exitAtMs: record, wasLoss: false, scoreAtExit: null };
+  }
+  return record;
+}
+
 // Call this whenever a position is closed (any exit reason).
-function startCooldown(symbol) {
+// exitInfo: { wasLoss: bool, scoreAtExit: number|null }
+function startCooldown(symbol, exitInfo = {}) {
   const cooldowns = loadCooldowns();
-  cooldowns[symbol.toUpperCase()] = Date.now();
+  const wasLoss = !!exitInfo.wasLoss;
+  const scoreAtExit =
+    typeof exitInfo.scoreAtExit === "number" ? exitInfo.scoreAtExit : null;
+  cooldowns[symbol.toUpperCase()] = {
+    exitAtMs: Date.now(),
+    wasLoss,
+    scoreAtExit,
+  };
   saveCooldowns(cooldowns);
+
+  const cooldownMinutes = wasLoss
+    ? config.tradeCooldownMinutes * config.lossCooldownMultiplier
+    : config.tradeCooldownMinutes;
   logger.info(
     symbol +
       " entering " +
-      config.tradeCooldownMinutes +
-      "min cooldown after exit",
+      cooldownMinutes +
+      "min cooldown after " +
+      (wasLoss ? "a LOSING" : "an") +
+      " exit" +
+      (wasLoss
+        ? " (×" +
+          config.lossCooldownMultiplier +
+          " loss multiplier; re-entry after cooldown still needs a score " +
+          config.lossReentryMinScoreImprovement +
+          "+ points stronger than the setup that lost" +
+          (scoreAtExit != null ? " — was " + scoreAtExit.toFixed(0) : "") +
+          ")"
+        : ""),
   );
 }
 
 // Returns { onCooldown: bool, minutesRemaining: number }
 function checkCooldown(symbol) {
   const cooldowns = loadCooldowns();
-  const lastExitTime = cooldowns[symbol.toUpperCase()];
-  if (!lastExitTime) return { onCooldown: false, minutesRemaining: 0 };
+  const record = normalizeRecord(cooldowns[symbol.toUpperCase()]);
+  if (!record) return { onCooldown: false, minutesRemaining: 0 };
 
-  const elapsedMinutes = (Date.now() - lastExitTime) / 60000;
-  const remaining = config.tradeCooldownMinutes - elapsedMinutes;
+  const cooldownMinutes = record.wasLoss
+    ? config.tradeCooldownMinutes * config.lossCooldownMultiplier
+    : config.tradeCooldownMinutes;
+  const elapsedMinutes = (Date.now() - record.exitAtMs) / 60000;
+  const remaining = cooldownMinutes - elapsedMinutes;
   if (remaining <= 0) return { onCooldown: false, minutesRemaining: 0 };
   return { onCooldown: true, minutesRemaining: Math.ceil(remaining) };
 }
 
-module.exports = { startCooldown, checkCooldown };
+// v6: after the raw cooldown window expires, does re-entering this symbol
+// require a stronger setup than the one that just lost? Returns
+// { requiresJustification, minScore, priorScore }. The caller compares its
+// NEW candidate's score (available only after scoring, further down the
+// pipeline than checkCooldown() is called from) against minScore.
+function getReentryJustification(symbol) {
+  const cooldowns = loadCooldowns();
+  const record = normalizeRecord(cooldowns[symbol.toUpperCase()]);
+  if (!record || !record.wasLoss || record.scoreAtExit == null) {
+    return { requiresJustification: false };
+  }
+
+  // ══════════════════════════════════════════════════════════════════════
+  // P1 FIX (2026-07-27) — PERMANENT LOCKOUT ABOVE SCORE 85.
+  //
+  // momentum-scanner caps every score at 100 (Math.min(100, ...)). So
+  // demanding priorScore + 15 quietly becomes UNREACHABLE the moment a
+  // symbol loses with a score above 85 — the required score exceeds the
+  // maximum obtainable one and the symbol is banned forever, silently.
+  //
+  // Observed live 2026-07-27: AMD lost at score 88, needed 103, and was
+  // rejected 13 times in three hours at scores from 20 to 81. It could
+  // never have passed. MRVL (prior 52) and ANET (prior 64) were fine;
+  // only the high scorers were affected — i.e. the bot was permanently
+  // banning precisely the names whose setups it rated most highly.
+  //
+  // The intent — "come back with a meaningfully better setup" — is kept,
+  // but the bar is clamped to something actually achievable.
+  // ══════════════════════════════════════════════════════════════════════
+  const rawMinScore =
+    record.scoreAtExit + config.lossReentryMinScoreImprovement;
+  const minScore = Math.min(rawMinScore, config.reentryMaxRequiredScore);
+  const wasClamped = minScore < rawMinScore;
+
+  if (wasClamped) {
+    logger.info(
+      symbol +
+        " re-entry bar clamped: " +
+        record.scoreAtExit.toFixed(0) +
+        " + " +
+        config.lossReentryMinScoreImprovement +
+        " = " +
+        rawMinScore.toFixed(0) +
+        " exceeds the reachable maximum, so the bar is " +
+        minScore +
+        " (scores are capped at 100 — without this the symbol could never re-enter)",
+    );
+  }
+
+  return {
+    requiresJustification: true,
+    minScore,
+    priorScore: record.scoreAtExit,
+    wasClamped,
+  };
+}
+
+module.exports = { startCooldown, checkCooldown, getReentryJustification };

@@ -7,6 +7,7 @@
     "start": "node src/index.js",
     "dry-run": "set TRADING_MODE=dry_run && node src/index.js --run-now",
     "live": "set TRADING_MODE=live && node src/index.js --run-now",
+    "test": "node test/run-tests.js",
     "test-setup": "node src/test-setup.js",
     "test-telegram": "node src/notifications/telegram.js --test"
   },

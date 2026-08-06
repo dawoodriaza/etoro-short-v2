@@ -13,7 +13,7 @@
 require("dotenv").config();
 const { logger } = require("../logger");
 const performance = require("./performance-tracker");
-const { escapeHtml } = require("../notifications/format-helpers");
+const { escapeHtml, toRealDollars } = require("../notifications/format-helpers");
 
 const MIN_TRADES_FOR_SUGGESTION = 15; // don't suggest changes on tiny samples
 const MIN_TRADES_FOR_SUB_ANALYSIS = 8; // regime/session breakdowns need fewer since they're narrower cuts
@@ -59,7 +59,7 @@ function analyzeBySetup(trades) {
         "% win rate, " +
         (pnl >= 0 ? "+" : "") +
         "$" +
-        pnl.toFixed(2) +
+        toRealDollars(pnl).toFixed(2) +
         " total",
       suggestion:
         wr < 35 && setupTrades.length >= MIN_TRADES_FOR_SUGGESTION
@@ -189,7 +189,7 @@ function analyzeByExitReason(trades) {
         " trades, " +
         (totalPnl(list) >= 0 ? "+" : "") +
         "$" +
-        totalPnl(list).toFixed(2),
+        toRealDollars(totalPnl(list)).toFixed(2),
     }));
 }
 
@@ -235,12 +235,16 @@ function analyzeExtendedTrades(trades) {
     ? totalPnl(notExtended) / notExtended.length
     : null;
 
+  // v7.5: extendedAvgPnl / baselineAvgPnl / the $1 suggestion threshold
+  // below are all bot-account dollars and stay that way — they're only
+  // compared against EACH OTHER, and that comparison is scale-invariant.
+  // Only the STRINGS shown to the user are converted.
   const comparisonText =
     baselineWr != null
       ? " vs " +
         baselineWr.toFixed(0) +
         "% win rate / $" +
-        baselineAvgPnl.toFixed(2) +
+        toRealDollars(baselineAvgPnl).toFixed(2) +
         " avg for non-extended DAY trades (" +
         notExtended.length +
         ")"
@@ -252,18 +256,18 @@ function analyzeExtendedTrades(trades) {
       suggestion =
         "Reviewer-extended trades are UNDERPERFORMING non-extended DAY " +
         "trades ($" +
-        extendedAvgPnl.toFixed(2) +
+        toRealDollars(extendedAvgPnl).toFixed(2) +
         " vs $" +
-        baselineAvgPnl.toFixed(2) +
+        toRealDollars(baselineAvgPnl).toFixed(2) +
         " avg). Consider raising DT_REVIEWER_MIN_CONF_EXTEND so only " +
         "higher-conviction extensions are allowed.";
     } else if (extendedAvgPnl > baselineAvgPnl + 1) {
       suggestion =
         "Reviewer-extended trades are OUTPERFORMING non-extended DAY " +
         "trades ($" +
-        extendedAvgPnl.toFixed(2) +
+        toRealDollars(extendedAvgPnl).toFixed(2) +
         " vs $" +
-        baselineAvgPnl.toFixed(2) +
+        toRealDollars(baselineAvgPnl).toFixed(2) +
         " avg) — the EXTEND mechanism appears to be adding real value.";
     }
   }
@@ -279,7 +283,7 @@ function analyzeExtendedTrades(trades) {
       " trade(s): " +
       extendedWr.toFixed(0) +
       "% win rate, $" +
-      extendedAvgPnl.toFixed(2) +
+      toRealDollars(extendedAvgPnl).toFixed(2) +
       " avg P&L" +
       comparisonText,
     suggestion,
@@ -308,7 +312,7 @@ function analyzeByArchetype(trades) {
         "% win rate, " +
         (totalPnl(list) >= 0 ? "+" : "") +
         "$" +
-        totalPnl(list).toFixed(2),
+        toRealDollars(totalPnl(list)).toFixed(2),
     }));
 }
 
@@ -374,7 +378,7 @@ function formatSelfEvaluationForTelegram(report) {
       "% win rate, " +
       (report.overallStats.totalPnl >= 0 ? "+" : "") +
       "$" +
-      report.overallStats.totalPnl.toFixed(2) +
+      toRealDollars(report.overallStats.totalPnl).toFixed(2) +
       " total.",
   );
   lines.push("");

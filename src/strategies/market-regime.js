@@ -36,6 +36,7 @@
 const { logger } = require("../logger");
 const config = require("../config");
 const fred = require("../data-sources/fred");
+const marketHours = require("../market-hours");
 
 const VIX_ELEVATED_THRESHOLD = 25;
 const VIX_ELEVATED_TIGHTEN_FACTOR = 1.2; // effective threshold × 1.2 when VIX is elevated
@@ -44,17 +45,16 @@ const REGULAR_SESSION_MINUTES = 390; // 09:30 → 16:00 ET
 const MINIMUM_MINUTES_FOR_REGIME = 45; // too early to judge before this
 
 // Minutes elapsed since the 09:30 ET open (can be negative pre-open).
+//
+// P0 FIX (2026-07-27): this used to parse `hour12: false` itself. On the
+// production server's Node 20 that yields hour 24 at 00:xx ET, so this
+// returned ~900 instead of ~-540 — and since 900 >= 45 the "too early to
+// judge" gate never fired. Between 00:00 and 00:59 ET every day, a dead
+// overnight tape was classified as a COMPLETED 390-minute session using
+// stale range data. Now delegated to the single fixed implementation in
+// market-hours.js; see the block comment there.
 function getMinutesSinceOpenEastern() {
-  const easternTimeString = new Date().toLocaleString("en-US", {
-    timeZone: "America/New_York",
-    hour12: false,
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-  const [hourString, minuteString] = easternTimeString.split(":");
-  const easternHour = parseInt(hourString);
-  const easternMinute = parseInt(minuteString);
-  return (easternHour - 9) * 60 + (easternMinute - 30);
+  return marketHours.getMinutesSinceEasternOpen();
 }
 
 // spyQuote: the raw quote object for SPY (has high, low, currentPrice)
@@ -74,12 +74,26 @@ function classifyRegime(spyQuote, effectiveChopThreshold) {
 
   // Too early in the session to say anything meaningful — no penalty.
   if (minutesElapsed < MINIMUM_MINUTES_FOR_REGIME) {
+    // FIX (2026-07-22): this used to always print "Math.max(0, minutesElapsed)
+    // min since open" — clamping any NEGATIVE value (pre-market/overnight,
+    // hours before 9:30 ET) up to 0, so "4h before open" and "just opened"
+    // both logged as the identical, misleading "0 min since open". Now shows
+    // an honest "opens in Xh Ym" when the session hasn't started yet, and
+    // the real elapsed minutes once it has.
+    const timingDescription =
+      minutesElapsed < 0
+        ? "opens in " +
+          Math.floor(-minutesElapsed / 60) +
+          "h " +
+          (-minutesElapsed % 60) +
+          "m"
+        : minutesElapsed + " min since open";
     logger.info(
-      "Market regime: UNKNOWN — only " +
-        Math.max(0, minutesElapsed) +
-        " min since open (need " +
+      "Market regime: UNKNOWN — " +
+        timingDescription +
+        " (need " +
         MINIMUM_MINUTES_FOR_REGIME +
-        "+ to judge). Range so far " +
+        "+ min since open to judge). Range so far " +
         rangeSoFarPct.toFixed(2) +
         "%",
     );

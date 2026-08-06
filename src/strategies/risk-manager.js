@@ -1,5 +1,30 @@
 // src/strategies/risk-manager.js
 //
+// v6 (2026-07-21, review-driven upgrade) — TIME-BASED EXIT LOGIC OVERHAUL:
+//
+//   R1. RECOVERY-AWARE TIME EXITS. TIME_EXIT_STALE (DAY) and SWING_TIME_EXIT
+//       (SWING) used to force-close purely on the clock, with NO read on
+//       whether the position was actually recovering — exactly the "closes
+//       just because a time limit was reached" behavior flagged in review.
+//       Both now check a short recent-price trend before exiting a
+//       losing/flat position; a genuine up-trend earns ONE bounded grace
+//       extension (never unlimited — the hard stop-loss/floor stays fully
+//       live and unaffected the entire time, so this never increases the
+//       position's actual downside risk).
+//   R2. PROFIT-STALL LOCK. New rule: a DAY position sitting in modest,
+//       non-MFE-armed profit that hasn't made a new high in a while now
+//       locks in a partial gain — UNLESS the short-term trend still looks
+//       like it's pushing toward a new high, in which case it re-arms
+//       instead of exiting. Distinct from the existing MFE-giveback engine
+//       (which reacts to GIVING BACK price from the peak) — this reacts to
+//       flatlining without necessarily giving anything back yet.
+//   R3. VOLATILITY-SCALED TIME BUDGETS. maxHoldMinutes/swingMaxHoldDays are
+//       now multiplied by the position's OWN volatility bucket (already
+//       computed at entry by trade-planner.classifyVolatility — reused
+//       here, not re-derived): a HIGH-ATR name gets a SHORTER time budget
+//       (it should show its hand fast), a LOW-ATR name gets a LONGER one
+//       (it legitimately needs more time to develop).
+//
 // v5 (2026-07-04) — THREE REVIEW FIXES:
 //
 //   F1. DAILY LOSS LIMIT NOW USES EFFECTIVE (COMPOUNDED) CAPITAL.
@@ -24,6 +49,194 @@ const path = require("path");
 const { logger } = require("../logger");
 const config = require("../config");
 const sectorMap = require("./sector-map");
+const tradePlanner = require("./trade-planner"); // v6: reuse classifyVolatility (no cycle — trade-planner has no risk-manager require)
+
+// ── v6: short-term trend read (recovery check + profit-stall check) ───────
+// recentPrices: [{price, atMs}, ...] oldest-first, small rolling window
+// maintained by the caller (index.js) on every exit-monitor tick. Returns
+// "RISING" | "FALLING" | "FLAT" | "UNKNOWN" (not enough samples yet — an
+// UNKNOWN read never grants a grace extension and never suppresses a lock,
+// it just means "no opinion," which is the safe default in both directions).
+function computeRecentTrend(recentPrices) {
+  if (
+    !Array.isArray(recentPrices) ||
+    recentPrices.length < config.recoveryCheckMinSamples
+  ) {
+    return "UNKNOWN";
+  }
+  const oldest = recentPrices[0].price;
+  const newest = recentPrices[recentPrices.length - 1].price;
+  if (!oldest || oldest <= 0) return "UNKNOWN";
+  const changePct = ((newest - oldest) / oldest) * 100;
+  if (changePct >= config.recoveryCheckMinSlopePct) return "RISING";
+  if (changePct <= -config.recoveryCheckMinSlopePct) return "FALLING";
+  return "FLAT";
+}
+
+// v6: the same ATR-lookup decideDayAction already does, factored out so
+// decideSwingAction can use it too (for volatility-scaled time budgets)
+// without duplicating the meta-shape knowledge.
+function getAtrPercentFromMeta(meta) {
+  if (meta.entryConditions && meta.entryConditions.atrPercent != null) {
+    return meta.entryConditions.atrPercent;
+  }
+  if (meta.plan && meta.plan.atrPercent != null) {
+    return meta.plan.atrPercent;
+  }
+  return null;
+}
+
+// v6: volatility-scaled time-budget multiplier — reuses the SAME LOW/
+// MEDIUM/HIGH thresholds trade-planner used at entry, so a position's time
+// budget and its stop/target geometry are governed by one consistent
+// volatility read, never two different opinions of "how volatile is this."
+function getTimeBudgetMultiplier(meta) {
+  const bucket = tradePlanner.classifyVolatility(getAtrPercentFromMeta(meta));
+  if (bucket === "HIGH") return config.timeBudgetHighVolMultiplier;
+  if (bucket === "LOW") return config.timeBudgetLowVolMultiplier;
+  return 1;
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// v7.1 — SESSION-AWARE TIME BUDGETS.
+//
+// maxHoldMinutes (90) is a REGULAR-SESSION number: "give this setup 90
+// minutes of live trading to work." Measured against the wall clock it
+// means something completely different overnight, where the clock runs at
+// full speed and the market does not move at all.
+//
+// Live evidence, 2026-07-27 (a Monday, the thinnest tape of the week):
+// SNAP was opened at 01:00 ET — eight and a half hours BEFORE the open —
+// sized at 35% of capital, and force-closed by TIME_EXIT_STALE having
+// never seen a single minute of the session it was sized for. RIVN and
+// AVGO died the same way the same night. Across all history,
+// TIME_EXIT_STALE is 71% of every exit this bot has ever made.
+//
+// The fix is to measure the budget in the units it was written in:
+// REGULAR-SESSION minutes actually elapsed since entry. A position opened
+// pre-market accrues zero budget until 09:30 ET, then burns it at real
+// time. An absolute wall-clock ceiling still applies so nothing can be
+// held forever (e.g. over a weekend, when session minutes never accrue).
+//
+// The hard stop-loss is completely unaffected by any of this and remains
+// immediate and unconditional throughout — same principle as the v6
+// recovery grace.
+// ═══════════════════════════════════════════════════════════════════════
+const SESSION_OPEN_MINUTE_OF_DAY = 9 * 60 + 30; // 09:30 ET
+const SESSION_CLOSE_MINUTE_OF_DAY = 16 * 60; // 16:00 ET
+const MINUTES_PER_DAY = 24 * 60;
+
+// One reusable formatter — constructing Intl objects in a loop is the
+// single most expensive thing this file could do, and this runs on every
+// exit-monitor tick for every open position.
+const ET_PARTS_FORMATTER = new Intl.DateTimeFormat("en-US", {
+  timeZone: "America/New_York",
+  hourCycle: "h23",
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+  hour: "2-digit",
+  minute: "2-digit",
+  weekday: "short",
+});
+
+function easternInfo(ms) {
+  const parts = ET_PARTS_FORMATTER.formatToParts(new Date(ms));
+  const part = (type) => parts.find((p) => p.type === type)?.value;
+  const dateString = part("year") + "-" + part("month") + "-" + part("day");
+  const weekday = part("weekday");
+  return {
+    dateString,
+    weekday,
+    minuteOfDay: (Number(part("hour")) % 24) * 60 + Number(part("minute")),
+    isTradingDay:
+      weekday !== "Sat" && weekday !== "Sun" && !isUSMarketHoliday(dateString),
+  };
+}
+
+// Minutes of [fromMinute, toMinute) that fall inside the 09:30-16:00 window.
+function sessionOverlap(fromMinute, toMinute) {
+  return Math.max(
+    0,
+    Math.min(toMinute, SESSION_CLOSE_MINUTE_OF_DAY) -
+      Math.max(fromMinute, SESSION_OPEN_MINUTE_OF_DAY),
+  );
+}
+
+// How many REGULAR-SESSION minutes fall between two instants. Pure and
+// timezone-correct: intersects each ET calendar day's 09:30-16:00 window
+// with [startMs, endMs]. Weekends and US market holidays contribute zero,
+// so a Friday-evening entry accrues nothing until Monday's open.
+//
+// Day arithmetic rather than a minute-by-minute walk: a 10-day swing would
+// otherwise mean ~14,000 Intl formats per position per tick.
+function computeRegularSessionMinutesBetween(startMs, endMs) {
+  if (!startMs || !endMs || endMs <= startMs) return 0;
+
+  // Guard against pathological inputs.
+  if (endMs - startMs > 30 * MINUTES_PER_DAY * 60000) {
+    return (endMs - startMs) / 60000; // >30 days: treat as fully elapsed
+  }
+
+  const start = easternInfo(startMs);
+  const end = easternInfo(endMs);
+
+  // Same ET calendar day — one intersection settles it.
+  if (start.dateString === end.dateString) {
+    return start.isTradingDay
+      ? sessionOverlap(start.minuteOfDay, end.minuteOfDay)
+      : 0;
+  }
+
+  // First (partial) day, from entry to midnight.
+  let total = start.isTradingDay
+    ? sessionOverlap(start.minuteOfDay, MINUTES_PER_DAY)
+    : 0;
+
+  // Whole days in between contribute a full session each, or nothing.
+  // Stepping 24h from a midday anchor always lands on the next calendar
+  // day, including across DST transitions (which shift by one hour).
+  const FULL_SESSION_MINUTES =
+    SESSION_CLOSE_MINUTE_OF_DAY - SESSION_OPEN_MINUTE_OF_DAY; // 390
+  let cursorMs = startMs + (12 * 60 - start.minuteOfDay) * 60000; // ~noon ET
+  for (let dayIndex = 0; dayIndex < 31; dayIndex += 1) {
+    cursorMs += MINUTES_PER_DAY * 60000;
+    const day = easternInfo(cursorMs);
+    if (day.dateString === end.dateString) break;
+    if (cursorMs > endMs) break;
+    if (day.isTradingDay) total += FULL_SESSION_MINUTES;
+  }
+
+  // Last (partial) day, from midnight to now.
+  if (end.isTradingDay) total += sessionOverlap(0, end.minuteOfDay);
+
+  return total;
+}
+
+// Minimal holiday check kept local so risk-manager stays free of a require
+// on market-hours (which loads dotenv and reads 24/5 env at module load).
+const US_MARKET_HOLIDAYS = new Set([
+  "2026-01-01", "2026-01-19", "2026-02-16", "2026-04-03", "2026-05-25",
+  "2026-06-19", "2026-07-03", "2026-09-07", "2026-11-26", "2026-12-25",
+]);
+function isUSMarketHoliday(etDateString) {
+  return US_MARKET_HOLIDAYS.has(etDateString);
+}
+
+// The elapsed figure the DAY stale-exit should judge against, plus the
+// wall-clock figure used for the absolute ceiling.
+function getDayHoldElapsed(meta) {
+  const openedAt = meta.openedAt || Date.now();
+  const wallClockMinutes = (Date.now() - openedAt) / 60000;
+  if (!config.sessionAwareTimeBudgets) {
+    return { effectiveMinutes: wallClockMinutes, wallClockMinutes, mode: "WALL_CLOCK" };
+  }
+  return {
+    effectiveMinutes: computeRegularSessionMinutesBetween(openedAt, Date.now()),
+    wallClockMinutes,
+    mode: "SESSION_MINUTES",
+  };
+}
 
 // SYNC label helper (static map only — used for prompt text, not the guard)
 function sectorBucketFor(symbol) {
@@ -283,15 +496,64 @@ function computeRiskLevels(entryPrice, aiStopPrice, aiTargetPrice) {
   };
 }
 
-// ── Exit decision engine (v4: DAY + SWING) — unchanged ──────────────────────
+// ── Exit decision engine (v4: DAY + SWING) ─────────────────────────────────
+//
+// v7: the daily AI reviewer can now request TAKE_PARTIAL or CLOSE. Rather
+// than executing orders itself, it queues a directive on the position meta
+// and the ordinary 1-minute exit monitor carries it out through the SAME
+// order + accounting path every other exit uses. That deliberately avoids a
+// second implementation of close accounting (realized P&L, cooldown,
+// performance record, journal, shadow tracking) — a duplicate of that on a
+// live-money bot is a bug factory.
+//
+// PRECEDENCE: the deterministic engine runs FIRST and any EXIT it produces
+// wins outright. A stop-loss, MFE giveback or target completion must never be
+// displaced by a directive the AI queued hours earlier on stale prices. The
+// directive only applies when the engine would otherwise HOLD or take its own
+// partial, and a queued PARTIAL is dropped if the tier was banked meanwhile.
 function decidePositionAction(meta, currentPrice) {
   const peak = Math.max(meta.peakPrice || meta.entryPrice, currentPrice);
   const tradeType = meta.tradeType === "SWING" ? "SWING" : "DAY";
 
-  if (tradeType === "SWING") {
-    return decideSwingAction(meta, currentPrice, peak);
+  const baseDecision =
+    tradeType === "SWING"
+      ? decideSwingAction(meta, currentPrice, peak)
+      : decideDayAction(meta, currentPrice, peak);
+
+  // Hard risk always wins.
+  if (baseDecision.action === "EXIT") return baseDecision;
+
+  const pending = meta.pendingReviewerAction;
+  if (!pending) return baseDecision;
+
+  if (pending.type === "EXIT") {
+    return {
+      action: "EXIT",
+      reason: pending.reason || "AI_REVIEW_CLOSE",
+      newPeak: peak,
+      fromReviewer: true,
+    };
   }
-  return decideDayAction(meta, currentPrice, peak);
+
+  if (pending.type === "PARTIAL") {
+    // The deterministic engine already banking a tier this tick takes
+    // precedence — one partial per tick, and its floor logic is stricter.
+    if (baseDecision.action === "PARTIAL") return baseDecision;
+    // Tier already banked since the review — the directive is stale.
+    if (meta.partialDone || meta.partialT1Done) return baseDecision;
+    return {
+      action: "PARTIAL",
+      reason: pending.reason || "AI_REVIEW_PARTIAL",
+      fraction: pending.fraction,
+      // Bank at breakeven-or-better, mirroring every other partial path.
+      floorOnSuccess: Math.max(meta.lockedFloor || 0, meta.entryPrice),
+      flagOnSuccess: "partialDone",
+      newPeak: peak,
+      fromReviewer: true,
+    };
+  }
+
+  return baseDecision;
 }
 
 // ── Whipsaw confirmation for stop/floor breaches ────────────────────────────
@@ -322,7 +584,11 @@ function confirmStopBreach(meta, currentPrice, stopLevel, peak, label) {
 
 // ── DAY logic ────────────────────────────────────────────────────────────────
 function decideDayAction(meta, currentPrice, peak) {
-  const heldMinutes = (Date.now() - (meta.openedAt || Date.now())) / 60000;
+  // NOTE: the DAY stale-exit no longer reads a raw wall-clock figure — it
+  // uses getDayHoldElapsed(meta) further down, which spends the budget in
+  // regular-session minutes. SWING is deliberately left on wall-clock days:
+  // its budget is denominated in DAYS, where spanning a weekend is normal
+  // and expected rather than a distortion.
   const entryPrice = meta.entryPrice;
 
   // ── MFE GIVEBACK ENGINE ──────────────────────────────────────────────
@@ -418,13 +684,102 @@ function decideDayAction(meta, currentPrice, peak) {
     };
   }
 
-  // 5. Time-based exit: stale and not working (loser cleanup — winners are
-  // the MFE engine's job)
+  // 4.5. PROFIT-STALL LOCK (v6). Applies to the gap the MFE engine and
+  // Target 1 don't cover: a position sitting in modest REAL profit that
+  // hasn't armed the MFE floor yet (arm threshold is ATR-scaled — often
+  // well above where this fires) and hasn't reached Target 1 either, but
+  // also hasn't made a new high in a while. Left alone, this position would
+  // just sit in HOLD indefinitely (it's above the +0.5% floor the stale
+  // check needs, so that never catches it either). Before locking, check
+  // the short-term trend — if it still looks like it's pushing toward a new
+  // high, re-arm silently instead of exiting (the "intelligent extend"
+  // half of the ask). A rising peak naturally keeps resetting this clock
+  // on its own — no separate grace-used flag needed here.
   if (
-    heldMinutes >= config.maxHoldMinutes &&
-    currentPrice < entryPrice * 1.005
+    config.profitStallEnabled &&
+    !meta.partialDone &&
+    !mfeArmed &&
+    currentPrice > entryPrice * (1 + config.profitStallMinProfitPct / 100)
   ) {
-    return { action: "EXIT", reason: "TIME_EXIT_STALE", newPeak: peak };
+    const peakSetAt = meta.peakSetAt || meta.openedAt || Date.now();
+    const minutesSincePeak = (Date.now() - peakSetAt) / 60000;
+    if (minutesSincePeak >= config.profitStallMinMinutes) {
+      const trend = computeRecentTrend(meta.recentPrices);
+      if (trend === "RISING") {
+        return {
+          action: "HOLD",
+          reason: "profit-stall check: still rising, extending",
+          newPeak: peak,
+        };
+      }
+      return {
+        action: "PARTIAL",
+        reason: "PROFIT_STALL_LOCK",
+        newPeak: peak,
+        fraction: config.profitStallLockFraction,
+        flagOnSuccess: "partialDone",
+      };
+    }
+  }
+
+  // 5. Time-based exit: stale and not working (loser cleanup — winners are
+  // the MFE engine's job). RECOVERY-AWARE (v6) and VOLATILITY-SCALED (v6):
+  // the time budget itself scales with the position's own ATR bucket, and
+  // before force-exiting a losing/flat position purely on the clock, the
+  // short-term trend gets ONE chance to earn a bounded grace extension. The
+  // hard stop above is completely unaffected by any of this — it remains
+  // immediate and unconditional regardless of grace state.
+  // v7.1: the budget is now spent in REGULAR-SESSION minutes (see
+  // getDayHoldElapsed above) so a position opened pre-market is not killed
+  // by a clock running while the market is shut. An absolute WALL-CLOCK
+  // ceiling still applies, so a position opened on a Friday evening — when
+  // session minutes would not accrue until Monday — cannot be held
+  // indefinitely.
+  const effectiveMaxHoldMinutes =
+    config.maxHoldMinutes * getTimeBudgetMultiplier(meta);
+  const holdElapsed = getDayHoldElapsed(meta);
+  const absoluteCeilingMinutes =
+    config.maxHoldMinutes * config.maxHoldWallClockCeilingMultiplier;
+  const budgetSpent = holdElapsed.effectiveMinutes >= effectiveMaxHoldMinutes;
+  const ceilingHit = holdElapsed.wallClockMinutes >= absoluteCeilingMinutes;
+
+  if ((budgetSpent || ceilingHit) && currentPrice < entryPrice * 1.005) {
+    if (config.recoveryCheckEnabled && !meta.staleGraceUsedAt) {
+      const trend = computeRecentTrend(meta.recentPrices);
+      if (trend === "RISING") {
+        return {
+          action: "HOLD",
+          reason:
+            "stale-exit check: recovery signal detected, granting a " +
+            config.dayStaleGraceExtensionMinutes +
+            "min grace extension before re-evaluating",
+          newPeak: peak,
+          grantStaleGrace: true,
+        };
+      }
+    }
+    const graceStillActive =
+      meta.staleGraceUsedAt &&
+      Date.now() - meta.staleGraceUsedAt <
+        config.dayStaleGraceExtensionMinutes * 60000;
+    if (graceStillActive) {
+      return {
+        action: "HOLD",
+        reason: "in stale-exit recovery grace window",
+        newPeak: peak,
+      };
+    }
+    return {
+      action: "EXIT",
+      reason: "TIME_EXIT_STALE",
+      newPeak: peak,
+      // Which limit actually fired — the session budget or the wall-clock
+      // backstop. Recorded so the journal can separate "had its trading
+      // time and did nothing" from "sat through a closed market".
+      timeExitTrigger: budgetSpent ? "SESSION_BUDGET" : "WALL_CLOCK_CEILING",
+      sessionMinutesHeld: Math.round(holdElapsed.effectiveMinutes),
+      wallClockMinutesHeld: Math.round(holdElapsed.wallClockMinutes),
+    };
   }
 
   return { action: "HOLD", reason: "in trade", newPeak: peak };
@@ -491,8 +846,47 @@ function decideSwingAction(meta, currentPrice, peak) {
     };
   }
 
-  // 6. Time exit: held too long (Friday close will usually fire first)
-  if (heldDays >= config.swingMaxHoldDays) {
+  // 6. Time exit: held too long (Friday's mandatory close-ALL in eod-closer.js
+  // still fires unconditionally regardless of anything below — this is only
+  // the routine Mon-Thu day-count exit). VOLATILITY-SCALED (v6) and, when
+  // the position is currently a LOSER, RECOVERY-AWARE (v6): force-closing a
+  // loser purely because N days passed, with no read on whether it's
+  // stabilizing, is exactly the "closes solely on a time limit" behavior
+  // flagged in review. A position current in PROFIT at the day limit is NOT
+  // gated here — the T1/T2/T3 floor ladder above already protects it, so
+  // there's no blind-exit-on-a-winner problem to fix.
+  const effectiveMaxHoldDays =
+    config.swingMaxHoldDays * getTimeBudgetMultiplier(meta);
+  if (heldDays >= effectiveMaxHoldDays) {
+    const isLosing = currentPrice < meta.entryPrice;
+    if (isLosing && config.recoveryCheckEnabled) {
+      if (!meta.swingTimeGraceUsedAt) {
+        const trend = computeRecentTrend(meta.recentPrices);
+        if (trend === "RISING") {
+          return {
+            action: "HOLD",
+            reason:
+              "swing time-exit check: recovery signal detected in a loss, " +
+              "granting a " +
+              config.swingTimeExitGraceExtensionDays +
+              "-day grace extension before re-evaluating",
+            newPeak: peak,
+            grantSwingTimeGrace: true,
+          };
+        }
+      } else {
+        const graceStillActiveDays =
+          (Date.now() - meta.swingTimeGraceUsedAt) / 86400000 <
+          config.swingTimeExitGraceExtensionDays;
+        if (graceStillActiveDays) {
+          return {
+            action: "HOLD",
+            reason: "in swing time-exit recovery grace window",
+            newPeak: peak,
+          };
+        }
+      }
+    }
     return { action: "EXIT", reason: "SWING_TIME_EXIT", newPeak: peak };
   }
 
@@ -508,4 +902,9 @@ module.exports = {
   computeRiskLevels,
   decidePositionAction,
   sectorBucketFor,
+  // v7.1: exported for tests — the session-minutes accounting behind the
+  // session-aware DAY time budget.
+  computeRegularSessionMinutesBetween,
+  getDayHoldElapsed,
+  getTimeBudgetMultiplier,
 };

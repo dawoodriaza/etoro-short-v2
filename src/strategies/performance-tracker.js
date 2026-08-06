@@ -8,7 +8,7 @@ require("dotenv").config();
 const fs = require("fs");
 const path = require("path");
 const { logger } = require("../logger");
-const { humanize } = require("../notifications/format-helpers");
+const { humanize, toRealDollars } = require("../notifications/format-helpers");
 
 const tradeLogPath = path.join(__dirname, "../../data/trade-history.json");
 const dataDir = path.dirname(tradeLogPath);
@@ -85,8 +85,15 @@ function computeStats(history) {
   };
 }
 
+// v7.5: every dollar figure here is stored in trade-history.json as BOT
+// (agent-account) dollars — computeStats() just sums pnlDollars as recorded.
+// Run each one through toRealDollars() before it reaches Telegram, so this
+// report matches every other Telegram message and your actual account.
+// Win rate / profit factor are RATIOS and are unaffected by the copy scale.
 function formatStatsForTelegram(stats) {
   if (!stats.totalTrades) return "No trades recorded yet.";
+  const money = (value) =>
+    (value >= 0 ? "+" : "") + "$" + toRealDollars(value).toFixed(2);
   const setupLines = Object.entries(stats.bySetup)
     .map(
       ([setup, s]) =>
@@ -96,8 +103,8 @@ function formatStatsForTelegram(stats) {
         s.wins +
         "/" +
         s.trades +
-        " win, $" +
-        s.pnl.toFixed(2),
+        " win, " +
+        money(s.pnl),
     )
     .join("\n");
   return (
@@ -113,20 +120,18 @@ function formatStatsForTelegram(stats) {
     stats.winRate.toFixed(1) +
     "%\n" +
     "Avg win: $" +
-    stats.avgWin.toFixed(2) +
+    toRealDollars(stats.avgWin).toFixed(2) +
     " · Avg loss: $" +
-    stats.avgLoss.toFixed(2) +
+    toRealDollars(stats.avgLoss).toFixed(2) +
     "\n" +
     "Profit factor: " +
     (stats.profitFactor === Infinity ? "∞" : stats.profitFactor.toFixed(2)) +
     "\n" +
     "Expectancy/trade: $" +
-    stats.expectancy.toFixed(2) +
+    toRealDollars(stats.expectancy).toFixed(2) +
     "\n" +
     "Total P&L: " +
-    (stats.totalPnl >= 0 ? "+" : "") +
-    "$" +
-    stats.totalPnl.toFixed(2) +
+    money(stats.totalPnl) +
     "\n\n" +
     "By setup:\n" +
     setupLines

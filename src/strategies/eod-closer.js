@@ -71,11 +71,16 @@ async function forceCloseAllPositions(
     ).toUpperCase();
     const positionMeta = meta[symbol];
     if (!positionMeta) {
-      logger.info(
-        "EOD closer: " +
+      // v7.2: raised from info to warn. The 1-minute exit monitor now
+      // adopts or alerts on untracked positions, so anything still
+      // untracked by EOD is genuinely unmanaged and will NOT be closed
+      // tonight — that deserves to be visible, not buried at info level.
+      logger.warn(
+        "⚠️ EOD closer: " +
           symbol +
-          " is NOT tracked by this bot — leaving it alone (likely another " +
-          "bot's or a manual position)",
+          " is NOT tracked by this bot — leaving it alone (likely a manual " +
+          "position). It will NOT be closed at EOD and has no stop from this " +
+          "bot. Set DT_ADOPT_FOREIGN_POSITIONS=true if it should be managed.",
       );
       continue;
     }

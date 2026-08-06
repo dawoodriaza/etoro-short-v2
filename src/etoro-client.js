@@ -91,6 +91,44 @@ async function fetchRawPortfolio() {
   });
 }
 
+// v7.2: eToro's pnl response carries SEVEN order arrays besides `positions`.
+// Before this, only `ordersForOpen` and `orders` were read (for cash maths)
+// and nothing else was ever looked at — so an order parked in `stockOrders`
+// or `entryOrders` was completely invisible to the bot. A position that
+// exists as a pending/queued order therefore looked identical to "does not
+// exist", the ghost sweeper cleared its tracking, and if it later filled the
+// bot had no record of it: no stop, no exit management, no EOD close.
+const PENDING_ORDER_ARRAYS = [
+  "ordersForOpen",
+  "orders",
+  "stockOrders",
+  "entryOrders",
+  "exitOrders",
+  "ordersForClose",
+  "ordersForCloseMultiple",
+];
+
+function collectPendingOrders(clientPortfolio) {
+  const pendingOrders = [];
+  for (const arrayName of PENDING_ORDER_ARRAYS) {
+    const orders = clientPortfolio[arrayName];
+    if (!Array.isArray(orders)) continue;
+    for (const order of orders) {
+      if (!order) continue;
+      pendingOrders.push({
+        source: arrayName,
+        orderId: order.orderID ?? order.orderId ?? null,
+        instrumentId: order.instrumentID ?? order.instrumentId ?? null,
+        amount: order.amount ?? null,
+        isBuy: order.isBuy,
+        positionId: order.positionID ?? order.positionId ?? null,
+        raw: order,
+      });
+    }
+  }
+  return pendingOrders;
+}
+
 function parsePortfolioFromRawData(rawPortfolioData) {
   const clientPortfolio = rawPortfolioData.clientPortfolio;
 
@@ -103,6 +141,8 @@ function parsePortfolioFromRawData(rawPortfolioData) {
     (total, order) => total + (order.amount || 0),
     0,
   );
+
+  const pendingOrders = collectPendingOrders(clientPortfolio);
 
   const availableCash =
     (clientPortfolio.credit || 0) -
@@ -119,8 +159,29 @@ function parsePortfolioFromRawData(rawPortfolioData) {
     0,
   );
 
+  // ══════════════════════════════════════════════════════════════════════
+  // v7.3 CRITICAL FIX — EQUITY MUST INCLUDE CASH RESERVED FOR PENDING ORDERS.
+  //
+  // This used to be `availableCash + invested + unrealized`, i.e. it
+  // subtracted pendingOpenOrderCost from the account's NET WORTH. But cash
+  // reserved against an unfilled order has not left the account — it is
+  // ring-fenced, not spent. Counting it as gone makes equity collapse and
+  // then rebound purely as orders queue and fill.
+  //
+  // Measured live 2026-07-31: two queued orders of $3,275 reserved $6,550,
+  // equity read $2,764.34 instead of the true $9,314.34, and the v7.1
+  // owner-transfer auto-detection interpreted the difference as a $6,596.66
+  // WITHDRAWAL. It rewrote the capital base from $10,000 to $3,403, cut the
+  // drawdown peak from $10,032 to $2,962, and collapsed position sizing to
+  // ~$114. No money had moved at all.
+  //
+  // availableCash below stays as it was — for "can I afford this trade?"
+  // reserved cash genuinely is unavailable. The two figures answer
+  // different questions and must not share one number.
   const totalEquity =
-    availableCash + totalAmountInvested + totalUnrealizedProfitLoss;
+    (clientPortfolio.credit || 0) +
+    totalAmountInvested +
+    totalUnrealizedProfitLoss;
 
   const openPositions = (clientPortfolio.positions || []).map((position) => ({
     positionId: position.positionID,
@@ -147,6 +208,10 @@ function parsePortfolioFromRawData(rawPortfolioData) {
     cashPercent: totalEquity > 0 ? availableCash / totalEquity : 0,
     openPositions,
     positionCount: openPositions.length,
+    // v7.2: every order eToro is holding for this account, from ALL of its
+    // order arrays. A symbol appearing here is NOT a ghost — it is in flight.
+    pendingOrders,
+    pendingOrderCount: pendingOrders.length,
   };
 }
 
@@ -191,8 +256,33 @@ function findDuplicatePositions(parsedPortfolio) {
 
 // ── Instrument resolution ──────────────────────────────────────────────────
 
-async function resolveTickerToInstrumentId(tickerSymbol) {
+// eToro's own asset-class ids. 6 = ETF, 10 = Crypto.
+const ASSET_CLASS_CRYPTO = 10;
+
+// ══════════════════════════════════════════════════════════════════════
+// v7.4 CRITICAL — REJECT CROSS-ASSET-CLASS TICKER COLLISIONS.
+//
+// The search endpoint matches on symbol alone and happily returns a
+// CRYPTO token for an equity ticker. Measured 2026-08-06: "DIA" resolves
+// to instrumentId 100580 — Diadata, a $0.11 crypto on eToro's Digital
+// Currency exchange — not the SPDR Dow Jones ETF (~$450). The Dow ETF is
+// not listed on eToro under that symbol at all.
+//
+// As a market-data bug this fabricated a "Dow +5.30%" reading fed
+// straight into the AI prompts. As a TRADING bug it is far worse: this
+// same resolver supplies the instrumentId used to open positions, so any
+// watchlist ticker that collides with a crypto symbol would have real
+// money placed on the wrong asset entirely. That is precisely the failure
+// documented in the v5.7 note above, where every "AMD" trade was actually
+// buying Micron.
+//
+// Equities and ETFs are what this bot trades, so crypto matches are now
+// rejected unless a caller explicitly asks for them.
+// ══════════════════════════════════════════════════════════════════════
+async function resolveTickerToInstrumentId(tickerSymbol, options = {}) {
   const upperSymbol = tickerSymbol.toUpperCase();
+  const allowCrypto = options.allowCrypto === true;
+
   if (instrumentIdCache[upperSymbol]) {
     return instrumentIdCache[upperSymbol];
   }
@@ -205,9 +295,29 @@ async function resolveTickerToInstrumentId(tickerSymbol) {
     );
 
     const searchResults = response.data?.items || [];
-    const exactMatch = searchResults.find(
+    const symbolMatches = searchResults.filter(
       (item) => item.internalSymbolFull?.toUpperCase() === upperSymbol,
     );
+
+    // Prefer a tradeable non-crypto instrument; fall back only if the
+    // caller opted in. Several symbols return more than one exact match.
+    const acceptable = symbolMatches.filter(
+      (item) =>
+        allowCrypto || item.internalAssetClassId !== ASSET_CLASS_CRYPTO,
+    );
+
+    if (symbolMatches.length > 0 && acceptable.length === 0) {
+      logger.warn(
+        `${upperSymbol} on eToro is a ${symbolMatches[0].internalAssetClassName || "non-equity"} ` +
+          `instrument (id ${symbolMatches[0].internalInstrumentId}, exchange ` +
+          `"${symbolMatches[0].internalExchangeName || "?"}", rate ${symbolMatches[0].currentRate}) — ` +
+          `NOT the equity/ETF this bot trades. Refusing to resolve it so no ` +
+          `order or quote can ever use the wrong asset.`,
+      );
+      return null;
+    }
+
+    const exactMatch = acceptable[0];
 
     if (!exactMatch) {
       logger.warn(`${upperSymbol} not found on eToro instrument search`);
@@ -411,6 +521,8 @@ module.exports = {
   findDuplicatePositions,
   fetchRawPortfolio,
   parsePortfolioFromRawData,
+  collectPendingOrders,
+  PENDING_ORDER_ARRAYS,
   resolveTickerToInstrumentId,
   resolveInstrumentIdToTicker,
   labelPositionsWithTickers,

@@ -176,3 +176,20 @@ scp -i ~/Downloads/ssh-key-2026-07-02.key ~/Desktop/etoro-v2-short/src/strategie
 scp -i ~/Downloads/ssh-key-2026-07-02.key ~/Desktop/etoro-v2-short/src/strategies/self-evaluation.js ubuntu@130.110.113.198:~/etoro-v2-short/src/strategies/self-evaluation.js
 scp -i ~/Downloads/ssh-key-2026-07-02.key ~/Desktop/etoro-v2-short/src/strategies/session-timing.js ubuntu@130.110.113.198:~/etoro-v2-short/src/strategies/session-timing.js
 scp -i ~/Downloads/ssh-key-2026-07-02.key ~/Desktop/etoro-v2-short/src/strategies/trade-planner.js ubuntu@130.110.113.198:~/etoro-v2-short/src/strategies/trade-planner.js
+
+
+
+
+
+node src/close-position.js --list                        # what's open (read-only)
+node src/close-position.js NVDA --fraction 0.5 --confirm # close half
+node src/close-position.js --all --confirm               # close everything
+
+
+
+ssh -i ~/Downloads/ssh-key-2026-07-02.key ubuntu@130.110.113.198 "cd ~/etoro-v2-short && node src/close-position.js RIVN"
+
+
+ssh -i ~/Downloads/ssh-key-2026-07-02.key ubuntu@130.110.113.198 "cd ~/etoro-v2-short && node src/close-position.js RIVN --confirm"
+
+

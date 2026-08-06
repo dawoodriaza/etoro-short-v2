@@ -9,18 +9,15 @@
 // Returns whether NEW entries are allowed right now (exits always allowed).
 require("dotenv").config();
 const config = require("../config");
+const marketHours = require("../market-hours"); // P0 fix: single ET clock source
 
 // Get current ET hour/minute using the same approach as market-hours.js
+// P0 FIX (2026-07-27): delegated to market-hours.js so there is exactly ONE
+// implementation of "what time is it in New York" in the codebase. The old
+// local copy parsed `hour12: false`, which on the production server's Node
+// 20 returns hour 24 at 00:xx ET — see the block comment in market-hours.js.
 function getEasternHourMinute() {
-  const now = new Date();
-  const etString = now.toLocaleString("en-US", {
-    timeZone: "America/New_York",
-    hour12: false,
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-  const [hourStr, minStr] = etString.split(":");
-  return { hour: parseInt(hourStr), minute: parseInt(minStr) };
+  return marketHours.getEasternHourMinute();
 }
 
 function minutesSinceOpen(hour, minute) {
@@ -104,4 +101,63 @@ function isNewEntryAllowed() {
   return { allowed: true };
 }
 
-module.exports = { isNewEntryAllowed, getEasternHourMinute };
+// v6 (2026-07-21): PRE-OPEN / OPEN-VOLATILITY BUY BLACKOUT — pure TIME
+// check only (kept out of isNewEntryAllowed on purpose: SPY-weakness is
+// evaluated by the caller, which already has a fresh SPY quote fetched for
+// the regime classifier — this module stays free of a market-data
+// dependency). True from (open - preOpenBlackoutMinutesBefore) through
+// (open + postOpenBlackoutMinutesAfter) ET.
+//
+// WHY THIS IS A SEPARATE GATE, NOT PART OF isNewEntryAllowed: in 24/5 mode
+// (config.trade24_5 = true, confirmed live on this deployment),
+// isNewEntryAllowed() above returns {allowed:true} immediately and skips
+// every check in this file — there is currently NO pre-open protection at
+// all when 24/5 trading is on. The caller applies this blackout regardless
+// of trade24_5, closing that gap.
+function isInPreOpenBlackoutWindow() {
+  const { hour, minute } = getEasternHourMinute();
+  const sinceOpen = minutesSinceOpen(hour, minute); // negative before 9:30 ET
+  return (
+    sinceOpen >= -config.preOpenBlackoutMinutesBefore &&
+    sinceOpen < config.postOpenBlackoutMinutesAfter
+  );
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// v7.4 — OVERNIGHT DEAD ZONE (Eastern time).
+//
+// Measured across 114 closed trades: ALL 16 trades entered between 00:00
+// and 04:00 ET lost money, netting -$170.05 at a 31% win rate. Crucially
+// the conviction-score filter does NOT rescue this window — the three
+// high-score overnight trades lost fastest of all, -$27.07 each against a
+// 0% win rate. Every other session is profitable once the score gate is
+// applied, so 24/5 trading stays enabled and only this window closes.
+//
+// Mechanically this window has: no session volume to measure, a regime
+// classifier that is definitionally blind (it needs 45 minutes of regular
+// session), the widest spreads of the day, and too little liquidity for a
+// position to move in your favour before the open gaps it.
+//
+// Deliberately independent of DT_TRADE_24_5 — that flag bypasses every
+// other session gate, which is exactly why this one cannot rely on it.
+// Blocks NEW ENTRIES only; exits, stops and EOD closes never consult it.
+function isInOvernightDeadZone(atDate) {
+  if (!config.overnightDeadZoneEnabled) return false;
+  const { hour } = atDate
+    ? marketHours.getEasternHourMinute(atDate)
+    : getEasternHourMinute();
+  const start = config.overnightDeadZoneStartHourET;
+  const end = config.overnightDeadZoneEndHourET;
+  if (start === end) return false;
+  // Handles a window that wraps past midnight as well as a simple one.
+  return start < end
+    ? hour >= start && hour < end
+    : hour >= start || hour < end;
+}
+
+module.exports = {
+  isNewEntryAllowed,
+  getEasternHourMinute,
+  isInPreOpenBlackoutWindow,
+  isInOvernightDeadZone,
+};

@@ -92,8 +92,19 @@ const journal = {
   planBuilt: (plan) => appendEvent("PLAN_BUILT", { plan }),
   planRejected: (symbol, rejectReason) =>
     appendEvent("PLAN_REJECTED", { symbol, rejectReason }),
-  aiDecision: (symbol, decision, confidence, reasoning) =>
-    appendEvent("AI_DECISION", { symbol, decision, confidence, reasoning }),
+  // v7: `analysis` carries the model's structured reads (separated market /
+  // technical / risk verdicts, the named disqualifier, what data it could not
+  // see, and the reviewer's probability estimates). Optional and backward
+  // compatible — the point is that a decision can be audited later against
+  // the evidence it claimed, instead of one sentence that scrolled past.
+  aiDecision: (symbol, decision, confidence, reasoning, analysis) =>
+    appendEvent("AI_DECISION", {
+      symbol,
+      decision,
+      confidence,
+      reasoning,
+      ...(analysis ? { analysis } : {}),
+    }),
   tradeOpened: (plan) => appendEvent("TRADE_OPENED", { plan }),
   exitDecision: (symbol, action, reason, currentPrice, meta) =>
     appendEvent("EXIT_DECISION", {
