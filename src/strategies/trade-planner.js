@@ -211,15 +211,18 @@ function buildTradePlan(
     return {
       accepted: false,
       rejectReason:
+        // v7.11: one decimal, not toFixed(0) — a rejected 79.6 printed as
+        // "score 80 below the entry floor of 80", which reads as an
+        // off-by-one bug that isn't there.
         "score " +
-        candidate.score.toFixed(0) +
+        candidate.score.toFixed(1) +
         " below the entry floor of " +
         config.minEntryScore +
         " (every score band under 80 lost money across 114 audited trades)",
     };
   }
 
-  const {
+  let {
     tradeType,
     reason: typeReason,
     archetype,
@@ -229,15 +232,44 @@ function buildTradePlan(
     context.easternWeekday,
   );
 
-  // Per-type position slot check (cheap, before any math)
-  if (tradeType === "DAY" && openCounts.dayCount >= config.maxDayPositions) {
-    return { accepted: false, rejectReason: "day-trade slots full" };
-  }
+  // ══════════════════════════════════════════════════════════════════════
+  // v7.11 BUG FIX — SWING CAPACITY DOWNGRADES, IT DOES NOT DISCARD.
+  //
+  // classifyTradeType returns SWING only when a candidate passes EVERY
+  // trend-persistence bar (TRENDING regime, RSI under 70, relative
+  // strength >= 1.5, above VWAP). Failing any one of them already
+  // downgrades it to DAY, which then trades normally.
+  //
+  // So the old "swing slots full -> reject" branch inverted the quality
+  // filter: with DT_MAX_SWING_POSITIONS=0 (swings paused since the v7.7
+  // forensics) the check `0 >= 0` was true for EVERY swing-qualified
+  // candidate, meaning the best setups of the day were thrown away while
+  // weaker ones proceeded. Observed live on 2026-09-01 — MMED and CRK
+  // rejected as "swing slots full" on six consecutive scans while the
+  // bot took zero trades.
+  //
+  // A swing-qualified name is still a perfectly good DAY trade; it just
+  // can't be HELD for days. So when swing capacity is unavailable we now
+  // demote it to DAY and let the DAY slot check decide. The flag below is
+  // carried into the plan and the journal so a month of live data can
+  // answer "should swings be re-enabled?" with evidence.
+  // ══════════════════════════════════════════════════════════════════════
+  let downgradedFromSwing = false;
   if (
     tradeType === "SWING" &&
     openCounts.swingCount >= config.maxSwingPositions
   ) {
-    return { accepted: false, rejectReason: "swing slots full" };
+    downgradedFromSwing = true;
+    tradeType = "DAY";
+    typeReason =
+      config.maxSwingPositions === 0
+        ? "swings paused — traded as DAY (qualified: " + typeReason + ")"
+        : "swing slots full — traded as DAY (qualified: " + typeReason + ")";
+  }
+
+  // Per-type position slot check (cheap, before any math)
+  if (tradeType === "DAY" && openCounts.dayCount >= config.maxDayPositions) {
+    return { accepted: false, rejectReason: "day-trade slots full" };
   }
 
   const volatilityBucket = classifyVolatility(candidate.atrPercent);
@@ -286,12 +318,24 @@ function buildTradePlan(
     ? config.discoveryFirstTradeSizeMultiplier
     : 1;
 
+  // v7.7: per-symbol size multiplier from watchlist-daytrade.json. Lets a
+  // name be KEPT in the universe but traded smaller — the middle option
+  // between "full size" and "delete it". Used for TSLA, whose bucket lost
+  // $18.59/trade across 14 trades but which is deliberately retained.
+  const symbolMultiplier =
+    typeof candidate.sizeMultiplier === "number" &&
+    candidate.sizeMultiplier > 0 &&
+    candidate.sizeMultiplier <= 1
+      ? candidate.sizeMultiplier
+      : 1;
+
   const riskDollars =
     capitalState.effectiveCapital *
     riskPct *
     riskMultiplier *
     volatilityMultiplier *
-    discoveryMultiplier;
+    discoveryMultiplier *
+    symbolMultiplier;
 
   const maxPositionPct =
     tradeType === "SWING"
@@ -326,6 +370,10 @@ function buildTradePlan(
     symbol: candidate.symbol,
     tradeType, // "DAY" | "SWING"
     tradeTypeReason: typeReason,
+    // v7.11: true when this cleared every SWING bar but was demoted to DAY
+    // because swing capacity was unavailable. Recorded so a month of live
+    // trades can answer whether swings deserve re-enabling.
+    downgradedFromSwing,
     archetype, // "MOMENTUM_BREAKOUT" | "NEWS_CATALYST" | "MOMENTUM_CONTINUATION"
     catalyst: candidate.catalyst || null, // "ANALYST_UPGRADE" | "INSIDER_BUY" | null
     catalystLabel: candidate.catalystLabel || null,
@@ -344,6 +392,28 @@ function buildTradePlan(
     relativeStrength: candidate.relativeStrength,
     rsi: candidate.rsi,
     aboveVwap: candidate.aboveVwap,
+    // v7.8 — INSTRUMENTATION FOR THE ONE-MONTH TEST.
+    //
+    // These were previously absent and had to be RECONSTRUCTED during the
+    // 2026-08-28 forensic audit (raw move backed out of
+    // relativeStrength + spyChangePercent, sector joined from the
+    // watchlist file). Reconstruction only works while every input
+    // survives, and it silently fails the moment one of them changes.
+    // Recording them directly makes the trade log self-describing.
+    //
+    // moveToAtrRatio is the single strongest predictor found anywhere in
+    // this system: the >=1.0 cohort was 62% win / +$315.48, while every
+    // band below it lost money. It must be measurable per trade.
+    priceChangePercent: candidate.priceChangePercent,
+    moveToAtrRatio:
+      candidate.atrPercent > 0 &&
+      typeof candidate.priceChangePercent === "number"
+        ? Number(
+            (
+              Math.abs(candidate.priceChangePercent) / candidate.atrPercent
+            ).toFixed(3),
+          )
+        : null,
 
     // Geometry
     entryPrice: Number(entryPrice.toFixed(4)),
@@ -382,6 +452,7 @@ function buildTradePlan(
       drawdownMultiplier: riskMultiplier,
       volatilityMultiplier,
       discoveryMultiplier,
+      symbolMultiplier, // v7.7: per-symbol override from the watchlist
     },
 
     plannedAt: new Date().toISOString(),

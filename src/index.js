@@ -75,6 +75,7 @@ const selfEvaluation = require("./strategies/self-evaluation");
 const cooldownTracker = require("./strategies/cooldown-tracker");
 const marketRegime = require("./strategies/market-regime");
 const marketContextBuilder = require("./strategies/market-context");
+const sectorMap = require("./strategies/sector-map"); // v7.8: bucket at entry
 const notifications = require("./notifications/telegram");
 const alerts = require("./notifications/alerts");
 const finnhub = require("./data-sources/finnhub");
@@ -166,6 +167,16 @@ function loadWatchlistEntries() {
       bucket: entry.bucket,
       // 24/5 overnight-eligible only when explicitly flagged true.
       night: entry.night === true,
+      // v7.7: optional per-symbol position-size multiplier. Lets a name be
+      // KEPT but traded smaller, instead of the all-or-nothing choice of
+      // leaving it at full size or deleting it. Absent/invalid → 1 (no
+      // change), so every existing entry behaves exactly as before.
+      sizeMultiplier:
+        typeof entry.sizeMultiplier === "number" &&
+        entry.sizeMultiplier > 0 &&
+        entry.sizeMultiplier <= 1
+          ? entry.sizeMultiplier
+          : 1,
     }));
   } catch (loadError) {
     logger.error("Watchlist load error: " + loadError.message);
@@ -294,8 +305,19 @@ async function runScanCycle() {
   // ══════════════════════════════════════════════════════════════════════
   if (marketHours.isInOvernightFreezeWindow()) {
     const window = marketHours.getOvernightFreezeWindow();
-    logger.info(
-      "🌙 Overnight freeze active (" +
+    // v7.10: the window is ANCHORED to whichever clock it is configured in
+    // (ET, so it tracks the US session through DST), but it is DISPLAYED in
+    // the operator's timezone. When the two differ, the ET anchor is shown
+    // in brackets so the log stays truthful about what is configured while
+    // still being readable without mental arithmetic.
+    const freezeIsEtAnchored = window.timeZone === "America/New_York";
+    const windowText = freezeIsEtAnchored
+      ? marketHours.easternClockToLogZone(window.startHour, window.startMinute) +
+        "-" +
+        marketHours.easternClockToLogZone(window.endHour, window.endMinute) +
+        " " +
+        marketHours.getLogTimeZoneLabel() +
+        ", tracks " +
         String(window.startHour).padStart(2, "0") +
         ":" +
         String(window.startMinute).padStart(2, "0") +
@@ -303,11 +325,20 @@ async function runScanCycle() {
         String(window.endHour).padStart(2, "0") +
         ":" +
         String(window.endMinute).padStart(2, "0") +
+        " ET"
+      : String(window.startHour).padStart(2, "0") +
+        ":" +
+        String(window.startMinute).padStart(2, "0") +
+        "-" +
+        String(window.endHour).padStart(2, "0") +
+        ":" +
+        String(window.endMinute).padStart(2, "0") +
         " " +
-        // v7.4: the FREEZE window's own clock, not the log clock. These are
-        // now different — the window is anchored to ET so it tracks the
-        // dead zone through DST, while logs stay on the operator's time.
-        marketHours.getFreezeTimeZoneLabel() +
+        marketHours.getFreezeTimeZoneLabel();
+
+    logger.info(
+      "🌙 Overnight freeze active (" +
+        windowText +
         ") — skipping new-trade scan (" +
         marketHours.getCurrentLocalTime() +
         " " +
@@ -463,8 +494,18 @@ async function runScanCycle() {
     // fully managed while no new risk is taken and no API budget is spent.
     // ══════════════════════════════════════════════════════════════════
     if (sessionTiming.isInOvernightDeadZone()) {
+      // v7.10: shown in the operator's own clock first. The window is
+      // ANCHORED to ET (it tracks the US session), but printing raw ET
+      // forced DST-aware mental arithmetic twice a year. The Bahrain
+      // figures below are computed live, so they shift themselves.
       logger.info(
         "🌑 Overnight dead zone (" +
+          marketHours.easternClockToLogZone(config.overnightDeadZoneStartHourET) +
+          "-" +
+          marketHours.easternClockToLogZone(config.overnightDeadZoneEndHourET) +
+          " " +
+          marketHours.getLogTimeZoneLabel() +
+          ", tracks " +
           String(config.overnightDeadZoneStartHourET).padStart(2, "0") +
           ":00-" +
           String(config.overnightDeadZoneEndHourET).padStart(2, "0") +
@@ -587,6 +628,41 @@ async function runScanCycle() {
         );
         continue;
       }
+      // ══════════════════════════════════════════════════════════════════
+      // v7.11 — TRADABILITY GATE, MOVED TO THE FRONT OF THE PIPELINE.
+      //
+      // resolveTickerToInstrumentId() used to run inside tryOpenPosition,
+      // i.e. AFTER enrichment, AFTER plan construction and AFTER the paid
+      // AI screener call. Discovery routinely surfaces small US names that
+      // eToro simply does not list, so on 2026-09-01 the bot spent a full
+      // session enriching, planning and screening RDIB / FGL / NIPG /
+      // FCUV / WFCF / LEXX — every one of them unbuyable. All 31 plans
+      // that reached the screener that day were of this kind.
+      //
+      // Watchlist candidates arrive from eToro's own quote path with
+      // instrumentId already set, so they cost nothing here; only
+      // discovered names trigger a lookup, and the negative cache in
+      // etoro-client keeps that to one call per symbol per TTL.
+      //
+      // A lookup FAILURE (network/HTTP) returns null the same as "not
+      // listed", so this deliberately does not treat null as permanent —
+      // the negative cache is what makes it cheap, and it expires.
+      // ══════════════════════════════════════════════════════════════════
+      if (!candidate.instrumentId && etoroMarketData.isConfigured()) {
+        const resolvedId = await etoroClient.resolveTickerToInstrumentId(
+          upperSymbol,
+        );
+        if (!resolvedId) {
+          journal.candidateRejected(
+            upperSymbol,
+            "NOT_ON_ETORO",
+            "no tradable eToro instrument — dropped before enrichment",
+          );
+          continue;
+        }
+        candidate.instrumentId = resolvedId;
+      }
+
       toEnrich.push(candidate);
     }
     if (!toEnrich.length) {
@@ -624,6 +700,12 @@ async function runScanCycle() {
       );
       if (!scored.rejected) {
         scored.atrPercent = candidate.atrPercent;
+        // v7.7: carry the per-symbol size multiplier through to sizing.
+        // Discovered (non-watchlist) names have no entry, so default to 1.
+        scored.sizeMultiplier =
+          (watchlistEntries.find(
+            (entry) => entry.symbol === candidate.symbol,
+          ) || {}).sizeMultiplier || 1;
         scored.source = candidate.source || "WATCHLIST";
         scored.priceChangePercent = candidate.priceChangePercent;
 
@@ -649,15 +731,21 @@ async function runScanCycle() {
               justification.priorScore.toFixed(0) +
               ") — not enough improvement to justify re-buying a recent loser",
           );
+          // v7.9: state the bar ACTUALLY applied, not the raw improvement
+          // figure. When the bar is clamped (prior score > 75, which is 72%
+          // of all blocks) the old wording said "the required 15 points",
+          // implying a bar of prior+15 — directly contradicting the clamp
+          // line logged immediately above it. The journal already recorded
+          // the real number; only the console line was wrong.
           logger.info(
             candidate.symbol +
               " re-entry blocked: score " +
               scored.score.toFixed(0) +
-              " doesn't beat the prior losing setup (" +
-              justification.priorScore.toFixed(0) +
-              ") by the required " +
-              config.lossReentryMinScoreImprovement +
-              " points",
+              " is below the required " +
+              justification.minScore.toFixed(0) +
+              (justification.wasClamped ? " (clamped)" : "") +
+              " — prior losing setup scored " +
+              justification.priorScore.toFixed(0),
           );
           await marketData.sleep(1500);
           continue;
@@ -728,7 +816,29 @@ async function runScanCycle() {
         plans.push(planResult.plan);
         journal.planBuilt(planResult.plan);
       } else {
-        journal.planRejected(candidate.symbol, planResult.rejectReason);
+        // v7.11: record the numbers, not just the sentence. Price + ts are
+        // what let a later analysis compute the forward return this
+        // rejection gave up, so a quiet month still produces evidence.
+        journal.planRejected(candidate.symbol, planResult.rejectReason, {
+          score: candidate.score != null ? candidate.score : null,
+          price: candidate.currentPrice != null ? candidate.currentPrice : null,
+          atrPercent: candidate.atrPercent != null ? candidate.atrPercent : null,
+          priceChangePercent:
+            candidate.priceChangePercent != null
+              ? candidate.priceChangePercent
+              : null,
+          rsi: candidate.rsi != null ? candidate.rsi : null,
+          relativeStrength:
+            candidate.relativeStrength != null
+              ? candidate.relativeStrength
+              : null,
+          aboveVwap: candidate.aboveVwap === true,
+          setup: candidate.setup || null,
+          source: candidate.source || "WATCHLIST",
+          sectorBucket: sectorMap.getStaticBucket(candidate.symbol) || null,
+          regime: regime.regime,
+          spyChangePercent: spyChange,
+        });
         logger.info(
           candidate.symbol + " plan rejected: " + planResult.rejectReason,
         );
@@ -1202,6 +1312,23 @@ async function tryOpenPosition(
         atrPercent: plan.atrPercent,
         volatilityBucket: plan.volatilityBucket,
         entryHourET: sessionTiming.getEasternHourMinute().hour,
+        // v7.8: fields the 2026-08-28 audit had to reconstruct by hand.
+        // Recording them makes every future analysis direct instead of
+        // inferential — and inference breaks silently when an input moves.
+        priceChangePercent: plan.priceChangePercent, // raw move at entry
+        moveToAtrRatio: plan.moveToAtrRatio, // strongest known predictor
+        sectorBucket: sectorMap.getStaticBucket(plan.symbol) || null,
+        sizeMultiplier:
+          (plan.sizingBreakdown && plan.sizingBreakdown.symbolMultiplier) || 1,
+        // Which selection filters were live when this trade was taken, so a
+        // later analysis can tell a config change apart from a market change.
+        filtersActive: {
+          minEntryScore: config.minEntryScore,
+          maxEntryAtrPct: config.maxEntryAtrPct,
+          prefilterMinMovePct: config.prefilterMinMovePct,
+          minMoveToAtrRatio: config.minMoveToAtrRatio,
+          overnightDeadZone: config.overnightDeadZoneEnabled,
+        },
       },
     };
     savePositionMeta(meta);
@@ -2674,19 +2801,27 @@ function startScheduler() {
     TIMEZONE,
   );
 
+  // v7.10: schedules are ANCHORED to ET (they follow the US session) but
+  // are printed in the operator's clock, computed live so they shift with
+  // US daylight saving on their own. Bahrain has no DST, so a hardcoded
+  // local figure here would be wrong for roughly half the year.
+  const zoneLabel = marketHours.getLogTimeZoneLabel();
   logger.info(
     "Scheduler: scans every " +
       config.scanIntervalMinutes +
       " min (adaptive slow-down in CHOP) · 1-min exit monitor · daily " +
       "position review Mon-Thu " +
-      config.reviewerHourET +
-      ":" +
-      String(config.reviewerMinuteET).padStart(2, "0") +
-      " ET · EOD close Mon-Thu (DAY) / Fri (ALL) at " +
-      forceCloseHour +
-      ":" +
-      String(forceCloseMinute).padStart(2, "0") +
-      " ET · Friday self-evaluation",
+      marketHours.easternClockToLogZone(
+        config.reviewerHourET,
+        config.reviewerMinuteET,
+      ) +
+      " " +
+      zoneLabel +
+      " · EOD close Mon-Thu (DAY) / Fri (ALL) at " +
+      marketHours.easternClockToLogZone(forceCloseHour, forceCloseMinute) +
+      " " +
+      zoneLabel +
+      " · Friday self-evaluation",
   );
 }
 

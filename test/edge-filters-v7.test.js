@@ -135,6 +135,107 @@ module.exports = {
       }).availableSignals === 5,
     );
 
+    // ══ v7.6 — VXX IS DIRECTION, NEVER A LEVEL ════════════════════════
+    // VXX tracks VIX *futures*, bleeds under contango and has been
+    // reverse-split repeatedly, so its price is meaningless as a fear
+    // gauge — VXX at $20.51 does NOT mean VIX 20.51. The absolute level
+    // must come from FRED; VXX contributes direction only.
+    const vxxBrief = marketContext.formatBriefForPrompt({
+      spyChangePercent: -0.9,
+      indexChanges: { QQQ: -1.1, IWM: -1.3, VXX: 7.0 },
+      breadth: { advancers: 5, decliners: 15, total: 20, advancingPct: 25 },
+      vix: 16.5,
+      vxxChangePercent: 7.0,
+      volatilityExpanding: true,
+      volatilityCollapsing: false,
+      volatilityConfirmedByPrice: true,
+      tenYear: null,
+      regime: "TRENDING",
+      rangePct: 1.6,
+      sectorLeaders: [],
+      sectorLaggards: [],
+      riskTone: "RISK_OFF",
+      riskToneDetail: { availableSignals: 6, riskOnVotes: 0, riskOffVotes: 6 },
+    });
+    check(
+      "vxx: the real VIX LEVEL still comes from FRED, not from VXX",
+      vxxBrief.includes("VIX 16.5"),
+    );
+    check(
+      "vxx: the model is told explicitly that VXX's price is not a VIX level",
+      vxxBrief.includes("NOT a VIX level"),
+    );
+    check(
+      "vxx: the FRED level is still labelled as lagging",
+      vxxBrief.includes("lags 1-3 days"),
+    );
+    check(
+      "vxx: a confirmed expansion says the index confirmed it",
+      vxxBrief.includes("confirmed by a falling index"),
+    );
+
+    // Expansion no longer requires SPY to be red — vol often bids up
+    // BEFORE the index turns, which was the most valuable missed case.
+    const earlyWarning = marketContext.classifyRiskTone({
+      spyChangePercent: 0.3,
+      indexChanges: { QQQ: 0.2, IWM: 0.1, VXX: 6.0 },
+      breadth: { advancingPct: 58 },
+      vix: 17,
+      volatilityExpanding: true,
+      volatilityCollapsing: false,
+      volatilityConfirmedByPrice: false,
+    });
+    check(
+      "vxx: a VXX spike counts even while the index is still green",
+      earlyWarning.riskOffVotes >= 1,
+    );
+
+    const confirmed = marketContext.classifyRiskTone({
+      spyChangePercent: -1.2,
+      indexChanges: { QQQ: -1.4, IWM: -1.6, VXX: 8.0 },
+      breadth: { advancingPct: 20 },
+      vix: 22,
+      volatilityExpanding: true,
+      volatilityCollapsing: false,
+      volatilityConfirmedByPrice: true,
+    });
+    check(
+      "vxx: expansion CONFIRMED by a falling index carries extra weight",
+      confirmed.riskOffVotes > earlyWarning.riskOffVotes,
+    );
+
+    // The contango dead-band: routine decay must not read as a vol crush.
+    const decayDrift = -0.3;
+    check(
+      "vxx: routine futures-roll decay is below the collapse threshold",
+      decayDrift > -(config.vxxExpansionPct + config.vxxContangoDriftPct),
+    );
+    check(
+      "vxx: a contango drift allowance is configured",
+      config.vxxContangoDriftPct > 0,
+    );
+    const steadyBrief = marketContext.formatBriefForPrompt({
+      spyChangePercent: 0.4,
+      indexChanges: { QQQ: 0.3, IWM: 0.2, VXX: decayDrift },
+      breadth: null,
+      vix: 16.5,
+      vxxChangePercent: decayDrift,
+      volatilityExpanding: false,
+      volatilityCollapsing: false,
+      volatilityConfirmedByPrice: false,
+      tenYear: null,
+      regime: "TRENDING",
+      rangePct: 0.7,
+      sectorLeaders: [],
+      sectorLaggards: [],
+      riskTone: "MIXED",
+      riskToneDetail: { availableSignals: 4, riskOnVotes: 2, riskOffVotes: 2 },
+    });
+    check(
+      "vxx: a small negative move is labelled decay, NOT falling volatility",
+      steadyBrief.includes("futures-roll decay, not signal"),
+    );
+
     // ══ CROSS-ASSET-CLASS TICKER COLLISION ════════════════════════════
     // Measured 2026-08-06: "DIA" resolved to instrumentId 100580 — a $0.11
     // crypto on eToro's Digital Currency exchange — not the ~$450 Dow ETF,

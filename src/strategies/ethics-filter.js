@@ -64,6 +64,55 @@ const BLOCKED_TICKERS = new Set([
   // ── Adult entertainment ──
   "RICK", // RCI Hospitality
   "PLBY", // PLBY Group (Playboy)
+
+  // ══════════════════════════════════════════════════════════════════
+  // v7.7 — ADDITIONAL EXCLUSIONS FOR SHARIA COMPLIANCE.
+  //
+  // The categories above (gambling, alcohol, adult) were the original
+  // scope. These add the remaining commonly-screened sectors so the
+  // autonomous DISCOVERY path — which pulls arbitrary tickers from Yahoo
+  // screeners and could otherwise surface any of them — is covered too.
+  //
+  // NOT exhaustive, and deliberately conservative: it lists well-known
+  // large caps whose PRIMARY business is the excluded activity. Full
+  // AAOIFI-style screening also applies financial-ratio tests (debt and
+  // interest income as a share of market cap) that this bot has no
+  // fundamentals feed to compute — so treat this as a floor, not a
+  // certification, and vet discovered names yourself.
+  // ══════════════════════════════════════════════════════════════════
+
+  // ── Tobacco / nicotine ──
+  "MO", // Altria
+  "PM", // Philip Morris International
+  "BTI", // British American Tobacco
+  "TPB", // Turning Point Brands
+  "UVV", // Universal Corp — leaf tobacco
+  "VGR", // Vector Group
+  "RLX", // RLX Technology — e-cigarettes
+
+  // ── Conventional (interest-based) banking ──
+  "JPM", "BAC", "WFC", "C", "GS", "MS", "USB", "PNC", "TFC", "COF",
+  "SCHW", "BK", "STT", "FITB", "HBAN", "RF", "KEY", "CFG", "ALLY",
+  "DFS", // Discover — consumer lending
+  "SYF", // Synchrony Financial — consumer credit
+  "HSBC", "DB", "UBS", "BCS", "RY", "TD",
+
+  // ── Insurance ──
+  "AIG", "MET", "PRU", "ALL", "TRV", "PGR", "CB", "AFL", "HIG", "LNC",
+  "UNH", "ELV", "CI", "CNC", "HUM", // health insurers
+
+  // ── Crypto-primary businesses (explicitly excluded by request) ──
+  "COIN", // Coinbase
+  "MARA", // MARA Holdings — bitcoin mining
+  "RIOT", // Riot Platforms — bitcoin mining
+  "MSTR", // MicroStrategy — bitcoin treasury
+  "CLSK", // CleanSpark — bitcoin mining
+  "HUT", // Hut 8 — bitcoin mining
+  "BITF", // Bitfarms
+  "CIFR", // Cipher Mining
+  "WULF", // TeraWulf
+  "GLXY", // Galaxy Digital
+  "BKKT", // Bakkt
 ]);
 
 // Conservative industry-label keywords (lowercased substring match against

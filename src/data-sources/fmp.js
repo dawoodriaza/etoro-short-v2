@@ -27,8 +27,12 @@ const CACHE_MS = 30 * 60 * 1000; // analyst actions don't need to be fresher tha
 
 // Returns recent upgrade/price-target-raise actions (last ~24h), deduped
 // by symbol, most-bullish action per symbol only.
+// v7.11: set once the API answers 401/403 for this endpoint, so an
+// entitlement problem is reported a single time instead of every scan.
+let entitlementBlocked = false;
+
 async function getRecentAnalystUpgrades() {
-  if (!isConfigured()) return [];
+  if (!isConfigured() || entitlementBlocked) return [];
 
   if (cachedUpgrades && Date.now() - cachedAtMs < CACHE_MS) {
     return cachedUpgrades;
@@ -88,6 +92,29 @@ async function getRecentAnalystUpgrades() {
     }
     return upgrades;
   } catch (fetchError) {
+    // v7.11: distinguish "your plan doesn't include this endpoint" from a
+    // transient failure. /upgrades-downgrades-rss-feed is a premium FMP
+    // route; on the current key it returned 403 on EVERY scan, and because
+    // only successes were cached it re-hit the API every 10 minutes all
+    // day. Worse, the failure is silent in effect: hasVerifiedBullishCatalyst
+    // depends on this feed, so the entire analyst-catalyst path (catalyst
+    // override, NEWS_CATALYST archetype) is dead while it 403s.
+    const status = fetchError.response && fetchError.response.status;
+    if (status === 401 || status === 403) {
+      if (!entitlementBlocked) {
+        entitlementBlocked = true;
+        logger.warn(
+          "FMP analyst-actions returned " +
+            status +
+            " — endpoint not included in this API plan. Suppressing further " +
+            "attempts this session. NOTE: verified analyst catalysts are now " +
+            "unavailable, so no candidate can earn a catalyst override.",
+        );
+      }
+      cachedUpgrades = [];
+      cachedAtMs = Date.now();
+      return [];
+    }
     logger.warn("FMP analyst-actions fetch failed: " + fetchError.message);
     return [];
   }

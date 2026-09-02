@@ -48,7 +48,15 @@ function prefilterCandidates(quotesBySymbol) {
         ? ((quote.dayOpen - quote.previousClose) / quote.previousClose) * 100
         : 0;
     const hasGap = Math.abs(gapPercent) >= config.gapThresholdPct;
-    const hasIntradayMove = Math.abs(quote.priceChangePercent || 0) >= 1.0;
+    // v7.7: was hardcoded at 1.0%. Forensic audit of 172 trades found this
+    // single number was the main driver of the bot's selection bias — a
+    // stock had to already be moving 1% intraday before it was even
+    // enriched with indicators. Semis (7.58% avg ATR) clear that on most
+    // days; mega-caps (3.57%) clear it occasionally, which is why the most
+    // profitable bucket (+$202.99, 68% win) was only 11% of all trades.
+    // Now configurable via DT_PREFILTER_MIN_MOVE_PCT.
+    const hasIntradayMove =
+      Math.abs(quote.priceChangePercent || 0) >= config.prefilterMinMovePct;
 
     // Only worth enriching (costs API calls) if SOMETHING is moving
     if (hasGap || hasIntradayMove) {
@@ -132,7 +140,11 @@ function detectMomentumSurge(candidate) {
     candidate.rsi > config.rsiOverextendedMax
   )
     return null;
-  if ((candidate.priceChangePercent || 0) < 1.0) return null;
+  // v7.7: was hardcoded 1.0 — see prefilterMinMovePct. Kept as its own knob
+  // because the pre-filter decides who gets LOOKED AT while this decides who
+  // forms a valid setup; they should be tunable independently.
+  if ((candidate.priceChangePercent || 0) < config.momentumSurgeMinMovePct)
+    return null;
   return {
     setup: "MOMENTUM_SURGE",
     score: Math.min(
@@ -177,6 +189,73 @@ function scoreEnrichedCandidate(
   // tickers — hand-picked watchlist names keep volume as a SCORE input
   // (bonus for surges via the setup detectors, small penalty below-average
   // applied in the final score below) rather than a kill switch.
+  // ══════════════════════════════════════════════════════════════════════
+  // v7.7 — VOLATILITY CEILING.
+  //
+  // The single cleanest split found across 172 closed trades:
+  //     ATR <  5% : 55 trades, 56% win, +$31.13
+  //     ATR >= 7% : 67 trades, 43% win, -$280.88
+  //
+  // The pre-filter selects for movement, movement scales with ATR, and the
+  // high-ATR cohort is where the losses are concentrated. This is also what
+  // makes diversification possible at all: candidates are sorted by score
+  // and sliced to maxCandidates, and score itself rises with ATR — so
+  // without this ceiling the calm, profitable names would rank below the
+  // semis and be cut before ever reaching the AI screener.
+  //
+  // Rejected here (after enrichment, where real ATR is known) rather than
+  // in the pre-filter, so the reason lands in the decision journal.
+  // ══════════════════════════════════════════════════════════════════════
+  if (
+    config.maxEntryAtrPct > 0 &&
+    candidate.atrPercent != null &&
+    candidate.atrPercent > config.maxEntryAtrPct
+  ) {
+    return {
+      rejected: true,
+      rejectReason:
+        "ATR " +
+        candidate.atrPercent.toFixed(2) +
+        "% exceeds the " +
+        config.maxEntryAtrPct +
+        "% volatility ceiling (the ATR>=7% cohort lost $280.88 over 67 trades)",
+    };
+  }
+
+  // v7.7 — VOLATILITY-NORMALIZED MOVE GATE (optional, off by default).
+  //
+  // Requires today's move to be at least N× the stock's own average daily
+  // range, instead of a flat percentage that means different things on a
+  // 3.5% ATR mega-cap and a 7.5% ATR semiconductor. Historically the
+  // ratio>=1.0 cohort was the only profitable one: 45 trades, 62% win,
+  // +$315.48 — versus losses in every band below it.
+  //
+  // Disabled by default (see config) because it cuts trade count ~74%.
+  if (
+    config.minMoveToAtrRatio > 0 &&
+    candidate.atrPercent != null &&
+    candidate.atrPercent > 0 &&
+    typeof candidate.priceChangePercent === "number"
+  ) {
+    const moveToAtr =
+      Math.abs(candidate.priceChangePercent) / candidate.atrPercent;
+    if (moveToAtr < config.minMoveToAtrRatio) {
+      return {
+        rejected: true,
+        rejectReason:
+          "move " +
+          candidate.priceChangePercent.toFixed(2) +
+          "% is only " +
+          moveToAtr.toFixed(2) +
+          "x this stock's own " +
+          candidate.atrPercent.toFixed(2) +
+          "% daily range (needs " +
+          config.minMoveToAtrRatio +
+          "x — sub-1x moves lost money in every historical band)",
+      };
+    }
+  }
+
   const isDiscoveredCandidate = (candidate.source || "WATCHLIST") === "DISCOVERED";
   if (
     isDiscoveredCandidate &&

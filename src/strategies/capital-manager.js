@@ -173,6 +173,10 @@ function computeConsecutiveLosingDays(ledger) {
   return losingStreak;
 }
 
+// v7.11: remembers the last de-risking level announced, so the warning is
+// printed on transitions instead of on every getCapitalState() call.
+let lastLoggedDeriskDays = null;
+
 // Everything sizing needs, in one object.
 function getCapitalState() {
   const ledger = loadLedger();
@@ -184,14 +188,24 @@ function getCapitalState() {
       ? config.deriskMultiplier
       : 1;
 
+  // v7.11: getCapitalState() is called more than once per scan (sizing and
+  // the capital banner), so this warning printed twice on every cycle for
+  // the whole de-risked stretch. Log only when the picture actually
+  // changes — the state is still returned to every caller regardless.
   if (riskMultiplier < 1) {
-    logger.warn(
-      "🩹 De-risking active: " +
-        consecutiveLosingDays +
-        " consecutive losing day(s) → risk multiplier ×" +
-        riskMultiplier +
-        " until a green day",
-    );
+    if (lastLoggedDeriskDays !== consecutiveLosingDays) {
+      lastLoggedDeriskDays = consecutiveLosingDays;
+      logger.warn(
+        "🩹 De-risking active: " +
+          consecutiveLosingDays +
+          " consecutive losing day(s) → risk multiplier ×" +
+          riskMultiplier +
+          " until a green day",
+      );
+    }
+  } else if (lastLoggedDeriskDays !== null) {
+    lastLoggedDeriskDays = null;
+    logger.info("🩹 De-risking cleared — risk multiplier back to ×1");
   }
 
   return {

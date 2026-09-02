@@ -90,8 +90,23 @@ const journal = {
       atrPercent: candidate.atrPercent,
     }),
   planBuilt: (plan) => appendEvent("PLAN_BUILT", { plan }),
-  planRejected: (symbol, rejectReason) =>
-    appendEvent("PLAN_REJECTED", { symbol, rejectReason }),
+  // v7.11: `snapshot` carries the STRUCTURED state at rejection time.
+  //
+  // Until now the only machine-readable field was the reason string, with
+  // the score buried in prose ("score 58 below the entry floor of 80") and
+  // no price recorded at all. That makes the most important question of the
+  // coming month unanswerable: "what would a floor of 65 have earned?"
+  // needs a number and an entry price to measure forward returns from.
+  //
+  // With ~90% of candidates rejected by the floor, these records are the
+  // bulk of the evidence — a month of few trades still yields thousands of
+  // labelled counterfactuals. Optional and backward compatible.
+  planRejected: (symbol, rejectReason, snapshot) =>
+    appendEvent("PLAN_REJECTED", {
+      symbol,
+      rejectReason,
+      ...(snapshot ? { snapshot } : {}),
+    }),
   // v7: `analysis` carries the model's structured reads (separated market /
   // technical / risk verdicts, the named disqualifier, what data it could not
   // see, and the reviewer's probability estimates). Optional and backward

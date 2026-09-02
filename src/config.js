@@ -93,7 +93,18 @@ const config = {
   // Reject entries where average daily dollar volume is below this floor —
   // thin names get wide spreads and bad fills on a small position. Only
   // enforced when the figure is actually known (never blocks on "unknown").
-  minAverageDollarVolume: num("DT_MIN_AVG_DOLLAR_VOLUME", 2000000),
+  // v7.7: raised from $2M to $15M. Discovery is a "% biggest gainers"
+  // screen, so it structurally surfaces low-float micro-cap spikes — live
+  // examples from the log: CBRS +14.2%, RCMT +12.9%, DUOT +10.8%, BUUU,
+  // FXHO, CCXIU. None of those are companies anyone would choose to own;
+  // they are the shape of stock that appears on a gainers list.
+  //
+  // Result of the old floor: 2 discovered trades ever executed, both
+  // losers (-$1.42), while every scan spent quote and AI budget screening
+  // the rest. $15M/day comfortably clears every real company on the
+  // watchlist (the smallest, SOUN/IONQ/RKLB, trade far above it) while
+  // removing most of the junk before it costs anything.
+  minAverageDollarVolume: num("DT_MIN_AVG_DOLLAR_VOLUME", 15000000),
 
   // ── v5: SYSTEM ALERTS ─────────────────────────────────────────────
   // Same failure re-alerts at most once per this many minutes.
@@ -184,7 +195,12 @@ const config = {
   breakoutLookbackDays: int("DT_BREAKOUT_LOOKBACK_DAYS", 5),
   rsiMomentumMin: num("DT_RSI_MOMENTUM_MIN", 55),
   rsiOverextendedMax: num("DT_RSI_OVEREXTENDED_MAX", 78),
-  maxCandidates: int("DT_MAX_CANDIDATES", 8),
+  // v7.7: raised 8 -> 12. Candidates are sorted by score and sliced to this
+  // cap, and the score rises with volatility — so with only 8 slots the
+  // newly added calm, diversified names would rank below the semis and be
+  // cut before ever reaching the AI. More slots + the ATR ceiling above is
+  // what actually lets diversification reach the decision stage.
+  maxCandidates: int("DT_MAX_CANDIDATES", 12),
 
   // ── Filters ───────────────────────────────────────────────────────
   // v5.5: was -0.3 — too strict. This hard gate BLOCKED EVERY STOCK
@@ -391,6 +407,21 @@ const config = {
   // three hours). The bar is clamped to this reachable maximum.
   reentryMaxRequiredScore: num("DT_REENTRY_MAX_REQUIRED_SCORE", 90),
 
+  // v7.12 — HOW LONG THE RE-ENTRY SCORE PENALTY LASTS.
+  //
+  // checkCooldown() has always respected `exitAtMs`, but
+  // getReentryJustification() never read it, so the SCORE half of the
+  // penalty was PERMANENT. Measured on the live server 2026-09-01: 26
+  // symbols carrying a penalty, 24 of them requiring a score of 90, from
+  // losses up to 41 DAYS old — AAPL (39d), MSFT (33d), AVGO (33d). The
+  // whole watchlist peaked at 87 that day, so those names could not be
+  // bought at all, and roughly half the watchlist was silently retired.
+  //
+  // A loss six weeks ago says nothing about today's setup. The penalty is
+  // meant to stop revenge-trading the same broken idea within days, so it
+  // now decays. 5 trading days is deliberately generous.
+  reentryPenaltyExpiryHours: num("DT_REENTRY_PENALTY_EXPIRY_HOURS", 120),
+
   // SESSION-AWARE TIME BUDGETS. maxHoldMinutes is a REGULAR-SESSION
   // number; measuring it on the wall clock kills pre-market positions that
   // never got a single minute of the session they were sized for (SNAP,
@@ -510,6 +541,92 @@ const config = {
   // which is actionable in a way that a two-day-old VIX print is not.
   // FRED is retained as the slow absolute-level reference.
   vxxExpansionPct: num("DT_VXX_EXPANSION_PCT", 3.0),
+  // v7.6: VXX loses roughly 0.2-0.4%/day structurally to futures-roll
+  // decay (contango), so its neutral baseline is NOT zero — it is slightly
+  // negative. A "volatility collapsing" call must clear this drift before
+  // it counts, otherwise ordinary decay reads as a genuine vol crush and
+  // votes risk-on for no reason. Expansion is unaffected: decay biases
+  // VXX downward, so an UP move is if anything understated.
+  vxxContangoDriftPct: num("DT_VXX_CONTANGO_DRIFT_PCT", 0.4),
+
+  // ── v7.7 (2026-08-06) — SELECTION-BIAS FIXES FROM THE FORENSIC AUDIT ──
+  //
+  // VOLATILITY CEILING. Set from a clean split in 172 closed trades
+  // (ATR<5%: 56% win +$31.13 · ATR>=7%: 43% win -$280.88).
+  //
+  // HELD AT 7.0 FOR THE ONE-MONTH TEST — deliberately, despite contrary
+  // evidence. The replay harness tested this against 7,197 historical
+  // scored candidates (~34x the evidence) and 5% looked materially better:
+  //
+  //     ceiling   trades   avg/trade
+  //     any        7197     +$1.17
+  //     9%         6228     -$0.28
+  //     8%         5858     -$0.38
+  //     7%         5153     -$0.57   <- current
+  //     6%         4337     +$1.13
+  //     5%         2678     +$2.28
+  //
+  // It was briefly changed to 5.0 and reverted the same day. Two reasons:
+  //
+  //   1. The curve is NON-MONOTONIC — tightening from "any" to 9% makes
+  //      things WORSE before improving below 6%. A structural signal
+  //      improves steadily as it tightens; this dips and rebounds, which
+  //      means some of the apparent edge is noise.
+  //
+  //   2. Changing it now would make the month test a setting chosen by the
+  //      same evidence the month is supposed to validate. The month needs
+  //      to be an INDEPENDENT sample, and 5% would also roughly halve
+  //      trade count (5153 -> 2678) right when sample size matters most.
+  //
+  // Re-run `node src/replay-harness.js --sweep atr` after the month, on
+  // data this setting did not help select. If 5% still wins on a genuinely
+  // independent sample, change it then. Set to 0 to disable.
+  maxEntryAtrPct: num("DT_MAX_ENTRY_ATR_PCT", 7.0),
+
+  // PRE-FILTER MOVE GATE. Previously hardcoded at 1.0% in
+  // momentum-scanner.js; now configurable, but the value is deliberately
+  // left AT 1.0.
+  //
+  // REVERTED FROM 0.6 (2026-08-28). Lowering it looked right in theory —
+  // mega-caps (3.57% avg ATR) clear a 1% bar far less often than semis
+  // (7.58%), which is why the most profitable bucket was only 11% of
+  // trades. But testing it against history showed the opposite:
+  //
+  //     move at entry   trades  win%   net P&L    avg
+  //     1% to 2%          44     50%   -$77.33   -$1.76
+  //     2% to 3%          31     48%  -$368.16  -$11.88
+  //     3% to 5%          31     39%  -$220.26   -$7.11
+  //     5%+               66     52%  +$156.29   +$2.37
+  //
+  // The 0.6-1.0% band has ZERO historical trades, so history is silent on
+  // it — and the adjacent 1-2% band already loses money. Lowering the gate
+  // would have manufactured weaker setups, not better access to good ones.
+  prefilterMinMovePct: num("DT_PREFILTER_MIN_MOVE_PCT", 1.0),
+  momentumSurgeMinMovePct: num("DT_MOMENTUM_SURGE_MIN_MOVE_PCT", 1.0),
+
+  // VOLATILITY-NORMALIZED MOVE GATE (optional, OFF by default).
+  //
+  // The real lesson from the test above: what predicts a good trade is not
+  // the raw size of the move, but its size RELATIVE TO THAT STOCK'S OWN
+  // normal daily range. A 0.6% move means something very different on a
+  // 3.5% ATR mega-cap than on a 7.5% ATR semiconductor.
+  //
+  //     move/ATR ratio  trades  win%   net P&L    avg
+  //     0    to 0.3       35     46%  -$126.07   -$3.60
+  //     0.3  to 0.6       51     41%  -$440.42   -$8.64
+  //     0.6  to 1.0       41     44%  -$258.45   -$6.30
+  //     1.0+              45     62%  +$315.48   +$7.01   <- the only
+  //                                                          profitable band
+  //
+  // Set to 1.0 to require a move at least as large as the stock's average
+  // daily range. On history that produced 62% wins and +$315.48 — the
+  // strongest single filter found anywhere in this system.
+  //
+  // Left DISABLED (0) by default because it would have cut trade count by
+  // roughly 74%, which runs directly against the stated goal of trading
+  // MORE. That is a genuine strategy trade-off and belongs to the operator,
+  // not to a default. Enable with DT_MIN_MOVE_TO_ATR_RATIO=1.0.
+  minMoveToAtrRatio: num("DT_MIN_MOVE_TO_ATR_RATIO", 0),
 };
 
 module.exports = config;

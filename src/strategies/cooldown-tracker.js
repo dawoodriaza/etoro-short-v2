@@ -123,6 +123,34 @@ function getReentryJustification(symbol) {
   }
 
   // ══════════════════════════════════════════════════════════════════════
+  // v7.12 FIX — THE SCORE PENALTY EXPIRES.
+  //
+  // checkCooldown() above expires the TIME window off `exitAtMs`, but this
+  // function never read that field, so the SCORE half of the penalty was
+  // permanent. Nothing in the design intended that; the comment above only
+  // says the bar outlives the cooldown window, not that it lasts forever.
+  //
+  // Live measurement (2026-09-01) of what that cost: 26 symbols carrying a
+  // penalty, 24 requiring a score of 90 after the clamp, from losses up to
+  // 41 days old — AAPL 39d, CRWV/DELL 41d, MSFT/AVGO 33d. The entire
+  // watchlist topped out at 87 that session, so every one of them was
+  // unbuyable. Roughly half the watchlist had been silently retired,
+  // including the mega-cap bucket that was the ONLY profitable one in the
+  // forensic audit (68% win, +$202.99).
+  //
+  // The July clamp fixed "mathematically impossible" (>100). This fixes
+  // "permanent", which was the other half of the same bug.
+  // ══════════════════════════════════════════════════════════════════════
+  const expiryMs = config.reentryPenaltyExpiryHours * 60 * 60 * 1000;
+  if (
+    expiryMs > 0 &&
+    typeof record.exitAtMs === "number" &&
+    Date.now() - record.exitAtMs > expiryMs
+  ) {
+    return { requiresJustification: false, expired: true };
+  }
+
+  // ══════════════════════════════════════════════════════════════════════
   // P1 FIX (2026-07-27) — PERMANENT LOCKOUT ABOVE SCORE 85.
   //
   // momentum-scanner caps every score at 100 (Math.min(100, ...)). So

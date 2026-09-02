@@ -282,6 +282,59 @@ function getOvernightFreezeWindow() {
 // America/New_York while logs still read Bahrain, printing "Bahrain" beside
 // an ET window is actively misleading — it made a correctly-frozen 03:37 ET
 // scan look like a bug at 10:37 Bahrain.
+// v7.10 — RENDER AN EASTERN CLOCK TIME IN THE OPERATOR'S TIMEZONE.
+//
+// Several schedules are anchored to ET because they track the US market
+// (the overnight dead zone, the daily reviewer, the EOD close). Printing
+// them as raw "15:00 ET" forces the reader to do DST-aware mental
+// arithmetic — and get it wrong twice a year, since Bahrain has no DST and
+// the US does.
+//
+// This converts an ET wall-clock time to the LOG timezone *for today*, so
+// the same configured schedule prints as 07:00 Bahrain in summer and 08:00
+// in winter, with no intervention. Returns just the "HH:MM" string.
+function easternClockToLogZone(easternHour, easternMinute = 0) {
+  // Walk today's UTC hours to find the instant whose ET wall clock matches,
+  // then read that instant in the log timezone. Avoids hardcoding an offset
+  // that would silently break at a DST boundary.
+  const now = new Date();
+  for (let utcHour = 0; utcHour < 24; utcHour += 1) {
+    const probe = new Date(
+      Date.UTC(
+        now.getUTCFullYear(),
+        now.getUTCMonth(),
+        now.getUTCDate(),
+        utcHour,
+        easternMinute,
+      ),
+    );
+    const et = new Intl.DateTimeFormat("en-US", {
+      timeZone: ET_TIME_ZONE,
+      hourCycle: "h23",
+      hour: "2-digit",
+      minute: "2-digit",
+    }).formatToParts(probe);
+    const h = normaliseHour(Number(et.find((p) => p.type === "hour").value));
+    const m = Number(et.find((p) => p.type === "minute").value);
+    if (h === easternHour && m === easternMinute) {
+      const local = new Intl.DateTimeFormat("en-US", {
+        timeZone: LOG_TIME_ZONE,
+        hourCycle: "h23",
+        hour: "2-digit",
+        minute: "2-digit",
+      }).formatToParts(probe);
+      return (
+        normaliseHour(Number(local.find((p) => p.type === "hour").value))
+          .toString()
+          .padStart(2, "0") +
+        ":" +
+        local.find((p) => p.type === "minute").value
+      );
+    }
+  }
+  return String(easternHour).padStart(2, "0") + ":" + String(easternMinute).padStart(2, "0");
+}
+
 function getFreezeTimeZoneLabel() {
   const zone = getOvernightFreezeWindow().timeZone;
   if (zone === "America/New_York") return "ET";
@@ -335,4 +388,5 @@ module.exports = {
   getOvernightFreezeWindow,
   isInOvernightFreezeWindow,
   getFreezeTimeZoneLabel,
+  easternClockToLogZone,
 };

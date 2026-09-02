@@ -1,8 +1,10 @@
 {
-  "comment": "Day+Swing watchlist v5.2 — tech-focused. Each stock has a \"night\" flag: true = eToro 24/5 overnight-eligible (bot may trade it when the US regular session is closed), false = regular/extended US hours only (bot skips it overnight so it never sends a reject-able order). Flags are BEST-EFFORT — verify in the eToro app (an instrument's trading hours are shown on its page; 24/5 names trade nearly around the clock) and flip a flag if it's wrong. A wrong 'false' just means no overnight trade (safe); a wrong 'true' means an occasional harmless overnight reject. ADRs (TSM, ASML) are set false — foreign ADRs are generally not in the US overnight session.",
+  "comment": "Day+Swing watchlist v7.7 — diversified beyond tech. FIELDS: 'night' = eToro 24/5 overnight-eligible (true = bot may trade it when the US regular session is closed; false = regular/extended hours only, so it never sends a reject-able order). Flags are BEST-EFFORT — verify in the eToro app and flip one if it's wrong; a wrong 'false' just means no overnight trade (safe), a wrong 'true' means an occasional harmless reject. ADRs and most non-mega-caps are set false. 'sizeMultiplier' (optional, 0-1) scales the position size for that symbol only — used to KEEP a name in the universe while trading it smaller, instead of the all-or-nothing choice of full size or deletion. Absent = 1.0 (no change). ALL symbols verified tradeable on eToro as EQUITIES on 2026-08-06. Screened to exclude gambling, alcohol, tobacco, adult, interest-based banking/insurance, and crypto-primary businesses — see src/strategies/ethics-filter.js for the enforced blocklist.",
+
+  "changelog_v7_7": "REMOVED RIVN (ev bucket lost $18.59/trade over 14 trades; RIVN alone -$140.54). KEPT TSLA at sizeMultiplier 0.5 per request. ADDED 16 names across healthcare, energy, industrials, consumer, materials, telecom, cybersecurity and e-commerce — the watchlist previously had zero non-tech diversification apart from BA. Rationale: mega_cap was the ONLY profitable bucket (+$202.99, 68% win) at just 11% of trades, while semi (-$439.46) took 40%. CVX was evaluated and EXCLUDED — not available as an equity on eToro.",
+
   "stocks": [
-    { "symbol": "TSLA", "bucket": "ev", "night": true },
-    { "symbol": "RIVN", "bucket": "ev", "night": true },
+    { "symbol": "TSLA", "bucket": "ev", "night": true, "sizeMultiplier": 0.5 },
 
     { "symbol": "NVDA", "bucket": "semi", "night": true },
     { "symbol": "TSM", "bucket": "semi", "night": false },
@@ -38,6 +40,40 @@
     { "symbol": "AMZN", "bucket": "mega_cap", "night": true },
     { "symbol": "GOOGL", "bucket": "mega_cap", "night": true },
 
-    { "symbol": "BA", "bucket": "industrials", "night": true }
+    { "symbol": "BA", "bucket": "industrials", "night": true },
+
+    { "symbol": "LLY", "bucket": "healthcare", "night": false },
+    { "symbol": "ISRG", "bucket": "healthcare", "night": false },
+    { "symbol": "VRTX", "bucket": "healthcare", "night": false },
+    { "symbol": "ABBV", "bucket": "healthcare", "night": false },
+
+    { "symbol": "XOM", "bucket": "energy", "night": false },
+    { "symbol": "COP", "bucket": "energy", "night": false },
+
+    { "symbol": "CAT", "bucket": "industrials", "night": false },
+    { "symbol": "DE", "bucket": "industrials", "night": false },
+    { "symbol": "GE", "bucket": "industrials", "night": false },
+
+    { "symbol": "NKE", "bucket": "consumer", "night": false },
+    { "symbol": "HD", "bucket": "consumer", "night": false },
+
+    { "symbol": "LIN", "bucket": "materials", "night": false },
+    { "symbol": "TMUS", "bucket": "telecom", "night": false },
+
+    { "symbol": "CRM", "bucket": "software", "night": false },
+    { "symbol": "PANW", "bucket": "software", "night": false },
+
+    { "symbol": "SHOP", "bucket": "ecommerce", "night": false },
+    { "symbol": "MELI", "bucket": "ecommerce", "night": false },
+
+    { "symbol": "GM", "bucket": "automotive", "night": false },
+    { "symbol": "F", "bucket": "automotive", "night": false },
+
+    { "symbol": "UPS", "bucket": "transport", "night": false },
+    { "symbol": "UNP", "bucket": "transport", "night": false },
+    { "symbol": "FDX", "bucket": "transport", "night": false },
+
+    { "symbol": "HON", "bucket": "industrials", "night": false },
+    { "symbol": "ETN", "bucket": "industrials", "night": false }
   ]
 }

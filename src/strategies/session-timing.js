@@ -57,10 +57,16 @@ function isNewEntryAllowed() {
       if (nowMinutes >= premarketStartMinutes) {
         return { allowed: true, reason: "pre-market entries enabled" };
       }
+      // v7.10: shown in the operator's clock (computed live so it tracks
+      // US daylight saving), with the ET anchor kept for traceability.
       return {
         allowed: false,
         reason:
           "Before pre-market window (opens " +
+          marketHours.easternClockToLogZone(config.premarketStartHourET) +
+          " " +
+          marketHours.getLogTimeZoneLabel() +
+          " / " +
           config.premarketStartHourET +
           ":00 ET)",
       };
@@ -68,7 +74,11 @@ function isNewEntryAllowed() {
     return {
       allowed: false,
       reason:
-        "Pre-market — regular session opens at 9:30 AM ET (" +
+        "Pre-market — regular session opens at " +
+        marketHours.easternClockToLogZone(9, 30) +
+        " " +
+        marketHours.getLogTimeZoneLabel() +
+        " (9:30 AM ET, " +
         Math.abs(sinceOpen) +
         " min from now)",
     };

@@ -186,6 +186,8 @@ function classifyRiskTone({
   breadth,
   vix,
   volatilityExpanding,
+  volatilityCollapsing,
+  volatilityConfirmedByPrice,
 }) {
   let riskOnVotes = 0;
   let riskOffVotes = 0;
@@ -214,12 +216,20 @@ function classifyRiskTone({
     else if (vix > VIX_ELEVATED_ABOVE) riskOffVotes += 1;
   }
 
-  // v7.4: LIVE volatility expansion is a risk-off vote in its own right,
-  // and unlike the FRED VIX level it reflects this minute rather than a
-  // close from one to three days ago.
+  // v7.6: LIVE volatility direction, one signal, counted once. Unlike the
+  // FRED VIX level this reflects the current session rather than a close
+  // one to three days old.
+  //
+  // Expansion confirmed by a falling index is the strongest risk-off tell
+  // available intraday, so it carries an extra vote — but VXX spiking on
+  // its own still counts, because volatility often bids up before the
+  // index turns. A collapse (past the contango dead-band) is risk-on.
   if (volatilityExpanding === true) {
     availableSignals += 1;
-    riskOffVotes += 1;
+    riskOffVotes += volatilityConfirmedByPrice ? 2 : 1;
+  } else if (volatilityCollapsing === true) {
+    availableSignals += 1;
+    riskOnVotes += 1;
   }
 
   if (availableSignals < config.marketBriefMinToneSignals) {
@@ -256,16 +266,40 @@ async function buildMarketBrief({
   const breadth = computeWatchlistBreadth(quotesBySymbol);
   const { leaders, laggards } = rankSectors(sectorProxyChanges);
 
-  // v7.4: live volatility read. Volatility is EXPANDING when VXX is rising
-  // sharply while SPY falls — the two moving together in that direction is
-  // what a genuine risk-off impulse looks like intraday. A stale daily VIX
-  // close cannot express this at all.
+  // ══════════════════════════════════════════════════════════════════
+  // v7.6 — VOLATILITY READ, CONTANGO-AWARE.
+  //
+  // VXX is used for DIRECTION ONLY, never as a level. Its absolute price
+  // is meaningless as a fear gauge: it tracks VIX *futures*, bleeds under
+  // contango, and has been reverse-split repeatedly, so VXX at $20.51
+  // does NOT mean VIX 20.51. The real VIX level stays with FRED, labelled
+  // as the lagging daily close it is.
+  //
+  // Two corrections to the v7.4 version:
+  //
+  // 1. EXPANSION NO LONGER REQUIRES SPY TO BE RED. The old rule was
+  //    `vxx >= 3% AND spy < 0`, which silently missed the most valuable
+  //    case — volatility bidding up *ahead* of a selloff while the index
+  //    is still marginally green. A sharp VXX move is a signal on its own;
+  //    SPY falling with it is CONFIRMATION, and now counts double rather
+  //    than acting as a gate.
+  //
+  // 2. CONTANGO DEAD-BAND. VXX decays roughly 0.2-0.4%/day structurally
+  //    from rolling futures, so its neutral baseline is NOT zero — it is
+  //    slightly negative. A VXX print of -0.3% is decay, not "volatility
+  //    falling". Anything inside the dead-band is reported as steady so
+  //    neither the vote nor the model reads drift as information.
+  // ══════════════════════════════════════════════════════════════════
   const vxxChange = indexChanges.VXX;
-  const volatilityExpanding =
-    typeof vxxChange === "number" &&
-    vxxChange >= config.vxxExpansionPct &&
-    typeof spyChangePercent === "number" &&
-    spyChangePercent < 0;
+  const hasVxx = typeof vxxChange === "number" && !isNaN(vxxChange);
+  const spyFalling =
+    typeof spyChangePercent === "number" && spyChangePercent < 0;
+
+  const volatilityExpanding = hasVxx && vxxChange >= config.vxxExpansionPct;
+  // A collapse must clear the decay baseline before it counts as real.
+  const volatilityCollapsing =
+    hasVxx && vxxChange <= -(config.vxxExpansionPct + config.vxxContangoDriftPct);
+  const volatilityConfirmedByPrice = volatilityExpanding && spyFalling;
 
   const toneResult = classifyRiskTone({
     spyChangePercent,
@@ -273,6 +307,8 @@ async function buildMarketBrief({
     breadth,
     vix,
     volatilityExpanding,
+    volatilityCollapsing,
+    volatilityConfirmedByPrice,
   });
 
   return {
@@ -284,8 +320,10 @@ async function buildMarketBrief({
     breadth,
     vix: typeof vix === "number" ? vix : null,
     // v7.4: live volatility, alongside the slow FRED VIX level.
-    vxxChangePercent: typeof vxxChange === "number" ? vxxChange : null,
+    vxxChangePercent: hasVxx ? vxxChange : null,
     volatilityExpanding,
+    volatilityCollapsing,
+    volatilityConfirmedByPrice,
     tenYear,
     regime: regime || "UNKNOWN",
     rangePct: typeof rangePct === "number" ? rangePct : null,
@@ -344,18 +382,30 @@ function formatBriefForPrompt(brief) {
             : " (normal)");
   // v7.4: the LIVE reading leads; the FRED close follows, explicitly
   // labelled as lagging so the model never mistakes it for current.
+  // v7.6: VXX is reported as DIRECTION, never as a level, and the model is
+  // told which of the three states it is in. Without the explicit state a
+  // model reads "VXX -0.3%" as "volatility falling" when that is just the
+  // contango decay every VIX-futures ETN carries.
   const vxxLabel =
     brief.vxxChangePercent == null
       ? "VXX n/a"
       : "VXX " +
         pct(brief.vxxChangePercent) +
-        (brief.volatilityExpanding ? " — VOLATILITY EXPANDING NOW" : "");
+        " today" +
+        (brief.volatilityExpanding
+          ? brief.volatilityConfirmedByPrice
+            ? " — VOLATILITY EXPANDING NOW, confirmed by a falling index"
+            : " — VOLATILITY EXPANDING NOW (index has not turned yet)"
+          : brief.volatilityCollapsing
+            ? " — volatility genuinely collapsing"
+            : " — volatility steady (small moves here are futures-roll decay, not signal)");
   lines.push(
     "VOLATILITY: " +
       vxxLabel +
-      " · " +
+      "\n            LEVEL: " +
       vixLabel +
-      " (daily close, lags 1-3 days) · regime " +
+      " — real VIX, prior daily close, lags 1-3 days (VXX's own price is a " +
+      "futures ETN and is NOT a VIX level) · regime " +
       brief.regime +
       (brief.rangePct != null
         ? " (SPY projected full-day range " + brief.rangePct.toFixed(2) + "%)"

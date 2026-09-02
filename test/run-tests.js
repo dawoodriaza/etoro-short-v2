@@ -15,6 +15,8 @@ const testFiles = [
   "./overnight-freeze-v7.test.js",
   "./edge-filters-v7.test.js",
   "./telegram-money-and-logs-v7.test.js",
+  "./selection-bias-v7.test.js",
+  "./pipeline-fixes-v7-11.test.js",
 ];
 
 (async () => {

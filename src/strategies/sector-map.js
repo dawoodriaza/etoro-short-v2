@@ -75,6 +75,46 @@ const STATIC_BUCKETS = {
   AMZN: "mega_cap",
   MSFT: "mega_cap",
   AAPL: "mega_cap",
+
+  // v7.7 — pre-existing gaps found while auditing: these three were on the
+  // watchlist but absent from this map, so every scan paid a Finnhub
+  // lookup for them and the concentration guard depended on whatever label
+  // came back. QCOM/MRVL belong with the semis they correlate with.
+  QCOM: "semi",
+  MRVL: "semi",
+  ANET: "networking",
+
+  // v7.7 — diversification additions. Registered here so the sector
+  // concentration guard groups them correctly WITHOUT a Finnhub lookup
+  // (faster, free, and deterministic). energy/healthcare/industrials/
+  // consumer already have real ETF proxies in sector-rotation.js, so
+  // these buckets also pick up rotation signals immediately.
+  ISRG: "healthcare",
+  VRTX: "healthcare",
+  ABBV: "healthcare",
+  COP: "energy",
+  DE: "industrials",
+  GE: "industrials",
+  NKE: "consumer",
+  HD: "consumer",
+  LIN: "materials",
+  TMUS: "telecom",
+  CRM: "software",
+  PANW: "software",
+  SHOP: "ecommerce",
+  MELI: "ecommerce",
+
+  // Automotive. TM (Toyota), HMC (Honda) and RACE (Ferrari) were checked
+  // and deliberately NOT added — eToro lists them but reports
+  // isCurrentlyTradable=false, so orders would be rejected at execution.
+  GM: "automotive",
+  F: "automotive",
+
+  UPS: "transport",
+  UNP: "transport",
+  FDX: "transport",
+  HON: "industrials",
+  ETN: "industrials",
 };
 
 // Normalize common Finnhub industry labels into the SAME bucket names as

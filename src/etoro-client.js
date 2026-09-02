@@ -39,6 +39,35 @@ const instrumentIdCache = {};
 // this automatically and correctly whenever it resolves a ticker.
 const instrumentNameCache = {};
 
+// ══════════════════════════════════════════════════════════════════════════
+// v7.11 — NEGATIVE RESOLUTION CACHE. symbol -> epoch ms of the failure.
+//
+// Only SUCCESSES were cached, so a symbol eToro doesn't list re-hit the
+// search API on every scan, forever. Measured live on 2026-09-01: RDIB,
+// FGL, NIPG, FCUV and WFCF each resolved twice per scan and failed every
+// time — roughly 600 wasted calls a day, and the discovery pipeline kept
+// spending enrichment credits building plans for names that could never
+// be ordered.
+//
+// Deliberately TTL'd rather than permanent: eToro does add listings, and
+// a transient search hiccup must not blacklist a good symbol for the life
+// of the process. Network/HTTP errors are NOT cached at all — only an
+// explicit "no acceptable match" answer from a successful search is.
+const instrumentIdNegativeCache = {};
+const NEGATIVE_CACHE_TTL_MS = Number(
+  process.env.DT_INSTRUMENT_NEGATIVE_CACHE_HOURS || 6,
+) * 60 * 60 * 1000;
+
+function isKnownUnresolvable(upperSymbol) {
+  const failedAt = instrumentIdNegativeCache[upperSymbol];
+  if (!failedAt) return false;
+  if (Date.now() - failedAt > NEGATIVE_CACHE_TTL_MS) {
+    delete instrumentIdNegativeCache[upperSymbol];
+    return false;
+  }
+  return true;
+}
+
 // ── Request helpers ────────────────────────────────────────────────────────
 
 function buildRequestHeaders() {
@@ -287,6 +316,12 @@ async function resolveTickerToInstrumentId(tickerSymbol, options = {}) {
     return instrumentIdCache[upperSymbol];
   }
 
+  // v7.11: a recent, definitive "not on eToro" answer is honoured without
+  // re-querying. Silent by design — logging it would just move the noise.
+  if (isKnownUnresolvable(upperSymbol)) {
+    return null;
+  }
+
   logger.info(`Resolving eToro instrument ID for ${upperSymbol}...`);
   return executeWithRetry(async () => {
     const response = await axios.get(
@@ -314,13 +349,18 @@ async function resolveTickerToInstrumentId(tickerSymbol, options = {}) {
           `NOT the equity/ETF this bot trades. Refusing to resolve it so no ` +
           `order or quote can ever use the wrong asset.`,
       );
+      instrumentIdNegativeCache[upperSymbol] = Date.now();
       return null;
     }
 
     const exactMatch = acceptable[0];
 
     if (!exactMatch) {
-      logger.warn(`${upperSymbol} not found on eToro instrument search`);
+      logger.warn(
+        `${upperSymbol} not found on eToro instrument search — ` +
+          `suppressing re-lookups for ${NEGATIVE_CACHE_TTL_MS / 3600000}h`,
+      );
+      instrumentIdNegativeCache[upperSymbol] = Date.now();
       return null;
     }
 
@@ -531,5 +571,7 @@ module.exports = {
   closePartialPosition,
   sleep,
   instrumentIdCache,
+  instrumentIdNegativeCache,
+  isKnownUnresolvable,
   instrumentNameCache,
 };
