@@ -17,6 +17,7 @@
 require("dotenv").config();
 const axios = require("axios");
 const { logger } = require("../logger");
+const vixOverride = require("../vix-override");
 
 const FRED_BASE_URL = "https://api.stlouisfed.org/fred/series/observations";
 const FRED_API_KEY = process.env.FRED_API_KEY || "";
@@ -74,11 +75,49 @@ async function fetchRecentNumericObservations(seriesId, wanted) {
   }
 }
 
-// Returns the latest available VIX close, or null if unconfigured/unavailable.
+// Returns the latest available VIX, or null if unconfigured/unavailable.
+//
+// v7.13: a MANUAL override takes precedence while it is live. VIXCLS is a
+// daily CLOSE published with a lag, so the bot has run whole sessions on a
+// VIX several days old (observed: the 2026-08-28 print still in use on
+// 2026-09-01). That matters because market-regime tightens its CHOP
+// threshold on an elevated VIX — a stale-calm reading leaves the bot
+// treating a fearful tape as a quiet one.
+//
+// The override expires on its own (see src/vix-override.js) and every log
+// line names its source, so a reading is never ambiguous about where it
+// came from.
 async function getLatestVix() {
+  const override = vixOverride.getActiveOverride();
+  if (override) {
+    logger.info(
+      "VIX (MANUAL override, " +
+        vixOverride.hoursRemaining(override).toFixed(1) +
+        "h left" +
+        (override.note ? ", " + override.note : "") +
+        "): " +
+        override.value.toFixed(2) +
+        " — FRED ignored until this expires",
+    );
+    return override.value;
+  }
+
   const points = await fetchRecentNumericObservations("VIXCLS", 1);
   if (points.length === 0) return null;
-  logger.info("VIX (FRED, " + points[0].date + "): " + points[0].value.toFixed(2));
+
+  // v7.13: say how stale the print is. "VIX (FRED, 2026-08-28): 14.43" on a
+  // September session looked authoritative; "4 days old" does not.
+  const ageDays = Math.max(
+    0,
+    Math.round((Date.now() - Date.parse(points[0].date + "T21:00:00Z")) / 86400000),
+  );
+  logger.info(
+    "VIX (FRED, " +
+      points[0].date +
+      (ageDays >= 2 ? ", " + ageDays + " days old" : "") +
+      "): " +
+      points[0].value.toFixed(2),
+  );
   return points[0].value;
 }
 

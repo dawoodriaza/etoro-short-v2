@@ -17,6 +17,7 @@ const testFiles = [
   "./telegram-money-and-logs-v7.test.js",
   "./selection-bias-v7.test.js",
   "./pipeline-fixes-v7-11.test.js",
+  "./vix-override-v7-13.test.js",
 ];
 
 (async () => {

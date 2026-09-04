@@ -1303,6 +1303,13 @@ async function tryOpenPosition(
         tradeType: plan.tradeType, // v5.1: ORIGINAL type at entry — positionMeta.tradeType
         // mutates to SWING if the reviewer later extends it; this field lets
         // self-evaluation tell "born DAY, later extended" apart from "born SWING"
+        // v7.12: TRUE when this cleared every SWING bar (TRENDING regime,
+        // RSI < 70, relative strength >= 1.5, above VWAP) and was demoted to
+        // DAY only because swing capacity was unavailable. Without this the
+        // month's trade history cannot tell a swing-grade setup apart from
+        // an ordinary DAY trade, and the question the v7.11 downgrade exists
+        // to answer — "should swings be re-enabled?" — stays unanswerable.
+        downgradedFromSwing: plan.downgradedFromSwing === true,
         score: plan.score,
         regime: plan.regime,
         spyChangePercent: plan.spyChangePercent,

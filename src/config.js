@@ -302,7 +302,10 @@ const config = {
   // window requires a meaningfully STRONGER setup than the one that lost
   // (higher score), not just "a setup re-fired."
   lossCooldownMultiplier: num("DT_LOSS_COOLDOWN_MULTIPLIER", 2.0),
-  lossReentryMinScoreImprovement: num("DT_LOSS_REENTRY_MIN_SCORE_IMPROVEMENT", 15),
+  lossReentryMinScoreImprovement: num(
+    "DT_LOSS_REENTRY_MIN_SCORE_IMPROVEMENT",
+    15,
+  ),
 
   // PRE-OPEN / OPEN-VOLATILITY BUY BLACKOUT: blocks NEW entries only (never
   // exits/EOD closes) from (open - N min) to (open + M min) ET, but ONLY

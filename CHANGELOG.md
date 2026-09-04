@@ -2,6 +2,60 @@
 
 ---
 
+## 2026-09-02 — v7.13 · Manual VIX override + a bug-hunt pass
+
+### Manual VIX override (`src/vix-override.js`)
+
+FRED's VIXCLS is a daily **close** published with a lag — the bot ran the
+whole 2026-09-01 session on the 2026-08-28 print. That is not a cosmetic
+staleness: `market-regime` tightens its CHOP threshold when VIX is elevated,
+so a stale-calm reading makes the bot treat a fearful tape as a quiet one.
+
+```bash
+node src/vix-override.js 28.5              # use 28.5 for 24h
+node src/vix-override.js 28.5 "CPI day"    # with a note
+node src/vix-override.js 28.5 --hours 6    # custom window
+node src/vix-override.js --status          # which source is live
+node src/vix-override.js --clear           # back to FRED now
+```
+
+Safety properties, each covered by a test:
+
+- **Expires on its own** (default 24h) and reverts to FRED with no action —
+  a number typed once can never silently drive the bot for weeks.
+- **Refuses values outside 5–100.** A decimal slip would mis-drive the
+  regime classifier all day; the VIX has never closed outside that range.
+- **A refused value leaves the existing override intact.**
+- **The source is always named in the log**, so no reading is ambiguous:
+  `VIX (MANUAL override, 6.0h left, CPI day): 31.20 — FRED ignored until this expires`
+  `VIX (FRED, 2026-08-28, 4 days old): 14.43`
+
+FRED readings now also state their age when the print is 2+ days old. The
+old line looked authoritative; "4 days old" does not.
+
+No restart needed — the bot picks up the file on its next scan.
+17 new tests, 324 total.
+
+### Bug found in the override's own CLI, before shipping
+
+Argument parsing excluded `args[hoursFlagIndex + 1]` to skip the `--hours`
+value. With no `--hours` flag `indexOf` returns `-1`, so the expression
+became `0` and swallowed **the VIX value itself**, reporting the note as
+"not a number". Guarded.
+
+### `computeRiskLevels()` — dead code with an inverted sign 🟡
+
+Exported from `risk-manager.js`, **called from nowhere** in `src/` or
+`test/` (verified). It applied the slippage buffer with the *same* sign to
+the stop and the target. For a long those need opposite signs: a stop nudged
+up triggers earlier (protective), but a target nudged up triggers *later*,
+the opposite of what a slippage allowance is for.
+
+The live path (`buildTradePlan`) was never affected. Fixed rather than
+deleted, and marked clearly, so reviving it cannot reintroduce the error.
+
+---
+
 ## 2026-09-01 — v7.12 · Half the watchlist was permanently retired 🔴
 
 Found while investigating why the bot took zero trades. This is the root
@@ -47,7 +101,20 @@ counting how many symbols were in that state, and how old they were,
 exposed it.
 
 6 new tests, including the expiry boundary and proof a *fresh* loss is
-still gated. 306 total.
+still gated.
+
+### Caught in a self-review of the same day's work
+
+`downgradedFromSwing` (v7.11) was set on the plan and **never persisted**.
+It lived in the in-memory plan object and died there, so the month's trade
+history would have shown swing-grade setups as ordinary DAY trades with no
+way to tell them apart — making the exact question the downgrade exists to
+answer unanswerable. Now copied into `positionMeta.entryConditions`.
+
+Also: `pipeline-fixes-v7-11.test.js` read `config.swingEntryDays`, which
+does not exist (the key is `swingEntryDaysET`). It fell through to a `|| 2`
+default and passed by luck rather than by testing what it claimed. Both
+fixed; 307 tests.
 
 ### Correction to the v7.11 note
 

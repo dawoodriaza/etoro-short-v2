@@ -60,10 +60,22 @@ const apply = process.argv.includes("--apply");
   console.log("\n═══ VERIFYING AGAINST THE LIVE ACCOUNT ═══");
   const raw = await etoroClient.fetchRawPortfolio();
   const portfolio = etoroClient.parsePortfolioFromRawData(raw);
-  console.log("  true equity now (incl. reserved order cash): " + money(portfolio.totalEquity));
-  console.log("  available cash:                              " + money(portfolio.availableCash));
-  console.log("  invested in open positions:                  " + money(portfolio.totalAmountInvested));
-  console.log("  pending orders:                              " + portfolio.pendingOrderCount);
+  console.log(
+    "  true equity now (incl. reserved order cash): " +
+      money(portfolio.totalEquity),
+  );
+  console.log(
+    "  available cash:                              " +
+      money(portfolio.availableCash),
+  );
+  console.log(
+    "  invested in open positions:                  " +
+      money(portfolio.totalAmountInvested),
+  );
+  console.log(
+    "  pending orders:                              " +
+      portfolio.pendingOrderCount,
+  );
 
   // Reverse every auto-detected transfer; a manually declared one is
   // assumed real and is left alone.
@@ -71,7 +83,9 @@ const apply = process.argv.includes("--apply");
     (t.note || "").startsWith("auto-detected"),
   );
   if (autoTransfers.length === 0) {
-    console.log("\nNo AUTO-DETECTED transfers to reverse (manual ones are left alone).\n");
+    console.log(
+      "\nNo AUTO-DETECTED transfers to reverse (manual ones are left alone).\n",
+    );
     return;
   }
 
@@ -90,9 +104,24 @@ const apply = process.argv.includes("--apply");
   );
 
   console.log("\n═══ PROPOSED REPAIR ═══");
-  console.log("  reversing " + autoTransfers.length + " auto-detected transfer(s) totalling " + money(reversalTotal));
-  console.log("  ownerAdjustments : " + money(currentAdjustments) + "  →  " + money(repairedAdjustments));
-  console.log("  drawdown peak    : " + money(ledger.peakEffectiveCapital) + "  →  " + money(restoredPeak));
+  console.log(
+    "  reversing " +
+      autoTransfers.length +
+      " auto-detected transfer(s) totalling " +
+      money(reversalTotal),
+  );
+  console.log(
+    "  ownerAdjustments : " +
+      money(currentAdjustments) +
+      "  →  " +
+      money(repairedAdjustments),
+  );
+  console.log(
+    "  drawdown peak    : " +
+      money(ledger.peakEffectiveCapital) +
+      "  →  " +
+      money(restoredPeak),
+  );
   const repairedEffective =
     ledger.baseCapital +
     repairedAdjustments +
@@ -107,7 +136,9 @@ const apply = process.argv.includes("--apply");
   );
 
   if (!apply) {
-    console.log("\nDry run — nothing changed. Re-run with --apply to repair.\n");
+    console.log(
+      "\nDry run — nothing changed. Re-run with --apply to repair.\n",
+    );
     return;
   }
 

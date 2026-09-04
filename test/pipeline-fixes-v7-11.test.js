@@ -37,7 +37,10 @@ function swingQualifiedCandidate(overrides) {
 // easternWeekday must be inside DT_SWING_ENTRY_DAYS (default Mon-Wed) or
 // the candidate is disqualified as a late-week entry before we get to the
 // capacity branch under test.
-const SWING_DAY = (config.swingEntryDays && config.swingEntryDays[0]) || 2;
+// NOTE: the config key is swingEntryDaysET, not swingEntryDays. An earlier
+// draft read the wrong name, silently fell through to the `|| 2` default and
+// passed by luck rather than by testing what it claimed.
+const SWING_DAY = (config.swingEntryDaysET && config.swingEntryDaysET[0]) || 2;
 
 function build(openCounts, weekday) {
   return tradePlanner.buildTradePlan(
@@ -137,6 +140,15 @@ module.exports = {
       { dayCount: 0, swingCount: config.maxSwingPositions },
       false,
     );
+    // The flag is worthless if it dies inside the planner — the month's
+    // trade history is what gets analysed, not the in-memory plan object.
+    // index.js copies it into positionMeta.entryConditions; assert the
+    // planner exposes it on the plan as a plain boolean so that copy works.
+    check(
+      "downgrade flag is a plain boolean on the plan (survives persistence)",
+      typeof atCapacity.plan.downgradedFromSwing === "boolean",
+    );
+
     check(
       "genuine DAY candidate is not falsely flagged as downgraded",
       genuineDay.accepted === true &&

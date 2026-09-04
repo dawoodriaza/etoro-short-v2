@@ -470,7 +470,16 @@ async function checkPreTradeSafety(
   return { allowed: true };
 }
 
-// Legacy level computation kept for compatibility.
+// ⚠️ DEAD CODE — exported but called from nowhere in src/ or test/ (verified
+// 2026-09-02). Left in place rather than deleted because it documents the
+// pre-v4 level model, but DO NOT wire it back up without reading this:
+//
+// v7.13 BUG FIX — the slippage buffer was applied with the SAME sign to the
+// stop and the target. For a long position those need OPPOSITE signs: a stop
+// nudged UP triggers earlier (protective, correct), but a target nudged UP
+// triggers LATER, making the trade harder to complete — the opposite of what
+// a slippage allowance is for. Fixed below so that if this is ever revived
+// it behaves correctly; the live path (buildTradePlan) was never affected.
 function computeRiskLevels(entryPrice, aiStopPrice, aiTargetPrice) {
   const hardStop = entryPrice * (1 - config.stopLossPct);
   const hardTargetMin = entryPrice * (1 + config.takeProfitPct * 0.5);
@@ -489,7 +498,9 @@ function computeRiskLevels(entryPrice, aiStopPrice, aiTargetPrice) {
     targetPrice = entryPrice * (1 + config.takeProfitPct);
   }
   const slippageAdjustedStop = stopPrice * (1 + config.slippageBufferPct);
-  const slippageAdjustedTarget = targetPrice * (1 + config.slippageBufferPct);
+  // Long target: nudge DOWN so it fills slightly earlier, mirroring the
+  // stop's nudge UP. Was `1 +`, which pushed the target further away.
+  const slippageAdjustedTarget = targetPrice * (1 - config.slippageBufferPct);
   return {
     stopPrice: slippageAdjustedStop,
     targetPrice: slippageAdjustedTarget,
