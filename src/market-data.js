@@ -55,6 +55,14 @@ function getTodayEasternDateString() {
   });
 }
 
+const EASTERN_DATE_FORMATTER = new Intl.DateTimeFormat("en-CA", {
+  timeZone: "America/New_York",
+});
+function easternDateOf(timestamp) {
+  const when = new Date(timestamp);
+  return Number.isFinite(when.getTime()) ? EASTERN_DATE_FORMATTER.format(when) : null;
+}
+
 // ── Single-symbol quote ─────────────────────────────────────────────────────
 async function fetchSingleQuote(symbol) {
   trackApiCall("quote:" + symbol);
@@ -158,6 +166,9 @@ async function fetchIntradayQuotesFromEtoro(symbolList) {
       source: "WATCHLIST",
       dataSource: "ETORO",
       instrumentId,
+      // v8: when eToro last updated this price. Read by the stale-quote gate
+      // in index.js — a frozen after-hours rate otherwise looks live.
+      quoteTimestamp: rate.date || null,
     };
   }
   return quotesBySymbol;
@@ -353,9 +364,13 @@ async function enrichCandidateFromEtoro(symbol, instrumentId) {
   // ET date, NOT UTC (toISOString). From 8 PM ET onward UTC is already
   // "tomorrow", so the UTC filter matched zero bars — cumulative volume
   // read as 0 and every overnight candidate was hard-rejected on volume.
+  // v8: the BAR side of the comparison must be converted too. fromDate is a
+  // UTC timestamp, so matching its string prefix against the ET date made
+  // "today" run 20:00 ET yesterday -> 20:00 ET today: the previous evening's
+  // bars leaked into today's VWAP, high and low, and tonight's were dropped.
   const todayDateString = getTodayEasternDateString();
-  const todaysBarsOnly = todaysFiveMinuteBars.filter((bar) =>
-    (bar.fromDate || "").startsWith(todayDateString),
+  const todaysBarsOnly = todaysFiveMinuteBars.filter(
+    (bar) => bar.fromDate && easternDateOf(bar.fromDate) === todayDateString,
   );
 
   const { vwap, high, low } = etoroMarketData.computeVwapAndRange(

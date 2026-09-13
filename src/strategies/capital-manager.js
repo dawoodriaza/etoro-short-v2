@@ -322,6 +322,29 @@ function reconcileWithLiveEquity(liveEquity, options = {}) {
   // the entire capital baseline.
   // ══════════════════════════════════════════════════════════════════════
   const pendingOrderCount = options.pendingOrderCount || 0;
+
+  // ══════════════════════════════════════════════════════════════════════
+  // v8 — COMPARE REALIZED WITH REALIZED.
+  //
+  // The ledger holds REALIZED capital only, but live equity includes the
+  // unrealized P&L of every open position. Comparing the two booked open
+  // P&L into the ledger whenever it exceeded the 1% tolerance — and then
+  // booked it AGAIN when the position closed. Measured 2026-08-21: +$124.68
+  // reconciled at 17:30 with positions open, the close added its P&L on top
+  // (ledger peak $10,098.27), and -$181.68 was reconciled back at 17:50.
+  // That phantom peak still sits under the drawdown breaker.
+  //
+  // Subtracting the open P&L leaves credit + invested cost basis, which is
+  // exactly what a realized ledger should equal.
+  // ══════════════════════════════════════════════════════════════════════
+  const unrealizedPnl = Number.isFinite(options.unrealizedPnl)
+    ? options.unrealizedPnl
+    : 0;
+  liveEquity = liveEquity - unrealizedPnl;
+  if (liveEquity <= 0) {
+    return { reconciled: false, driftDollars: 0, driftPct: 0 };
+  }
+
   const ledger = loadLedger();
   const ledgerEffective = computeEffectiveCapital(ledger);
   const driftDollars = liveEquity - ledgerEffective;

@@ -30,6 +30,86 @@ function saveHistory(history) {
   }
 }
 
+// ══════════════════════════════════════════════════════════════════════
+// v8 — ONE DEFINITION OF A CLOSED TRADE'S RESULT.
+//
+// A partial exit realizes cash the moment it fills, but all three close
+// paths (exit monitor, EOD closer, manual close-position.js) recorded only
+// the LAST leg: position.unrealizedProfitLoss of whatever was still open.
+// Measured 2026-09-03: HOOD banked half at +6.5% (~+$37.70) and
+// trade-history recorded +$44.07 for the runner alone. Across 57 of 210
+// trades the missing partial profit was roughly +$1,000 (agent dollars), so
+// trade-history, the Telegram stats, the loss cooldown, the BAD-DAY rule
+// and every threshold "audited" from that file understated each winner
+// that reached a target.
+//
+// pnlDollars is now the WHOLE trade (partials + final leg) on the ORIGINAL
+// amount; the legs are kept separately so either view can be rebuilt.
+// Records written before this carry no pnlAccountingVersion.
+function buildClosedTradeRecord({
+  symbol,
+  positionMeta,
+  livePosition,
+  exitReason,
+  heldMinutes,
+}) {
+  const meta = positionMeta || {};
+  const live = livePosition || {};
+  const finalLegPnlDollars = Number(live.unrealizedProfitLoss || 0);
+  const partialPnlDollars = Number(meta.realizedPartialPnl || 0);
+  const pnlDollars = finalLegPnlDollars + partialPnlDollars;
+  const originalDollarAmount =
+    meta.originalDollarAmount || meta.dollarAmount || live.amountInvested || 0;
+
+  const entryPrice = meta.entryPrice || live.openPrice || null;
+  const priceBasis = live.openPrice || meta.entryPrice || null;
+  const exitPrice = priceBasis
+    ? priceBasis * (1 + (live.unrealizedProfitLossPercent || 0))
+    : null;
+  const percentFromEntry = (price) =>
+    entryPrice && price && Number.isFinite(price)
+      ? Number(((price / entryPrice - 1) * 100).toFixed(2))
+      : null;
+  const peakPrice = Math.max(meta.peakPrice || 0, exitPrice || 0) || null;
+  const troughPrice =
+    Math.min(meta.troughPrice || Infinity, exitPrice || Infinity) || null;
+  const mfePercent = percentFromEntry(peakPrice);
+  const exitPercent = percentFromEntry(exitPrice);
+
+  return {
+    symbol,
+    setup: meta.setup,
+    tradeType: meta.tradeType || "DAY",
+    source: meta.source || "WATCHLIST",
+    entryPrice,
+    exitPrice: exitPrice != null ? Number(exitPrice.toFixed(4)) : null,
+    dollarAmount: originalDollarAmount,
+    remainingDollarAmount:
+      meta.dollarAmount != null ? meta.dollarAmount : live.amountInvested ?? null,
+    pnlDollars: Number(pnlDollars.toFixed(2)),
+    pnlPercent:
+      originalDollarAmount > 0 ? (pnlDollars / originalDollarAmount) * 100 : 0,
+    finalLegPnlDollars: Number(finalLegPnlDollars.toFixed(2)),
+    finalLegPnlPercent: (live.unrealizedProfitLossPercent || 0) * 100,
+    partialPnlDollars: Number(partialPnlDollars.toFixed(2)),
+    partialFills: meta.partialFills || [],
+    mfePercent,
+    maePercent: Number.isFinite(troughPrice) ? percentFromEntry(troughPrice) : null,
+    givebackFromPeakPercent:
+      mfePercent != null && exitPercent != null
+        ? Number((mfePercent - exitPercent).toFixed(2))
+        : null,
+    exitReason,
+    confidence: meta.confidence,
+    openedAt: meta.openedAt ? new Date(meta.openedAt).toISOString() : null,
+    heldMinutes,
+    entryConditions: meta.entryConditions || null,
+    plan: meta.plan || null,
+    extendedByReviewer: !!meta.extendedByReviewerAt,
+    pnlAccountingVersion: 2,
+  };
+}
+
 function recordTrade(trade) {
   // trade: { symbol, setup, entryPrice, exitPrice, dollarAmount, pnlDollars,
   //          pnlPercent, exitReason, openedAt, closedAt, confidence }
@@ -139,6 +219,7 @@ function formatStatsForTelegram(stats) {
 }
 
 module.exports = {
+  buildClosedTradeRecord,
   recordTrade,
   computeStats,
   formatStatsForTelegram,

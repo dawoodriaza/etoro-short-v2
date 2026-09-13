@@ -593,6 +593,36 @@ function confirmStopBreach(meta, currentPrice, stopLevel, peak, label) {
   return null; // confirmed (or deep) — caller exits
 }
 
+// The MFE giveback floor for a DAY position. Factored out of decideDayAction
+// (v8) so position diagnostics and the replay harness read the SAME level the
+// exit engine enforces instead of re-deriving it and drifting from it.
+function computeMfeProtection(meta, peak) {
+  const entryPrice = meta.entryPrice;
+  const atrPercent = getAtrPercentFromMeta(meta);
+  const atrFraction = atrPercent != null ? atrPercent / 100 : null;
+  const mfeGainFraction = (peak - entryPrice) / entryPrice;
+  const armThreshold = Math.max(
+    config.mfeArmMinPct,
+    atrFraction != null ? atrFraction * config.mfeArmAtrFraction : 0,
+  );
+  const armed = mfeGainFraction >= armThreshold;
+  let floor = null;
+  let allowedGiveback = null;
+  if (armed) {
+    allowedGiveback = Math.min(
+      mfeGainFraction * (1 - config.mfeRetention),
+      atrFraction != null
+        ? atrFraction * config.mfeGivebackAtrCap
+        : config.mfeGivebackFallbackPct,
+    );
+    floor = Math.max(
+      entryPrice,
+      entryPrice * (1 + mfeGainFraction - allowedGiveback),
+    );
+  }
+  return { armed, floor, armThreshold, atrFraction, mfeGainFraction, allowedGiveback };
+}
+
 // ── DAY logic ────────────────────────────────────────────────────────────────
 function decideDayAction(meta, currentPrice, peak) {
   // NOTE: the DAY stale-exit no longer reads a raw wall-clock figure — it
@@ -620,32 +650,7 @@ function decideDayAction(meta, currentPrice, peak) {
   // harvested while most of its best profit still exists. No fixed
   // percentages: both the arming bar and the giveback cap scale with the
   // stock's daily ATR (fallbacks apply only when ATR was unavailable).
-  const atrPercent =
-    (meta.entryConditions && meta.entryConditions.atrPercent) != null
-      ? meta.entryConditions.atrPercent
-      : meta.plan && meta.plan.atrPercent != null
-        ? meta.plan.atrPercent
-        : null;
-  const atrFraction = atrPercent != null ? atrPercent / 100 : null;
-  const mfeGainFraction = (peak - entryPrice) / entryPrice;
-  const armThreshold = Math.max(
-    config.mfeArmMinPct,
-    atrFraction != null ? atrFraction * config.mfeArmAtrFraction : 0,
-  );
-  const mfeArmed = mfeGainFraction >= armThreshold;
-  let mfeFloor = null;
-  if (mfeArmed) {
-    const allowedGiveback = Math.min(
-      mfeGainFraction * (1 - config.mfeRetention),
-      atrFraction != null
-        ? atrFraction * config.mfeGivebackAtrCap
-        : config.mfeGivebackFallbackPct,
-    );
-    mfeFloor = Math.max(
-      entryPrice,
-      entryPrice * (1 + mfeGainFraction - allowedGiveback),
-    );
-  }
+  const { armed: mfeArmed, floor: mfeFloor } = computeMfeProtection(meta, peak);
 
   // 1. Hard stop (pre-partial) — with whipsaw confirmation: a shallow poke
   // below the stop needs a second consecutive 1-min tick before exiting,
@@ -904,7 +909,105 @@ function decideSwingAction(meta, currentPrice, peak) {
   return { action: "HOLD", reason: "swing developing", newPeak: peak };
 }
 
+// ═══════════════════════════════════════════════════════════════════════
+// v8 — WHAT IS THE BOT DOING WITH THIS POSITION, AND WHAT HAPPENS NEXT?
+//
+// Pure read of the live engine's own state for one position, for the
+// periodic status line and the POSITION_STATUS journal record. It calls the
+// real decidePositionAction() and computeMfeProtection(), so the stop and
+// triggers it prints are exactly the ones being enforced.
+//
+// state: EXIT | TRIM (the engine is acting this tick) · RUNNER (partial
+// banked, remainder trailing) · WEAKENING (giving back a protected gain, or
+// a loser burning its time budget) · HOLD. "ADD" is never produced: adding
+// to winners is not enabled, because the replay did not support it
+// (ADD_AT_1R was mixed in-sample and flat out-of-sample).
+// ═══════════════════════════════════════════════════════════════════════
+function describePositionState(meta, currentPrice) {
+  const entryPrice = meta.entryPrice;
+  const peak = Math.max(meta.peakPrice || entryPrice, currentPrice);
+  const percentFromEntry = (price) => ((price / entryPrice - 1) * 100);
+  const decision = decidePositionAction(meta, currentPrice);
+  const round = (value) => (value == null ? null : Number(value.toFixed(4)));
+
+  const status = {
+    tradeType: meta.tradeType === "SWING" ? "SWING" : "DAY",
+    state: "HOLD",
+    pnlPct: Number(percentFromEntry(currentPrice).toFixed(2)),
+    peakPct: Number(percentFromEntry(peak).toFixed(2)),
+    stopPrice: null,
+    stopKind: null,
+    nextTrim: null,
+    nextAdd: "not enabled (replay did not support adding to winners)",
+    exitConditions: [],
+    realizedPartialPnl: Number(meta.realizedPartialPnl || 0),
+    reason: decision.reason,
+  };
+
+  if (status.tradeType === "SWING") {
+    const floor = meta.lockedFloor || meta.stopPrice;
+    status.stopPrice = round(floor);
+    status.stopKind = meta.lockedFloor ? "LOCKED_FLOOR" : "STOP";
+    status.nextTrim = !meta.partialT1Done
+      ? "T1 $" + round(meta.targetT1)
+      : !meta.partialT2Done && meta.targetT2
+        ? "T2 $" + round(meta.targetT2)
+        : "ladder done — runner trailing";
+    status.exitConditions.push("exit at or below $" + round(floor));
+  } else {
+    const protection = computeMfeProtection(meta, peak);
+    const levels = [];
+    if (!meta.partialDone) levels.push({ level: meta.stopPrice, kind: "STOP" });
+    if (protection.floor != null) levels.push({ level: protection.floor, kind: "PROFIT_FLOOR" });
+    if (meta.partialDone) {
+      levels.push({ level: Math.max(peak * (1 - config.trailingStopPct), entryPrice), kind: "RUNNER_TRAIL" });
+    }
+    const effective = levels.reduce((best, item) => (item.level > best.level ? item : best), levels[0]);
+    status.stopPrice = round(effective.level);
+    status.stopKind = effective.kind;
+    status.exitConditions.push(
+      "exit at or below $" + round(effective.level) + " (" + effective.kind.toLowerCase().replace("_", " ") + ")",
+    );
+
+    const target = meta.targetT1 || meta.targetPrice;
+    status.nextTrim = meta.partialDone
+      ? "none — " + Math.round(config.partialExitFraction * 100) + "% banked, runner trailing"
+      : target
+        ? "T1 $" + round(target) + " (+" + percentFromEntry(target).toFixed(2) + "%) sells " +
+          Math.round(config.partialExitFraction * 100) + "%"
+        : "none";
+
+    const budgetMinutes = config.maxHoldMinutes * getTimeBudgetMultiplier(meta);
+    const elapsed = getDayHoldElapsed(meta).effectiveMinutes;
+    const budgetLeft = Math.max(0, Math.round(budgetMinutes - elapsed));
+    if (!meta.partialDone) {
+      status.exitConditions.push(
+        budgetLeft > 0
+          ? "time exit in " + budgetLeft + " session-min if still under +0.5%"
+          : "time budget spent — exits if under +0.5%",
+      );
+    }
+
+    if (decision.action === "EXIT") status.state = "EXIT";
+    else if (decision.action === "PARTIAL") status.state = "TRIM";
+    else if (meta.partialDone) status.state = "RUNNER";
+    else if (
+      protection.armed &&
+      protection.allowedGiveback != null &&
+      currentPrice <= peak * (1 - protection.allowedGiveback * 0.5)
+    ) {
+      status.state = "WEAKENING";
+    } else if (currentPrice < entryPrice && elapsed >= budgetMinutes * 0.5) {
+      status.state = "WEAKENING";
+    }
+  }
+
+  if (decision.action === "EXIT") status.state = "EXIT";
+  return status;
+}
+
 module.exports = {
+  describePositionState,
   recordClosedTradeResult,
   isDailyLossLimitHit,
   getDailyLossSnapshot,
@@ -912,6 +1015,7 @@ module.exports = {
   checkPreTradeSafety,
   computeRiskLevels,
   decidePositionAction,
+  computeMfeProtection,
   sectorBucketFor,
   // v7.1: exported for tests — the session-minutes accounting behind the
   // session-aware DAY time budget.

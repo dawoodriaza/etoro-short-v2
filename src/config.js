@@ -114,10 +114,27 @@ const config = {
   discoveryFailureAlertThreshold: int("DT_DISCOVERY_FAIL_ALERT_AFTER", 3),
 
   // ── v4: Swing parameters ──────────────────────────────────────────
-  dayAtrStopMultiple: num("DT_DAY_ATR_STOP_MULT", 0.5),
+  // v8 (2026-09-12): DAY stop widened 0.5x -> 1.0x daily ATR, clamp 3% -> 5%.
+  // Sizing is risk-based, so the SAME dollars are risked on a smaller
+  // position. Replayed with src/replay-exits.js on the 210 real entries plus
+  // 2,055 journal entries, split at 2026-08-22 (avgR per unit of risk):
+  //
+  //   stop       extended IS   extended OOS   real trades IS   real trades OOS
+  //   0.5x ATR     -0.050         -0.080          +0.041           -0.149
+  //   0.75x        -0.033         -0.042          +0.023           -0.048
+  //   1.0x (5%)    -0.028         -0.027          +0.017           -0.032
+  //   1.25x        -0.018         -0.022          +0.014           -0.028
+  //
+  // The curve is monotonic, so 1.0x is a middle point, not a fitted optimum.
+  // Stopped-out trades rose a median +2.65% within 4h of the stop: a 0.5x ATR
+  // stop sat inside normal intraday noise. Trade-off, stated plainly: winners
+  // are smaller in dollars and capital utilization roughly halves. No
+  // variant made the strategy profitable — this reduces the bleed per unit
+  // of risk (and halves drawdown); it does not create an edge.
+  dayAtrStopMultiple: num("DT_DAY_ATR_STOP_MULT", 1.0),
   swingAtrStopMultiple: num("DT_SWING_ATR_STOP_MULT", 1.5),
   dayStopClampMinPct: num("DT_DAY_STOP_MIN_PCT", 0.01),
-  dayStopClampMaxPct: num("DT_DAY_STOP_MAX_PCT", 0.03),
+  dayStopClampMaxPct: num("DT_DAY_STOP_MAX_PCT", 0.05),
   swingStopClampMinPct: num("DT_SWING_STOP_MIN_PCT", 0.03),
   swingStopClampMaxPct: num("DT_SWING_STOP_MAX_PCT", 0.08),
   swingMaxHoldDays: int("DT_SWING_MAX_HOLD_DAYS", 10),
@@ -630,6 +647,36 @@ const config = {
   // MORE. That is a genuine strategy trade-off and belongs to the operator,
   // not to a default. Enable with DT_MIN_MOVE_TO_ATR_RATIO=1.0.
   minMoveToAtrRatio: num("DT_MIN_MOVE_TO_ATR_RATIO", 0),
+
+  // ── v8 (2026-09-12) — AUDIT FIXES ─────────────────────────────────
+  //
+  // STALE QUOTE GATE. eToro's batched rates carry the timestamp of the last
+  // price update, and nothing read it. After the Friday 2026-09-04 close the
+  // bot re-planned AMD 24 times at an identical frozen $477.385 and sent
+  // every copy to the AI screener; across the journal 1,553 of 7,015 plans
+  // were identical-price re-plans within 30 minutes. A candidate whose quote
+  // is older than this is dropped before enrichment.
+  maxQuoteAgeMinutes: num("DT_MAX_QUOTE_AGE_MINUTES", 15),
+
+  // ENTRY CUTOFFS AROUND THE EOD FORCE-CLOSE (Eastern time).
+  // No new entry after the Friday force-close: four positions were opened
+  // on a Friday after 15:45 ET (META 07-10, META + GOOGL 07-31, PLTR 08-07)
+  // and carried into a weekend with no exit monitor running. That block is
+  // unconditional. The pre-close windows are the evidence-sized part:
+  // Mon-Thu entries in the last 30 min before the force-close went 2/7,
+  // -$113 (true P&L incl. partials). A longer Friday window was considered
+  // and NOT adopted — only 2 trades ever landed in it (+$3).
+  fridayNoEntryMinutesBeforeClose: int("DT_FRIDAY_NO_ENTRY_MINUTES", 30),
+  eodNoEntryMinutesBeforeClose: int("DT_EOD_NO_ENTRY_MINUTES", 30),
+
+  // AI SCREENER DEDUPE. An identical plan (same symbol, entry price and
+  // rounded score) is not re-sent within this window; the previous verdict
+  // is reused. Saves Haiku calls and keeps verdicts consistent.
+  screenerDedupeMinutes: int("DT_SCREENER_DEDUPE_MINUTES", 30),
+
+  // POSITION STATUS LOG. Every Nth exit-monitor tick logs one line per open
+  // position (state, P&L, peak, stop, next trim, exit conditions).
+  positionStatusEveryTicks: int("DT_POSITION_STATUS_EVERY_TICKS", 10),
 };
 
 module.exports = config;

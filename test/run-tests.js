@@ -18,6 +18,7 @@ const testFiles = [
   "./selection-bias-v7.test.js",
   "./pipeline-fixes-v7-11.test.js",
   "./vix-override-v7-13.test.js",
+  "./audit-fixes-v8.test.js",
 ];
 
 (async () => {

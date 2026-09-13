@@ -2,6 +2,104 @@
 
 ---
 
+## 2026-09-12 — v8 · Full audit: why the bot loses, what was broken, what changed
+
+Evidence base: 210 closed trades, 40 days of decision journals (60k
+rejections, 11.6k scored candidates, 7k plans), PM2/agent logs, live account
+equity, and fresh eToro candles (1h / 15m / 5m) for 146 symbols.
+
+### Account truth
+
+Live agent-portfolio equity on 2026-09-12 (flat book): **$9,369.27** on a
+$10,000 base — **−$630.73** (≈ −$22 real at the 0.035 copy ratio).
+`trade-history.json` said −$855.52 since 07-17 — wrong, see bug 1.
+
+### Why it is losing (measured, not assumed)
+
+1. **The entry signal has no forward edge.** Within 150 min, TAKEN entries hit
+   +1R before −1R 14–15% of the time and −1R first 15–16%; AI-skipped plans
+   and score-floor rejections resolve the same way (AI skips slightly worse).
+   Lowering thresholds would add more zero-edge trades.
+2. **Half the trades were bad entries, not mismanaged winners.** 104/210 never
+   reached +0.4R (median best +0.18R) and cost −$2,203. Only 1 trade reached
+   +1R and was then managed into a scratch.
+3. **Late entries are real — but not filterable with this data.** With
+   hindsight, entries made after ≥75% of the day's up-move lost −$1,094 and
+   those before 50% made +$1,073. Every at-entry proxy tested (range position,
+   % below high, move/ATR, RSI, score, SPY trend) either flipped sign between
+   halves or lost its edge once look-ahead was removed. No entry filter added.
+4. **The score floor selects for extension.** Score 90–100 plans had a median
+   day move of 4.65% (1.11× ATR, RSI 73) vs 1.84% below score 40, and the
+   score swings a median 7.5 points (p90 27) between 10-minute scans.
+5. **Payoff shape was asymmetric the wrong way.** Winners averaged +0.42R,
+   losers −0.51R; stop-outs rose a median +2.65% within 4h of the stop.
+
+### Bugs fixed
+
+1. 🔴 **Partial profits never recorded.** Partials sold units and realized
+   cash, but trade history, Telegram stats, the daily tracker, the loss
+   cooldown and the BAD-DAY rule saw only the runner's P&L (HOOD 09-03: +$37.70
+   banked, +$44.07 recorded). ~$1,000 missing over 57 trades; 17 winning trades
+   were recorded as losses and given loss cooldowns. Every earlier "audit" of
+   this file inherited the bias. Now: partials book to the ledger when they
+   fill and ride on the meta; the closed-trade record (one shared builder for
+   exit monitor, EOD closer and `close-position.js`) is the whole trade, with
+   both legs, MFE, MAE and giveback.
+2 🔴 **Exit monitor blind during scans.** Exit ticks and the price-stream
+   emergency path skipped while a scan ran (~133s of every 10 min). Replaced
+   the skip flags with a position lock (`src/position-lock.js`) held only
+   while positions are read/written.
+3. 🟠 **Unserialised meta writers.** The EOD cron and the daily reviewer could
+   save a stale copy of `position-meta.json` over a newer one. Both now run
+   under the lock; the reviewer applies its verdicts to freshly loaded meta.
+4. 🟠 **Reconciliation booked open P&L as realized**, then booked it again at
+   close (the $10,098.27 "peak" on 08-21). Now compares realized with realized
+   and always uses a fresh fetch.
+5. 🟠 **Entries after the Friday force-close** (META 07-10, META+GOOGL 07-31,
+   PLTR 08-07) ran into weekends with no exit monitor. Blocked; plus a 30-min
+   pre-close window (Mon–Thu entries there: 2/7, −$113).
+6. 🟡 **Stale quotes.** eToro rate timestamps were ignored: AMD was re-planned
+   and re-screened 24× at a frozen $477.385 after the 09-04 close; 1,553 of
+   7,015 plans were identical-price repeats. Quotes older than 15 min are
+   dropped, and identical plans reuse a recent AI verdict.
+7. 🟡 **"Today's" candles used the UTC date prefix**, so the previous ET
+   evening leaked into today's VWAP/high/low.
+8. 🟡 EOD closes stored `exitPrice: null`; the reviewer derived price from the
+   bot's entry rather than eToro's fill.
+
+### Strategy change (replay-validated)
+
+DAY stop **0.5× → 1.0× daily ATR**, clamp 3% → 5%, same dollars at risk.
+See the table in `config.js`. Out-of-sample avgR −0.080 → −0.027 (2,055
+journal entries) and −0.149 → −0.032 (real trades); drawdown roughly halves.
+**No tested change made the strategy profitable** — this reduces the bleed.
+
+Tested and **rejected**: early-failure exits, wider MFE giveback, T1 at 1.5R
+(no gain on top of the wider stop), removing the profit-stall lock (neutral),
+**adding to winners at +1R** (mixed IS, flat OOS), range-position/anti-chase
+entry filters (look-ahead artefact).
+
+### Diagnostics
+
+- `🧮 Funnel:` line + `SCAN_FUNNEL` journal record every scan.
+- `📍` position status every 10 exit ticks + `POSITION_STATUS` record:
+  HOLD / TRIM / RUNNER / WEAKENING / EXIT, P&L, peak, effective exit level,
+  next trim, time budget left, banked partials.
+
+### Tools
+
+- `src/replay-exits.js` — exit-management replay with a virtual clock over
+  the real engine. Calibrated on the 206 real trades with candles: mean
+  simulated R −0.004 vs actual +0.009, same sign on 86% of trades.
+- `src/replay-harness.js --data-dir` — run on a copy of server data.
+
+### Not in scope
+
+DE / TSM "cannot trim" messages come from **etoro-v2** (PM2 `etoro-bot` on the
+other server), not this bot — this bot has no trim counter and never traded DE.
+
+---
+
 ## 2026-09-02 — v7.13 · Manual VIX override + a bug-hunt pass
 
 ### Manual VIX override (`src/vix-override.js`)

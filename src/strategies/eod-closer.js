@@ -16,6 +16,7 @@ const { logger } = require("../logger");
 const config = require("../config");
 const alerts = require("../notifications/alerts");
 const { toRealDollars } = require("../notifications/format-helpers");
+const { buildClosedTradeRecord } = require("./performance-tracker");
 
 async function forceCloseAllPositions(
   etoroClient,
@@ -146,56 +147,58 @@ async function forceCloseAllPositions(
   for (const tracked of trackedPositions) {
     const { position, positionMeta, symbol, tradeType } = tracked;
     try {
-      const pnlDollars = position.unrealizedProfitLoss || 0;
-      const pnlPercent = (position.unrealizedProfitLossPercent || 0) * 100;
       await etoroClient.closeExistingPosition(
         position.positionId,
         position.instrumentId,
         symbol,
       );
-      riskManager.recordClosedTradeResult(pnlDollars);
+      // v8: the trade result includes partials banked earlier (they were
+      // already booked to the capital ledger when they filled). Only the
+      // final leg is new cash for the ledger; the whole trade is what the
+      // daily tracker, cooldown and trade history must judge.
+      const heldMinutes = positionMeta.openedAt
+        ? Math.round((Date.now() - positionMeta.openedAt) / 60000)
+        : null;
+      const closedTrade = buildClosedTradeRecord({
+        symbol,
+        positionMeta,
+        livePosition: position,
+        exitReason,
+        heldMinutes,
+      });
+      closedTrade.tradeType = tradeType;
+      const finalLegPnl = closedTrade.finalLegPnlDollars;
+      const tradePnl = closedTrade.pnlDollars;
+      riskManager.recordClosedTradeResult(tradePnl);
       if (performance) {
-        const heldMinutes = positionMeta.openedAt
-          ? Math.round((Date.now() - positionMeta.openedAt) / 60000)
-          : null;
-        performance.recordTrade({
-          symbol,
-          setup: positionMeta.setup,
-          tradeType,
-          source: positionMeta.source || "WATCHLIST",
-          entryPrice: positionMeta.entryPrice,
-          exitPrice: null,
-          dollarAmount: positionMeta.dollarAmount,
-          pnlDollars,
-          pnlPercent,
-          exitReason,
-          confidence: positionMeta.confidence,
-          openedAt: positionMeta.openedAt
-            ? new Date(positionMeta.openedAt).toISOString()
-            : null,
-          heldMinutes,
-          entryConditions: positionMeta.entryConditions || null,
-          plan: positionMeta.plan || null,
-          extendedByReviewer: !!positionMeta.extendedByReviewerAt, // v5.1 Tier-3
-        });
+        performance.recordTrade(closedTrade);
       }
       if (extraHooks && typeof extraHooks.onClosed === "function") {
         try {
-          extraHooks.onClosed(symbol, pnlDollars, positionMeta, exitReason);
+          extraHooks.onClosed(
+            symbol,
+            finalLegPnl,
+            positionMeta,
+            exitReason,
+            closedTrade,
+          );
         } catch (hookError) {
           logger.warn("EOD onClosed hook failed: " + hookError.message);
         }
       }
       delete meta[symbol];
-      totalRealizedPnl += pnlDollars;
+      totalRealizedPnl += tradePnl;
       closedCount++;
       logger.info(
         "  ✅ Force-closed " +
           symbol +
           " [" +
           tradeType +
-          "] — P&L $" +
-          pnlDollars.toFixed(2),
+          "] — trade P&L $" +
+          tradePnl.toFixed(2) +
+          (closedTrade.partialPnlDollars
+            ? " (incl. $" + closedTrade.partialPnlDollars.toFixed(2) + " banked earlier)"
+            : ""),
       );
       await etoroClient.sleep(2000);
     } catch (closeError) {

@@ -86,6 +86,7 @@ const capitalManager = require("./strategies/capital-manager");
 const journal = require("./strategies/decision-journal");
 const ethicsFilter = require("./strategies/ethics-filter");
 const exitShadowTracker = require("./strategies/exit-shadow-tracker");
+const { withPositionLock } = require("./position-lock"); // v8: serialises position-meta writers
 const {
   escapeHtml,
   humanize,
@@ -104,6 +105,8 @@ let reviewInProgress = false;
 // is the bot's only live protection between scans.
 let consecutiveExitMonitorFailures = 0;
 const EXIT_MONITOR_FAILURE_ALERT_THRESHOLD = 5; // 5 minutes of failures
+// v8: passes through manageOpenPositions, for the periodic status line.
+let managePositionsCallCount = 0;
 
 // Adaptive-scan state (from the PREVIOUS scan)
 let lastScanCompletedAtMs = 0;
@@ -215,7 +218,7 @@ async function isTradingHaltedForNewEntries() {
 
   if (breakerCheck.tripped) {
     // First trip — make it loud
-    journal.gateBlock(
+    recordGateBlock(
       "DRAWDOWN_BREAKER",
       "effective capital " +
         (breakerCheck.drawdownPct * 100).toFixed(1) +
@@ -241,11 +244,140 @@ async function isTradingHaltedForNewEntries() {
 
   if (breakerCheck.alreadyHalted) {
     logger.info("🛑 halt.flag present — new entries blocked (exits still run)");
-    journal.gateBlock("HALT_FLAG", "data/halt.flag exists");
+    recordGateBlock("HALT_FLAG", "data/halt.flag exists");
     return true;
   }
 
   return false;
+}
+
+// -----------------------------
+// v8: SCAN FUNNEL — why the bot did or did not trade
+// -----------------------------
+// Before v8 the only way to answer "why no trades today?" was to count
+// tens of thousands of CANDIDATE_REJECTED lines by hand. Each scan now ends
+// with one line (and one SCAN_FUNNEL journal record) showing how many
+// candidates survived each stage, why the rest died, and which gate — if
+// any — stopped the scan, e.g.:
+//   🧮 Funnel: 54 quoted → 12 moving + 4 discovered → 13 eligible [HELD 2,
+//   COOLDOWN 1] → 5 scored [below VWAP 6, weak RS 2] → 3 plans [score floor 2]
+//   → AI 1/3 take → 1 opened
+let currentScanFunnel = null;
+
+function createScanFunnel() {
+  currentScanFunnel = {
+    startedAt: new Date().toISOString(),
+    gate: null,
+    quoted: 0,
+    watchlistMovers: 0,
+    discovered: 0,
+    preEnrichRejects: {},
+    eligible: 0,
+    scoringRejects: {},
+    scored: 0,
+    reentryBlocked: 0,
+    shortlisted: 0,
+    planRejects: {},
+    plans: 0,
+    aiTake: 0,
+    aiSkip: 0,
+    executionBlocks: {},
+    opened: 0,
+  };
+  return currentScanFunnel;
+}
+
+function bumpReason(bucket, key) {
+  bucket[key] = (bucket[key] || 0) + 1;
+}
+
+function recordGateBlock(gate, reason) {
+  if (currentScanFunnel) currentScanFunnel.gate = gate;
+  journal.gateBlock(gate, reason);
+}
+
+const PRE_ENRICH_REJECT_STAGES = new Set([
+  "ETHICS_FILTER",
+  "HELD",
+  "COOLDOWN",
+  "STALE_QUOTE",
+  "NOT_ON_ETORO",
+]);
+
+function classifyScoringReject(reason) {
+  const text = String(reason || "");
+  if (/VWAP/.test(text)) return "below VWAP";
+  if (/relative strength/.test(text)) return "weak RS";
+  if (/no gap\/breakout\/momentum/.test(text)) return "no setup";
+  if (/volatility ceiling/.test(text)) return "ATR ceiling";
+  if (/volumeRatio/.test(text)) return "low volume";
+  if (/daily range/.test(text)) return "move/ATR";
+  return "other";
+}
+
+function classifyPlanReject(reason) {
+  const text = String(reason || "");
+  if (/entry floor/.test(text)) return "score floor";
+  if (/slots full/.test(text)) return "slots full";
+  return "other";
+}
+
+// Every candidate rejection goes through here so the funnel counts it.
+function recordCandidateRejection(symbol, stage, reason, snapshot) {
+  if (currentScanFunnel) {
+    if (stage === "SCORING") {
+      bumpReason(currentScanFunnel.scoringRejects, classifyScoringReject(reason));
+    } else if (stage === "REENTRY_JUSTIFICATION") {
+      currentScanFunnel.reentryBlocked++;
+    } else if (PRE_ENRICH_REJECT_STAGES.has(stage)) {
+      bumpReason(currentScanFunnel.preEnrichRejects, stage);
+    } else {
+      bumpReason(currentScanFunnel.executionBlocks, stage);
+    }
+  }
+  journal.candidateRejected(symbol, stage, reason, snapshot);
+}
+
+function formatReasonBucket(bucket) {
+  const entries = Object.entries(bucket).sort((a, b) => b[1] - a[1]);
+  return entries.length
+    ? " [" + entries.map(([key, count]) => key + " " + count).join(", ") + "]"
+    : "";
+}
+
+function logScanFunnel(funnel) {
+  if (!funnel) return;
+  logger.info(
+    "🧮 Funnel: " +
+      funnel.quoted +
+      " quoted → " +
+      funnel.watchlistMovers +
+      " moving" +
+      (funnel.discovered ? " + " + funnel.discovered + " discovered" : "") +
+      " → " +
+      funnel.eligible +
+      " eligible" +
+      formatReasonBucket(funnel.preEnrichRejects) +
+      " → " +
+      funnel.scored +
+      " scored" +
+      formatReasonBucket(funnel.scoringRejects) +
+      (funnel.reentryBlocked ? " (" + funnel.reentryBlocked + " re-entry blocked)" : "") +
+      " → " +
+      funnel.plans +
+      " plans" +
+      formatReasonBucket(funnel.planRejects) +
+      " → AI " +
+      funnel.aiTake +
+      "/" +
+      (funnel.aiTake + funnel.aiSkip) +
+      " take → " +
+      funnel.opened +
+      " opened" +
+      formatReasonBucket(funnel.executionBlocks) +
+      (funnel.gate ? " · stopped at gate " + funnel.gate : ""),
+  );
+  journal.scanFunnel(funnel);
 }
 
 // -----------------------------
@@ -354,6 +486,7 @@ async function runScanCycle() {
 
   scanInProgress = true;
   const startTime = Date.now();
+  const funnel = createScanFunnel();
 
   try {
     logger.info(
@@ -363,8 +496,11 @@ async function runScanCycle() {
     );
     journal.scanStart({ bahrain: marketHours.getCurrentBahrainTime() });
 
-    // 1. Always manage open positions first — exits are never gated
-    const monitoredPortfolio = await manageOpenPositions();
+    // 1. Always manage open positions first — exits are never gated.
+    // v8: under the position lock only for this step, so the 1-minute exit
+    // monitor keeps running through the rest of the scan (~133s on average)
+    // instead of skipping it entirely.
+    await withPositionLock("scan-manage", () => manageOpenPositions());
 
     // v5.3: cheap check for a silently-dead Alpaca stream (no-op if not
     // configured) — mirrors the alerting pattern for every other data source
@@ -372,24 +508,26 @@ async function runScanCycle() {
 
     // v6: LIVE CAPITAL RECONCILIATION — before any gate/sizing reads
     // capitalState this cycle, make sure the ledger matches the REAL eToro
-    // equity. Reuses manageOpenPositions's own portfolio fetch above (zero
-    // extra calls) when positions are tracked; on a flat book that returns
-    // nothing, so one lightweight direct fetch covers deposit/withdrawal/
-    // drift reconciliation even while flat.
+    // equity.
+    // v8: always a FRESH fetch. The portfolio manageOpenPositions returns was
+    // read BEFORE its exits ran, so any P&L those exits just booked showed up
+    // as ledger drift against a stale equity figure.
     try {
-      const equitySourcePortfolio = monitoredPortfolio
-        ? monitoredPortfolio
-        : etoroClient.parsePortfolioFromRawData(
-            await etoroClient.fetchRawPortfolio(),
-          );
+      const equitySourcePortfolio = etoroClient.parsePortfolioFromRawData(
+        await etoroClient.fetchRawPortfolio(),
+      );
       const liveEquity = equitySourcePortfolio.totalEquity;
       // v7.3: the transfer detector needs to know whether orders are in
       // flight. Cash reserved against a queued order is the classic source
       // of a large, temporary, entirely fake equity drift — it produced a
       // $6,596.66 phantom withdrawal on 2026-07-31.
+      // v8: and open positions' unrealized P&L is not realized capital.
       const reconciliation = capitalManager.reconcileWithLiveEquity(
         liveEquity,
-        { pendingOrderCount: equitySourcePortfolio.pendingOrderCount || 0 },
+        {
+          pendingOrderCount: equitySourcePortfolio.pendingOrderCount || 0,
+          unrealizedPnl: equitySourcePortfolio.totalUnrealizedProfitLoss || 0,
+        },
       );
       if (reconciliation.reconciled) {
         await notifications.sendTelegramMessage(
@@ -419,14 +557,23 @@ async function runScanCycle() {
     const capitalState = capitalManager.getCapitalState();
     if (riskManager.isDailyLossLimitHit(capitalState.effectiveCapital)) {
       logger.info("Daily loss limit hit — exits only");
-      journal.gateBlock("DAILY_LOSS_LIMIT", "realized losses at limit");
+      recordGateBlock("DAILY_LOSS_LIMIT", "realized losses at limit");
       return;
     }
 
     const sessionCheck = sessionTiming.isNewEntryAllowed();
     if (!sessionCheck.allowed) {
       logger.info("Entry blocked: " + sessionCheck.reason);
-      journal.gateBlock("SESSION_TIMING", sessionCheck.reason);
+      recordGateBlock("SESSION_TIMING", sessionCheck.reason);
+      return;
+    }
+
+    // v8: no entries after the Friday force-close (a weekend with no exit
+    // monitor) or in the short window before any day's force-close.
+    const entryCutoff = sessionTiming.getEntryCutoffStatus();
+    if (entryCutoff.blocked) {
+      logger.info("Entry blocked: " + entryCutoff.reason);
+      recordGateBlock(entryCutoff.gate, entryCutoff.reason);
       return;
     }
 
@@ -434,7 +581,7 @@ async function runScanCycle() {
     const spyQuote = await marketData.fetchSpyQuote();
     if (!spyQuote) {
       logger.warn("SPY unavailable — blocking entries");
-      journal.gateBlock("SPY_DATA", "SPY quote unavailable (fail-closed)");
+      recordGateBlock("SPY_DATA", "SPY quote unavailable (fail-closed)");
       return;
     }
     const spyChange = spyQuote.changePercent;
@@ -447,7 +594,7 @@ async function runScanCycle() {
 
     if (spyChange < config.spyMinChangePctForLongs) {
       logger.info("SPY weak (" + spyChange.toFixed(2) + "%) — no longs");
-      journal.gateBlock(
+      recordGateBlock(
         "SPY_DIRECTION",
         "SPY " + spyChange.toFixed(2) + "% below floor",
       );
@@ -476,7 +623,7 @@ async function runScanCycle() {
           "% (weak) inside the open window — no new entries " +
           "(existing positions unaffected)",
       );
-      journal.gateBlock(
+      recordGateBlock(
         "PRE_OPEN_BLACKOUT",
         "SPY " + spyChange.toFixed(2) + "% weak inside the open window",
       );
@@ -512,7 +659,7 @@ async function runScanCycle() {
           ":00 ET) — no new entries. Every audited trade in this window " +
           "lost money regardless of score. Exits remain fully active.",
       );
-      journal.gateBlock(
+      recordGateBlock(
         "OVERNIGHT_DEAD_ZONE",
         "inside the 00:00-04:00 ET window where all 16 audited trades lost",
       );
@@ -537,7 +684,7 @@ async function runScanCycle() {
           ? "No night-eligible (24/5) watchlist names for this overnight scan"
           : "Empty watchlist",
       );
-      journal.gateBlock(
+      recordGateBlock(
         "WATCHLIST",
         overnightMode
           ? "no night-eligible names for overnight session"
@@ -555,6 +702,8 @@ async function runScanCycle() {
 
     const quotes = await marketData.fetchIntradayQuotes(watchlist);
     const watchlistCandidates = momentumScanner.prefilterCandidates(quotes);
+    funnel.quoted = Object.keys(quotes || {}).length;
+    funnel.watchlistMovers = watchlistCandidates.length;
     const sectorProxyChanges = await sectorRotation.getSectorProxyChanges();
     // Discovery: movers OUTSIDE watchlist + holdings (zero TD credits).
     // Paused overnight in 24/5 mode — discovered movers can't be checked for
@@ -567,6 +716,7 @@ async function runScanCycle() {
     const discoveredCandidates = overnightMode
       ? []
       : await marketDiscovery.discoverOpportunities(excludeFromDiscovery);
+    funnel.discovered = discoveredCandidates.length;
     journal.discoveryResult(
       discoveredCandidates.map((candidate) => candidate.symbol),
     );
@@ -602,7 +752,7 @@ async function runScanCycle() {
       // bought — cheap static check here saves the enrichment API spend;
       // the async industry-based check runs again in tryOpenPosition.
       if (ethicsFilter.isBlockedStatic(upperSymbol)) {
-        journal.candidateRejected(
+        recordCandidateRejection(
           upperSymbol,
           "ETHICS_FILTER",
           "excluded industry (gambling/alcohol/adult)",
@@ -610,7 +760,7 @@ async function runScanCycle() {
         continue;
       }
       if (heldSymbols.has(upperSymbol)) {
-        journal.candidateRejected(upperSymbol, "HELD", "already holding");
+        recordCandidateRejection(upperSymbol, "HELD", "already holding");
         continue;
       }
       const cooldown = cooldownTracker.checkCooldown(candidate.symbol);
@@ -621,12 +771,36 @@ async function runScanCycle() {
             cooldown.minutesRemaining +
             "min) — skipping",
         );
-        journal.candidateRejected(
+        recordCandidateRejection(
           upperSymbol,
           "COOLDOWN",
           cooldown.minutesRemaining + " min remaining",
         );
         continue;
+      }
+      // v8: STALE QUOTE GATE. eToro's rate carries the time of its last
+      // price update. After the 2026-09-04 close AMD was re-planned and
+      // re-screened 24 times at a frozen $477.385 — a dead tape that looked
+      // live. Only eToro-sourced quotes carry a timestamp; discovery rows
+      // (Yahoo/FMP) are unaffected.
+      if (config.maxQuoteAgeMinutes > 0 && candidate.quoteTimestamp) {
+        const quoteAgeMinutes =
+          (Date.now() - new Date(candidate.quoteTimestamp).getTime()) / 60000;
+        if (
+          Number.isFinite(quoteAgeMinutes) &&
+          quoteAgeMinutes > config.maxQuoteAgeMinutes
+        ) {
+          recordCandidateRejection(
+            upperSymbol,
+            "STALE_QUOTE",
+            "last eToro price update " +
+              Math.round(quoteAgeMinutes) +
+              " min ago (max " +
+              config.maxQuoteAgeMinutes +
+              ")",
+          );
+          continue;
+        }
       }
       // ══════════════════════════════════════════════════════════════════
       // v7.11 — TRADABILITY GATE, MOVED TO THE FRONT OF THE PIPELINE.
@@ -653,7 +827,7 @@ async function runScanCycle() {
           upperSymbol,
         );
         if (!resolvedId) {
-          journal.candidateRejected(
+          recordCandidateRejection(
             upperSymbol,
             "NOT_ON_ETORO",
             "no tradable eToro instrument — dropped before enrichment",
@@ -665,6 +839,7 @@ async function runScanCycle() {
 
       toEnrich.push(candidate);
     }
+    funnel.eligible = toEnrich.length;
     if (!toEnrich.length) {
       logger.info("All movers held or cooling down");
       return;
@@ -720,7 +895,7 @@ async function runScanCycle() {
           candidate.symbol,
         );
         if (justification.requiresJustification && scored.score < justification.minScore) {
-          journal.candidateRejected(
+          recordCandidateRejection(
             candidate.symbol,
             "REENTRY_JUSTIFICATION",
             "score " +
@@ -754,7 +929,7 @@ async function runScanCycle() {
         scoredCandidates.push(scored);
         journal.candidateScored(scored);
       } else {
-        journal.candidateRejected(
+        recordCandidateRejection(
           candidate.symbol,
           "SCORING",
           scored.rejectReason,
@@ -769,6 +944,7 @@ async function runScanCycle() {
       }
       await marketData.sleep(1500);
     }
+    funnel.scored = scoredCandidates.length;
     if (!scoredCandidates.length) {
       logger.info("No candidates passed scoring");
       return;
@@ -776,6 +952,7 @@ async function runScanCycle() {
 
     scoredCandidates.sort((a, b) => b.score - a.score);
     const topCandidates = scoredCandidates.slice(0, config.maxCandidates);
+    funnel.shortlisted = topCandidates.length;
 
     // 6. Build trade PLANS
     logger.info(
@@ -819,6 +996,7 @@ async function runScanCycle() {
         // v7.11: record the numbers, not just the sentence. Price + ts are
         // what let a later analysis compute the forward return this
         // rejection gave up, so a quiet month still produces evidence.
+        bumpReason(funnel.planRejects, classifyPlanReject(planResult.rejectReason));
         journal.planRejected(candidate.symbol, planResult.rejectReason, {
           score: candidate.score != null ? candidate.score : null,
           price: candidate.currentPrice != null ? candidate.currentPrice : null,
@@ -844,6 +1022,7 @@ async function runScanCycle() {
         );
       }
     }
+    funnel.plans = plans.length;
     if (!plans.length) {
       logger.info("No plans survived geometry/slots/RRR checks");
       return;
@@ -920,6 +1099,8 @@ async function runScanCycle() {
         (result) => result.symbol === plan.symbol && result.decision === "TAKE",
       ),
     );
+    funnel.aiTake = approvedPlans.length;
+    funnel.aiSkip = plans.length - approvedPlans.length;
 
     // ══════════════════════════════════════════════════════════════════
     // v7.2 — ROOT CAUSE OF THE FILL MISMATCHES.
@@ -945,13 +1126,16 @@ async function runScanCycle() {
       const aiResult = screenResults.find(
         (result) => result.symbol === plan.symbol,
       );
-      await tryOpenPosition(
-        plan,
-        aiResult,
-        portfolio,
-        capitalState,
-        scanCashLedger,
+      // v8: each open runs under the position lock — it reads and writes
+      // position meta, and the exit monitor may now run during the scan.
+      const openOutcome = await withPositionLock(
+        "scan-open:" + plan.symbol,
+        () =>
+          tryOpenPosition(plan, aiResult, portfolio, capitalState, scanCashLedger),
       );
+      // Blocks are counted by recordCandidateRejection; only a real open
+      // returns true.
+      if (openOutcome === true) funnel.opened++;
     }
 
     logger.info(
@@ -975,6 +1159,8 @@ async function runScanCycle() {
   } finally {
     scanInProgress = false;
     lastScanCompletedAtMs = Date.now();
+    logScanFunnel(funnel);
+    currentScanFunnel = null;
   }
 }
 
@@ -989,6 +1175,28 @@ async function tryOpenPosition(
   scanCashLedger,
 ) {
   const meta = loadPositionMeta();
+
+  // v8: the exit monitor now runs during a scan, so since this plan was
+  // built the symbol may have been bought, or closed and put on cooldown.
+  // Re-check both here, under the position lock, at execution time.
+  if (meta[plan.symbol.toUpperCase()]) {
+    recordCandidateRejection(
+      plan.symbol,
+      "HELD_AT_EXECUTION",
+      "already held when the order was about to be placed",
+    );
+    return false;
+  }
+  const executionCooldown = cooldownTracker.checkCooldown(plan.symbol);
+  if (executionCooldown.onCooldown) {
+    recordCandidateRejection(
+      plan.symbol,
+      "COOLDOWN_AT_EXECUTION",
+      executionCooldown.minutesRemaining + " min remaining (closed during this scan)",
+    );
+    return false;
+  }
+
   // v7.2: cash already committed by earlier opens in THIS scan. Without
   // this, every plan in a batch sees the same pre-scan cash and the batch
   // collectively overspends — the documented cause of the partial fills.
@@ -1030,7 +1238,7 @@ async function tryOpenPosition(
       liveCap +
       ") — the cap was free when this plan was built earlier in the scan";
     logger.info(plan.symbol + " blocked: " + reason);
-    journal.candidateRejected(plan.symbol, "POSITION_CAP_EXECUTION", reason);
+    recordCandidateRejection(plan.symbol, "POSITION_CAP_EXECUTION", reason);
     return;
   }
 
@@ -1058,7 +1266,7 @@ async function tryOpenPosition(
         capitalState.effectiveCapital.toFixed(0) +
         " capital)";
       logger.info(plan.symbol + " blocked: " + reason);
-      journal.candidateRejected(plan.symbol, "GROSS_EXPOSURE_CAP", reason);
+      recordCandidateRejection(plan.symbol, "GROSS_EXPOSURE_CAP", reason);
       return;
     }
   }
@@ -1069,7 +1277,7 @@ async function tryOpenPosition(
   const ethicsCheck = await ethicsFilter.isBlocked(plan.symbol);
   if (ethicsCheck.blocked) {
     logger.info(plan.symbol + " blocked: " + ethicsCheck.reason);
-    journal.candidateRejected(plan.symbol, "ETHICS_FILTER", ethicsCheck.reason);
+    recordCandidateRejection(plan.symbol, "ETHICS_FILTER", ethicsCheck.reason);
     return;
   }
 
@@ -1095,7 +1303,7 @@ async function tryOpenPosition(
           plan.tradeType +
           " window",
       );
-      journal.candidateRejected(
+      recordCandidateRejection(
         plan.symbol,
         "EARNINGS_BLACKOUT",
         "earnings " + earningsCheck.earningsDate,
@@ -1126,7 +1334,7 @@ async function tryOpenPosition(
   );
   if (!safety.allowed) {
     logger.info(plan.symbol + " blocked: " + safety.reason);
-    journal.candidateRejected(plan.symbol, "PRE_TRADE_SAFETY", safety.reason);
+    recordCandidateRejection(plan.symbol, "PRE_TRADE_SAFETY", safety.reason);
     return;
   }
 
@@ -1136,7 +1344,7 @@ async function tryOpenPosition(
     );
     if (!instrumentId) {
       logger.warn(plan.symbol + " not resolvable on eToro — skipping");
-      journal.candidateRejected(
+      recordCandidateRejection(
         plan.symbol,
         "ETORO_RESOLUTION",
         "instrument not found on eToro",
@@ -1167,7 +1375,7 @@ async function tryOpenPosition(
                 (config.maxSpreadPct * 100).toFixed(2) +
                 "% cap — entering would start the trade at an instant loss",
             );
-            journal.candidateRejected(
+            recordCandidateRejection(
               plan.symbol,
               "SPREAD_GUARD",
               "live spread " + (spreadFraction * 100).toFixed(2) + "%",
@@ -1195,7 +1403,7 @@ async function tryOpenPosition(
     // opened: phantom meta entry, false OPEN Telegram, exit engine managing
     // a trade that doesn't exist.
     if (!openResult) {
-      journal.candidateRejected(
+      recordCandidateRejection(
         plan.symbol,
         "ETORO_OPEN_SKIPPED",
         "order not placed (below minimum size)",
@@ -1293,6 +1501,12 @@ async function tryOpenPosition(
       confidence: aiResult ? aiResult.confidence : null,
       dollarAmount: actualDollarAmount, // REAL invested amount, not the plan
       plannedDollarAmount: plan.positionDollars, // kept for comparison/debugging
+      // v8: partial-exit accounting. dollarAmount shrinks as partials sell;
+      // these keep the whole trade's size and banked P&L for the final record.
+      originalDollarAmount: actualDollarAmount,
+      realizedPartialPnl: 0,
+      partialFills: [],
+      troughPrice: plan.entryPrice, // v8: lowest price seen while held (MAE)
       openedAt: Date.now(),
       // v7.2: null until eToro actually shows the position. The per-tick
       // sync uses this to know whether the amount above is a VERIFIED fill
@@ -1375,6 +1589,7 @@ async function tryOpenPosition(
         aiResult ? aiResult.reasoning : null,
       ),
     );
+    return true;
   } catch (openError) {
     logger.error("Open error for " + plan.symbol + ": " + openError.message);
     journal.error("OPEN:" + plan.symbol, openError.message);
@@ -1445,6 +1660,11 @@ function syncPositionMetaWithLive(positionMeta, livePosition, symbol) {
           "% off) — correcting the bot's record to the REAL amount.",
       );
       positionMeta.dollarAmount = Number(liveAmount.toFixed(2));
+      // v8: before any partial has sold, the live amount IS the trade's
+      // original size — keep the whole-trade record consistent with it.
+      if (!positionMeta.partialDone && !positionMeta.realizedPartialPnl) {
+        positionMeta.originalDollarAmount = positionMeta.dollarAmount;
+      }
       // Only alert once per position, not every minute.
       if (!positionMeta.amountCorrectedAt) {
         positionMeta.amountCorrectedAt = new Date().toISOString();
@@ -2090,6 +2310,11 @@ async function manageOpenPositions() {
   // stop automatically since this runs every tick.
   priceStream.updateWatchedPositions(portfolio.openPositions, meta);
 
+  // v8: every Nth pass logs one management-state line per open position.
+  managePositionsCallCount++;
+  const logPositionStatusThisPass =
+    managePositionsCallCount % Math.max(1, config.positionStatusEveryTicks) === 0;
+
   for (const position of portfolio.openPositions || []) {
     const symbol = (position.symbol || "").toUpperCase();
     const positionMeta = meta[symbol];
@@ -2153,6 +2378,42 @@ async function manageOpenPositions() {
       // clock the profit-stall guard reads ("no NEW peak in N minutes").
       positionMeta.peakSetAt = Date.now();
       metaChanged = true;
+    }
+    // v8: lowest price seen while held (MAE) for the closed-trade record.
+    if (!(positionMeta.troughPrice <= currentPrice)) {
+      positionMeta.troughPrice = currentPrice;
+      metaChanged = true;
+    }
+
+    // v8: what the bot is doing with this position and what happens next,
+    // read from the engine's own levels (see describePositionState).
+    if (logPositionStatusThisPass) {
+      try {
+        const status = riskManager.describePositionState(positionMeta, currentPrice);
+        const signed = (value) => (value >= 0 ? "+" : "") + value.toFixed(2);
+        logger.info(
+          "📍 " +
+            symbol +
+            " [" +
+            status.state +
+            "] P&L " +
+            signed(status.pnlPct) +
+            "% (peak " +
+            signed(status.peakPct) +
+            "%) · " +
+            status.exitConditions.join(" · ") +
+            " · next trim: " +
+            status.nextTrim +
+            (status.realizedPartialPnl
+              ? " · banked $" + status.realizedPartialPnl.toFixed(2)
+              : "") +
+            " · " +
+            status.reason,
+        );
+        journal.positionStatus({ symbol, ...status });
+      } catch (statusError) {
+        logger.warn("Position status failed for " + symbol + ": " + statusError.message);
+      }
     }
 
     // Whipsaw-confirmation state: risk-manager returns stopBreachTicks while
@@ -2220,12 +2481,34 @@ async function manageOpenPositions() {
     // ── PARTIAL: sell a fraction, set the tier flag + floor on SUCCESS ──
     if (decision.action === "PARTIAL") {
       try {
+        // v8: the P&L of the slice being sold, measured on the same snapshot
+        // the decision used. Before v8 this cash was realized on eToro and
+        // never recorded anywhere except, eventually, a noisy reconciliation.
+        const partialRealizedPnl = Number(
+          ((position.unrealizedProfitLoss || 0) * (decision.fraction || 0)).toFixed(2),
+        );
         await etoroClient.closePartialPosition(
           position.positionId,
           position.instrumentId,
           symbol,
           decision.fraction,
         );
+        if (!positionMeta.originalDollarAmount) {
+          positionMeta.originalDollarAmount = positionMeta.dollarAmount;
+        }
+        capitalManager.recordRealizedPnl(partialRealizedPnl); // cash is realized now
+        positionMeta.realizedPartialPnl = Number(
+          ((positionMeta.realizedPartialPnl || 0) + partialRealizedPnl).toFixed(2),
+        );
+        positionMeta.partialFills = (positionMeta.partialFills || []).concat([
+          {
+            at: new Date().toISOString(),
+            reason: decision.reason,
+            fraction: decision.fraction,
+            price: Number(currentPrice.toFixed(4)),
+            pnlDollars: partialRealizedPnl,
+          },
+        ]);
         if (decision.flagOnSuccess) {
           positionMeta[decision.flagOnSuccess] = true;
         }
@@ -2273,7 +2556,9 @@ async function manageOpenPositions() {
             "%" +
             (positionMeta.lockedFloor
               ? " — floor now $" + positionMeta.lockedFloor.toFixed(2)
-              : ""),
+              : "") +
+            " · banked $" +
+            partialRealizedPnl.toFixed(2),
         );
         await notifications.sendTelegramMessage(
           "🎯 <b>" +
@@ -2284,7 +2569,9 @@ async function manageOpenPositions() {
             Math.round(decision.fraction * 100) +
             "% at +" +
             pnlPercent.toFixed(1) +
-            "%. Rest keeps running" +
+            "%, banked " +
+            formatDualAmount(partialRealizedPnl, { signed: true }) +
+            ". Rest keeps running" +
             (positionMeta.lockedFloor
               ? ", floor locked at $" + positionMeta.lockedFloor.toFixed(2)
               : "") +
@@ -2312,16 +2599,30 @@ async function manageOpenPositions() {
     // ── EXIT: full close + all accounting ──
     if (decision.action === "EXIT") {
       try {
-        const pnlDollars = position.unrealizedProfitLoss || 0;
-        const pnlPercent = (position.unrealizedProfitLossPercent || 0) * 100;
         await etoroClient.closeExistingPosition(
           position.positionId,
           position.instrumentId,
           symbol,
         );
 
+        // v8: the WHOLE trade — partials banked earlier plus this final
+        // leg — is what the daily tracker, the loss cooldown, trade history
+        // and Telegram judge. The ledger gets only the final leg, because
+        // each partial was booked to it when it filled.
+        const heldMinutes = Math.round(
+          (Date.now() - (positionMeta.openedAt || Date.now())) / 60000,
+        );
+        const closedTrade = performance.buildClosedTradeRecord({
+          symbol,
+          positionMeta,
+          livePosition: position,
+          exitReason: decision.reason,
+          heldMinutes,
+        });
+        const pnlDollars = closedTrade.pnlDollars;
+        const pnlPercent = closedTrade.pnlPercent;
         riskManager.recordClosedTradeResult(pnlDollars); // daily loss limit
-        capitalManager.recordRealizedPnl(pnlDollars); // compounding + de-risk
+        capitalManager.recordRealizedPnl(closedTrade.finalLegPnlDollars); // compounding + de-risk
         // v6: loss-aware cooldown + re-entry justification (whipsaw guard)
         cooldownTracker.startCooldown(symbol, {
           wasLoss: pnlDollars < 0,
@@ -2331,37 +2632,18 @@ async function manageOpenPositions() {
               positionMeta.entryConditions.score) ??
             null,
         });
-
-        const heldMinutes = Math.round(
-          (Date.now() - (positionMeta.openedAt || Date.now())) / 60000,
-        );
-        performance.recordTrade({
-          symbol,
-          setup: positionMeta.setup,
-          tradeType: positionMeta.tradeType || "DAY",
-          source: positionMeta.source || "WATCHLIST",
-          entryPrice: positionMeta.entryPrice,
-          exitPrice: currentPrice,
-          dollarAmount: positionMeta.dollarAmount,
-          pnlDollars,
-          pnlPercent,
-          exitReason: decision.reason,
-          confidence: positionMeta.confidence,
-          openedAt: positionMeta.openedAt
-            ? new Date(positionMeta.openedAt).toISOString()
-            : null,
-          heldMinutes,
-          entryConditions: positionMeta.entryConditions || null,
-          plan: positionMeta.plan || null,
-          extendedByReviewer: !!positionMeta.extendedByReviewerAt, // v5.1 Tier-3
-        });
+        performance.recordTrade(closedTrade);
         journal.tradeClosed({
           symbol,
           tradeType: positionMeta.tradeType || "DAY",
           source: positionMeta.source || "WATCHLIST",
           exitReason: decision.reason,
-          pnlDollars: Number(pnlDollars.toFixed(2)),
+          pnlDollars,
           pnlPercent: Number(pnlPercent.toFixed(2)),
+          partialPnlDollars: closedTrade.partialPnlDollars,
+          mfePercent: closedTrade.mfePercent,
+          maePercent: closedTrade.maePercent,
+          givebackFromPeakPercent: closedTrade.givebackFromPeakPercent,
           heldMinutes,
           plan: positionMeta.plan || null,
         });
@@ -2401,8 +2683,11 @@ async function manageOpenPositions() {
           symbol +
             " EXIT (" +
             decision.reason +
-            ") P&L $" +
-            pnlDollars.toFixed(2),
+            ") trade P&L $" +
+            pnlDollars.toFixed(2) +
+            (closedTrade.partialPnlDollars
+              ? " (incl. $" + closedTrade.partialPnlDollars.toFixed(2) + " banked earlier)"
+              : ""),
         );
         {
           const exitInfo = describeExitReason(decision.reason);
@@ -2468,11 +2753,14 @@ async function manageOpenPositions() {
 // EXIT MONITOR (1-min)
 // -----------------------------
 async function runExitMonitorTick() {
-  if (scanInProgress || exitCheckInProgress || reviewInProgress) return;
+  // v8: no longer skips while a scan or the daily review is running — both
+  // hold the position lock only while touching positions, so this tick waits
+  // at most a few seconds instead of losing whole minutes of stop coverage.
+  if (exitCheckInProgress) return;
   if (!marketHours.shouldRunAnalysisCycle()) return;
   exitCheckInProgress = true;
   try {
-    await manageOpenPositions();
+    await withPositionLock("exit-tick", () => manageOpenPositions());
     // Observation-only checkpoints for prior stale exits — cheap no-op
     // unless a checkpoint is actually due. Failures here must never affect
     // real position management, so they're isolated in their own try/catch.
@@ -2558,19 +2846,22 @@ async function runDailyPositionReview() {
       briefText: lastKnownBriefText,
     };
     const easternWeekdayName = getEasternWeekdayName();
-    const { swingCount } = countOpenByType(meta);
-    let currentSwingCount = swingCount;
-
-    let metaChanged = false;
     const reviewSummaryLines = [];
+    // v8: verdicts are collected here and applied afterwards to a FRESH copy
+    // of the meta under the position lock. The AI calls take minutes; saving
+    // this early snapshot back afterwards could erase positions opened, or
+    // resurrect positions closed, in the meantime.
+    const pendingReviews = [];
 
     for (const position of portfolio.openPositions || []) {
       const symbol = (position.symbol || "").toUpperCase();
       const positionMeta = meta[symbol];
       if (!positionMeta) continue; // not this bot's position
 
+      // v8: eToro's real fill price, as manageOpenPositions uses — not the
+      // bot's recorded entry, which can differ from the fill.
       const currentPrice =
-        positionMeta.entryPrice *
+        (position.openPrice || positionMeta.entryPrice) *
         (1 + (position.unrealizedProfitLossPercent || 0));
       if (!currentPrice) continue;
 
@@ -2605,23 +2896,42 @@ async function runDailyPositionReview() {
         reviewResult.analysis,
       );
 
-      const applied = await positionReviewer.applyReviewDecision(
-        positionMeta,
-        reviewResult,
-        currentPrice,
-        currentSwingCount,
-      );
+      pendingReviews.push({ symbol, reviewResult, currentPrice, pnlPercent });
+    }
 
-      if (applied.applied) {
-        metaChanged = true;
-        if (
-          reviewResult.action === "EXTEND" &&
-          positionMeta.tradeType === "SWING"
-        ) {
-          currentSwingCount++; // an extension consumes a swing slot
+    await withPositionLock("daily-review-apply", async () => {
+      const freshMeta = loadPositionMeta();
+      let freshSwingCount = countOpenByType(freshMeta).swingCount;
+      let freshMetaChanged = false;
+      for (const pending of pendingReviews) {
+        const freshPositionMeta = freshMeta[pending.symbol];
+        if (!freshPositionMeta) {
+          pending.applied = {
+            applied: false,
+            description: "position closed before the review could be applied",
+          };
+          continue;
+        }
+        pending.applied = await positionReviewer.applyReviewDecision(
+          freshPositionMeta,
+          pending.reviewResult,
+          pending.currentPrice,
+          freshSwingCount,
+        );
+        if (pending.applied.applied) {
+          freshMetaChanged = true;
+          if (
+            pending.reviewResult.action === "EXTEND" &&
+            freshPositionMeta.tradeType === "SWING"
+          ) {
+            freshSwingCount++; // an extension consumes a swing slot
+          }
         }
       }
+      if (freshMetaChanged) savePositionMeta(freshMeta);
+    });
 
+    for (const { symbol, reviewResult, pnlPercent, applied } of pendingReviews) {
       const REVIEW_ACTION_EMOJI = {
         EXTEND: "🔼",
         TIGHTEN: "🔒",
@@ -2658,8 +2968,6 @@ async function runDailyPositionReview() {
           applied.description,
       );
     }
-
-    if (metaChanged) savePositionMeta(meta);
 
     if (reviewSummaryLines.length > 0) {
       await notifications.sendTelegramMessage(
@@ -2732,36 +3040,44 @@ function startScheduler() {
       } else {
         mode = "DAY_ONLY";
       }
-      await eodCloser.forceCloseAllPositions(
-        etoroClient,
-        notifications,
-        riskManager,
-        performance,
-        loadPositionMeta,
-        savePositionMeta,
-        mode,
-        {
-          onClosed: (symbol, pnlDollars, positionMeta, exitReason) => {
-            capitalManager.recordRealizedPnl(pnlDollars);
-            // v6: loss-aware cooldown + re-entry justification
-            cooldownTracker.startCooldown(symbol, {
-              wasLoss: pnlDollars < 0,
-              scoreAtExit:
-                (positionMeta.plan && positionMeta.plan.score) ??
-                (positionMeta.entryConditions &&
-                  positionMeta.entryConditions.score) ??
-                null,
-            });
-            journal.tradeClosed({
-              symbol,
-              tradeType: positionMeta.tradeType || "DAY",
-              source: positionMeta.source || "WATCHLIST",
-              exitReason,
-              pnlDollars: Number(pnlDollars.toFixed(2)),
-              plan: positionMeta.plan || null,
-            });
+      // v8: under the position lock — this cron used to load and save the
+      // meta file with nothing stopping an exit tick or a scan doing the same.
+      await withPositionLock("eod-close", () =>
+        eodCloser.forceCloseAllPositions(
+          etoroClient,
+          notifications,
+          riskManager,
+          performance,
+          loadPositionMeta,
+          savePositionMeta,
+          mode,
+          {
+            // v8: finalLegPnl is new cash for the ledger; closedTrade is the
+            // whole trade (partials included) for cooldown and the journal.
+            onClosed: (symbol, finalLegPnl, positionMeta, exitReason, closedTrade) => {
+              capitalManager.recordRealizedPnl(finalLegPnl);
+              const tradePnl = closedTrade ? closedTrade.pnlDollars : finalLegPnl;
+              // v6: loss-aware cooldown + re-entry justification
+              cooldownTracker.startCooldown(symbol, {
+                wasLoss: tradePnl < 0,
+                scoreAtExit:
+                  (positionMeta.plan && positionMeta.plan.score) ??
+                  (positionMeta.entryConditions &&
+                    positionMeta.entryConditions.score) ??
+                  null,
+              });
+              journal.tradeClosed({
+                symbol,
+                tradeType: positionMeta.tradeType || "DAY",
+                source: positionMeta.source || "WATCHLIST",
+                exitReason,
+                pnlDollars: Number(tradePnl.toFixed(2)),
+                partialPnlDollars: closedTrade ? closedTrade.partialPnlDollars : 0,
+                plan: positionMeta.plan || null,
+              });
+            },
           },
-        },
+        ),
       );
 
       // EOD performance summary
@@ -2943,7 +3259,8 @@ async function main() {
   // manageOpenPositions() path a normal tick would, so risk-manager's
   // whipsaw confirmation still applies identically.
   priceStream.start(async (symbol, estimatedMidPrice) => {
-    if (scanInProgress || exitCheckInProgress || reviewInProgress) return;
+    // v8: waits for the position lock rather than skipping during a scan.
+    if (exitCheckInProgress) return;
     logger.warn(
       "Emergency position check (price stream): " +
         symbol +
@@ -2952,7 +3269,7 @@ async function main() {
     );
     exitCheckInProgress = true;
     try {
-      await manageOpenPositions();
+      await withPositionLock("price-stream", () => manageOpenPositions());
       consecutiveExitMonitorFailures = 0;
     } catch (emergencyError) {
       logger.error(

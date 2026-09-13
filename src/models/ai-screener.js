@@ -338,11 +338,47 @@ async function screenCandidate(plan, currentPositions, context) {
   }
 }
 
+// v8 — IDENTICAL PLANS ARE NOT RE-SCREENED.
+//
+// Scans run every 10 minutes and a quiet or frozen tape rebuilds the same
+// plan at the same price: 1,553 of 7,015 plans in the journal were
+// identical-price re-plans within 30 minutes (AMD alone was re-screened 24
+// times at a frozen $477.385 after the 2026-09-04 close). Each was a paid
+// Haiku call, and the verdicts flip-flopped on identical evidence. Within
+// config.screenerDedupeMinutes the previous verdict is reused; errored
+// verdicts are never cached, so a transient failure is retried.
+const recentVerdictsByFingerprint = new Map();
+
+function planFingerprint(plan) {
+  return [
+    plan.symbol,
+    plan.tradeType,
+    Number(plan.entryPrice).toFixed(4),
+    Math.round(Number(plan.score) || 0),
+  ].join("|");
+}
+
 // Screen multiple PLANS in parallel (one Haiku call each).
 async function screenCandidates(plans, currentPositions, context) {
   if (!plans || plans.length === 0) return [];
+  const dedupeMs = Math.max(0, config.screenerDedupeMinutes || 0) * 60000;
+  const nowMs = Date.now();
+  for (const [key, entry] of recentVerdictsByFingerprint) {
+    if (nowMs - entry.atMs > dedupeMs) recentVerdictsByFingerprint.delete(key);
+  }
   const results = await Promise.all(
-    plans.map((plan) => screenCandidate(plan, currentPositions, context)),
+    plans.map(async (plan) => {
+      const fingerprint = planFingerprint(plan);
+      const cached = dedupeMs > 0 ? recentVerdictsByFingerprint.get(fingerprint) : null;
+      if (cached) {
+        return { ...cached.result, symbol: plan.symbol, reusedVerdict: true };
+      }
+      const result = await screenCandidate(plan, currentPositions, context);
+      if (!result.errored && dedupeMs > 0) {
+        recentVerdictsByFingerprint.set(fingerprint, { atMs: Date.now(), result });
+      }
+      return result;
+    }),
   );
 
   const erroredResults = results.filter((result) => result.errored);
@@ -369,14 +405,21 @@ async function screenCandidates(plans, currentPositions, context) {
   }
 
   const taken = results.filter((result) => result.decision === "TAKE");
+  const reusedCount = results.filter((result) => result.reusedVerdict).length;
   logger.info(
-    "🤖 AI screener: " + taken.length + "/" + results.length + " plans approved",
+    "🤖 AI screener: " +
+      taken.length +
+      "/" +
+      results.length +
+      " plans approved" +
+      (reusedCount ? " (" + reusedCount + " identical plan(s) reused a recent verdict)" : ""),
   );
   return results;
 }
 
 module.exports = {
   screenCandidates,
+  planFingerprint,
   // Exported for tests and for token measurement.
   buildScreenerEvidence,
   extractJsonObject,

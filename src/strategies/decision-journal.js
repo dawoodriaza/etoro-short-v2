@@ -139,6 +139,13 @@ const journal = {
   // for whether DT_MAX_HOLD_MINUTES should change.
   exitShadowCheckpoint: (data) => appendEvent("EXIT_SHADOW_CHECKPOINT", data),
   eodSummary: (summary) => appendEvent("EOD_SUMMARY", summary),
+  // v8: one record per scan — how many candidates survived each stage, why
+  // the rest died, and which gate (if any) ended the scan. Answers "why did
+  // it not trade?" without reconstructing it from thousands of rejections.
+  scanFunnel: (funnel) => appendEvent("SCAN_FUNNEL", funnel),
+  // v8: periodic per-position management state (HOLD / TRIM / RUNNER /
+  // WEAKENING / EXIT) with P&L, peak, effective stop and the next trigger.
+  positionStatus: (status) => appendEvent("POSITION_STATUS", status),
   error: (where, message) => appendEvent("ERROR", { where, message }),
 };
 

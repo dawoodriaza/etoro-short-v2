@@ -165,9 +165,80 @@ function isInOvernightDeadZone(atDate) {
     : hour >= start || hour < end;
 }
 
+// ══════════════════════════════════════════════════════════════════════
+// v8 — ENTRY CUTOFFS AROUND THE EOD FORCE-CLOSE (Eastern time).
+//
+// The EOD cron runs once, at (16:00 - forceCloseMinutesBeforeClose) ET, and
+// only closes what is open at that moment. In 24/5 mode nothing stopped a
+// new entry straight after it: META (07-10), META + GOOGL (07-31) and PLTR
+// (08-07) were all opened on a Friday after 15:45 ET and carried into a
+// weekend during which the exit monitor does not run at all.
+//
+// The pre-close window is the smaller, evidence-sized part: Mon-Thu
+// entries in the last 30 minutes went 2 wins / 7, -$113, mostly
+// force-closed before their own time budget could play out. Entries AFTER
+// the Mon-Thu close remain allowed on purpose — that cohort was 8/12,
+// +$81, and 24/5 mode holds it overnight by design.
+const ET_WEEKDAY_FORMATTER = new Intl.DateTimeFormat("en-US", {
+  timeZone: "America/New_York",
+  weekday: "short",
+});
+const WEEKDAY_INDEX = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 };
+
+function getEntryCutoffStatus(atDate) {
+  const when = atDate || new Date();
+  const weekday = WEEKDAY_INDEX[ET_WEEKDAY_FORMATTER.format(when)];
+  const { hour, minute } = marketHours.getEasternHourMinute(when);
+  const nowMinute = hour * 60 + minute;
+  const forceCloseMinute = 16 * 60 - config.forceCloseMinutesBeforeClose;
+  const forceCloseLabel =
+    Math.floor(forceCloseMinute / 60) +
+    ":" +
+    String(forceCloseMinute % 60).padStart(2, "0") +
+    " ET";
+
+  if (weekday === 5 && config.fridayCloseAll && nowMinute >= forceCloseMinute) {
+    return {
+      blocked: true,
+      gate: "FRIDAY_AFTER_CLOSE",
+      reason:
+        "the Friday " +
+        forceCloseLabel +
+        " force-close has run — a position opened now would be held all " +
+        "weekend with no exit monitor",
+    };
+  }
+
+  const windowMinutes =
+    weekday === 5
+      ? config.fridayNoEntryMinutesBeforeClose
+      : config.eodNoEntryMinutesBeforeClose;
+  if (
+    weekday >= 1 &&
+    weekday <= 5 &&
+    windowMinutes > 0 &&
+    nowMinute < forceCloseMinute &&
+    nowMinute >= forceCloseMinute - windowMinutes
+  ) {
+    return {
+      blocked: true,
+      gate: "PRE_EOD_CLOSE",
+      reason:
+        "within " +
+        windowMinutes +
+        " min of the " +
+        forceCloseLabel +
+        " force-close — a new DAY trade would be closed before its time budget",
+    };
+  }
+
+  return { blocked: false };
+}
+
 module.exports = {
   isNewEntryAllowed,
   getEasternHourMinute,
   isInPreOpenBlackoutWindow,
   isInOvernightDeadZone,
+  getEntryCutoffStatus,
 };

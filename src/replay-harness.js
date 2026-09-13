@@ -69,8 +69,16 @@ const etoroMarketData = require("./data-sources/etoro-market-data");
 const tradePlanner = require("./strategies/trade-planner");
 const riskManager = require("./strategies/risk-manager");
 
-const journalDir = path.join(__dirname, "../data/journal");
-const cacheDir = path.join(__dirname, "../data/replay-cache");
+// v8: --data-dir points the harness at a copy of the server's data (journal
+// + replay-cache) so it can run on a workstation instead of the 1 GB server,
+// where loading every candle file competes with the live bot for memory.
+const dataDirArgIndex = process.argv.indexOf("--data-dir");
+const dataDir =
+  dataDirArgIndex !== -1 && process.argv[dataDirArgIndex + 1]
+    ? path.resolve(process.argv[dataDirArgIndex + 1])
+    : path.join(__dirname, "../data");
+const journalDir = path.join(dataDir, "journal");
+const cacheDir = path.join(dataDir, "replay-cache");
 const CANDLE_INTERVAL = "OneHour";
 const CANDLE_COUNT = 1000; // API ceiling; ~58 days of coverage
 const MAX_FORWARD_HOURS = 48; // how far to walk a simulated trade
