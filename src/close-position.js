@@ -37,6 +37,7 @@ const capitalManager = require("./strategies/capital-manager");
 const cooldownTracker = require("./strategies/cooldown-tracker");
 const performance = require("./strategies/performance-tracker");
 const journal = require("./strategies/decision-journal");
+const { withPositionLock } = require("./position-lock"); // v8.1: shared with the live bot
 
 const positionMetaPath = path.join(__dirname, "../data/position-meta.json");
 const money = (value) => "$" + Number(value || 0).toFixed(2);
@@ -172,129 +173,153 @@ if (!listOnly && !closeAll && !symbolArgument) {
 
   // ── Execute ──────────────────────────────────────────────────────────
   console.log("\n═══ EXECUTING ═══");
-  let metaChanged = false;
+  // v8.1: under the SAME position lock as the live bot (a lock file shared
+  // across processes), with positions and meta re-read inside it. The bot
+  // may have trimmed or closed a position while this script showed its plan;
+  // before this, both processes could write conflicting copies of the meta.
+  await withPositionLock("manual-close", async () => {
+    const meta = loadPositionMeta();
+    const freshPortfolio = etoroClient.parsePortfolioFromRawData(
+      await etoroClient.fetchRawPortfolio(),
+    );
+    await etoroClient.labelPositionsWithTickers(freshPortfolio);
+    const livePositionsById = new Map(
+      freshPortfolio.openPositions.map((livePosition) => [
+        String(livePosition.positionId),
+        livePosition,
+      ]),
+    );
+    let metaChanged = false;
 
-  for (const position of targets) {
-    const symbol = position.symbol.toUpperCase();
-    const positionMeta = meta[symbol];
-    const legPnlDollars = (position.unrealizedProfitLoss || 0) * fraction;
-
-    try {
-      if (fraction < 1) {
-        await etoroClient.closePartialPosition(
-          position.positionId,
-          position.instrumentId,
-          symbol,
-          fraction,
-        );
+    for (const target of targets) {
+      const position = livePositionsById.get(String(target.positionId));
+      if (!position) {
         console.log(
-          "  ✅ " + symbol + " partial close sent (" + (fraction * 100).toFixed(0) + "%)",
+          "  ⏭  " + target.symbol + " is no longer open (closed while waiting) — skipped",
         );
-        // v8: a partial realizes cash now (ledger) but does NOT end the
-        // trade. Its P&L rides on the meta until the final close — the same
-        // accounting as the bot's own partial path — instead of being
-        // written as a separate "trade" with its own cooldown.
-        capitalManager.recordRealizedPnl(legPnlDollars);
-        if (positionMeta) {
-          if (!positionMeta.originalDollarAmount) {
-            positionMeta.originalDollarAmount =
-              positionMeta.dollarAmount || position.amountInvested;
-          }
-          positionMeta.realizedPartialPnl = Number(
-            ((positionMeta.realizedPartialPnl || 0) + legPnlDollars).toFixed(2),
+        continue;
+      }
+      const symbol = position.symbol.toUpperCase();
+      const positionMeta = meta[symbol];
+      const legPnlDollars = (position.unrealizedProfitLoss || 0) * fraction;
+
+      try {
+        if (fraction < 1) {
+          await etoroClient.closePartialPosition(
+            position.positionId,
+            position.instrumentId,
+            symbol,
+            fraction,
           );
-          positionMeta.partialFills = (positionMeta.partialFills || []).concat([
-            {
-              at: new Date().toISOString(),
-              reason: "MANUAL_PARTIAL",
-              fraction,
-              pnlDollars: Number(legPnlDollars.toFixed(2)),
-            },
-          ]);
-          if (typeof positionMeta.dollarAmount === "number") {
-            positionMeta.dollarAmount = Number(
-              (positionMeta.dollarAmount * (1 - fraction)).toFixed(2),
+          console.log(
+            "  ✅ " + symbol + " partial close sent (" + (fraction * 100).toFixed(0) + "%)",
+          );
+          // v8: a partial realizes cash now (ledger) but does NOT end the
+          // trade. Its P&L rides on the meta until the final close — the same
+          // accounting as the bot's own partial path — instead of being
+          // written as a separate "trade" with its own cooldown.
+          capitalManager.recordRealizedPnl(legPnlDollars);
+          if (positionMeta) {
+            if (!positionMeta.originalDollarAmount) {
+              positionMeta.originalDollarAmount =
+                positionMeta.dollarAmount || position.amountInvested;
+            }
+            positionMeta.realizedPartialPnl = Number(
+              ((positionMeta.realizedPartialPnl || 0) + legPnlDollars).toFixed(2),
+            );
+            positionMeta.partialFills = (positionMeta.partialFills || []).concat([
+              {
+                at: new Date().toISOString(),
+                reason: "MANUAL_PARTIAL",
+                fraction,
+                pnlDollars: Number(legPnlDollars.toFixed(2)),
+              },
+            ]);
+            if (typeof positionMeta.dollarAmount === "number") {
+              positionMeta.dollarAmount = Number(
+                (positionMeta.dollarAmount * (1 - fraction)).toFixed(2),
+              );
+            }
+            // Flag the tier as banked so the bot's own ladder doesn't double-sell.
+            positionMeta.partialDone = true;
+            if (
+              !positionMeta.lockedFloor ||
+              positionMeta.lockedFloor < positionMeta.entryPrice
+            ) {
+              positionMeta.lockedFloor = positionMeta.entryPrice;
+            }
+            metaChanged = true;
+          }
+        } else {
+          await etoroClient.closeExistingPosition(
+            position.positionId,
+            position.instrumentId,
+            symbol,
+          );
+          console.log("  ✅ " + symbol + " closed");
+
+          // ── Bookkeeping, mirroring the bot's own exit path ─────────────
+          // The ledger gets only the final leg (partials were booked when
+          // they filled); the daily tracker and cooldown judge the WHOLE trade.
+          capitalManager.recordRealizedPnl(legPnlDollars);
+          if (positionMeta) {
+            const heldMinutes = Math.round(
+              (Date.now() - (positionMeta.openedAt || Date.now())) / 60000,
+            );
+            const closedTrade = performance.buildClosedTradeRecord({
+              symbol,
+              positionMeta,
+              livePosition: position,
+              exitReason: "MANUAL_CLOSE",
+              heldMinutes,
+            });
+            riskManager.recordClosedTradeResult(closedTrade.pnlDollars);
+            cooldownTracker.startCooldown(symbol, {
+              wasLoss: closedTrade.pnlDollars < 0,
+              scoreAtExit:
+                (positionMeta.plan && positionMeta.plan.score) ??
+                (positionMeta.entryConditions &&
+                  positionMeta.entryConditions.score) ??
+                null,
+            });
+            performance.recordTrade(closedTrade);
+            journal.tradeClosed({
+              symbol,
+              tradeType: positionMeta.tradeType || "DAY",
+              source: positionMeta.source || "WATCHLIST",
+              exitReason: "MANUAL_CLOSE",
+              pnlDollars: closedTrade.pnlDollars,
+              pnlPercent: Number(closedTrade.pnlPercent.toFixed(2)),
+              partialPnlDollars: closedTrade.partialPnlDollars,
+              heldMinutes,
+              plan: positionMeta.plan || null,
+            });
+            delete meta[symbol];
+            metaChanged = true;
+          } else {
+            riskManager.recordClosedTradeResult(legPnlDollars);
+            console.log(
+              "     (untracked — realized P&L recorded to the capital ledger, " +
+                "but no cooldown/performance entry since there was no plan)",
             );
           }
-          // Flag the tier as banked so the bot's own ladder doesn't double-sell.
-          positionMeta.partialDone = true;
-          if (
-            !positionMeta.lockedFloor ||
-            positionMeta.lockedFloor < positionMeta.entryPrice
-          ) {
-            positionMeta.lockedFloor = positionMeta.entryPrice;
-          }
-          metaChanged = true;
         }
-      } else {
-        await etoroClient.closeExistingPosition(
-          position.positionId,
-          position.instrumentId,
-          symbol,
+      } catch (closeError) {
+        console.error(
+          "  ❌ " +
+            symbol +
+            " FAILED: " +
+            (closeError.response
+              ? JSON.stringify(closeError.response.data)
+              : closeError.message),
         );
-        console.log("  ✅ " + symbol + " closed");
-
-        // ── Bookkeeping, mirroring the bot's own exit path ─────────────
-        // The ledger gets only the final leg (partials were booked when
-        // they filled); the daily tracker and cooldown judge the WHOLE trade.
-        capitalManager.recordRealizedPnl(legPnlDollars);
-        if (positionMeta) {
-          const heldMinutes = Math.round(
-            (Date.now() - (positionMeta.openedAt || Date.now())) / 60000,
-          );
-          const closedTrade = performance.buildClosedTradeRecord({
-            symbol,
-            positionMeta,
-            livePosition: position,
-            exitReason: "MANUAL_CLOSE",
-            heldMinutes,
-          });
-          riskManager.recordClosedTradeResult(closedTrade.pnlDollars);
-          cooldownTracker.startCooldown(symbol, {
-            wasLoss: closedTrade.pnlDollars < 0,
-            scoreAtExit:
-              (positionMeta.plan && positionMeta.plan.score) ??
-              (positionMeta.entryConditions &&
-                positionMeta.entryConditions.score) ??
-              null,
-          });
-          performance.recordTrade(closedTrade);
-          journal.tradeClosed({
-            symbol,
-            tradeType: positionMeta.tradeType || "DAY",
-            source: positionMeta.source || "WATCHLIST",
-            exitReason: "MANUAL_CLOSE",
-            pnlDollars: closedTrade.pnlDollars,
-            pnlPercent: Number(closedTrade.pnlPercent.toFixed(2)),
-            partialPnlDollars: closedTrade.partialPnlDollars,
-            heldMinutes,
-            plan: positionMeta.plan || null,
-          });
-          delete meta[symbol];
-          metaChanged = true;
-        } else {
-          riskManager.recordClosedTradeResult(legPnlDollars);
-          console.log(
-            "     (untracked — realized P&L recorded to the capital ledger, " +
-              "but no cooldown/performance entry since there was no plan)",
-          );
-        }
       }
-    } catch (closeError) {
-      console.error(
-        "  ❌ " +
-          symbol +
-          " FAILED: " +
-          (closeError.response
-            ? JSON.stringify(closeError.response.data)
-            : closeError.message),
-      );
+
+      await etoroClient.sleep(2000); // respect the rate limit between orders
     }
 
-    await etoroClient.sleep(2000); // respect the rate limit between orders
-  }
-
-  if (metaChanged) savePositionMeta(meta);
+    if (metaChanged) savePositionMeta(meta);
+  });
 
   // ── Verify against the real account ──────────────────────────────────
   console.log("\n═══ VERIFYING ═══");

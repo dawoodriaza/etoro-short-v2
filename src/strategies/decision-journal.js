@@ -146,6 +146,12 @@ const journal = {
   // v8: periodic per-position management state (HOLD / TRIM / RUNNER /
   // WEAKENING / EXIT) with P&L, peak, effective stop and the next trigger.
   positionStatus: (status) => appendEvent("POSITION_STATUS", status),
+  // v8.1: realized account equity vs the capital ledger, whenever the gap is
+  // material — the trail that makes an "unexplained equity change" traceable.
+  equityDrift: (drift) => appendEvent("EQUITY_DRIFT", drift),
+  // v8.1: one record per candidate per scan — its scan-time features and what
+  // the bot finally did with it (see strategies/shadow-signals.js).
+  shadowSignal: (signal) => appendEvent("SHADOW_SIGNAL", signal),
   error: (where, message) => appendEvent("ERROR", { where, message }),
 };
 

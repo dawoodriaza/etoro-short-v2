@@ -19,6 +19,7 @@ const testFiles = [
   "./pipeline-fixes-v7-11.test.js",
   "./vix-override-v7-13.test.js",
   "./audit-fixes-v8.test.js",
+  "./audit-followups-v8-1.test.js",
 ];
 
 (async () => {

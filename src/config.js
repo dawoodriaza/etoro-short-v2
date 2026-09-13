@@ -677,6 +677,15 @@ const config = {
   // POSITION STATUS LOG. Every Nth exit-monitor tick logs one line per open
   // position (state, P&L, peak, stop, next trim, exit conditions).
   positionStatusEveryTicks: int("DT_POSITION_STATUS_EVERY_TICKS", 10),
+
+  // ── v8.1 (2026-09-13) ─────────────────────────────────────────────
+  // EQUITY DRIFT TRAIL. Since v8 the reconciliation compares REALIZED equity
+  // with the REALIZED ledger, so any remaining gap is money the bot cannot
+  // account for (a position closed outside the bot, a manual close, fees).
+  // An EQUITY_DRIFT journal record is written when the gap reaches this many
+  // dollars and has moved since the last record; crossing the 1%
+  // reconciliation tolerance also raises a Telegram alert.
+  equityDriftJournalDollars: num("DT_EQUITY_DRIFT_JOURNAL_DOLLARS", 25),
 };
 
 module.exports = config;

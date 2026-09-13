@@ -36,7 +36,7 @@
 // USAGE
 //   node src/replay-exits.js --data-dir data --candles data/replay-candles \
 //     --legacy-candles data/replay-cache --split 2026-08-22 \
-//     [--set trades|extended|both] [--variants CURRENT,NO_STALL_LOCK]
+//     [--set trades|extended|shadow|both|all] [--variants CURRENT,NO_STALL_LOCK]
 //     [--env path/to/server.env] [--json out.json]
 //
 // READ-ONLY. Places no orders and touches no live state.
@@ -218,6 +218,34 @@ function extendedSamples(events) {
 }
 
 // ── Simulation ───────────────────────────────────────────────────────────
+// v8.1: SHADOW_SIGNAL records (strategies/shadow-signals.js) carry the
+// scan-time price, the planner's stop distance and what the bot finally did,
+// so every candidate — taken or not — is a replayable sample, grouped by its
+// outcome (SHADOW_OPENED, SHADOW_AI_SKIP, SHADOW_PLAN_REJECTED, ...).
+function shadowSamples(events) {
+  const lastKept = {};
+  const samples = [];
+  for (const e of events) {
+    if (e.event !== "SHADOW_SIGNAL" || !(e.price > 0) || !(e.stopDistancePct > 0)) continue;
+    const group = "SHADOW_" + e.outcome;
+    const key = e.symbol + "|" + group;
+    const t = new Date(e.ts).getTime();
+    if (lastKept[key] && t - lastKept[key] < HOUR) continue;
+    lastKept[key] = t;
+    const volMult = tradePlanner.classifyVolatility(e.atrPercent) === "HIGH" ? config.highVolSizeMultiplier : 1;
+    samples.push({
+      set: "shadow", group, symbol: e.symbol, entryMs: t, entryPrice: e.price,
+      stopPct: e.stopDistancePct, atrPercent: e.atrPercent,
+      sizeDollars: Math.min((config.dayTradeCapital * config.riskPctDay * volMult) / (e.stopDistancePct / 100), config.dayTradeCapital * config.maxPositionPctDay),
+      score: e.score, rsi: e.rsi, relativeStrength: e.relativeStrength, aboveVwap: e.aboveVwap,
+      priceChangePercent: e.priceChangePercent, regime: e.regime, spyChangePercent: e.spyChangePercent,
+      rangePosition: e.rangePosition, belowHighPct: e.belowHighPct, vwapDistancePct: e.vwapDistancePct,
+      outcome: e.outcome,
+    });
+  }
+  return samples;
+}
+
 function simulate(sample, variant) {
   const bars = loadBars(sample.symbol);
   if (!bars || !bars.length) return null;
@@ -403,8 +431,9 @@ if (require.main !== module) {
 } else {
   const events = readJournal();
   const samples = [];
-  if (SET === "trades" || SET === "both") samples.push(...tradeSamples(events));
-  if (SET === "extended" || SET === "both") samples.push(...extendedSamples(events));
+  if (["trades", "both", "all"].includes(SET)) samples.push(...tradeSamples(events));
+  if (["extended", "both", "all"].includes(SET)) samples.push(...extendedSamples(events));
+  if (["shadow", "all"].includes(SET)) samples.push(...shadowSamples(events));
   const splitMs = new Date(SPLIT + "T00:00:00Z").getTime();
   const wanted = argValue("--variants", Object.keys(VARIANTS).join(",")).split(",");
   console.log("samples: " + samples.length + " (split " + SPLIT + ", cost " + (COST * 10000) + " bps round trip)");
@@ -415,7 +444,7 @@ if (require.main !== module) {
     const runs = runVariant(name, variant, samples);
     report[name] = {};
     console.log("\n=== " + name + " ===");
-    for (const set of ["trades", "extended"]) {
+    for (const set of ["trades", "extended", "shadow"]) {
       for (const half of ["IS", "OOS"]) {
         const subset = runs.filter((x) => x.sample.set === set && (half === "IS" ? x.sample.entryMs < splitMs : x.sample.entryMs >= splitMs));
         if (!subset.length) continue;

@@ -573,6 +573,7 @@ function formatPlanForTelegram(plan, aiReasoning) {
 
 module.exports = {
   buildTradePlan,
+  computeStopDistancePct, // v8.1: the shadow log records the planner's own stop distance
   classifyTradeType,
   classifyVolatility,
   classifyTrend,

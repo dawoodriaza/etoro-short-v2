@@ -87,6 +87,7 @@ const journal = require("./strategies/decision-journal");
 const ethicsFilter = require("./strategies/ethics-filter");
 const exitShadowTracker = require("./strategies/exit-shadow-tracker");
 const { withPositionLock } = require("./position-lock"); // v8: serialises position-meta writers
+const shadowSignals = require("./strategies/shadow-signals"); // v8.1: per-candidate shadow log
 const {
   escapeHtml,
   humanize,
@@ -263,6 +264,10 @@ async function isTradingHaltedForNewEntries() {
 //   COOLDOWN 1] → 5 scored [below VWAP 6, weak RS 2] → 3 plans [score floor 2]
 //   → AI 1/3 take → 1 opened
 let currentScanFunnel = null;
+// v8.1: SHADOW_SIGNAL records for the scan in progress (one per candidate).
+let currentShadowBook = null;
+// v8.1: last realized-equity-vs-ledger gap written to the journal.
+let lastRecordedEquityDriftDollars = null;
 
 function createScanFunnel() {
   currentScanFunnel = {
@@ -335,7 +340,86 @@ function recordCandidateRejection(symbol, stage, reason, snapshot) {
       bumpReason(currentScanFunnel.executionBlocks, stage);
     }
   }
+  if (stage === "REENTRY_JUSTIFICATION") {
+    shadowSignals.markShadowOutcome(currentShadowBook, symbol, "REENTRY_BLOCKED", reason);
+  } else if (stage !== "SCORING" && !PRE_ENRICH_REJECT_STAGES.has(stage)) {
+    shadowSignals.markShadowOutcome(currentShadowBook, symbol, "BLOCKED", stage + ": " + reason);
+  }
   journal.candidateRejected(symbol, stage, reason, snapshot);
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// v8.1 — EQUITY DRIFT TRAIL + ALERT.
+//
+// Since v8 the reconciliation compares REALIZED equity with the REALIZED
+// ledger, so a gap is money the bot cannot account for. The 2026-09 audit
+// found ~$506 of such change after 07-22 with no trail. Every material,
+// moving gap is now journaled (EQUITY_DRIFT); a gap large enough for the
+// reconciliation to correct the ledger raises a Telegram alert that says
+// what it means, instead of a neutral "capital reconciled" note.
+// ═══════════════════════════════════════════════════════════════════════
+async function recordEquityDrift(portfolio, ledgerEffective, reconciliation) {
+  const unrealizedPnl = portfolio.totalUnrealizedProfitLoss || 0;
+  const drift = capitalManager.describeEquityDrift({
+    liveEquity: portfolio.totalEquity,
+    unrealizedPnl,
+    ledgerEffective,
+    lastRecordedDriftDollars: lastRecordedEquityDriftDollars,
+    recordThresholdDollars: config.equityDriftJournalDollars,
+  });
+  if (drift.shouldRecord || reconciliation.reconciled) {
+    journal.equityDrift({
+      liveEquity: Number(portfolio.totalEquity.toFixed(2)),
+      unrealizedPnl: Number(unrealizedPnl.toFixed(2)),
+      realizedEquity: drift.realizedEquity,
+      ledgerEffective: Number(ledgerEffective.toFixed(2)),
+      driftDollars: drift.driftDollars,
+      driftPct: Number((drift.driftPct * 100).toFixed(3)),
+      openPositions: portfolio.positionCount || 0,
+      pendingOrders: portfolio.pendingOrderCount || 0,
+      reconciled: !!reconciliation.reconciled,
+      treatedAsTransfer: !!reconciliation.treatedAsTransfer,
+      blockedByPending: !!reconciliation.blockedByPending,
+    });
+    logger.info(
+      "💵 Equity drift: realized equity $" +
+        drift.realizedEquity.toFixed(2) +
+        " vs ledger $" +
+        ledgerEffective.toFixed(2) +
+        " (gap " +
+        (drift.driftDollars >= 0 ? "+" : "") +
+        drift.driftDollars.toFixed(2) +
+        ")" +
+        (reconciliation.reconciled ? " — ledger corrected" : ""),
+    );
+    lastRecordedEquityDriftDollars = reconciliation.reconciled ? 0 : drift.driftDollars;
+  }
+  if (!reconciliation.reconciled) return;
+
+  const driftPercentText = (reconciliation.driftPct * 100).toFixed(1) + "%";
+  if (reconciliation.treatedAsTransfer) {
+    await notifications.sendTelegramMessage(
+      "🏦 <b>Owner transfer detected</b>\nAccount equity moved " +
+        formatDualAmount(reconciliation.driftDollars, { signed: true }) +
+        " (" +
+        driftPercentText +
+        ") with no trade to explain it, confirmed over several checks — treated " +
+        "as a deposit/withdrawal. Base capital and the drawdown peak were " +
+        "rescaled; nothing was booked as trading P&L.",
+    );
+    return;
+  }
+  await alerts.systemAlert(
+    "UNEXPLAINED_EQUITY_CHANGE",
+    "Realized account equity and the bot's ledger disagreed by " +
+      formatDualAmount(reconciliation.driftDollars, { signed: true }) +
+      " (" +
+      driftPercentText +
+      ") — money moved without a recorded trade. Likely causes: a position " +
+      "closed outside the bot (a manual close in the app, a ghost or untracked " +
+      "position) or fees. The ledger was corrected to the real account; check " +
+      "eToro's closed-position history around now (journal: EQUITY_DRIFT).",
+  );
 }
 
 function formatReasonBucket(bucket) {
@@ -487,6 +571,7 @@ async function runScanCycle() {
   scanInProgress = true;
   const startTime = Date.now();
   const funnel = createScanFunnel();
+  currentShadowBook = shadowSignals.createShadowBook();
 
   try {
     logger.info(
@@ -517,6 +602,8 @@ async function runScanCycle() {
         await etoroClient.fetchRawPortfolio(),
       );
       const liveEquity = equitySourcePortfolio.totalEquity;
+      const ledgerEffectiveBeforeReconcile =
+        capitalManager.getCapitalState().effectiveCapital;
       // v7.3: the transfer detector needs to know whether orders are in
       // flight. Cash reserved against a queued order is the classic source
       // of a large, temporary, entirely fake equity drift — it produced a
@@ -529,17 +616,12 @@ async function runScanCycle() {
           unrealizedPnl: equitySourcePortfolio.totalUnrealizedProfitLoss || 0,
         },
       );
-      if (reconciliation.reconciled) {
-        await notifications.sendTelegramMessage(
-          "💰 <b>Capital reconciled</b>\nLedger vs live eToro equity had " +
-            "drifted by $" +
-            reconciliation.driftDollars.toFixed(2) +
-            " (" +
-            (reconciliation.driftPct * 100).toFixed(1) +
-            "%) — corrected to match the real account. Sizing, the daily " +
-            "loss limit, and the drawdown breaker all use the corrected figure now.",
-        );
-      }
+      // v8.1: journal material gaps; alert when the ledger had to be corrected.
+      await recordEquityDrift(
+        equitySourcePortfolio,
+        ledgerEffectiveBeforeReconcile,
+        reconciliation,
+      );
     } catch (reconcileError) {
       logger.warn(
         "Capital reconciliation skipped (equity fetch failed): " +
@@ -873,6 +955,10 @@ async function runScanCycle() {
         regime,
         sectorProxyChanges,
       );
+      shadowSignals.recordShadowCandidate(currentShadowBook, candidate, scored, {
+        regime: regime.regime,
+        spyChangePercent: spyChange,
+      });
       if (!scored.rejected) {
         scored.atrPercent = candidate.atrPercent;
         // v7.7: carry the per-symbol size multiplier through to sizing.
@@ -953,6 +1039,14 @@ async function runScanCycle() {
     scoredCandidates.sort((a, b) => b.score - a.score);
     const topCandidates = scoredCandidates.slice(0, config.maxCandidates);
     funnel.shortlisted = topCandidates.length;
+    for (const leftOut of scoredCandidates.slice(config.maxCandidates)) {
+      shadowSignals.markShadowOutcome(
+        currentShadowBook,
+        leftOut.symbol,
+        "NOT_SHORTLISTED",
+        "ranked below the top " + config.maxCandidates,
+      );
+    }
 
     // 6. Build trade PLANS
     logger.info(
@@ -992,11 +1086,23 @@ async function runScanCycle() {
       if (planResult.accepted) {
         plans.push(planResult.plan);
         journal.planBuilt(planResult.plan);
+        shadowSignals.markShadowOutcome(
+          currentShadowBook,
+          candidate.symbol,
+          "PLANNED",
+          "stop -" + planResult.plan.stopDistancePct + "% · $" + planResult.plan.positionDollars,
+        );
       } else {
         // v7.11: record the numbers, not just the sentence. Price + ts are
         // what let a later analysis compute the forward return this
         // rejection gave up, so a quiet month still produces evidence.
         bumpReason(funnel.planRejects, classifyPlanReject(planResult.rejectReason));
+        shadowSignals.markShadowOutcome(
+          currentShadowBook,
+          candidate.symbol,
+          "PLAN_REJECTED",
+          planResult.rejectReason,
+        );
         journal.planRejected(candidate.symbol, planResult.rejectReason, {
           score: candidate.score != null ? candidate.score : null,
           price: candidate.currentPrice != null ? candidate.currentPrice : null,
@@ -1101,6 +1207,18 @@ async function runScanCycle() {
     );
     funnel.aiTake = approvedPlans.length;
     funnel.aiSkip = plans.length - approvedPlans.length;
+    for (const screenResult of screenResults) {
+      shadowSignals.markShadowOutcome(
+        currentShadowBook,
+        screenResult.symbol,
+        screenResult.decision === "TAKE" ? "AI_TAKE" : "AI_SKIP",
+        "confidence " +
+          screenResult.confidence +
+          (screenResult.analysis && screenResult.analysis.disqualifier
+            ? " · " + screenResult.analysis.disqualifier
+            : ""),
+      );
+    }
 
     // ══════════════════════════════════════════════════════════════════
     // v7.2 — ROOT CAUSE OF THE FILL MISMATCHES.
@@ -1135,7 +1253,16 @@ async function runScanCycle() {
       );
       // Blocks are counted by recordCandidateRejection; only a real open
       // returns true.
-      if (openOutcome === true) funnel.opened++;
+      if (openOutcome === true) {
+        funnel.opened++;
+        shadowSignals.markShadowOutcome(currentShadowBook, plan.symbol, "OPENED", null);
+      } else {
+        const shadowEntry =
+          currentShadowBook && currentShadowBook.get(plan.symbol.toUpperCase());
+        if (shadowEntry && shadowEntry.outcome === "AI_TAKE") {
+          shadowEntry.outcome = "OPEN_FAILED";
+        }
+      }
     }
 
     logger.info(
@@ -1161,6 +1288,10 @@ async function runScanCycle() {
     lastScanCompletedAtMs = Date.now();
     logScanFunnel(funnel);
     currentScanFunnel = null;
+    if (currentShadowBook) {
+      for (const signal of currentShadowBook.values()) journal.shadowSignal(signal);
+    }
+    currentShadowBook = null;
   }
 }
 

@@ -121,15 +121,40 @@ function recordTrade(trade) {
   saveHistory(history);
 }
 
+// v8.1: the best-known result of one trade. v8 records (pnlAccountingVersion
+// 2) already hold the whole trade. Older records hold only the runner leg;
+// when src/backfill-partial-pnl.js has estimated the missing partial profit,
+// it is added here. Every stat reads this, never raw pnlDollars.
+function tradeResultDollars(trade) {
+  const recorded = Number(trade && trade.pnlDollars) || 0;
+  if (!trade || trade.pnlAccountingVersion === 2) return recorded;
+  return recorded + (Number(trade.estimatedPartialPnlDollars) || 0);
+}
+
+// v8.1: overall stats plus the two accounting eras side by side, so the
+// Telegram report stops mixing understated pre-fix records with v8 ones.
 function computeStats(history) {
   const trades = history || loadHistory();
+  const overall = computeStatsFor(trades);
+  if (!overall.totalTrades) return overall;
+  const afterFix = trades.filter((t) => t.pnlAccountingVersion === 2);
+  const beforeFix = trades.filter((t) => t.pnlAccountingVersion !== 2);
+  overall.segments = {
+    afterFix: computeStatsFor(afterFix),
+    beforeFix: computeStatsFor(beforeFix),
+    beforeFixEstimated: beforeFix.some((t) => t.estimatedPartialPnlDollars != null),
+  };
+  return overall;
+}
+
+function computeStatsFor(trades) {
   if (trades.length === 0) {
     return { totalTrades: 0 };
   }
-  const wins = trades.filter((t) => t.pnlDollars > 0);
-  const losses = trades.filter((t) => t.pnlDollars <= 0);
-  const grossWin = wins.reduce((sum, t) => sum + t.pnlDollars, 0);
-  const grossLoss = Math.abs(losses.reduce((sum, t) => sum + t.pnlDollars, 0));
+  const wins = trades.filter((t) => tradeResultDollars(t) > 0);
+  const losses = trades.filter((t) => tradeResultDollars(t) <= 0);
+  const grossWin = wins.reduce((sum, t) => sum + tradeResultDollars(t), 0);
+  const grossLoss = Math.abs(losses.reduce((sum, t) => sum + tradeResultDollars(t), 0));
   const totalPnl = grossWin - grossLoss;
 
   const winRate = (wins.length / trades.length) * 100;
@@ -147,8 +172,8 @@ function computeStats(history) {
     const key = t.setup || "UNKNOWN";
     if (!bySetup[key]) bySetup[key] = { trades: 0, wins: 0, pnl: 0 };
     bySetup[key].trades++;
-    if (t.pnlDollars > 0) bySetup[key].wins++;
-    bySetup[key].pnl += t.pnlDollars;
+    if (tradeResultDollars(t) > 0) bySetup[key].wins++;
+    bySetup[key].pnl += tradeResultDollars(t);
   }
 
   return {
@@ -170,6 +195,35 @@ function computeStats(history) {
 // Run each one through toRealDollars() before it reaches Telegram, so this
 // report matches every other Telegram message and your actual account.
 // Win rate / profit factor are RATIOS and are unaffected by the copy scale.
+// v8.1: the two accounting eras side by side. Only rendered when stats came
+// from computeStats() (a hand-built stats object has no segments).
+function formatAccountingEras(stats, money) {
+  if (!stats.segments) return "";
+  const line = (label, segment) =>
+    segment && segment.totalTrades
+      ? label +
+        ": " +
+        segment.totalTrades +
+        " trades · " +
+        segment.winRate.toFixed(1) +
+        "% win · PF " +
+        (segment.profitFactor === Infinity ? "∞" : segment.profitFactor.toFixed(2)) +
+        " · " +
+        money(segment.totalPnl)
+      : label + ": no trades yet";
+  return (
+    "\n\n" +
+    line("Since the v8 accounting fix", stats.segments.afterFix) +
+    "\n" +
+    line(
+      stats.segments.beforeFixEstimated
+        ? "Before the fix (partial profits estimated)"
+        : "Before the fix (runner leg only — partial profits missing)",
+      stats.segments.beforeFix,
+    )
+  );
+}
+
 function formatStatsForTelegram(stats) {
   if (!stats.totalTrades) return "No trades recorded yet.";
   const money = (value) =>
@@ -212,6 +266,7 @@ function formatStatsForTelegram(stats) {
     "\n" +
     "Total P&L: " +
     money(stats.totalPnl) +
+    formatAccountingEras(stats, money) +
     "\n\n" +
     "By setup:\n" +
     setupLines
@@ -219,6 +274,7 @@ function formatStatsForTelegram(stats) {
 }
 
 module.exports = {
+  tradeResultDollars,
   buildClosedTradeRecord,
   recordTrade,
   computeStats,

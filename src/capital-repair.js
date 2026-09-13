@@ -13,6 +13,10 @@
 //   node src/capital-repair.js                 # show what would change
 //   node src/capital-repair.js --apply         # actually repair
 //
+// v8.1 — lowering a drawdown peak inflated by a bookkeeping bug:
+//   node src/capital-repair.js --reset-peak 10032.85 --reason "..."          # dry run
+//   node src/capital-repair.js --reset-peak 10032.85 --reason "..." --apply  # write
+//
 // The root cause is fixed in etoro-client.js (equity now includes reserved
 // order cash) and guarded in capital-manager.js, so this should be needed
 // exactly once.
@@ -25,7 +29,57 @@ const ledgerPath = path.join(__dirname, "../data/capital-ledger.json");
 const money = (value) => "$" + Number(value || 0).toFixed(2);
 const apply = process.argv.includes("--apply");
 
+async function resetPeakCommand(requestedPeak) {
+  const capitalManager = require("./strategies/capital-manager");
+  const reasonIndex = process.argv.indexOf("--reason");
+  const reason = reasonIndex !== -1 ? process.argv[reasonIndex + 1] || "" : "";
+  const state = capitalManager.getCapitalState();
+  const drawdownPct = (peak) => (peak > 0 ? ((peak - state.effectiveCapital) / peak) * 100 : 0);
+
+  console.log("\n═══ DRAWDOWN PEAK RESET ═══");
+  console.log("  effective capital : " + money(state.effectiveCapital));
+  console.log(
+    "  recorded peak     : " + money(state.peakEffectiveCapital) +
+      "  (drawdown " + drawdownPct(state.peakEffectiveCapital).toFixed(2) + "%)",
+  );
+  console.log(
+    "  requested peak    : " + money(requestedPeak) +
+      "  (drawdown " + drawdownPct(requestedPeak).toFixed(2) + "%)",
+  );
+  if (reason) console.log("  reason            : " + reason);
+
+  const raw = await etoroClient.fetchRawPortfolio();
+  const portfolio = etoroClient.parsePortfolioFromRawData(raw);
+  console.log(
+    "  live equity       : " + money(portfolio.totalEquity) +
+      " (" + portfolio.positionCount + " open, " + portfolio.pendingOrderCount + " pending)",
+  );
+
+  const validation = capitalManager.validateDrawdownPeakReset(requestedPeak);
+  if (!validation.ok) {
+    console.log("\n❌ Refused: " + validation.reason + "\n");
+    process.exitCode = 1;
+    return;
+  }
+  if (!apply) {
+    console.log("\nDry run — nothing changed. Re-run with --apply to write it.\n");
+    return;
+  }
+  const result = capitalManager.resetDrawdownPeak(requestedPeak, reason);
+  console.log(
+    result.applied
+      ? "\n✅ Peak reset " + money(result.previousPeak) + " → " + money(result.newPeak) + "\n"
+      : "\n❌ Not applied: " + result.reason + "\n",
+  );
+}
+
 (async () => {
+  const resetPeakIndex = process.argv.indexOf("--reset-peak");
+  if (resetPeakIndex !== -1) {
+    await resetPeakCommand(Number(process.argv[resetPeakIndex + 1]));
+    return;
+  }
+
   const ledger = JSON.parse(fs.readFileSync(ledgerPath, "utf8"));
   const transfers = ledger.transferHistory || [];
 

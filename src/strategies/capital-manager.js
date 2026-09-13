@@ -565,7 +565,108 @@ function applyCapitalTransfer(amountDollars, note) {
   };
 }
 
+// ═══════════════════════════════════════════════════════════════════════
+// v8.1 — EQUITY DRIFT: IS THERE MONEY THE BOT CANNOT ACCOUNT FOR?
+//
+// Pure. realizedEquity (live equity minus open positions' unrealized P&L)
+// minus the ledger's effective capital is money that moved without a
+// recorded trade: a position closed outside the bot, a ghost clear, a
+// manual close, fees. The 2026-09 audit found ~$506 of such change after
+// 07-22 with no trail at all. shouldRecord keeps the journal quiet until the
+// gap is material and has moved since the last record.
+// ═══════════════════════════════════════════════════════════════════════
+function describeEquityDrift({
+  liveEquity,
+  unrealizedPnl,
+  ledgerEffective,
+  lastRecordedDriftDollars,
+  recordThresholdDollars,
+}) {
+  const realizedEquity = liveEquity - (Number.isFinite(unrealizedPnl) ? unrealizedPnl : 0);
+  const driftDollars = realizedEquity - ledgerEffective;
+  const threshold = Math.max(0, Number(recordThresholdDollars) || 0);
+  const material = Math.abs(driftDollars) >= threshold;
+  const movedSinceLastRecord =
+    lastRecordedDriftDollars == null ||
+    Math.abs(driftDollars - lastRecordedDriftDollars) >= threshold / 2;
+  return {
+    realizedEquity: Number(realizedEquity.toFixed(2)),
+    driftDollars: Number(driftDollars.toFixed(2)),
+    driftPct: ledgerEffective > 0 ? driftDollars / ledgerEffective : 0,
+    shouldRecord: material && movedSinceLastRecord,
+  };
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// v8.1 — LOWER A DRAWDOWN PEAK THAT WAS INFLATED BY A BOOKKEEPING BUG.
+//
+// The recorded peak of $10,098.27 (2026-08-21) was produced by the pre-v8
+// reconciliation booking open positions' P&L into the ledger and the close
+// then booking it again. The last peak before that event was $10,032.85.
+// A reset may only LOWER the peak, never below current effective capital,
+// and is written to repairHistory so it stays auditable.
+// ═══════════════════════════════════════════════════════════════════════
+function validateDrawdownPeakReset(newPeak) {
+  const ledger = loadLedger();
+  const previousPeak = Number(ledger.peakEffectiveCapital || 0);
+  const effectiveCapital = computeEffectiveCapital(ledger);
+  const money = (value) => "$" + Number(value).toFixed(2);
+  if (!Number.isFinite(newPeak) || newPeak <= 0) {
+    return { ok: false, reason: "the new peak must be a positive number", previousPeak, effectiveCapital };
+  }
+  if (newPeak >= previousPeak) {
+    return {
+      ok: false,
+      reason: "a reset may only LOWER an inflated peak — " + money(newPeak) + " is not below the recorded " + money(previousPeak),
+      previousPeak,
+      effectiveCapital,
+    };
+  }
+  if (newPeak < effectiveCapital) {
+    return {
+      ok: false,
+      reason: "the peak cannot sit below current effective capital " + money(effectiveCapital),
+      previousPeak,
+      effectiveCapital,
+    };
+  }
+  return { ok: true, previousPeak, effectiveCapital };
+}
+
+function resetDrawdownPeak(newPeak, reason) {
+  const validation = validateDrawdownPeakReset(newPeak);
+  if (!validation.ok) return { applied: false, ...validation };
+  const ledger = loadLedger();
+  ledger.peakEffectiveCapital = Number(Number(newPeak).toFixed(2));
+  ledger.repairHistory = (ledger.repairHistory || []).concat([
+    {
+      at: new Date().toISOString(),
+      type: "PEAK_RESET",
+      previousPeak: validation.previousPeak,
+      restoredPeak: ledger.peakEffectiveCapital,
+      reason: reason || "",
+    },
+  ]);
+  saveLedger(ledger);
+  logger.warn(
+    "🏔️ Drawdown peak reset $" +
+      validation.previousPeak.toFixed(2) +
+      " → $" +
+      ledger.peakEffectiveCapital.toFixed(2) +
+      (reason ? " (" + reason + ")" : ""),
+  );
+  return {
+    applied: true,
+    previousPeak: validation.previousPeak,
+    newPeak: ledger.peakEffectiveCapital,
+    effectiveCapital: validation.effectiveCapital,
+  };
+}
+
 module.exports = {
+  describeEquityDrift,
+  validateDrawdownPeakReset,
+  resetDrawdownPeak,
   recordRealizedPnl,
   getCapitalState,
   checkDrawdownBreaker,

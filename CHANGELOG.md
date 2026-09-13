@@ -2,6 +2,71 @@
 
 ---
 
+## 2026-09-13 — v8.1 · Closing the risks left open by the v8 audit
+
+### Risk per trade halved (`DT_RISK_PCT_DAY` 0.01 → 0.005, `.env`)
+
+The v8 replay found no entry edge: even with the wider stop the expected
+result is about −0.03R per trade. Pausing entries was the alternative;
+trading at half risk was chosen so the new shadow log collects live
+evidence at roughly half the bleed. `config.js` defaults are unchanged —
+this is an operator setting. Revisit only when a new entry rule clears the
+go-live bar (≥150 out-of-sample signals above +0.05R after costs in replay,
+plus a 3–4 week shadow run that agrees).
+
+### Manual closes can no longer race the bot
+
+`src/position-lock.js` now also owns `data/position-meta.lock` (O_EXCL). The
+bot and `close-position.js` — separate processes — take the same lock; the
+manual tool re-reads positions and meta inside it and skips anything the
+bot closed while it was waiting. A lock left by a dead process is taken over
+at once; one held past 5 min is treated as hung; no caller waits more than
+90 s.
+
+### Unexplained equity changes leave a trail and raise an alert
+
+Since v8 the reconciliation compares realized with realized, so a remaining
+gap is money the bot cannot account for. Every material gap (≥ $25, and
+moved since the last record) writes `EQUITY_DRIFT` to the journal; a gap
+that forces a ledger correction raises `UNEXPLAINED_EQUITY_CHANGE` on
+Telegram instead of the old neutral "capital reconciled" note.
+
+### Pre-v8 trade history: estimated partials added, never overwritten
+
+`node src/backfill-partial-pnl.js --apply` (run once on the server) added
+`estimatedPartialPnlDollars` / `estimatedTradePnlDollars` to every pre-v8
+record from the journal's partial-exit decisions. `pnlDollars` is untouched.
+Result on live data: 57 of 210 trades, **+$1,008.23**; 17 recorded losses
+were really wins; whole-trade total −$855.52 → +$152.71. Stats and the
+weekly self-evaluation now read `tradeResultDollars()`, and the Telegram
+report shows the "since the v8 accounting fix" and "before the fix" eras
+separately.
+
+### Drawdown peak repaired
+
+`node src/capital-repair.js --reset-peak 10032.85 --apply`: the $10,098.27
+peak was created on 2026-08-21 by the pre-v8 reconciliation counting open
+P&L twice; the last genuine recorded peak was $10,032.85. Resets may only
+lower a peak and never below current effective capital, and are written to
+`repairHistory`.
+
+### Data capture for the next strategy test
+
+- `src/fetch-replay-candles.js`, cron `15 5 * * 2-6` (01:15 ET, inside the
+  overnight freeze): merges 1h / 15m / 5m eToro candles into
+  `data/replay-candles/` daily so fine-grained history accumulates beyond the
+  API's 1,000-bar window. Seeded with the audit's fetch.
+- `SHADOW_SIGNAL` journal record per candidate per scan
+  (`strategies/shadow-signals.js`): scan-time price, day move, ATR, VWAP
+  distance, range position, distance below the high, RSI, relative strength,
+  planner stop distance, and the final outcome (SCORING_REJECTED … AI_SKIP …
+  OPENED). Recorded at decision time, so a replay cannot leak future bars into
+  entry features — the look-ahead trap the v8 audit hit once.
+- `node src/replay-exits.js --set shadow` replays those records with real
+  exits, grouped by outcome.
+
+---
+
 ## 2026-09-12 — v8 · Full audit: why the bot loses, what was broken, what changed
 
 Evidence base: 210 closed trades, 40 days of decision journals (60k

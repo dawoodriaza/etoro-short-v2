@@ -18,13 +18,16 @@ const { escapeHtml, toRealDollars } = require("../notifications/format-helpers")
 const MIN_TRADES_FOR_SUGGESTION = 15; // don't suggest changes on tiny samples
 const MIN_TRADES_FOR_SUB_ANALYSIS = 8; // regime/session breakdowns need fewer since they're narrower cuts
 
+// v8.1: judged on the whole trade (partials included, estimated for pre-v8
+// records) — the raw runner-only pnlDollars made targeted winners look like
+// losers and skewed every finding below.
 function winRate(trades) {
   if (trades.length === 0) return null;
-  const wins = trades.filter((t) => t.pnlDollars > 0).length;
+  const wins = trades.filter((t) => performance.tradeResultDollars(t) > 0).length;
   return (wins / trades.length) * 100;
 }
 function totalPnl(trades) {
-  return trades.reduce((sum, t) => sum + (t.pnlDollars || 0), 0);
+  return trades.reduce((sum, t) => sum + performance.tradeResultDollars(t), 0);
 }
 function avgHoldMinutes(trades) {
   const withHold = trades.filter((t) => typeof t.heldMinutes === "number");
