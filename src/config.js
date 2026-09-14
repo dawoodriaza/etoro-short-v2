@@ -678,6 +678,18 @@ const config = {
   // position (state, P&L, peak, stop, next trim, exit conditions).
   positionStatusEveryTicks: int("DT_POSITION_STATUS_EVERY_TICKS", 10),
 
+  // ── v8.2 (2026-09-13) ─────────────────────────────────────────────
+  // DIP ENTRY. The bot used to buy the moment a scan approved a stock — right
+  // after the spike that made it score well. Replay of 2,055 candidates
+  // (Jul 1 - Sep 11, 1.0 ATR stop, 10 bps): buying at once averaged -0.05R per
+  // trade in both halves; waiting up to 2 hours for a dip of one full stop
+  // distance and buying there averaged +0.05R (Jul 1 - Aug 21) and +0.13R
+  // (Aug 22 - Sep 11), buying ~15% of approvals. No dip in time = no trade.
+  // DT_DIP_ENTRY_ENABLED=false restores the old buy-immediately behaviour.
+  dipEntryEnabled: bool("DT_DIP_ENTRY_ENABLED", true),
+  dipEntryDepthOfStop: num("DT_DIP_ENTRY_DEPTH_OF_STOP", 1.0),
+  dipEntryWindowMinutes: int("DT_DIP_ENTRY_WINDOW_MINUTES", 120),
+
   // ── v8.1 (2026-09-13) ─────────────────────────────────────────────
   // EQUITY DRIFT TRAIL. Since v8 the reconciliation compares REALIZED equity
   // with the REALIZED ledger, so any remaining gap is money the bot cannot

@@ -1,4 +1,116 @@
-# Change log — v7.x series
+# Change log — v7.x / v8.x series
+
+Newest first. **Every change gets an entry here** (code, settings, deploys, data
+repairs, reverted experiments). See README.md → "For AI agents".
+
+---
+
+## 2026-09-14 — docs · README rewritten for humans and AI agents
+
+`README.md` previously described only the July 2026 eToro API probe scripts.
+It now documents the whole bot: status snapshot (server, PM2 name, account,
+risk, track record, current experiment), rules for AI agents (owner
+preferences, `.env` overrides, evidence and look-ahead rules, position lock,
+P&L accounting, secrets), the trading pipeline in plain language including dip
+entry, every exit reason, safety controls, schedules, Telegram messages, data
+files, every journal event, configuration (secret names only, key live
+values), a code map, operator commands, testing/replay tools, the two-week
+dip-entry review plan, the deployment procedure, a one-line version history,
+open items and a glossary.
+
+No code or settings changed. Also: the local scratch copies of the server
+settings used for replays were deleted because they included the Telegram bot
+token; replay env files must contain only non-secret `DT_` values.
+
+---
+
+## 2026-09-13 — v8.2 · Buy the dip after the signal, not the spike
+
+### What the logs showed
+
+- The losses do not come from buying stocks that were already up a lot on the
+  day. Rebuilt from daily closes for all 210 trades, stocks bought 8%+ above
+  yesterday's close won 78% (+$359) and stocks up only 1–3% lost −$227.
+- They come from the moment of the buy: the scan approves a stock right after
+  the spike that made it score well, and it then drifts. "Stale" time exits
+  (79 trades, −$751) and stop-losses (26, −$1,518) are the damage; since
+  Aug 22 every bucket lost (49 trades, 43% win, −$393).
+
+### What changed
+
+An AI-approved plan is no longer bought at once. It becomes an order that
+buys only if the price dips one full stop distance below the approval price
+within 120 minutes, checked on the 1-minute tick with one batched quote call.
+The plan is moved to the fill price with the same stop percentage, so size
+and dollar risk are unchanged. No dip in time = no trade. An order is also
+cancelled if the price falls a further stop distance (a breakdown) or a
+new-entry gate closes while it waits (Friday/EOD cutoff, loss limit, halt,
+overnight freeze). A stock with a waiting order is not re-planned or re-sent
+to the AI.
+
+Settings: `DT_DIP_ENTRY_ENABLED` (default true; false restores buy-now),
+`DT_DIP_ENTRY_DEPTH_OF_STOP` (1.0), `DT_DIP_ENTRY_WINDOW_MINUTES` (120).
+
+### Replay evidence (`src/replay-exits.js`, v8 exits, 10 bps, split Aug 22)
+
+A dip can only fill on a bar that starts after the approval; that bar's high
+is not counted as profit (it may have printed before the dip).
+
+| Entry | Real trades Jul 1–Aug 21 | Real trades Aug 22–Sep 11 | All candidates Jul 1–Aug 21 | All candidates Aug 22–Sep 11 |
+|---|---|---|---|---|
+| Buy at once (old) | 157 · +$255 | 49 · −$406 | 1,322 · −$3,851 (−0.05R) | 733 · −$1,927 (−0.05R) |
+| Dip ¼ stop, 60 min | 72 · +$357 | 34 · −$70 | 712 · −$577 | 261 · +$8 |
+| Dip ½ stop, 120 min | 55 · +$486 | 21 · +$1 | 577 · −$310 | 174 · −$334 |
+| **Dip 1 stop, 120 min** | **19 · +$210** | **5 · +$48** | **282 · +$602 (+0.05R)** | **65 · +$315 (+0.13R)** |
+
+The chosen setting is the only one positive in every column, and deeper dips
+earned more per trade in both periods. It buys far fewer stocks, so the live
+sample grows slowly; `DIP_ENTRY` journal records (ARMED, FILLED,
+BLOCKED_AT_FILL, EXPIRED, CANCELLED) carry `deepestDipOfStop` for every
+approval, so the depth can be re-tuned from live results.
+
+### Telegram
+
+- **Approved, waiting:** one message per scan listing every stock now waiting
+  for its dip ("approved $X → buy at $Y").
+- **Bought:** the usual OPEN message, plus "📉 Bought on a dip: approved at $X,
+  bought at $Y (−Z%) after N min".
+- **Not bought:** one grouped message per 1-minute check for orders that
+  ended without a buy — ⌛ no dip in time (lowest price, where it is now), ✋
+  cancelled (breakdown, Friday/EOD cutoff, loss limit, halt, overnight freeze),
+  🚫 dipped but the buy was blocked (slots, cash, spread, earnings).
+- **End of day:** the stats message ends with "📉 Dip orders today: N approved ·
+  N bought on a dip · N not bought".
+
+### Logging for the two-week review
+
+Every approved stock ends in exactly one terminal `DIP_ENTRY` record:
+FILLED, BLOCKED_AT_FILL, EXPIRED, CANCELLED — including when the bot is
+stopped or restarted while orders wait (CANCELLED, "bot stopped or
+restarted"). Each record carries:
+
+- the approval snapshot (`approval`: % up today, move vs ATR, RSI, relative
+  strength, VWAP, setup, news catalyst, regime, SPY, AI confidence), so "what
+  did the rockets we skipped have in common" needs no joins;
+- the price path while waiting (lowest, highest, last, `deepestDipOfStop`,
+  `moveFromSignalPct`);
+- data-quality counters: `quoteMisses` (minutes with no usable quote) and
+  `checkFailures` (minutes the dip check crashed, also journaled as
+  `ERROR DIP_ENTRY_CHECK`);
+- for BLOCKED_AT_FILL, the exact refusal (`HELD_AT_EXECUTION`, slots, gross
+  exposure, spread, earnings, cash…), also shown on Telegram.
+
+`fetch-replay-candles.js` now captures 5-minute history for every symbol with
+a `DIP_ENTRY` record, so what a skipped rocket did after its window can be
+measured. Trades bought on a dip carry `plan.dipEntry` into TRADE_OPENED and
+trade-history, so their results separate cleanly from older trades.
+
+### Also
+
+- The Sep 11 18:45 `UNTRACKED_POSITION` alerts for SMCI and AFRM were a
+  momentary lost record during a meta race (the v8 lock fixes that class);
+  both positions were managed and closed normally.
+- `src/replay-exits.js`: `DIP_*` variants, fill counts and R per signal.
 
 ---
 

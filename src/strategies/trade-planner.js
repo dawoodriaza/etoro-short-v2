@@ -559,8 +559,22 @@ function formatPlanForTelegram(plan, aiReasoning) {
     ? "\n\n<i>" + escapeHtml(aiReasoning) + "</i>"
     : "";
 
+  // v8.2: a dip entry says where it was approved and how much lower it bought.
+  const dipLine = plan.dipEntry
+    ? "\n📉 Bought on a dip: approved at " +
+      money(plan.dipEntry.signalPrice) +
+      ", bought at " +
+      money(plan.entryPrice) +
+      " (-" +
+      ((1 - plan.entryPrice / plan.dipEntry.signalPrice) * 100).toFixed(2) +
+      "%) after " +
+      plan.dipEntry.minutesWaited +
+      " min"
+    : "";
+
   return (
     titleLine +
+    dipLine +
     "\n" +
     setupLine +
     catalystLine +
@@ -571,8 +585,123 @@ function formatPlanForTelegram(plan, aiReasoning) {
   );
 }
 
+// ══════════════════════════════════════════════════════════════════════
+// v8.2 — DIP ENTRY (pure helpers; index.js owns the clock and the order).
+// An approved plan becomes an order that buys only if the price dips
+// depthOfStop x the stop distance below the approval price within
+// windowMinutes. The plan is then moved to the fill price with the SAME stop
+// percentage, so size and dollar risk are unchanged.
+// ══════════════════════════════════════════════════════════════════════
+function buildDipEntryOrder(plan, { depthOfStop, windowMinutes, nowMs }) {
+  const stopFraction = plan.stopDistancePct / 100;
+  const triggerPrice = plan.entryPrice * (1 - stopFraction * depthOfStop);
+  return {
+    symbol: String(plan.symbol).toUpperCase(),
+    plan,
+    signalPrice: plan.entryPrice,
+    triggerPrice: Number(triggerPrice.toFixed(4)),
+    // A further full stop distance below the buy price is where the new
+    // position's stop would sit — a breakdown, not a dip. Never buy there.
+    breakdownPrice: Number((triggerPrice * (1 - stopFraction)).toFixed(4)),
+    depthOfStop,
+    windowMinutes,
+    armedAtMs: nowMs,
+    expiresAtMs: nowMs + windowMinutes * 60000,
+    lowestPrice: plan.entryPrice,
+    highestPrice: plan.entryPrice,
+    lastPrice: plan.entryPrice,
+    quoteMisses: 0, // minutes with no usable quote (the order could not be checked)
+    checkFailures: 0, // minutes the whole dip check crashed
+  };
+}
+
+// askPrice null = no usable quote this minute (the order just waits).
+function evaluateDipEntry(order, askPrice, nowMs) {
+  if (Number.isFinite(askPrice) && askPrice > 0) {
+    order.lastPrice = askPrice;
+    order.lowestPrice = Math.min(order.lowestPrice, askPrice);
+    order.highestPrice = Math.max(order.highestPrice, askPrice);
+    if (askPrice <= order.breakdownPrice) {
+      return { action: "CANCEL", reason: "fell through $" + order.breakdownPrice + " — a breakdown, not a dip" };
+    }
+    if (askPrice <= order.triggerPrice) return { action: "FILL", price: askPrice };
+  } else {
+    order.quoteMisses = (order.quoteMisses || 0) + 1;
+  }
+  if (nowMs >= order.expiresAtMs) return { action: "EXPIRE" };
+  return { action: "WAIT" };
+}
+
+function rebasePlanToFill(plan, fillPrice) {
+  const ratio = fillPrice / plan.entryPrice;
+  const scale = (value) => (typeof value === "number" ? Number((value * ratio).toFixed(4)) : value);
+  return {
+    ...plan,
+    entryPrice: Number(fillPrice.toFixed(4)),
+    stopPrice: scale(plan.stopPrice),
+    targetT1: scale(plan.targetT1),
+    targetT2: scale(plan.targetT2),
+    targetT3: scale(plan.targetT3),
+  };
+}
+
+// The DIP_ENTRY journal record. deepestDipOfStop is how far the price fell
+// below the approval price, in stop distances — what lets the depth setting
+// be re-tuned from live data (a 0.5 setting would have filled every order
+// with deepestDipOfStop >= 0.5).
+function describeDipEntryOrder(order, nowMs) {
+  const stopFraction = (order.plan.stopDistancePct || 0) / 100;
+  const deepestDip =
+    order.signalPrice > 0 && stopFraction > 0
+      ? (order.signalPrice - order.lowestPrice) / (order.signalPrice * stopFraction)
+      : null;
+  return {
+    symbol: order.symbol,
+    signalPrice: order.signalPrice,
+    triggerPrice: order.triggerPrice,
+    breakdownPrice: order.breakdownPrice,
+    depthOfStop: order.depthOfStop,
+    windowMinutes: order.windowMinutes,
+    armedAt: new Date(order.armedAtMs).toISOString(),
+    minutesWaited: Math.round((nowMs - order.armedAtMs) / 60000),
+    lowestPrice: order.lowestPrice,
+    highestPrice: order.highestPrice,
+    lastPrice: order.lastPrice,
+    deepestDipOfStop: deepestDip != null ? Number(deepestDip.toFixed(2)) : null,
+    moveFromSignalPct:
+      order.signalPrice > 0 ? Number(((order.lastPrice / order.signalPrice - 1) * 100).toFixed(2)) : null,
+    stopDistancePct: order.plan.stopDistancePct,
+    atrPercent: order.plan.atrPercent != null ? order.plan.atrPercent : null,
+    score: order.plan.score != null ? order.plan.score : null,
+    source: order.plan.source || null,
+    quoteMisses: order.quoteMisses || 0,
+    checkFailures: order.checkFailures || 0,
+    // What the stock looked like when approved — answers "what do the
+    // rockets we skipped have in common?" without joining other records.
+    approval: {
+      plannedAt: order.plan.plannedAt || null,
+      priceChangePercent: order.plan.priceChangePercent != null ? order.plan.priceChangePercent : null,
+      moveToAtrRatio: order.plan.moveToAtrRatio != null ? order.plan.moveToAtrRatio : null,
+      rsi: order.plan.rsi != null ? order.plan.rsi : null,
+      relativeStrength: order.plan.relativeStrength != null ? order.plan.relativeStrength : null,
+      aboveVwap: order.plan.aboveVwap != null ? order.plan.aboveVwap : null,
+      setup: order.plan.setup || null,
+      archetype: order.plan.archetype || null,
+      catalystLabel: order.plan.catalystLabel || null,
+      volatilityBucket: order.plan.volatilityBucket || null,
+      regime: order.plan.regime || null,
+      spyChangePercent: order.plan.spyChangePercent != null ? order.plan.spyChangePercent : null,
+      aiConfidence: order.aiResult && order.aiResult.confidence != null ? order.aiResult.confidence : null,
+    },
+  };
+}
+
 module.exports = {
   buildTradePlan,
+  buildDipEntryOrder,
+  evaluateDipEntry,
+  rebasePlanToFill,
+  describeDipEntryOrder,
   computeStopDistancePct, // v8.1: the shadow log records the planner's own stop distance
   classifyTradeType,
   classifyVolatility,

@@ -90,6 +90,14 @@ const VARIANTS = {
   COMBO_STOP100_T15: { stopAtrMultiple: 1.0, stopMaxPct: 0.05, t1R: 1.5 },
   COMBO_STOP100_T15_NOSTALL: { stopAtrMultiple: 1.0, stopMaxPct: 0.05, t1R: 1.5, config: { profitStallEnabled: false } },
   COMBO_STOP075_T15_NOSTALL: { stopAtrMultiple: 0.75, stopMaxPct: 0.04, t1R: 1.5, config: { profitStallEnabled: false } },
+  // v8.2: do not buy at the signal price — wait up to windowMinutes for a dip
+  // of depthOfStop × the planned stop distance, then buy there with the same
+  // stop DISTANCE (or, when anchorStop, the same stop PRICE). No dip = no trade.
+  DIP_025_60M: { pullbackEntry: { depthOfStop: 0.25, windowMinutes: 60 } },
+  DIP_050_60M: { pullbackEntry: { depthOfStop: 0.5, windowMinutes: 60 } },
+  DIP_050_120M: { pullbackEntry: { depthOfStop: 0.5, windowMinutes: 120 } },
+  DIP_100_120M: { pullbackEntry: { depthOfStop: 1.0, windowMinutes: 120 } },
+  DIP_050_120M_ANCHOR: { pullbackEntry: { depthOfStop: 0.5, windowMinutes: 120, anchorStop: true } },
 };
 
 // ── Time helpers ─────────────────────────────────────────────────────────
@@ -260,14 +268,37 @@ function simulate(sample, variant) {
     sizeDollars = Math.min(sizeDollars * (stopPct / newStopPct), config.dayTradeCapital * config.maxPositionPctDay);
     stopPct = newStopPct;
   }
-  const entry = sample.entryPrice;
+  let entry = sample.entryPrice;
+  let entryMs = sample.entryMs;
+  let fillBarIndex = -1;
+  if (variant.pullbackEntry) {
+    const { depthOfStop, windowMinutes, anchorStop } = variant.pullbackEntry;
+    const signalStop = sample.entryPrice * (1 - stopPct / 100);
+    const trigger = sample.entryPrice * (1 - (stopPct / 100) * depthOfStop);
+    const deadlineMs = sample.entryMs + windowMinutes * 60000;
+    let fillIndex = -1;
+    for (let k = index; k < bars.length && bars[k].t < deadlineMs; k++) {
+      if (bars[k].l <= trigger) { fillIndex = k; break; }
+    }
+    if (fillIndex === -1) return { missed: true, exitMs: sample.entryMs };
+    entry = Math.min(trigger, bars[fillIndex].o);
+    entryMs = bars[fillIndex].t;
+    index = fillIndex;
+    fillBarIndex = fillIndex;
+    if (anchorStop) {
+      const riskDollars = sizeDollars * (stopPct / 100);
+      const newStopPct = Math.max(config.dayStopClampMinPct * 100, (1 - signalStop / entry) * 100);
+      sizeDollars = Math.min(riskDollars / (newStopPct / 100), config.dayTradeCapital * config.maxPositionPctDay);
+      stopPct = newStopPct;
+    }
+  }
   const risk = stopPct / 100;
   const t1R = (variant.addOn && variant.addOn.t1R) || variant.t1R || 1.0;
   const meta = {
     tradeType: "DAY", entryPrice: entry, stopPrice: entry * (1 - risk),
     targetT1: entry * (1 + risk * t1R), targetT2: entry * (1 + risk * 2 * t1R),
-    lockedFloor: null, peakPrice: entry, peakSetAt: sample.entryMs, recentPrices: [],
-    partialDone: false, openedAt: sample.entryMs, dollarAmount: sizeDollars,
+    lockedFloor: null, peakPrice: entry, peakSetAt: entryMs, recentPrices: [],
+    partialDone: false, openedAt: entryMs, dollarAmount: sizeDollars,
     plan: { atrPercent: sample.atrPercent, stopDistancePct: stopPct },
     entryConditions: { atrPercent: sample.atrPercent },
   };
@@ -300,7 +331,7 @@ function simulate(sample, variant) {
       const endInfo = easternInfo(barEnd - 1);
       const isWeekday = !["Sat", "Sun"].includes(startInfo.weekday);
       const crossesClose = isWeekday && startInfo.date === endInfo.date &&
-        startInfo.minute <= forceCloseMinute && endInfo.minute >= forceCloseMinute && bar.t > sample.entryMs;
+        startInfo.minute <= forceCloseMinute && endInfo.minute >= forceCloseMinute && bar.t > entryMs;
       if (crossesClose) {
         const price = startInfo.minute === forceCloseMinute ? bar.o : bar.c;
         if (startInfo.weekday === "Fri") { sell(1, price); exitReason = "FRIDAY_FORCE_CLOSE"; exitMs = barEnd; break; }
@@ -325,17 +356,21 @@ function simulate(sample, variant) {
       }
 
       // 2. Raise the peak, then targets / add-on against the bar HIGH.
-      if (bar.h > meta.peakPrice) { meta.peakPrice = bar.h; meta.peakSetAt = barEnd; }
-      maxHigh = Math.max(maxHigh, bar.h);
-      if (variant.addOn && adds === 0 && bar.h >= entry * (1 + risk * variant.addOn.atR)) {
-        const addPrice = Math.max(entry * (1 + risk * variant.addOn.atR), bar.o);
-        legs.push({ entry: addPrice * (1 + COST / 2), units: variant.addOn.fraction });
-        meta.stopPrice = Math.max(meta.stopPrice, entry * (1 + risk * variant.addOn.stopLockR));
-        adds++;
-      }
-      if (!meta.partialDone && bar.h >= meta.targetT1) {
-        sell(config.partialExitFraction, Math.max(meta.targetT1, bar.o));
-        meta.partialDone = true; partials++;
+      // v8.2: not on a dip entry's fill bar — its high may have printed BEFORE
+      // the dip that filled the order, so it cannot count as post-entry profit.
+      if (index !== fillBarIndex) {
+        if (bar.h > meta.peakPrice) { meta.peakPrice = bar.h; meta.peakSetAt = barEnd; }
+        maxHigh = Math.max(maxHigh, bar.h);
+        if (variant.addOn && adds === 0 && bar.h >= entry * (1 + risk * variant.addOn.atR)) {
+          const addPrice = Math.max(entry * (1 + risk * variant.addOn.atR), bar.o);
+          legs.push({ entry: addPrice * (1 + COST / 2), units: variant.addOn.fraction });
+          meta.stopPrice = Math.max(meta.stopPrice, entry * (1 + risk * variant.addOn.stopLockR));
+          adds++;
+        }
+        if (!meta.partialDone && bar.h >= meta.targetT1) {
+          sell(config.partialExitFraction, Math.max(meta.targetT1, bar.o));
+          meta.partialDone = true; partials++;
+        }
       }
 
       // 3. Close-of-bar rules through the REAL engine.
@@ -446,9 +481,13 @@ if (require.main !== module) {
     console.log("\n=== " + name + " ===");
     for (const set of ["trades", "extended", "shadow"]) {
       for (const half of ["IS", "OOS"]) {
-        const subset = runs.filter((x) => x.sample.set === set && (half === "IS" ? x.sample.entryMs < splitMs : x.sample.entryMs >= splitMs));
+        const signals = runs.filter((x) => x.sample.set === set && (half === "IS" ? x.sample.entryMs < splitMs : x.sample.entryMs >= splitMs));
+        // v8.2: a dip entry that never fills is a skipped trade ($0), not a result.
+        const subset = signals.filter((x) => !x.result.missed);
         if (!subset.length) continue;
         const summary = summarize(subset.map((x) => x.result));
+        summary.signals = signals.length;
+        summary.perSignalR = subset.reduce((s, x) => s + x.result.r, 0) / signals.length;
         // Capital utilization only means something for the real trades,
         // which actually overlapped in one account.
         if (set === "trades") {
@@ -459,7 +498,8 @@ if (require.main !== module) {
         report[name][set + "_" + half] = summary;
         console.log(
           formatRow("  " + set + " " + half, summary) +
-            (summary.utilizationPct != null ? " util " + summary.utilizationPct.toFixed(1) + "%" : ""),
+            (summary.utilizationPct != null ? " util " + summary.utilizationPct.toFixed(1) + "%" : "") +
+            (summary.signals !== summary.n ? " | filled " + summary.n + "/" + summary.signals + " · R per signal " + summary.perSignalR.toFixed(3) : ""),
         );
       }
     }
@@ -483,7 +523,7 @@ if (require.main !== module) {
   if (argValue("--dump", null)) {
     const dumpVariant = argValue("--dump-variant", "CURRENT");
     const runs = runVariant(dumpVariant, VARIANTS[dumpVariant], samples);
-    fs.writeFileSync(argValue("--dump"), JSON.stringify(runs.map((x) => ({ ...x.sample, ...x.result, half: x.sample.entryMs < splitMs ? "IS" : "OOS" }))));
+    fs.writeFileSync(argValue("--dump"), JSON.stringify(runs.filter((x) => !x.result.missed).map((x) => ({ ...x.sample, ...x.result, half: x.sample.entryMs < splitMs ? "IS" : "OOS" }))));
     console.log("\ndumped " + runs.length + " " + dumpVariant + " results to " + argValue("--dump"));
   }
 }

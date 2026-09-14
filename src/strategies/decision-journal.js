@@ -152,6 +152,9 @@ const journal = {
   // v8.1: one record per candidate per scan — its scan-time features and what
   // the bot finally did with it (see strategies/shadow-signals.js).
   shadowSignal: (signal) => appendEvent("SHADOW_SIGNAL", signal),
+  // v8.2: an approved stock waiting to be bought on a dip — ARMED, then
+  // FILLED / BLOCKED_AT_FILL / EXPIRED / CANCELLED, with the deepest dip seen.
+  dipEntry: (details) => appendEvent("DIP_ENTRY", details),
   error: (where, message) => appendEvent("ERROR", { where, message }),
 };
 

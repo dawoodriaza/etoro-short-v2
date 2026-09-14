@@ -268,6 +268,20 @@ let currentScanFunnel = null;
 let currentShadowBook = null;
 // v8.1: last realized-equity-vs-ledger gap written to the journal.
 let lastRecordedEquityDriftDollars = null;
+// v8.2: approved stocks waiting to be bought on a dip (symbol -> order).
+// In memory only: a restart drops them and the next scan re-approves.
+const pendingDipEntries = new Map();
+let dipEntryCheckCount = 0;
+let lastCandidateRejection = null; // { symbol, stage, reason, atMs }
+// v8.2: today's dip-order counts (New York date) for the EOD Telegram summary.
+const dipEntryDayStats = { day: null, armed: 0, bought: 0, notBought: 0 };
+function bumpDipEntryStat(key) {
+  const today = new Date().toLocaleDateString("en-US", { timeZone: TIMEZONE });
+  if (dipEntryDayStats.day !== today) {
+    Object.assign(dipEntryDayStats, { day: today, armed: 0, bought: 0, notBought: 0 });
+  }
+  dipEntryDayStats[key]++;
+}
 
 function createScanFunnel() {
   currentScanFunnel = {
@@ -286,6 +300,7 @@ function createScanFunnel() {
     plans: 0,
     aiTake: 0,
     aiSkip: 0,
+    armed: 0,
     executionBlocks: {},
     opened: 0,
   };
@@ -329,6 +344,8 @@ function classifyPlanReject(reason) {
 
 // Every candidate rejection goes through here so the funnel counts it.
 function recordCandidateRejection(symbol, stage, reason, snapshot) {
+  // v8.2: a dip buy that is refused reports this exact stage and reason.
+  lastCandidateRejection = { symbol: String(symbol).toUpperCase(), stage, reason, atMs: Date.now() };
   if (currentScanFunnel) {
     if (stage === "SCORING") {
       bumpReason(currentScanFunnel.scoringRejects, classifyScoringReject(reason));
@@ -456,6 +473,7 @@ function logScanFunnel(funnel) {
       "/" +
       (funnel.aiTake + funnel.aiSkip) +
       " take → " +
+      (funnel.armed ? funnel.armed + " waiting for a dip, " : "") +
       funnel.opened +
       " opened" +
       formatReasonBucket(funnel.executionBlocks) +
@@ -1128,6 +1146,17 @@ async function runScanCycle() {
         );
       }
     }
+    // v8.2: a stock already waiting for its dip keeps its original order —
+    // no second plan, no second AI call.
+    if (config.dipEntryEnabled && pendingDipEntries.size) {
+      for (let k = plans.length - 1; k >= 0; k--) {
+        const symbolKey = plans[k].symbol.toUpperCase();
+        if (!pendingDipEntries.has(symbolKey)) continue;
+        bumpReason(funnel.planRejects, "waiting for dip");
+        shadowSignals.markShadowOutcome(currentShadowBook, symbolKey, "DIP_PENDING", "order from an earlier scan");
+        plans.splice(k, 1);
+      }
+    }
     funnel.plans = plans.length;
     if (!plans.length) {
       logger.info("No plans survived geometry/slots/RRR checks");
@@ -1240,10 +1269,18 @@ async function runScanCycle() {
     // calls; the post-open verification and the per-tick sync remain as the
     // backstops that catch whatever eToro does differently anyway.
     const scanCashLedger = { committed: 0 };
+    const armedThisScan = []; // v8.2: one grouped Telegram message after the loop
     for (const plan of approvedPlans) {
       const aiResult = screenResults.find(
         (result) => result.symbol === plan.symbol,
       );
+      // v8.2: do not buy the spike — wait for a dip (checked every minute).
+      if (config.dipEntryEnabled) {
+        armedThisScan.push(armDipEntry(plan, aiResult));
+        funnel.armed++;
+        shadowSignals.markShadowOutcome(currentShadowBook, plan.symbol, "DIP_ARMED", "waiting to buy on a dip");
+        continue;
+      }
       // v8: each open runs under the position lock — it reads and writes
       // position meta, and the exit monitor may now run during the scan.
       const openOutcome = await withPositionLock(
@@ -1264,6 +1301,8 @@ async function runScanCycle() {
         }
       }
     }
+
+    await notifyDipOrdersArmed(armedThisScan);
 
     logger.info(
       "═══ Scan done in " +
@@ -1293,6 +1332,280 @@ async function runScanCycle() {
     }
     currentShadowBook = null;
   }
+}
+
+// -----------------------------
+// v8.2: DIP ENTRY — buy approved stocks on a pullback, not the spike
+// -----------------------------
+// Replay of 2,055 approved/skipped candidates (Jul 1 - Sep 11): buying the
+// moment a scan approved a stock averaged -0.05R per trade in both halves;
+// waiting up to 2 hours for a dip of one full stop distance and buying there
+// averaged +0.05R and +0.13R, buying ~15% of approvals. An order that never
+// fills is no trade. Every order journals DIP_ENTRY with the deepest dip it
+// saw, so the depth can be re-tuned from live results.
+const formatPrice = (value) => "$" + Number(value).toFixed(2);
+
+function armDipEntry(plan, aiResult) {
+  const nowMs = Date.now();
+  const order = tradePlanner.buildDipEntryOrder(plan, {
+    depthOfStop: config.dipEntryDepthOfStop,
+    windowMinutes: config.dipEntryWindowMinutes,
+    nowMs,
+  });
+  order.aiResult = aiResult || null;
+  pendingDipEntries.set(order.symbol, order);
+  journal.dipEntry({ status: "ARMED", ...tradePlanner.describeDipEntryOrder(order, nowMs) });
+  logger.info(
+    "⏳ " +
+      order.symbol +
+      " approved at " +
+      formatPrice(order.signalPrice) +
+      " — not buying the spike: will buy only on a dip to " +
+      formatPrice(order.triggerPrice) +
+      " (-" +
+      ((1 - order.triggerPrice / order.signalPrice) * 100).toFixed(2) +
+      "%) within " +
+      order.windowMinutes +
+      " min",
+  );
+  bumpDipEntryStat("armed");
+  return order;
+}
+
+// One Telegram message per scan for everything it approved (not one per stock).
+async function notifyDipOrdersArmed(orders) {
+  if (!orders.length) return;
+  const lines = orders.map(
+    (order) =>
+      "• <b>" +
+      order.symbol +
+      "</b>: approved " +
+      formatPrice(order.signalPrice) +
+      " → buy at " +
+      formatPrice(order.triggerPrice) +
+      " (-" +
+      ((1 - order.triggerPrice / order.signalPrice) * 100).toFixed(2) +
+      "%)",
+  );
+  try {
+    await notifications.sendTelegramMessage(
+      "⏳ <b>Waiting to buy on a dip</b>\n" +
+        "AI-approved, but the bot does not buy the spike. Each is bought only if it " +
+        "dips to the price shown within " +
+        orders[0].windowMinutes +
+        " min — otherwise no trade.\n\n" +
+        lines.join("\n"),
+    );
+  } catch (telegramError) {
+    logger.warn("Dip-order Telegram failed: " + telegramError.message);
+  }
+}
+
+// One Telegram message per check for every order that ended without a buy.
+async function notifyDipOrdersNotBought(entries) {
+  if (!entries.length) return;
+  const lines = entries.map(({ order, status, reason, record }) => {
+    if (status === "EXPIRED") {
+      return (
+        "⌛ <b>" +
+        order.symbol +
+        "</b>: no dip to " +
+        formatPrice(order.triggerPrice) +
+        " in " +
+        order.windowMinutes +
+        " min · lowest " +
+        formatPrice(order.lowestPrice) +
+        " · now " +
+        formatPrice(order.lastPrice) +
+        " (" +
+        (record.moveFromSignalPct >= 0 ? "+" : "") +
+        record.moveFromSignalPct +
+        "% vs approval)"
+      );
+    }
+    if (status === "BLOCKED_AT_FILL") {
+      return (
+        "🚫 <b>" +
+        order.symbol +
+        "</b>: dipped to " +
+        formatPrice(order.lastPrice) +
+        " but the buy was blocked — " +
+        escapeHtml(reason)
+      );
+    }
+    return "✋ <b>" + order.symbol + "</b>: cancelled — " + escapeHtml(reason);
+  });
+  try {
+    await notifications.sendTelegramMessage("<b>Dip orders — not bought</b>\n" + lines.join("\n"));
+  } catch (telegramError) {
+    logger.warn("Dip-order Telegram failed: " + telegramError.message);
+  }
+}
+
+function finishDipEntry(order, status, reason) {
+  pendingDipEntries.delete(order.symbol);
+  bumpDipEntryStat("notBought");
+  const record = tradePlanner.describeDipEntryOrder(order, Date.now());
+  journal.dipEntry({ status, reason, ...record });
+  logger.info(
+    (status === "EXPIRED" ? "⌛ " : "✋ ") +
+      order.symbol +
+      " not bought — " +
+      reason +
+      " (approved " +
+      formatPrice(order.signalPrice) +
+      ", lowest " +
+      formatPrice(order.lowestPrice) +
+      ", now " +
+      formatPrice(order.lastPrice) +
+      " = " +
+      (record.moveFromSignalPct >= 0 ? "+" : "") +
+      record.moveFromSignalPct +
+      "% vs approval)",
+  );
+  return record;
+}
+
+// The same new-entry gates a scan applies, re-checked while orders wait.
+async function dipEntryBlockReason() {
+  if (marketHours.isInOvernightFreezeWindow()) return "overnight freeze started";
+  if (await isTradingHaltedForNewEntries()) return "new entries halted (halt flag / drawdown breaker)";
+  if (riskManager.isDailyLossLimitHit(capitalManager.getCapitalState().effectiveCapital)) {
+    return "daily loss limit hit";
+  }
+  const sessionCheck = sessionTiming.isNewEntryAllowed();
+  if (!sessionCheck.allowed) return sessionCheck.reason;
+  const entryCutoff = sessionTiming.getEntryCutoffStatus();
+  if (entryCutoff.blocked) return entryCutoff.reason;
+  return null;
+}
+
+async function openDipEntry(plan, aiResult) {
+  const portfolio = etoroClient.parsePortfolioFromRawData(await etoroClient.fetchRawPortfolio());
+  await etoroClient.labelPositionsWithTickers(portfolio);
+  const outcome = await withPositionLock("dip-open:" + plan.symbol, () =>
+    tryOpenPosition(plan, aiResult, portfolio, capitalManager.getCapitalState(), { committed: 0 }),
+  );
+  return outcome === true;
+}
+
+// Runs on the 1-minute exit-monitor tick. One batched rates call for all
+// waiting symbols; nothing at all when no order is waiting.
+async function checkPendingDipEntries() {
+  if (!pendingDipEntries.size) return;
+  const blockReason = await dipEntryBlockReason();
+  if (blockReason) {
+    const cancelled = [...pendingDipEntries.values()].map((order) => ({
+      order,
+      status: "CANCELLED",
+      reason: blockReason,
+      record: finishDipEntry(order, "CANCELLED", blockReason),
+    }));
+    await notifyDipOrdersNotBought(cancelled);
+    return;
+  }
+
+  const instrumentIdBySymbol = {};
+  for (const symbol of pendingDipEntries.keys()) {
+    const instrumentId = await etoroClient.resolveTickerToInstrumentId(symbol);
+    if (instrumentId) instrumentIdBySymbol[symbol] = instrumentId;
+  }
+  const ratesByInstrumentId = await etoroMarketData.fetchBatchedRates(Object.values(instrumentIdBySymbol));
+  const nowMs = Date.now();
+  dipEntryCheckCount++;
+  const notBought = [];
+
+  for (const order of [...pendingDipEntries.values()]) {
+    const rate = ratesByInstrumentId[instrumentIdBySymbol[order.symbol]];
+    const quoteAgeMs = rate && rate.date ? nowMs - Date.parse(rate.date) : 0;
+    const usableAsk =
+      rate && rate.ask > 0 && !(quoteAgeMs > config.maxQuoteAgeMinutes * 60000) ? rate.ask : null;
+    const decision = tradePlanner.evaluateDipEntry(order, usableAsk, nowMs);
+
+    if (decision.action === "WAIT") {
+      if (dipEntryCheckCount % 5 === 0) {
+        logger.info(
+          "⏳ Waiting to buy " +
+            order.symbol +
+            ": now " +
+            formatPrice(order.lastPrice) +
+            ", buy at " +
+            formatPrice(order.triggerPrice) +
+            ", lowest so far " +
+            formatPrice(order.lowestPrice) +
+            ", " +
+            Math.max(0, Math.round((order.expiresAtMs - nowMs) / 60000)) +
+            " min left",
+        );
+      }
+      continue;
+    }
+    if (decision.action === "EXPIRE") {
+      const reason = "no dip to " + formatPrice(order.triggerPrice) + " within " + order.windowMinutes + " min";
+      notBought.push({ order, status: "EXPIRED", reason, record: finishDipEntry(order, "EXPIRED", reason) });
+      continue;
+    }
+    if (decision.action === "CANCEL") {
+      notBought.push({
+        order,
+        status: "CANCELLED",
+        reason: decision.reason,
+        record: finishDipEntry(order, "CANCELLED", decision.reason),
+      });
+      continue;
+    }
+
+    pendingDipEntries.delete(order.symbol);
+    logger.info(
+      "🎯 " +
+        order.symbol +
+        " dipped to " +
+        formatPrice(decision.price) +
+        " (approved at " +
+        formatPrice(order.signalPrice) +
+        ") — buying the dip",
+    );
+    const plan = {
+      ...tradePlanner.rebasePlanToFill(order.plan, decision.price),
+      dipEntry: {
+        signalPrice: order.signalPrice,
+        triggerPrice: order.triggerPrice,
+        armedAt: new Date(order.armedAtMs).toISOString(),
+        minutesWaited: Math.round((nowMs - order.armedAtMs) / 60000),
+      },
+    };
+    let opened = false;
+    let blockReason = null;
+    const openStartedMs = Date.now();
+    try {
+      opened = await openDipEntry(plan, order.aiResult);
+    } catch (openError) {
+      logger.error("Dip entry for " + order.symbol + " failed: " + openError.message);
+      blockReason = "error: " + openError.message;
+    }
+    if (!opened && !blockReason) {
+      blockReason =
+        lastCandidateRejection &&
+        lastCandidateRejection.symbol === order.symbol &&
+        lastCandidateRejection.atMs >= openStartedMs
+          ? lastCandidateRejection.stage + ": " + lastCandidateRejection.reason
+          : "order not placed (see logs)";
+    }
+    const record = tradePlanner.describeDipEntryOrder(order, nowMs);
+    journal.dipEntry({
+      status: opened ? "FILLED" : "BLOCKED_AT_FILL",
+      fillPrice: decision.price,
+      reason: blockReason,
+      ...record,
+    });
+    if (opened) {
+      bumpDipEntryStat("bought");
+    } else {
+      bumpDipEntryStat("notBought");
+      notBought.push({ order, status: "BLOCKED_AT_FILL", reason: blockReason, record });
+    }
+  }
+  await notifyDipOrdersNotBought(notBought);
 }
 
 // -----------------------------
@@ -2900,6 +3213,17 @@ async function runExitMonitorTick() {
     } catch (shadowError) {
       logger.warn("Exit-shadow check failed: " + shadowError.message);
     }
+    // v8.2: approved stocks waiting to be bought on a dip. Isolated like the
+    // shadow check — a failure here must never touch exit management.
+    try {
+      await checkPendingDipEntries();
+    } catch (dipError) {
+      logger.warn("Dip-entry check failed: " + dipError.message);
+      journal.error("DIP_ENTRY_CHECK", dipError.message);
+      for (const order of pendingDipEntries.values()) {
+        order.checkFailures = (order.checkFailures || 0) + 1;
+      }
+    }
     consecutiveExitMonitorFailures = 0;
   } catch (monitorError) {
     logger.error("Exit monitor error: " + monitorError.message);
@@ -3214,9 +3538,23 @@ function startScheduler() {
       // EOD performance summary
       try {
         const stats = performance.computeStats();
-        journal.eodSummary({ mode, stats });
+        journal.eodSummary({ mode, stats, dipEntry: { ...dipEntryDayStats } });
+        // v8.2: what happened to today's dip orders, under the stats.
+        const todayNy = new Date().toLocaleDateString("en-US", { timeZone: TIMEZONE });
+        const dipDayLine = !config.dipEntryEnabled
+          ? ""
+          : dipEntryDayStats.day === todayNy
+            ? "\n\n📉 Dip orders today: " +
+              dipEntryDayStats.armed +
+              " approved · " +
+              dipEntryDayStats.bought +
+              " bought on a dip · " +
+              dipEntryDayStats.notBought +
+              " not bought" +
+              (pendingDipEntries.size ? " · " + pendingDipEntries.size + " still waiting" : "")
+            : "\n\n📉 Dip orders today: none";
         await notifications.sendTelegramMessage(
-          performance.formatStatsForTelegram(stats),
+          performance.formatStatsForTelegram(stats) + dipDayLine,
         );
       } catch (statsError) {
         logger.warn("EOD stats failed: " + statsError.message);
@@ -3380,6 +3718,15 @@ async function main() {
       "% from peak · Friday closes ALL: " +
       config.fridayCloseAll,
   );
+  logger.info(
+    config.dipEntryEnabled
+      ? "🎯 Dip entry ON: approved stocks are bought only on a dip of " +
+          config.dipEntryDepthOfStop +
+          "× the stop distance within " +
+          config.dipEntryWindowMinutes +
+          " min (DT_DIP_ENTRY_ENABLED=false buys immediately)"
+      : "Dip entry OFF: approved stocks are bought immediately",
+  );
 
   startScheduler();
 
@@ -3410,6 +3757,19 @@ async function main() {
       exitCheckInProgress = false;
     }
   });
+
+  // v8.2: pm2 stop/restart sends SIGINT (SIGTERM on some setups). Waiting dip
+  // orders live in memory, so record how each one ended before the process
+  // goes — otherwise the review would find ARMED orders with no outcome.
+  // The journal write is synchronous, so it lands before exit.
+  const recordPendingDipOrdersAndExit = (signal) => {
+    for (const order of [...pendingDipEntries.values()]) {
+      finishDipEntry(order, "CANCELLED", "bot stopped or restarted (" + signal + ")");
+    }
+    process.exit(0);
+  };
+  process.once("SIGINT", () => recordPendingDipOrdersAndExit("SIGINT"));
+  process.once("SIGTERM", () => recordPendingDipOrdersAndExit("SIGTERM"));
 
   if (process.env.DT_RUN_ON_STARTUP !== "false") {
     runScanCycle();

@@ -87,10 +87,15 @@ function selectSymbols() {
     const journalCutoff = "decisions-" + new Date(Date.now() - 30 * DAY_MS).toISOString().slice(0, 10);
     for (const file of fs.readdirSync(journalDir).filter((f) => f.endsWith(".jsonl") && f >= journalCutoff)) {
       for (const line of fs.readFileSync(path.join(journalDir, file), "utf8").split("\n")) {
-        if (!/"(CANDIDATE_SCORED|PLAN_BUILT|PLAN_REJECTED|SHADOW_SIGNAL|TRADE_OPENED)"/.test(line)) continue;
+        if (!/"(CANDIDATE_SCORED|PLAN_BUILT|PLAN_REJECTED|SHADOW_SIGNAL|TRADE_OPENED|DIP_ENTRY)"/.test(line)) continue;
         try {
           const event = JSON.parse(line);
-          add(event.symbol || (event.plan && event.plan.symbol), event.event === "TRADE_OPENED" ? 500 : 1);
+          // v8.2: every AI-approved dip order is captured too — including the
+          // rockets that never dipped, so what they did next can be measured.
+          add(
+            event.symbol || (event.plan && event.plan.symbol),
+            event.event === "TRADE_OPENED" || event.event === "DIP_ENTRY" ? 500 : 1,
+          );
         } catch {
           /* truncated tail line */
         }
