@@ -393,4 +393,148 @@ function scoreEnrichedCandidate(
   };
 }
 
-module.exports = { prefilterCandidates, scoreEnrichedCandidate };
+// ══════════════════════════════════════════════════════════════════════
+// v8.4 — TREND SCORE V2 (logged beside the live score; NOT used for any
+// trading decision yet).
+//
+// Why: the live score is (RSI-55)*3 + dayChange*8 + bonuses. It is driven by
+// 5-minute RSI(14), which swings a stock holding +4% between 40 and 100 from
+// one scan to the next, treats RSI > 78 as "no setup" exactly when a move is
+// strongest, and measures the move only against yesterday's close, so a
+// gap-down that rallies hard (AMD 2026-09-14: -6% open, +3.7% off the low)
+// reads as weak all day.
+//
+// V2 reads the last hour of COMPLETED 5-minute bars of today's (ET) session:
+//   holdingAboveVwap  25 x share of the last hour's bars closing above VWAP
+//   hourMomentum      25 x min(1, hour's rise in daily-ATR units / 0.4)
+//   rallyUnderWay     15 x min(1, rise from today's low in ATR units / 0.6)
+//   beatingSpy        15 x min(1, (stock hour % - SPY hour %) / 1.0)  [7.5 if SPY unknown]
+//   higherLows        10 x (rising lows across three 20-minute windows, 0-2) / 2
+//   roomLeft          10 x (1 - clamp((rise from low in ATR - 1.0) / 1.0))
+//   stretchPenalty   -20 x clamp((distance above VWAP in ATR - 0.6) / 0.6)
+// Hard zero: price not above VWAP, or not higher than an hour ago.
+// Every constant above was fixed BEFORE any replay of V2 was run
+// (2026-09-17). Pre-registered test: CHANGELOG v8.4.
+// ══════════════════════════════════════════════════════════════════════
+const FIVE_MINUTES_MS = 5 * 60 * 1000;
+const HOUR_MS = 60 * 60 * 1000;
+const EASTERN_DATE = new Intl.DateTimeFormat("en-CA", {
+  timeZone: "America/New_York",
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+});
+// Memoised per 5-minute bucket (ET midnight falls on a bucket boundary), so
+// scoring many candidates does not re-format the same bar dates each scan.
+const easternDateCache = new Map();
+const easternDateOfMs = (ms) => {
+  const bucket = Math.floor(ms / FIVE_MINUTES_MS);
+  let date = easternDateCache.get(bucket);
+  if (date === undefined) {
+    date = EASTERN_DATE.format(new Date(bucket * FIVE_MINUTES_MS));
+    if (easternDateCache.size > 20000) easternDateCache.clear();
+    easternDateCache.set(bucket, date);
+  }
+  return date;
+};
+const clamp01 = (value) => Math.max(0, Math.min(1, value));
+const roundTo = (value, digits) =>
+  value == null || !Number.isFinite(value) ? null : Number(value.toFixed(digits));
+
+// Today's completed bars (chronological), their running VWAP, and the close
+// of the last bar that had ENDED an hour before `nowMs`.
+function summarizeSessionBars(bars, nowMs, barMs) {
+  const today = easternDateOfMs(nowMs);
+  const dayBars = (bars || [])
+    .filter((bar) => Number.isFinite(bar.t) && Number.isFinite(bar.c) && bar.t + barMs <= nowMs && easternDateOfMs(bar.t) === today)
+    .sort((a, b) => a.t - b.t);
+  let priceVolume = 0;
+  let volume = 0;
+  let typicalSum = 0;
+  const runningVwap = dayBars.map((bar, index) => {
+    const typical = (bar.h + bar.l + bar.c) / 3;
+    priceVolume += typical * (bar.v || 0);
+    volume += bar.v || 0;
+    typicalSum += typical;
+    return volume > 0 ? priceVolume / volume : typicalSum / (index + 1);
+  });
+  const hourAgoBars = dayBars.filter((bar) => bar.t + barMs <= nowMs - HOUR_MS);
+  const hourAgoClose = hourAgoBars.length ? hourAgoBars[hourAgoBars.length - 1].c : dayBars.length ? dayBars[0].o : null;
+  return { dayBars, runningVwap, hourAgoClose };
+}
+
+function extractTrendFeatures({ bars, nowMs, price, previousClose, atrPercent, spyBars, spyPrice, barMs = FIVE_MINUTES_MS }) {
+  if (!(atrPercent > 0) || !Number.isFinite(nowMs)) return null;
+  const session = summarizeSessionBars(bars, nowMs, barMs);
+  if (session.dayBars.length < 6) return null;
+  const { dayBars, runningVwap, hourAgoClose } = session;
+  const lastBar = dayBars[dayBars.length - 1];
+  const currentPrice = price > 0 ? price : lastBar.c;
+  const atrFraction = atrPercent / 100;
+  const dayLow = Math.min(...dayBars.map((bar) => bar.l), currentPrice);
+  const dayHigh = Math.max(...dayBars.map((bar) => bar.h), currentPrice);
+  const vwap = runningVwap[runningVwap.length - 1];
+
+  const lastHour = dayBars.map((bar, index) => ({ bar, vwap: runningVwap[index] })).filter(({ bar }) => bar.t >= nowMs - HOUR_MS);
+  const aboveVwapShare = lastHour.length ? lastHour.filter(({ bar, vwap: barVwap }) => bar.c >= barVwap).length / lastHour.length : null;
+
+  // Lowest low in each of three 20-minute windows of the last hour.
+  const windowLows = [0, 1, 2].map((windowIndex) => {
+    const from = nowMs - HOUR_MS + windowIndex * 20 * 60000;
+    const inWindow = dayBars.filter((bar) => bar.t >= from && bar.t < from + 20 * 60000);
+    return inWindow.length ? Math.min(...inWindow.map((bar) => bar.l)) : null;
+  });
+  let higherLows = 0;
+  for (let k = 1; k < 3; k++) {
+    if (windowLows[k] != null && windowLows[k - 1] != null && windowLows[k] > windowLows[k - 1]) higherLows++;
+  }
+
+  const hourChangePct = hourAgoClose > 0 ? (currentPrice / hourAgoClose - 1) * 100 : null;
+  let spyHourChangePct = null;
+  if (Array.isArray(spyBars) && spyBars.length) {
+    const spySession = summarizeSessionBars(spyBars, nowMs, barMs);
+    const spyNow = spyPrice > 0 ? spyPrice : spySession.dayBars.length ? spySession.dayBars[spySession.dayBars.length - 1].c : null;
+    if (spySession.hourAgoClose > 0 && spyNow > 0) spyHourChangePct = (spyNow / spySession.hourAgoClose - 1) * 100;
+  }
+
+  return {
+    sessionBars: dayBars.length,
+    price: roundTo(currentPrice, 4),
+    dayOpen: roundTo(dayBars[0].o, 4),
+    dayLow: roundTo(dayLow, 4),
+    dayHigh: roundTo(dayHigh, 4),
+    vwap: roundTo(vwap, 4),
+    changeVsPreviousClosePct: previousClose > 0 ? roundTo((currentPrice / previousClose - 1) * 100, 3) : null,
+    moveFromOpenPct: roundTo((currentPrice / dayBars[0].o - 1) * 100, 3),
+    rallyFromLowAtr: roundTo((currentPrice / dayLow - 1) / atrFraction, 3),
+    hourChangePct: roundTo(hourChangePct, 3),
+    hourChangeAtr: hourChangePct != null ? roundTo(hourChangePct / atrPercent, 3) : null,
+    spyHourChangePct: roundTo(spyHourChangePct, 3),
+    hourVsSpyPct: hourChangePct != null && spyHourChangePct != null ? roundTo(hourChangePct - spyHourChangePct, 3) : null,
+    aboveVwapShareLastHour: roundTo(aboveVwapShare, 3),
+    higherLowsLastHour: higherLows,
+    vwapStretchAtr: vwap > 0 ? roundTo((currentPrice / vwap - 1) / atrFraction, 3) : null,
+    dayRangeAtr: roundTo((dayHigh / dayLow - 1) / atrFraction, 3),
+  };
+}
+
+function scoreTrendV2(features) {
+  if (!features) return { score: null, reason: "not enough completed bars today", components: null };
+  if (!(features.price > features.vwap)) return { score: 0, reason: "not above VWAP", components: null };
+  if (!(features.hourChangePct > 0)) return { score: 0, reason: "not higher than an hour ago", components: null };
+  const components = {
+    holdingAboveVwap: 25 * (features.aboveVwapShareLastHour || 0),
+    hourMomentum: 25 * clamp01(features.hourChangeAtr / 0.4),
+    rallyUnderWay: 15 * clamp01(features.rallyFromLowAtr / 0.6),
+    beatingSpy: features.hourVsSpyPct == null ? 7.5 : 15 * clamp01(features.hourVsSpyPct / 1.0),
+    higherLows: 10 * ((features.higherLowsLastHour || 0) / 2),
+    roomLeft: 10 * (1 - clamp01((features.rallyFromLowAtr - 1.0) / 1.0)),
+    stretchPenalty: -20 * clamp01((features.vwapStretchAtr - 0.6) / 0.6),
+  };
+  const total = Object.values(components).reduce((sum, value) => sum + value, 0);
+  const rounded = {};
+  for (const [key, value] of Object.entries(components)) rounded[key] = roundTo(value, 1);
+  return { score: roundTo(Math.max(0, Math.min(100, total)), 1), reason: null, components: rounded };
+}
+
+module.exports = { prefilterCandidates, scoreEnrichedCandidate, extractTrendFeatures, scoreTrendV2 };

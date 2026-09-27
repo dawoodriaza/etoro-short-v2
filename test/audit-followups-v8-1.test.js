@@ -224,8 +224,8 @@ module.exports = {
       described.approval.priceChangePercent === 6.5 && described.approval.rsi === 71 && described.quoteMisses === 0 && described.checkFailures === 0,
     );
     check(
-      "dip: on by default — one stop distance within 120 minutes",
-      config.dipEntryEnabled === true && config.dipEntryDepthOfStop === 1 && config.dipEntryWindowMinutes === 120,
+      "dip: on by default — a quarter of the stop distance within 60 minutes (v8.3)",
+      config.dipEntryEnabled === true && config.dipEntryDepthOfStop === 0.25 && config.dipEntryWindowMinutes === 60,
     );
     const telegramPlan = {
       ...rebased, symbol: "AMD", tradeType: "DAY", source: "WATCHLIST", setup: "MOMENTUM", archetype: "MOMENTUM_BREAKOUT",
@@ -240,6 +240,181 @@ module.exports = {
     check(
       "dip: a normal OPEN message has no dip line",
       !/Bought on a dip/.test(planner.formatPlanForTelegram({ ...telegramPlan, dipEntry: undefined }, null)),
+    );
+
+    // ══ 9. v8.3: wait for breakeven instead of selling a red position on the clock ══
+    const riskManager = require("../src/strategies/risk-manager");
+    const { describeExitReason } = require("../src/notifications/format-helpers");
+    const savedTime = {
+      sessionAwareTimeBudgets: config.sessionAwareTimeBudgets,
+      maxHoldMinutes: config.maxHoldMinutes,
+      maxHoldWallClockCeilingMultiplier: config.maxHoldWallClockCeilingMultiplier,
+      staleWaitForBreakeven: config.staleWaitForBreakeven,
+    };
+    Object.assign(config, {
+      sessionAwareTimeBudgets: false,
+      maxHoldMinutes: 90,
+      maxHoldWallClockCeilingMultiplier: 8,
+      staleWaitForBreakeven: true,
+    });
+    const MINUTE = 60000;
+    const staleMeta = (heldMinutes, extra) => ({
+      tradeType: "DAY", entryPrice: 100, stopPrice: 95, targetT1: 105, peakPrice: 100,
+      peakSetAt: Date.now() - heldMinutes * MINUTE, openedAt: Date.now() - heldMinutes * MINUTE,
+      recentPrices: [98, 98, 98].map((price, k) => ({ price, atMs: Date.now() - (3 - k) * MINUTE })),
+      staleGraceUsedAt: 1, partialDone: false, entryConditions: { atrPercent: 3 },
+      plan: { dipEntry: { signalPrice: 101, triggerPrice: 100 } }, ...extra,
+    });
+    const startWait = riskManager.decidePositionAction(staleMeta(120), 98);
+    check(
+      "breakeven wait: red when time runs out → holds and starts waiting (no sale at a loss)",
+      startWait.action === "HOLD" && startWait.startBreakevenWait === true,
+    );
+    const waiting = staleMeta(150, { waitingForBreakevenSince: Date.now() - 30 * MINUTE });
+    const stillRed = riskManager.decidePositionAction(waiting, 99);
+    check("breakeven wait: still red → keeps waiting", stillRed.action === "HOLD" && !stillRed.startBreakevenWait);
+    const recovered = riskManager.decidePositionAction(waiting, 100.2);
+    check("breakeven wait: back at breakeven → sells as STALE_RECOVERED", recovered.action === "EXIT" && recovered.reason === "STALE_RECOVERED");
+    const stoppedWhileWaiting = riskManager.decidePositionAction(waiting, 94);
+    check("breakeven wait: the stop-loss still fires while waiting", stoppedWhileWaiting.action === "EXIT" && stoppedWhileWaiting.reason === "STOP_LOSS");
+    const pastCeiling = riskManager.decidePositionAction(staleMeta(800), 98);
+    check("breakeven wait: the wall-clock ceiling still force-exits", pastCeiling.action === "EXIT" && pastCeiling.reason === "TIME_EXIT_STALE");
+    check("breakeven wait: the status line shows WAITING_BREAKEVEN", riskManager.describePositionState(waiting, 99).state === "WAITING_BREAKEVEN");
+    const notADip = riskManager.decidePositionAction(staleMeta(120, { plan: { score: 90 } }), 98);
+    check(
+      "breakeven wait: only for positions bought on a dip — others keep the old time exit",
+      notADip.action === "EXIT" && notADip.reason === "TIME_EXIT_STALE",
+    );
+    config.staleWaitForBreakeven = false;
+    const legacyExit = riskManager.decidePositionAction(staleMeta(120), 98);
+    check("breakeven wait: switched off → the old time exit", legacyExit.action === "EXIT" && legacyExit.reason === "TIME_EXIT_STALE");
+    Object.assign(config, savedTime);
+    check("breakeven wait: STALE_RECOVERED has a plain Telegram label", /Breakeven/.test(describeExitReason("STALE_RECOVERED").trigger));
+
+    // ══ 11. v8.4: trend score V2 (logged beside the live score) ══
+    const scanner = require("../src/strategies/momentum-scanner");
+    const shadow = require("../src/strategies/shadow-signals");
+    const sessionStart = Date.parse("2026-09-15T13:30:00Z"); // 09:30 ET
+    const FIVE = 5 * 60000;
+    const pathUpAfterDip = (k) => (k < 3 ? 100 - k * 0.33 : 99 + (k - 3) * 0.17);
+    const makeBars = (pricePath, count, startMs) => {
+      const out = [];
+      let previous = pricePath(0);
+      for (let k = 0; k < count; k++) {
+        const close = pricePath(k);
+        out.push({ t: startMs + k * FIVE, o: previous, h: Math.max(previous, close) + 0.05, l: Math.min(previous, close) - 0.05, c: close, v: 1000 });
+        previous = close;
+      }
+      return out;
+    };
+    const risingBars = makeBars(pathUpAfterDip, 18, sessionStart);
+    const at1100 = sessionStart + 18 * FIVE; // 11:00 ET, all 18 bars complete
+    const rising = scanner.extractTrendFeatures({ bars: risingBars, nowMs: at1100, price: null, previousClose: 106, atrPercent: 3 });
+    const risingScore = scanner.scoreTrendV2(rising);
+    check(
+      "trend V2: a dip-then-rally scores high even while RED vs yesterday's close (the AMD Sep 14 case)",
+      rising.changeVsPreviousClosePct < 0 && risingScore.score >= 70 && rising.higherLowsLastHour === 2,
+    );
+    const fallingBars = makeBars((k) => 101.38 - k * 0.14, 18, sessionStart);
+    const falling = scanner.scoreTrendV2(scanner.extractTrendFeatures({ bars: fallingBars, nowMs: at1100, atrPercent: 3 }));
+    check("trend V2: a stock sliding below VWAP scores 0", falling.score === 0 && falling.reason === "not above VWAP");
+    const midBar = scanner.extractTrendFeatures({ bars: risingBars, nowMs: at1100 - 2.5 * 60000, atrPercent: 3 });
+    check("trend V2: only COMPLETED bars are used (no peeking into the bar still forming)", midBar.sessionBars === 17);
+    const withYesterday = makeBars((k) => 90 + k, 20, sessionStart - 24 * 3600000).concat(risingBars);
+    check(
+      "trend V2: yesterday's bars never leak into today's VWAP, low or high",
+      scanner.extractTrendFeatures({ bars: withYesterday, nowMs: at1100, atrPercent: 3 }).dayLow === rising.dayLow,
+    );
+    check(
+      "trend V2: under 30 minutes of today's bars → no score (not a fake 0)",
+      scanner.scoreTrendV2(scanner.extractTrendFeatures({ bars: risingBars, nowMs: sessionStart + 20 * 60000, atrPercent: 3 })).score === null,
+    );
+    const shadowCandidate = { symbol: "amd", currentPrice: 101.38, priceChangePercent: -4.36, atrPercent: 3, vwap: 100, rsi: 60 };
+    Object.defineProperty(shadowCandidate, "intradayBars", { value: risingBars, enumerable: false });
+    const shadowRecord = shadow.buildShadowSignal(shadowCandidate, { rejected: true, rejectReason: "relative strength" }, {
+      spyChangePercent: -0.5, scoreV2: true, nowMs: at1100,
+    });
+    check(
+      "trend V2: the SHADOW_SIGNAL record carries scoreV2 + features, and the bars stay out of JSON",
+      typeof shadowRecord.scoreV2 === "number" && shadowRecord.trendFeatures && !JSON.stringify(shadowCandidate).includes("intradayBars"),
+    );
+    check("trend V2: logging is on by default and nothing trades on it", config.scoreV2LoggingEnabled === true);
+
+    // ══ 12. v8.5: a position the bot just closed is settling, not untracked ══
+    const cooldowns = require("../src/strategies/cooldown-tracker");
+    const cooldownFile = path.join(__dirname, "../data/trade-cooldowns.json");
+    const savedCooldowns = fs.existsSync(cooldownFile) ? fs.readFileSync(cooldownFile, "utf8") : null;
+    cooldowns.startCooldown("ZZTEST", { wasLoss: false });
+    const justClosed = cooldowns.checkCooldown("ZZTEST");
+    check(
+      "untracked alert: a symbol closed seconds ago reports minutesSinceExit inside the settle grace",
+      justClosed.minutesSinceExit != null && justClosed.minutesSinceExit < config.closeSettleGraceMinutes && config.closeSettleGraceMinutes === 5,
+    );
+    check("untracked alert: a symbol never closed has no minutesSinceExit", cooldowns.checkCooldown("ZZNEVER").minutesSinceExit == null);
+    if (savedCooldowns != null) fs.writeFileSync(cooldownFile, savedCooldowns);
+    else if (fs.existsSync(cooldownFile)) fs.unlinkSync(cooldownFile);
+
+    // ══ 10. v8.3: a stock beating a red market is not "sideways" ══
+    check(
+      "trend label: above VWAP and beating a RED market reads BULLISH, not SIDEWAYS",
+      planner.classifyTrend({ aboveVwap: true, relativeStrength: 2, priceChangePercent: 1.5 }, -0.5, { regime: "TRENDING" }) === "BULLISH",
+    );
+    check(
+      "trend label: a CHOP regime still reads SIDEWAYS",
+      planner.classifyTrend({ aboveVwap: true, relativeStrength: 2, priceChangePercent: 1.5 }, 0.5, { regime: "CHOP" }) === "SIDEWAYS",
+    );
+
+
+    // ══ 14. v8.6 dip measured from the running high, capped at the signal ══
+    // The frozen buy level was why approved runners (META, MU, SMCI on
+    // Sep 17-25) sent "waiting to buy the dip" and never filled.
+    const trailPlan = {
+      symbol: "meta", entryPrice: 100, stopPrice: 96, stopDistancePct: 4, targetT1: 104,
+      targetT2: 108, targetT3: null, positionDollars: 2500, riskDollars: 50, atrPercent: 4, score: 88,
+    };
+    const trailAt = Date.parse("2026-09-26T14:00:00Z");
+    const trailOrder = (trail) =>
+      planner.buildDipEntryOrder(trailPlan, { depthOfStop: 0.25, windowMinutes: 60, nowMs: trailAt, trailFromHigh: trail });
+
+    const frozen = trailOrder(false);
+    planner.evaluateDipEntry(frozen, 105, trailAt + 60000);
+    check(
+      "dip anchor: without trailing, a run-up leaves the buy price where it was",
+      frozen.triggerPrice === 99 &&
+        planner.evaluateDipEntry(frozen, 103.95, trailAt + 120000).action === "WAIT",
+    );
+
+    const trailing = trailOrder(true);
+    check("dip anchor: starts one dip below the approval price", trailing.triggerPrice === 99);
+    planner.evaluateDipEntry(trailing, 105, trailAt + 60000);
+    check(
+      "dip anchor: after a run-up the buy price rises, but never above the approval price",
+      trailing.triggerPrice === 100 && trailing.highestPrice === 105,
+    );
+    const trailFill = planner.evaluateDipEntry(trailing, 100, trailAt + 120000);
+    check("dip anchor: a pullback to the approval price now fills", trailFill.action === "FILL" && trailFill.price === 100);
+
+    const smallRun = trailOrder(true);
+    planner.evaluateDipEntry(smallRun, 100.4, trailAt + 60000);
+    check(
+      "dip anchor: a small run-up moves the buy price by the same small amount",
+      Math.abs(smallRun.triggerPrice - 99.396) < 1e-9,
+    );
+
+    const trailBreak = trailOrder(true);
+    planner.evaluateDipEntry(trailBreak, 105, trailAt + 60000);
+    check(
+      "dip anchor: the breakdown guard moves with the buy price",
+      Math.abs(trailBreak.breakdownPrice - 96) < 1e-9 &&
+        planner.evaluateDipEntry(trailBreak, 95.9, trailAt + 120000).action === "CANCEL",
+    );
+
+    const trailExpired = trailOrder(true);
+    planner.evaluateDipEntry(trailExpired, 106, trailAt + 60000);
+    const trailRecord = planner.describeDipEntryOrder(trailExpired, trailAt + 61 * 60000);
+    check(
+      "dip anchor: the journal records the anchor and how far the stock ran while waiting",
+      trailRecord.trailFromHigh === true && trailRecord.runUpFromSignalPct === 6,
     );
 
     return results;

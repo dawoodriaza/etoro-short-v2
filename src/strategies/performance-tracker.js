@@ -106,6 +106,10 @@ function buildClosedTradeRecord({
     entryConditions: meta.entryConditions || null,
     plan: meta.plan || null,
     extendedByReviewer: !!meta.extendedByReviewerAt,
+    // v8.3: set when the time budget ran out while red and the bot held for breakeven
+    waitedForBreakevenSince: meta.waitingForBreakevenSince
+      ? new Date(meta.waitingForBreakevenSince).toISOString()
+      : null,
     pnlAccountingVersion: 2,
   };
 }

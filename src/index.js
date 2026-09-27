@@ -946,13 +946,28 @@ async function runScanCycle() {
     }
 
     const scoredCandidates = [];
+    // v8.4: SPY's 5-minute bars once per scan, for the logged trend score V2.
+    const spyIntradayBars = config.scoreV2LoggingEnabled
+      ? await marketData.fetchSpyIntradayBars()
+      : null;
     for (const candidate of toEnrich) {
       const enrichment = await marketData.enrichCandidate(
         candidate.symbol,
         candidate.currentPrice,
         candidate.instrumentId, // v5.4: already resolved if this came from eToro's quote path
       );
-      if (enrichment) Object.assign(candidate, enrichment);
+      if (enrichment) {
+        // v8.4: the raw bars ride along NON-enumerable, so they never end up
+        // in a plan, the journal or Telegram — only the trend score reads them.
+        const { intradayBars, ...enrichmentFields } = enrichment;
+        Object.assign(candidate, enrichmentFields);
+        Object.defineProperty(candidate, "intradayBars", {
+          value: intradayBars || null,
+          enumerable: false,
+          configurable: true,
+          writable: true,
+        });
+      }
 
       // Daily ATR for volatility bucket + stop geometry (cached ~20h).
       // v5.4: the 8s sleep below only matters for Twelve Data's rate limit
@@ -976,6 +991,11 @@ async function runScanCycle() {
       shadowSignals.recordShadowCandidate(currentShadowBook, candidate, scored, {
         regime: regime.regime,
         spyChangePercent: spyChange,
+        // v8.4: trend score V2, logged beside the live score (not traded on)
+        scoreV2: config.scoreV2LoggingEnabled,
+        spyBars: spyIntradayBars,
+        spyPrice: spyQuote.currentPrice,
+        nowMs: Date.now(),
       });
       if (!scored.rejected) {
         scored.atrPercent = candidate.atrPercent;
@@ -1350,6 +1370,7 @@ function armDipEntry(plan, aiResult) {
   const order = tradePlanner.buildDipEntryOrder(plan, {
     depthOfStop: config.dipEntryDepthOfStop,
     windowMinutes: config.dipEntryWindowMinutes,
+    trailFromHigh: config.dipEntryTrailFromHigh, // v8.6
     nowMs,
   });
   order.aiResult = aiResult || null;
@@ -1366,7 +1387,10 @@ function armDipEntry(plan, aiResult) {
       ((1 - order.triggerPrice / order.signalPrice) * 100).toFixed(2) +
       "%) within " +
       order.windowMinutes +
-      " min",
+      " min" +
+      (order.trailFromHigh
+        ? " — buy level follows the high, never above " + formatPrice(order.signalPrice)
+        : ""),
   );
   bumpDipEntryStat("armed");
   return order;
@@ -1393,7 +1417,12 @@ async function notifyDipOrdersArmed(orders) {
         "AI-approved, but the bot does not buy the spike. Each is bought only if it " +
         "dips to the price shown within " +
         orders[0].windowMinutes +
-        " min — otherwise no trade.\n\n" +
+        " min — otherwise no trade.\n" +
+        (orders[0].trailFromHigh
+          ? "If it runs up first, the buy price rises with it but never goes above the " +
+            "approval price — so a pullback later still counts (v8.6).\n"
+          : "") +
+        "\n" +
         lines.join("\n"),
     );
   } catch (telegramError) {
@@ -1420,7 +1449,12 @@ async function notifyDipOrdersNotBought(entries) {
         " (" +
         (record.moveFromSignalPct >= 0 ? "+" : "") +
         record.moveFromSignalPct +
-        "% vs approval)"
+        "% vs approval) · ran to " +
+        formatPrice(order.highestPrice) +
+        " (" +
+        (record.runUpFromSignalPct >= 0 ? "+" : "") +
+        record.runUpFromSignalPct +
+        "% at best)"
       );
     }
     if (status === "BLOCKED_AT_FILL") {
@@ -2294,6 +2328,25 @@ async function handleUntrackedPositions(portfolio, meta) {
     const symbol = (position.symbol || "").toUpperCase();
     if (meta[symbol]) continue; // tracked — nothing to do
 
+    // v8.5: eToro keeps listing a position for a few seconds after the bot
+    // closes it. Every bot close starts a cooldown, so a symbol closed moments
+    // ago is settling, not untracked — this raised false UNTRACKED_POSITION
+    // alerts 4-8 s after the bot's own closes (ANET/NBIS 2026-09-17, ISRG
+    // 2026-09-18, SMCI/AFRM 2026-09-11). Still listed after the grace → alert.
+    const recentClose = cooldownTracker.checkCooldown(symbol);
+    if (
+      recentClose.minutesSinceExit != null &&
+      recentClose.minutesSinceExit < config.closeSettleGraceMinutes
+    ) {
+      logger.info(
+        symbol +
+          " still listed by eToro " +
+          Math.round(recentClose.minutesSinceExit * 60) +
+          "s after the bot closed it — settling, not untracked",
+      );
+      continue;
+    }
+
     const clearedRecord = clearedRecords[symbol];
     const withinReadoptWindow =
       clearedRecord &&
@@ -2890,6 +2943,24 @@ async function manageOpenPositions() {
           config.dayStaleGraceExtensionMinutes +
           "min extension instead of closing on the clock. The stop-loss " +
           "stays fully active throughout.",
+      );
+    }
+    // v8.3: time ran out while red — the engine holds for breakeven instead
+    // of selling at a loss on the clock. Stamped once; announced once.
+    if (decision.startBreakevenWait && !positionMeta.waitingForBreakevenSince) {
+      positionMeta.waitingForBreakevenSince = Date.now();
+      metaChanged = true;
+      const redPct = ((currentPrice / positionMeta.entryPrice - 1) * 100).toFixed(2);
+      const breakevenPrice = positionMeta.entryPrice * (1 + config.staleBreakevenExitPct / 100);
+      logger.info(
+        "⏳ " + symbol + ": time budget spent at " + redPct + "% — not selling at a loss, waiting for breakeven $" +
+          breakevenPrice.toFixed(2) + " (stop $" + Number(positionMeta.stopPrice).toFixed(2) + " stays active)",
+      );
+      await notifications.sendTelegramMessage(
+        "⏳ <b>" + symbol + "</b> — time's up but it's red (" + redPct + "%). Not selling at a loss: " +
+          "holding until it is back to breakeven ($" + breakevenPrice.toFixed(2) + "). The stop-loss ($" +
+          Number(positionMeta.stopPrice).toFixed(2) + ") stays active, and if it is still red at the end of the " +
+          "day it closes as usual.",
       );
     }
     if (decision.grantSwingTimeGrace && !positionMeta.swingTimeGraceUsedAt) {
@@ -3724,7 +3795,11 @@ async function main() {
           config.dipEntryDepthOfStop +
           "× the stop distance within " +
           config.dipEntryWindowMinutes +
-          " min (DT_DIP_ENTRY_ENABLED=false buys immediately)"
+          " min" +
+          (config.dipEntryTrailFromHigh
+            ? ", measured from the highest price seen while waiting but never above the approval price (v8.6)"
+            : ", measured from the approval price") +
+          " (DT_DIP_ENTRY_ENABLED=false buys immediately)"
       : "Dip entry OFF: approved stocks are bought immediately",
   );
 

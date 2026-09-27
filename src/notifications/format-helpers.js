@@ -122,6 +122,11 @@ const EXIT_REASON_INFO = {
     trigger: "⏱️ Time-Based Cleanup",
     detail: "held past the max time window without enough profit to justify staying in",
   },
+  STALE_RECOVERED: {
+    trigger: "♻️ Recovered to Breakeven",
+    detail:
+      "time ran out while the trade was red; instead of selling at a loss the bot waited, and sold once it was back at breakeven",
+  },
   SWING_STOP: {
     trigger: "🛑 Stop-Loss Guard",
     detail: "price hit the swing stop before any profit was locked in",

@@ -98,6 +98,34 @@ const VARIANTS = {
   DIP_050_120M: { pullbackEntry: { depthOfStop: 0.5, windowMinutes: 120 } },
   DIP_100_120M: { pullbackEntry: { depthOfStop: 1.0, windowMinutes: 120 } },
   DIP_050_120M_ANCHOR: { pullbackEntry: { depthOfStop: 0.5, windowMinutes: 120, anchorStop: true } },
+  // v8.3: small dips, and "dip or buy anyway": wait a short time for a small
+  // pullback; if none comes, buy at market at the end of the wait provided the
+  // price is still at or above the approval price (the move is still on).
+  DIP_010_30M: { pullbackEntry: { depthOfStop: 0.1, windowMinutes: 30 } },
+  DIP_025_30M: { pullbackEntry: { depthOfStop: 0.25, windowMinutes: 30 } },
+  DIP_010_OR_MKT_15M: { pullbackEntry: { depthOfStop: 0.1, windowMinutes: 15, marketIfNoDip: true } },
+  DIP_025_OR_MKT_15M: { pullbackEntry: { depthOfStop: 0.25, windowMinutes: 15, marketIfNoDip: true } },
+  DIP_025_OR_MKT_30M: { pullbackEntry: { depthOfStop: 0.25, windowMinutes: 30, marketIfNoDip: true } },
+  // v8.3: letting a red position recover — longer DAY time budget, or none
+  // (stop, profit protection, EOD and Friday rules still apply).
+  HOLD_240M: { config: { maxHoldMinutes: 240 } },
+  HOLD_390M: { config: { maxHoldMinutes: 390 } },
+  NO_STALE_EXIT: { config: { maxHoldMinutes: 100000, maxHoldWallClockCeilingMultiplier: 1 } },
+  // v8.3: when the time budget runs out on a red position, do not sell it —
+  // wait for it to come back to breakeven (+exitAtPct) and sell there. The
+  // stop, EOD and Friday rules stay live.
+  STALE_TO_BREAKEVEN: { staleToBreakeven: { exitAtPct: 0.1 } },
+  STALE_TO_BREAKEVEN_05: { staleToBreakeven: { exitAtPct: 0.5 } },
+  DIP_025_60M_BE: { pullbackEntry: { depthOfStop: 0.25, windowMinutes: 60 }, staleToBreakeven: { exitAtPct: 0.1 } },
+  // v8.3 live defaults include the breakeven wait; these switch it off for comparison.
+  NO_BREAKEVEN_WAIT: { config: { staleWaitForBreakeven: false } },
+  DIP_025_60M_NO_WAIT: { pullbackEntry: { depthOfStop: 0.25, windowMinutes: 60 }, config: { staleWaitForBreakeven: false } },
+  // v8.6 (2026-09-27): the dip is measured from the running high instead of the
+  // frozen approval price, capped so the fill is never above the approval price.
+  // This is what the live bot now does — DIP_025_60M_TRAIL is the live entry.
+  DIP_025_60M_TRAIL: { pullbackEntry: { depthOfStop: 0.25, windowMinutes: 60, trailFromHigh: true } },
+  DIP_010_60M_TRAIL: { pullbackEntry: { depthOfStop: 0.1, windowMinutes: 60, trailFromHigh: true } },
+  DIP_050_60M_TRAIL: { pullbackEntry: { depthOfStop: 0.5, windowMinutes: 60, trailFromHigh: true } },
 };
 
 // ── Time helpers ─────────────────────────────────────────────────────────
@@ -249,6 +277,7 @@ function shadowSamples(events) {
       priceChangePercent: e.priceChangePercent, regime: e.regime, spyChangePercent: e.spyChangePercent,
       rangePosition: e.rangePosition, belowHighPct: e.belowHighPct, vwapDistancePct: e.vwapDistancePct,
       outcome: e.outcome,
+      outcomeDetail: e.outcomeDetail || null,
     });
   }
   return samples;
@@ -272,19 +301,40 @@ function simulate(sample, variant) {
   let entryMs = sample.entryMs;
   let fillBarIndex = -1;
   if (variant.pullbackEntry) {
-    const { depthOfStop, windowMinutes, anchorStop } = variant.pullbackEntry;
+    const { depthOfStop, windowMinutes, anchorStop, trailFromHigh } = variant.pullbackEntry;
     const signalStop = sample.entryPrice * (1 - stopPct / 100);
-    const trigger = sample.entryPrice * (1 - (stopPct / 100) * depthOfStop);
+    const dip = 1 - (stopPct / 100) * depthOfStop;
     const deadlineMs = sample.entryMs + windowMinutes * 60000;
+    // v8.6: with trailFromHigh the buy level is re-measured from the highest
+    // price seen so far, capped at the signal price (never pay up). runHigh only
+    // ever includes bars BEFORE the one being tested, so there is no look-ahead.
+    let runHigh = sample.entryPrice;
+    let trigger = sample.entryPrice * dip;
     let fillIndex = -1;
     for (let k = index; k < bars.length && bars[k].t < deadlineMs; k++) {
+      if (trailFromHigh) trigger = Math.min(runHigh * dip, sample.entryPrice);
       if (bars[k].l <= trigger) { fillIndex = k; break; }
+      runHigh = Math.max(runHigh, bars[k].h);
     }
-    if (fillIndex === -1) return { missed: true, exitMs: sample.entryMs };
-    entry = Math.min(trigger, bars[fillIndex].o);
-    entryMs = bars[fillIndex].t;
-    index = fillIndex;
-    fillBarIndex = fillIndex;
+    if (fillIndex === -1 && variant.pullbackEntry.marketIfNoDip) {
+      // First bar starting at/after the deadline: buy at its open if the move
+      // is still intact (open at or above the approval price).
+      const marketIndex = firstBarIndexAtOrAfter(bars, deadlineMs);
+      if (marketIndex < bars.length && bars[marketIndex].t - deadlineMs <= HOUR && bars[marketIndex].o >= sample.entryPrice) {
+        entry = bars[marketIndex].o;
+        entryMs = bars[marketIndex].t;
+        index = marketIndex;
+      } else {
+        return { missed: true, exitMs: sample.entryMs };
+      }
+    } else if (fillIndex === -1) {
+      return { missed: true, exitMs: sample.entryMs };
+    } else {
+      entry = Math.min(trigger, bars[fillIndex].o);
+      entryMs = bars[fillIndex].t;
+      index = fillIndex;
+      fillBarIndex = fillIndex;
+    }
     if (anchorStop) {
       const riskDollars = sizeDollars * (stopPct / 100);
       const newStopPct = Math.max(config.dayStopClampMinPct * 100, (1 - signalStop / entry) * 100);
@@ -299,7 +349,7 @@ function simulate(sample, variant) {
     targetT1: entry * (1 + risk * t1R), targetT2: entry * (1 + risk * 2 * t1R),
     lockedFloor: null, peakPrice: entry, peakSetAt: entryMs, recentPrices: [],
     partialDone: false, openedAt: entryMs, dollarAmount: sizeDollars,
-    plan: { atrPercent: sample.atrPercent, stopDistancePct: stopPct },
+    plan: { atrPercent: sample.atrPercent, stopDistancePct: stopPct, dipEntry: fillBarIndex !== -1 ? { signalPrice: sample.entryPrice } : undefined },
     entryConditions: { atrPercent: sample.atrPercent },
   };
 
@@ -338,6 +388,11 @@ function simulate(sample, variant) {
         if (price <= entry * (1 + config.overnightHoldMinProfitPct / 100)) { sell(1, price); exitReason = "EOD_FORCE_CLOSE"; exitMs = barEnd; break; }
       }
 
+      // v8.3 STALE_TO_BREAKEVEN: a red position whose time ran out sells as soon as it
+      // is back at breakeven (the stop below still applies first on this bar).
+      if (meta.waitingForBreakeven && bar.l > meta.stopPrice && bar.h >= entry * (1 + variant.staleToBreakeven.exitAtPct / 100)) {
+        sell(1, Math.max(entry * (1 + variant.staleToBreakeven.exitAtPct / 100), bar.o)); exitReason = "STALE_RECOVERED"; exitMs = barEnd; break;
+      }
       // 1. Price-level exits against the bar LOW, with the pre-bar peak.
       const peakBefore = Math.max(meta.peakPrice, entry);
       if (!meta.partialDone && bar.l <= meta.stopPrice) {
@@ -385,9 +440,12 @@ function simulate(sample, variant) {
       }
       const decision = riskManager.decidePositionAction(meta, bar.c);
       if (decision.grantStaleGrace && !meta.staleGraceUsedAt) meta.staleGraceUsedAt = barEnd;
+      if (decision.startBreakevenWait && !meta.waitingForBreakevenSince) meta.waitingForBreakevenSince = barEnd;
       if (decision.action === "PARTIAL" && !meta.partialDone) {
         sell(decision.fraction || config.partialExitFraction, bar.c);
         meta.partialDone = true; partials++;
+      } else if (decision.action === "EXIT" && decision.reason === "TIME_EXIT_STALE" && variant.staleToBreakeven && bar.c < entry) {
+        meta.waitingForBreakeven = true;
       } else if (decision.action === "EXIT") {
         let price = bar.c;
         if (decision.reason === "MFE_GIVEBACK") {

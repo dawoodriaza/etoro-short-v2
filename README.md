@@ -41,21 +41,22 @@ Detailed history, evidence and the reasoning behind every change:
 
 ---
 
-## Status snapshot (2026-09-14)
+## Status snapshot (2026-09-27)
 
 | Item | Value |
 |---|---|
-| Version | **v8.2** — dip entry (see CHANGELOG) |
+| Version | **v8.6** — the dip is measured from the running high and never paid up; v8.5 untracked-alert race fixed, safe server tests; v8.4 trend score V2 logged (not traded); v8.3 small dip + wait for breakeven (see CHANGELOG) |
 | Mode | `TRADING_MODE=live` |
-| Server | `ubuntu@130.110.113.198`, directory `~/etoro-v2-short`, Node 20.20.2, ~1 GB RAM |
+| Server | `ubuntu@130.110.113.198` (Oracle Cloud), directory `~/etoro-v2-short`, Node 20.20.2, ~1 GB RAM + **2 GB swap** (`/swapfile`, swappiness 10, added 2026-09-22 after a freeze during an automatic kernel update). If SSH times out "during banner exchange", the box is starved: reboot it from the Oracle console (data is kept) |
+| PM2 memory limit | `etoro-daytrade` restarts itself above 300 MB (`--max-memory-restart 300M`, saved with `pm2 save`) |
 | Process | PM2 name **`etoro-daytrade`** (same server also runs `etoro-ai-short`, a different bot and portfolio) |
 | Agent portfolio | `DT_CAPITAL=10000` (bot dollars) |
 | Real account copying it | `DT_REAL_ACCOUNT_CAPITAL=350` → copy ratio 0.035. Telegram shows real dollars; logs, journal and trade history are **bot dollars** |
 | Risk per trade | 0.5% of effective capital (`DT_RISK_PCT_DAY=0.005`, halved in v8.1) |
 | Capital | ≈ $9,368 effective, drawdown peak $10,032.85 (as of 2026-09-13) |
-| Track record | 210 closed trades to 2026-09-11; whole-trade P&L ≈ +$153 (bot dollars, partial profits included). Jul 1–Aug 21 profitable; Aug 22–Sep 11 lost (49 trades, 43% win, −$393) |
-| Current experiment | **Two-week live review of dip entry** started 2026-09-14. Do not change entry or exit settings before reviewing `DIP_ENTRY` journal records (see [what to review](#the-two-week-dip-entry-review)) |
-| Git | Branch `audit-v8-fixes`; v8 and v8.1 committed; v8.2 deployed but not yet committed |
+| Track record | 219 closed trades to 2026-09-18. Whole-trade P&L ≈ +$153 to 2026-09-11 (bot dollars, partial profits included); seven v8.3–v8.5 sessions (Sep 17–25): 20 trades, 12 winners (60%), −$38.45 |
+| Current experiment | **Live review of v8.3–v8.6** (from 2026-09-16): small dip (¼ stop, 60 min, from 2026-09-27 measured from the running high), wait-for-breakeven on dip buys, trend score V2 logged but not traded. Review `DIP_ENTRY`, `STALE_RECOVERED`, `WAITING_BREAKEVEN` and `scoreV2` records before changing entry/exit settings (see [what to review](#the-two-week-dip-entry-review)) |
+| Git | `main` on GitHub has v8–v8.2 + docs (pushed 2026-09-14); v8.3–v8.6 deployed 2026-09-16…27, not committed yet |
 
 Other eToro bots the owner runs (do not confuse them):
 
@@ -121,7 +122,9 @@ These rules come from real incidents and from explicit owner instructions.
 9. **Never commit or print secrets.** `.env` and `data/` are git-ignored. Do not
    copy `.env` values into docs, logs or chat.
 10. **Test and back up before every deploy**; see [Deployment](#deployment).
-    Only restart when no deploy test failed.
+    Only restart when no deploy test failed. **Never run the test suite inside the
+    live server folder** — some tests swap the real capital ledger and delete a
+    real halt flag; run them in the scratch copy `~/etoro-test`.
 11. **Trading actions are the owner's.** Do not place, close or resize real
     positions without the owner's explicit instruction.
 
@@ -169,23 +172,43 @@ A scan runs every `DT_SCAN_INTERVAL_MINUTES` (10) on weekdays, whenever eToro's
 
 An AI-approved stock is **not bought immediately**. It becomes a waiting order:
 
-- **Buy price** = approval price − 1 × stop distance
-  (`DT_DIP_ENTRY_DEPTH_OF_STOP=1.0`).
-- It waits up to **120 minutes** (`DT_DIP_ENTRY_WINDOW_MINUTES`) and is checked
+- **Buy price** = ¼ × stop distance below the **highest price seen since
+  approval**, i.e. about 0.5–1.25% under that high
+  (`DT_DIP_ENTRY_DEPTH_OF_STOP=0.25`), but **never above the approval price**
+  (`DT_DIP_TRAIL_FROM_HIGH=true`, v8.6). So if the stock runs up first, the buy
+  price rises with it and stops at the approval price: a pullback an hour later
+  still counts, and the bot never pays more than the price that triggered the
+  signal. Set `DT_DIP_TRAIL_FROM_HIGH=false` to freeze the buy price at the
+  approval price (the v8.3–v8.5 behaviour).
+- It waits up to **60 minutes** (`DT_DIP_ENTRY_WINDOW_MINUTES`) and is checked
   every minute with one batched quote call for all waiting stocks.
 - If the ask price reaches the buy price, it buys there. Stop and targets move
-  down by the same percentage, so size and dollar risk are unchanged.
+  by the same percentage, so size and dollar risk are unchanged.
 - **No dip in time → no trade.**
-- **Cancelled** if the price falls a further full stop distance (a breakdown,
-  not a dip), or if a new-entry gate closes while it waits (Friday/EOD cutoff,
-  loss limit, halt, overnight freeze), or if the bot is stopped/restarted.
+- **Cancelled** if the price falls a further full stop distance below the buy
+  price (a breakdown, not a dip — this level moves with the buy price), or if a
+  new-entry gate closes while it waits (Friday/EOD cutoff, loss limit, halt,
+  overnight freeze), or if the bot is stopped/restarted.
 - A stock with a waiting order is not re-planned or re-sent to the AI.
 - `DT_DIP_ENTRY_ENABLED=false` restores the old "buy immediately" behaviour.
 
 Why: the score is highest right after a spike, so buying at approval meant buying
-the top of a push. In replay (Jul 1–Sep 11, 2,055 candidates) buying at once lost
-in both periods; the dip version was positive in both but buys only about 1 in 7
-approved stocks. Full table in CHANGELOG v8.2.
+the top of a push. v8.2 asked for a full stop-distance dip (4–5% on most names) and
+bought **nothing** in its first three live days (11 approvals, 11 expired). In replay
+(v8.3, incl. every Sep 14–16 candidate) buying immediately lost in all three periods;
+a ¼-stop dip within 60 minutes was the best entry in both recent samples
+(Sep 14–16: +$524 on 209 buys vs −$1,869 buying immediately). "Small dip or buy
+anyway" won only in the early period.
+
+v8.6 fixed the anchor. With the buy price frozen at the approval price, a stock
+that ran first and pulled back later could never fill — the reason Telegram kept
+announcing dips on META, AMD, MU and SMCI that never arrived. Over 93 real
+approvals (Sep 17–25) the frozen anchor bought 27 for −$81.21 (−0.114R each);
+measuring from the running high bought **39 for −$70.28** (−0.063R each). Letting
+the buy price chase *above* the approval price was worse (−$74 to −$84), and so
+was buying everything at approval once the 7-slot book and spread were applied
+(−$168.60 versus −$2.63 for the best selection rule). Full tables in CHANGELOG
+v8.2, v8.3 and v8.6.
 
 Waiting orders live **in memory** only; a restart journals them as cancelled and
 the next scan re-approves anything still valid.
@@ -216,7 +239,8 @@ rescaled if the fill differs), and runs `risk-manager.decidePositionAction()`.
 | `MFE_GIVEBACK` | Profit protection: once the best gain reaches 0.25 × ATR, the trade may give back at most 40% of its best gain (capped at 0.3 × ATR), never below breakeven. The biggest winner category. |
 | `TRAILING_STOP` | After the partial, the rest trails 2.5% below the peak, never below entry. |
 | `PROFIT_STALL_LOCK` | In profit ≥ 0.4% but no new high for 45 minutes → sell half, unless the short trend still points up. |
-| `TIME_EXIT_STALE` | The trade went nowhere within its time budget: 150 minutes of **session** time (`DT_MAX_HOLD_MINUTES`), ×1.5 for calm stocks, ×0.7 for volatile ones, with one 45-minute grace period if it is visibly recovering. |
+| `TIME_EXIT_STALE` | The trade went nowhere within its time budget: 150 minutes of **session** time (`DT_MAX_HOLD_MINUTES`), ×1.5 for calm stocks, ×0.7 for volatile ones, with one 45-minute grace period if it is visibly recovering. Since v8.3 a position **bought on a dip** that is **red** at that point is not sold: it waits for breakeven (below). |
+| `STALE_RECOVERED` | (v8.3) A dip buy whose time ran out while red was held (status `WAITING_BREAKEVEN`, Telegram ⏳) and sold once back at +0.1% (`DT_STALE_BREAKEVEN_EXIT_PCT`). Stop, profit protection, end-of-day loser close, Friday close-all and the 8× wall-clock ceiling still apply. Replay: better in 4 of 5 samples with dip entries; worse with immediate entries, hence dip buys only. |
 | `EOD_FORCE_CLOSE` | Mon–Thu, 15 minutes before the US close: **losing/flat DAY positions close; winners are kept overnight** (24/5 keep-winners mode). |
 | `FRIDAY_FORCE_CLOSE` | Friday: **everything closes** — no weekend exposure. |
 | `AI_REVIEW_CLOSE` | Daily AI reviewer (Mon–Thu 15:00 ET, Claude Haiku 4.5) chose CLOSE. It can also EXTEND (DAY→SWING), HOLD, TIGHTEN the stop or TAKE_PARTIAL, each behind a confidence floor enforced in code. |
@@ -227,7 +251,9 @@ Swing trades exist in the code (`SWING_TRAIL`, `SWING_TIME_EXIT`) but are paused
 (`DT_MAX_SWING_POSITIONS=0`).
 
 Positions eToro shows that the bot has no record of raise an
-`UNTRACKED_POSITION` alert. They are re-adopted automatically if the bot recently
+`UNTRACKED_POSITION` alert (v8.5: not during the first 5 minutes after the bot
+itself closed that stock — eToro keeps listing a closed position for a few seconds;
+`DT_CLOSE_SETTLE_GRACE_MINUTES`). They are re-adopted automatically if the bot recently
 cleared them, otherwise left alone unless `DT_ADOPT_FOREIGN_POSITIONS=true`.
 
 ---
@@ -285,6 +311,7 @@ useful for reconciling with logs).
 | Message | When |
 |---|---|
 | ⏳ **Waiting to buy on a dip** | A scan approved stocks; one grouped message listing approval price → buy price |
+| ⏳ **time's up but it's red** | (v8.3) A dip buy ran out of time while red; the bot holds for breakeven instead of selling at a loss (stop stays active) |
 | 🟢 **OPEN** | A buy filled; includes setup, entry, stop, targets, size, risk, AI reasoning, and "📉 Bought on a dip: approved $X, bought $Y after N min" |
 | **Dip orders — not bought** | Grouped: ⌛ no dip in time (lowest price, where it is now), ✋ cancelled (reason), 🚫 dipped but the buy was blocked (exact reason) |
 | Partial / exit messages | Partial sells and closes with the reason and P&L |
@@ -335,12 +362,12 @@ Every event has `ts` (UTC ISO), `bahrainTime` and `event`.
 | `CANDIDATE_SCORED` | Scored candidate with features |
 | `PLAN_BUILT`, `PLAN_REJECTED` | Trade plan accepted / rejected (e.g. score floor) |
 | `AI_DECISION` | Screener TAKE/SKIP, confidence, reasoning, structured analysis |
-| `SHADOW_SIGNAL` | (v8.1) One per candidate per scan: price, quote time, % up, ATR, move/ATR, score, RSI, RS, VWAP distance, day range position, volume ratio, regime, stop distance, and final **outcome** (NOT_SHORTLISTED, PLAN_REJECTED, AI_SKIP, DIP_ARMED, DIP_PENDING, OPENED, BLOCKED, …) |
+| `SHADOW_SIGNAL` | (v8.1) One per candidate per scan: price, quote time, % up, ATR, move/ATR, score, RSI, RS, VWAP distance, day range position, volume ratio, regime, stop distance, and final **outcome** (NOT_SHORTLISTED, PLAN_REJECTED, AI_SKIP, DIP_ARMED, DIP_PENDING, OPENED, BLOCKED, …). Since v8.4 also `scoreV2`, `scoreV2Reason`, `scoreV2Components`, `trendFeatures` (move from open, rise from low in ATR, last-hour change vs SPY, time above VWAP, higher lows, stretch) |
 | `DIP_ENTRY` | (v8.2) Dip order status `ARMED` → `FILLED` / `BLOCKED_AT_FILL` / `EXPIRED` / `CANCELLED`, with signal/buy/breakdown prices, lowest/highest/last price, `deepestDipOfStop`, `moveFromSignalPct`, minutes waited, `quoteMisses`, `checkFailures`, block reason, and an `approval` snapshot (% up, move/ATR, RSI, RS, VWAP, setup, catalyst, regime, SPY, AI confidence) |
 | `TRADE_OPENED` | Full plan at open |
 | `EXIT_DECISION` | PARTIAL / EXIT decisions with reason and price |
 | `TRADE_CLOSED` | Whole-trade P&L, partial P&L, exit reason, plan |
-| `POSITION_STATUS` | (v8) Every 10 ticks per open position: HOLD / TRIM / RUNNER / WEAKENING / EXIT, P&L, peak, effective stop, next trigger |
+| `POSITION_STATUS` | (v8) Every 10 ticks per open position: HOLD / TRIM / RUNNER / WEAKENING / WAITING_BREAKEVEN (v8.3) / EXIT, P&L, peak, effective stop, next trigger |
 | `SCAN_FUNNEL` | (v8) Counts per stage: quoted → moving → eligible → scored → plans → AI take → waiting for a dip → opened, with reasons |
 | `EQUITY_DRIFT` | (v8.1) Realized equity vs ledger when the gap ≥ $25 |
 | `EXIT_SHADOW_CHECKPOINT` | Price after a time-based exit at +30/60/120 min |
@@ -378,7 +405,8 @@ design; the running bot uses **Claude Haiku 4.5 only** (screener and reviewer).
 | Size | `DT_MAX_POSITION_PCT_DAY`, `DT_MAX_TOTAL_EXPOSURE_PCT` | 0.35, 0.9 (default) |
 | Slots | `DT_MAX_DAY_POSITIONS` / `DT_MAX_SWING_POSITIONS` | 7 / 0 |
 | Stop | `DT_DAY_ATR_STOP_MULT`, `DT_DAY_STOP_MIN_PCT`, `DT_DAY_STOP_MAX_PCT` | 1.0, 0.01, 0.05 |
-| Dip entry | `DT_DIP_ENTRY_ENABLED`, `DT_DIP_ENTRY_DEPTH_OF_STOP`, `DT_DIP_ENTRY_WINDOW_MINUTES` | true, 1.0, 120 (defaults) |
+| Dip entry | `DT_DIP_ENTRY_ENABLED`, `DT_DIP_ENTRY_DEPTH_OF_STOP`, `DT_DIP_ENTRY_WINDOW_MINUTES`, `DT_DIP_TRAIL_FROM_HIGH` | true, 0.25, 60, true (defaults, v8.3 + v8.6) |
+| Breakeven wait | `DT_STALE_WAIT_FOR_BREAKEVEN`, `DT_STALE_BREAKEVEN_EXIT_PCT` | true, 0.1 (defaults, v8.3; dip buys only) |
 | Take profit | `DT_PARTIAL_EXIT_FRACTION`, `DT_TRAILING_STOP_PCT` | 0.5, 0.025 |
 | Profit protection | `DT_MFE_ARM_ATR_FRACTION`, `DT_MFE_RETENTION`, `DT_MFE_GIVEBACK_ATR_CAP` | 0.25, 0.6, 0.3 (defaults) |
 | Time | `DT_MAX_HOLD_MINUTES`, `DT_SESSION_AWARE_TIME_BUDGETS` | 150, true |
@@ -391,6 +419,7 @@ design; the running bot uses **Claude Haiku 4.5 only** (screener and reviewer).
 | Discovery | `DT_DISCOVERY_ENABLED`, `DT_DISCOVERY_MIN_PRICE`, `DT_MIN_AVG_DOLLAR_VOLUME` | true, 10, 15000000 |
 | Breakers | `DT_DAILY_LOSS_LIMIT_PCT`, `DT_MAX_DRAWDOWN_FROM_PEAK_PCT` | 0.05, 0.15 |
 | AI | `DT_REVIEWER_ENABLED`, `DT_SCREENER_MIN_CONF_TAKE`, `DT_SCREENER_DEDUPE_MINUTES` | true, 4, 30 |
+| Trend score V2 | `DT_SCORE_V2_LOGGING` | true (v8.4; logged in SHADOW_SIGNAL only, not traded on) |
 
 To see the real live values: `ssh` to the server and
 `grep -E "^DT_" ~/etoro-v2-short/.env` (this prints the Telegram token too — do not
@@ -426,7 +455,8 @@ src/
     ai-screener.js          Entry TAKE/SKIP (Claude Haiku 4.5), dedupe cache
     ai-position-reviewer.js Daily EXTEND/HOLD/TIGHTEN/TAKE_PARTIAL/CLOSE (Claude Haiku 4.5)
   strategies/
-    momentum-scanner.js     Pre-filter + scoring (GAP_AND_GO, BREAKOUT, MOMENTUM_SURGE)
+    momentum-scanner.js     Pre-filter + live scoring (GAP_AND_GO, BREAKOUT, MOMENTUM_SURGE);
+                            v8.4 extractTrendFeatures()/scoreTrendV2() (logged, not traded)
     trade-planner.js        Plan geometry, sizing, Telegram OPEN text, dip-order helpers
     risk-manager.js         Exit decisions, MFE giveback, stall lock, time budgets,
                             daily loss limit, pre-trade safety, position status
@@ -521,7 +551,7 @@ To turn dip entry off: set `DT_DIP_ENTRY_ENABLED=false` in the server `.env`, th
 ## Testing, replay and evidence rules
 
 ```bash
-npm test                      # node test/run-tests.js — all suites must pass (389 as of v8.2)
+npm test                      # node test/run-tests.js — all suites must pass (400 as of v8.3)
 ```
 
 ### Replay tools (run on a workstation with a copy of server data)
@@ -557,16 +587,20 @@ node src/replay-exits.js --env server-values.env \
 
 ### The two-week dip-entry review
 
-Planned after ~2026-09-28. Questions and where the answers are:
+Planned after ~2026-09-30 (restarted with v8.3 on 2026-09-16). Questions and where the answers are:
 
 | Question | Data |
 |---|---|
 | How many approvals, buys, expiries, cancels, blocks; how did dip buys do? | `DIP_ENTRY` + `TRADE_CLOSED` (dip trades carry `plan.dipEntry`) |
 | Is the dip too deep (too few buys)? | `deepestDipOfStop` on EXPIRED orders — a smaller depth would have filled every order at or above that value |
-| How far did missed "rockets" run? | `highestPrice`, `moveFromSignalPct`, then `data/replay-candles/SYMBOL.json` 5m bars after the window |
+| How far did missed "rockets" run? | `runUpFromSignalPct` on EXPIRED orders (v8.6 — the best gain while the order waited), plus `highestPrice`, `moveFromSignalPct`, then `data/replay-candles/SYMBOL.json` 5m bars after the window |
 | What did rockets look like at approval? | `DIP_ENTRY.approval` (and `SHADOW_SIGNAL`) |
+| Did the running-high anchor actually buy the pullbacks? | `DIP_ENTRY` records with `trailFromHigh: true` — compare `triggerPrice` at the end against `signalPrice`, and FILLED count against the 27-of-93 the frozen anchor managed |
+| Should the dip be shallower still? | Replay `DIP_025_60M_TRAIL` (live) against `DIP_010_60M_TRAIL` and `DIP_050_60M_TRAIL` on the new data. Three cuts of Sep 17–25 favoured shallower, all on the same week |
 | Would "buy a third now, rest on the dip" or a rocket exception earn more? | Replay with `replay-exits.js` on the new data, both periods |
 | Any data gaps? | `quoteMisses`, `checkFailures`, `ERROR DIP_ENTRY_CHECK`, CANCELLED "bot stopped or restarted" |
+| Did waiting for breakeven pay? | `TRADE_CLOSED` / trade-history `exitReason` `STALE_RECOVERED` vs `EOD_FORCE_CLOSE` / `STOP_LOSS` among trades with `waitedForBreakevenSince`; `POSITION_STATUS` state `WAITING_BREAKEVEN` |
+| Does the AI still skip good momentum? | `AI_DECISION` reasoning, `SHADOW_SIGNAL` outcome `AI_SKIP` (trend now BULLISH when beating a red SPY) |
 
 ---
 
@@ -579,10 +613,13 @@ with `scp`; SSH key `~/Downloads/ssh-key-2026-07-02.key`. Procedure used for v8+
 2. Package only the changed files: `tar czf deploy.tgz <files>`.
 3. `scp` it to `~/etoro-audit/` on the server.
 4. On the server: back up the same files
-   (`tar czf ~/etoro-audit/backup-pre-<version>-<timestamp>.tgz <files>`), check
-   `data/position-meta.json` for open positions, extract the new files.
-5. `node test/run-tests.js` on the server. **If anything fails, restore the backup
-   and do not restart.**
+   (`tar czf ~/etoro-audit/backup-pre-<version>-<timestamp>.tgz <files>`) and check
+   `data/position-meta.json` for open positions.
+5. **Test in a scratch copy, never in the live folder** (v8.5): copy the code without
+   `data/`, `logs/` and `node_modules/` to `~/etoro-test`, symlink `node_modules`,
+   extract the new files there and run `node test/run-tests.js`. **If anything fails,
+   stop — the live folder is untouched.** Only then extract the new files into
+   `~/etoro-v2-short`.
 6. `pm2 restart etoro-daytrade --update-env`; confirm the startup lines
    (capital, risk, "🎯 Dip entry ON") and an empty error log.
 7. Update `CHANGELOG.md` and this README.
@@ -592,8 +629,8 @@ waiting dip orders are journaled as cancelled and re-approved by the next scan.
 Settings-only changes need `.env` edited on the server plus a restart with
 `--update-env`.
 
-Backups on the server: `~/etoro-audit/backup-pre-v8-*.tgz`, `backup-pre-v81-*`,
-`backup-pre-v82-*`, `backup-pre-v82b-*`, `backup-pre-v82c-*`.
+Backups on the server (latest `backup-pre-v85-*`): `~/etoro-audit/backup-pre-v8-*.tgz`, `backup-pre-v81-*`,
+`backup-pre-v82-*`, `backup-pre-v82b-*`, `backup-pre-v82c-*`, `backup-pre-v83-*`.
 
 ---
 
@@ -615,10 +652,26 @@ Details for every line: `CHANGELOG.md`.
 | 2026-09-13 | v8.1 | Cross-process lock for manual closes, equity drift trail/alert, partial P&L backfill (+$1,008 across 57 trades), drawdown peak repair, shadow signals, daily candle capture, **risk halved to 0.5%** |
 | 2026-09-13 | v8.2 | **Dip entry**, Telegram dip messages, complete dip logging for the two-week review |
 | 2026-09-14 | docs | README rewritten for humans and AI agents |
+| 2026-09-16 | v8.3 | Dip ¼ stop / 60 min (v8.2 bought nothing), wait-for-breakeven on red dip buys, "sideways" trend mislabel fixed, score floor 80 re-checked (kept; old claim outdated), per-stock thresholds tested and rejected |
+| 2026-09-17 | v8.4 | Trend score V2 logged beside the live score in every scan record (not traded on); first replay failed its pre-set bar on trade count |
+| 2026-09-18 | v8.5 | First live v8.3 sessions reviewed (9 trades, −$66); false untracked-position alerts after the bot's own closes fixed; server tests moved to a scratch copy |
+| 2026-09-22 | ops | Server freeze during an automatic kernel update: 2 GB swap added, PM2 memory limits on both bots |
+| 2026-09-27 | v8.6 | **Dip measured from the running high, capped at the approval price** (the frozen buy level was why approved runners never filled); run-up while waiting now logged and shown in Telegram; tighter stops, looser profit keeper and earlier partials all tested and rejected |
 
 ---
 
 ## Known limitations and open items
+
+Findings of the 2026-09-16 review (details and tables in CHANGELOG v8.3):
+
+- **The desk score does not predict results.** 80+ beat <80 only in July–Aug 21; since then 80+ did worse or the same, and no band wins consistently (with or without the dip). The floor stays at 80 only because nothing better is proven.
+- **The score is dominated by 5-minute RSI.** A stock holding +4% swings between 40 and 100 from scan to scan; at its strongest (RSI > 78) it is "no setup".
+- **"Up today" is measured only against yesterday's close.** A gap-down that rallies hard (AMD Sep 14: −6% open, +3.7% off the low) is rejected all day as weak relative strength.
+- **Per-stock learned thresholds are not supported:** per-symbol results mean-revert (early vs later correlation −0.23).
+- **The AI veto adds no measurable value since Aug 22** (TAKEs did no better than SKIPs); its extended-hours rule also skips any RSI ≥ 74.
+- **Next step (in progress, v8.4):** trend score V2 (last-hour trend vs VWAP, rise from the day low, beating SPY, higher lows, room left, stretch) is logged beside the live score on every scan. First replay (Sep 8–16): V2 ≥ 70 was positive in both halves and beat the old score ≥ 80 (+$202/+$186 vs −$455/−$91), but it fired ~70 times a session and higher V2 was not consistently better, so it FAILED the pre-set bar and stays logging-only. The follow-up test on fresh data (Sep 17 → ~Oct 1) models the real limits (12 candidates, 7 slots, cooldowns) before any switch.
+- **The old score ≥ 80 did worse than buying any stock above VWAP** in the Sep 8–16 replay with the live dip entry.
+
 
 - **Entry edge is unproven.** Before v8.2 the entry signal had little forward edge;
   dip entry is the current attempt and is under live review.

@@ -5,6 +5,497 @@ repairs, reverted experiments). See README.md → "For AI agents".
 
 ---
 
+## v8.6 (2026-09-27) — the dip is measured from the running high, and never paid up
+
+**The bug the owner spotted.** Telegram kept sending "waiting to buy the dip" on
+META, AMD, GOOGL, MU, SMCI — and the dip never came. The buy level was frozen at
+the approval price, so a stock that ran first and pulled back later could never
+fill: its pullback started from a higher price while the trigger sat far below.
+
+**What the logs actually say** (93 real approvals Sep 17–25 replayed through the
+live exits, 10 bps costs, the fill bar's own high never counted as profit):
+
+| Entry rule | Bought | Win | Result | Avg per trade |
+|---|---|---|---|---|
+| Buy at the approval price | 93 | 58% | +$1.81 | +0.001R |
+| Dip ¼ stop, frozen anchor (v8.3–v8.5) | 27 | 48% | −$81.21 | −0.114R |
+| **Dip ¼ stop from the running high, capped at the approval price** | **39** | 49% | **−$70.28** | **−0.063R** |
+| Same, allowed to pay up to +1 stop above approval | 41 | 51% | −$73.49 | — |
+
+- **The missed names really were the winners.** Of the 64 orders that expired,
+  buying at the approval price would have made **+$358.83** (45 winners): META
+  +$52.85, MU +$33.44, SMCI +$30.35, ARM +$9.80, AMD +$7.11.
+- **But buying everything is not the fix.** The 20 orders that did fill would
+  have lost **−$371.78** bought at approval versus −$97.97 on the dip: the dips
+  that fill are the ones that keep falling (adverse selection). The two almost
+  exactly cancel — hence +$1.81 across all 93 approvals.
+- **And through the real book it is worse.** 7 slots, one position per symbol:
+  buying immediately left 155 candidates blocked by a full book versus 44 with
+  the dip, and paid the ~10 bps spread far more often. Best selection rule:
+  −$168.60 buying immediately versus −$2.63 with the dip.
+
+**Shipped.** `dipEntryTrailFromHigh` (`DT_DIP_TRAIL_FROM_HIGH`, default **on**).
+The buy level now follows the highest price seen while waiting, clamped at the
+approval price: the bot buys a pullback, still takes the stock if it comes back
+to where it was spotted, and never chases it higher. Paying up tested worse and
+is the exact late entry v8.2 was built to stop. The breakdown guard moves with
+the buy level, so "a full stop below the buy price is a breakdown, not a dip"
+keeps its meaning. Changed: `src/config.js`, `src/strategies/trade-planner.js`
+(new `dipLevels`, plus `buildDipEntryOrder`, `evaluateDipEntry`,
+`describeDipEntryOrder`), `src/index.js` (arm call, log line, both Telegram
+messages), `src/replay-exits.js` (the lab now models the same anchor; new
+variants `DIP_025_60M_TRAIL`, `DIP_010_60M_TRAIL`, `DIP_050_60M_TRAIL`),
+`test/audit-followups-v8-1.test.js` (7 new tests, 416 total, 0 failing).
+
+**New logging for the two-week review.** Every DIP_ENTRY record now carries
+`trailFromHigh` and `runUpFromSignalPct` — how far the stock ran at best while
+the order waited. On an EXPIRED order that is the size of the move the bot stood
+and watched, and it is in the Telegram message too ("ran to $X (+Y% at best)"),
+so the missed-runner question can be answered from the journal alone.
+
+**Tested and deliberately NOT changed** (same 93 approvals):
+
+- **Removing the dip.** Best per trade (+0.001R) but worse through the book, as
+  above. The shallower-dip pattern now shows up in three independent cuts
+  (¼ stop −0.114R → ⅛ stop −0.056R → no dip +0.001R; and with the new anchor
+  ½ stop −0.155R → ¼ stop −0.063R → ⅒ stop −0.019R). Every cut is the same
+  seven days, so the depth stays at 0.25 until the Oct 1 checkpoint.
+- **Tightening the stop.** A 0.5 ATR stop looked like the fix (−$112.89 →
+  +$12.81) until the dip depth and the position size were held constant: a
+  tighter stop also makes the dip trigger shallower (more fills) and, with
+  risk-based sizing, buys a bigger position. Held constant it was **−0.101R vs
+  −0.114R** — no real gain — and at a flat $2,500 size every variant got worse.
+  It also turned 3 stop-outs into 5, and −$122 of stop losses into −$213.
+- **A looser profit keeper or an earlier partial.** Keeping 80% of the peak
+  −$104.49, arming the keeper later −$89.02, selling half at +0.5R −$107.08, at
+  +1R −$112.89 (no change at all). All within noise of the live −$112.89.
+- **Where the money actually goes** (live settings, 27 fills): the profit keeper
+  is the only profitable exit (+$94.25 over 9 trades), while 3 stop-outs cost
+  −$122.56 and 9 forced closes (EOD + Friday) cost −$89.94. The payoff-shape
+  problem is real, but it is not fixed by moving the stop or the target.
+
+---
+
+## 2026-09-27 — review · Sep 24–25 sessions and an interim selection test (no code change)
+
+- **Sep 24 (Thu): no trades. Sep 25 (Fri): 2 trades, −$4.61** (GM +$2.80,
+  MU −$7.41, both closed by the Friday rule; MU had waited for breakeven, which
+  saved about $1 versus selling on the clock).
+- **Seven sessions since the small dip: 20 trades, 12 winners (60%), −$38.45.**
+  Account effective $9,330.00, peak $10,032.85 (6.7% below; breaker 15%).
+- **Why so few trades — two measured bottlenecks (Sep 17–25):**
+  1. **The screener has never approved a discovered name: 0 of 262.** Watchlist
+     plans are approved 93 of 254 (37%). On Sep 24, 65 of 83 plans were
+     discovered, so only 12 watchlist plans reached a verdict (2 taken).
+  2. **The 80-point floor blocks the names V2 rates highest.** Sep 24: AMD max
+     old 77 (26 rejections) / V2 99 · AFRM 76 / 100 · META 75 / 98 · LLY 79 / 95.
+     Sep 25: GM 78 (30 rejections) / V2 100 · MSFT 78 / 93 · MRVL 78 / 97 ·
+     SMCI 79 / 88. V2 rated 31 symbols ≥ 80 on Sep 24 and 21 on Sep 25.
+- **Interim selection test** (8,982 candidate records Sep 17–25 replayed through
+  a real book: 7 slots, one per symbol, live dip entry and exits; ranked by the
+  rule's own score). **Not the pre-registered decision** — one week, several
+  rules compared on the same data:
+
+| Selection rule | Trades | Win | Result |
+|---|---|---|---|
+| Live rule (old ≥ 80 + AI veto) | 24 | 54% | −$117.91 |
+| Old ≥ 80, no AI veto | 63 | 62% | −$144.27 |
+| **V2 ≥ 80 (any source)** | **80** | **71%** | **−$2.63** |
+| V2 ≥ 80, watchlist only | 59 | 66% | −$91.19 |
+| V2 ≥ 70, watchlist only | 68 | 66% | −$173.28 |
+| V2 ≥ 80 and old ≥ 80, watchlist | 27 | 63% | −$43.93 |
+
+  Consistent with the live trades (V2 ≥ 80: +$26.53 over 11; V2 < 80: −$60.37
+  over 7). Dropping the AI veto alone made things worse; the discovered names
+  V2 rated ≥ 80 helped (+$88 vs watchlist-only). Buying at the scan price
+  instead of the dip was worse for every rule except one (V2 ≥ 70 watchlist
+  +$64.77), which contradicts its own dip version and reads as noise.
+- **The real limit is trade shape, not selection.** Even the best rule wins 71%
+  and only breaks even: winners are harvested at +1–3% while stops sit 4–5%
+  away. Next lever to test at the checkpoint: a tighter stop or a longer leash
+  for winners, now that entries come on a dip closer to a sensible stop level.
+- Ops healthy: 5 days uptime, 327 MB swap in use, no errors, no
+  `UNTRACKED_POSITION` alerts, nightly candle capture running.
+
+---
+
+## 2026-09-23 — review · Five live sessions of the small dip (no code change)
+
+**18 trades, 12 winners (67%), −$33.84** (bot dollars; ≈ −$1.18 real).
+By day: 09-17 −$58.89 · 09-18 −$7.58 · 09-21 **+$14.35** · 09-22 **+$18.28** ·
+09-23 no trades. Account: effective $9,334.61, peak $10,032.85 (6.7% below,
+breaker at 15%).
+
+| Exit | Count | P&L |
+|---|---|---|
+| Profit keeper (MFE giveback) | 8 | +$61.48 |
+| Time exit at/near breakeven | 3 | +$4.25 |
+| `STALE_RECOVERED` (new rule) | 1 | +$0.43 |
+| End-of-day / Friday close | 3 | −$23.87 |
+| AI reviewer close | 1 | −$26.22 |
+| Stop-loss | 2 | −$49.91 |
+
+- **Shape of results:** average win +$5.51, average loss −$16.67. Winners are
+  harvested at +0.9–3.3% by the profit keeper while stops sit 2.2–4.9% away.
+- **Breakeven wait:** 7 positions waited, **1 recovered** (HOOD, sold at +$0.43
+  where the old rule would have sold at about −$1.98). Those 7 trades totalled −$66.41
+  vs about −$61 selling on the clock — still slightly negative, 7 samples.
+- **Dip entry, 87 approvals Sep 17–23:** 18 bought live. The 18 fills would have
+  been far worse bought at approval (−$328 in replay vs −$34 actual), but the 62
+  that expired would have made +$362 (44 winners) — the dip keeps filtering out
+  the winners. **However, with the real book (7 slots, one position per symbol)
+  buying every approval scores −$89.11 over 56 trades (55% win) versus −$97.39
+  over 24 for the dip rule** — the apparent advantage disappears once slots are
+  finite and allocation is first-come. No change made; the pre-registered
+  Oct 1 test decides, and should also test ranking candidates instead of
+  first-come.
+- **Trend score V2 (logged only):** on the 18 live trades, V2 ≥ 80 → 11 trades
+  **+$26.53**; V2 < 80 → 7 trades **−$60.37**. The three worst losers scored
+  low (AFRM 0, NBIS 73, SOFI 69) while the old score rated them 91/100/80.
+  Encouraging but 18 trades; decision stays with the Oct 1 test.
+- **Sep 23:** zero trades — 8 plans, all AI-skipped (4× "RSI overbought",
+  2× "risk-off tone", 2× "volume unavailable"). V2 rated 22 symbols ≥ 70 that
+  day, so the gap between what the old pipeline surfaces and what V2 sees is
+  large.
+- **New finding — volume is unknown on the 09:30 scan.** `volumeRatio` is only
+  computed when minutes-since-open > 0, so the opening scan reports "volume
+  unavailable" and the screener skipped IONQ (old score 100) and SMCI (92) for
+  it today. Session-hours coverage is otherwise 100% (median RVOL ≈ 1.2), but
+  the first ~30 minutes are inflated (MSFT and BA showed 4.1× at 09:41) because
+  pre-market volume is compared against a few minutes of expected volume. Fix
+  candidate for the Oct 1 batch, with the AI prompt's "volume unavailable"
+  blocker.
+- **v8.5 fixes verified live:** no `UNTRACKED_POSITION` alerts since the deploy
+  (previously one per close), and the server has used 305 MB of swap without
+  freezing.
+
+---
+
+## 2026-09-22 — ops · Server froze during an automatic kernel update; swap + memory limit added
+
+### What happened (UTC)
+
+- 06:28–07:38 Ubuntu `unattended-upgrades` installed a new kernel
+  (6.8.0-1061-oracle) and libraries — 70 minutes instead of a few, because the
+  956 MB server had no swap and was running four Node processes
+  (etoro-daytrade, etoro-ai-short, etoro-ai-short-shadow, pm2-logrotate) plus
+  an `npm start` wrapper.
+- Hourly cron ran 5 s late at 07:17 and 63 s late at 08:18; the bot's last
+  complete journal record was a `SCAN_START` at 08:30; the kernel reported PM2
+  "blocked for more than 123 seconds" at 09:32; SSH timed out in the banner
+  exchange. No out-of-memory kills were logged — the box thrashed rather than
+  crashed.
+- 12:12 the owner rebooted from the cloud console (this also activated the new
+  kernel). No positions were open; all data files (trade history 226, ledger,
+  cooldowns, positions, journal) intact. About 3½ hours of pre-market scanning
+  (04:30–08:12 ET) were missed; the regular session was unaffected. The nightly
+  candle capture (05:15–05:28) had finished normally and was not the trigger.
+
+### Changed (server, not code)
+
+- **2 GB swap file** `/swapfile`, in `/etc/fstab` (survives reboots),
+  `vm.swappiness=10` (`/etc/sysctl.d/99-swappiness.conf`) so it is used only
+  under memory pressure — the machine slows instead of freezing.
+- **PM2 memory ceiling for this bot:** `etoro-daytrade --max-memory-restart
+  300M`, saved with `pm2 save`. A process growing past 300 MB is restarted
+  cleanly instead of starving the server.
+- Automatic security updates stay on.
+- **Other bot on the same server (owner approved):** `etoro-ai-short` now runs
+  `node src/index.js` directly instead of through `npm start` (the wrapper cost
+  ~30 MB and meant PM2's memory limit watched npm, not the bot), with
+  `max_memory_restart` 300 MB. Defined in
+  `~/etoro-ai-short/ecosystem.ai-short.config.js` on the server; its 14 `DT_`
+  settings (identical to its `.env`) were carried over and verified;
+  no open positions at the time; `pm2 save` done. `etoro-ai-short-shadow`
+  already had a 200 MB limit — unchanged.
+
+---
+
+## 2026-09-18 — v8.5 · First live sessions of v8.3 reviewed · untracked-alert race fixed · safe server tests
+
+### What the logs showed (Sep 17–18, first two full sessions with the small dip)
+
+**Trades: 9, 4 winners, −$66.47** (bot dollars; ≈ −$2.33 real).
+
+| Stock | Result | Exit | Note |
+|---|---|---|---|
+| ANET | +$12.47 | profit keeper | dip bought 20 min after approval, peak +1.77% |
+| QCOM | +$6.68 | profit keeper | dip after 60 min |
+| ISRG | +$4.83 | profit keeper | |
+| MRVL | +$0.14 | time exit at breakeven | waited, recovered to entry |
+| TSLA | −$2.05 | end of day | waited |
+| AVGO | −$12.41 | Friday close | waited |
+| SNAP | −$16.89 | stop | waited |
+| AFRM | −$26.22 | AI reviewer close | waited 3.7 h at about −4% |
+| NBIS | −$33.02 | stop | **falling knife**: approved at $231.15 from a stale quote, bought at the first check at $224.88 (already 2.7% lower), stopped 8 min later |
+
+- **The trend-label fix worked.** The AI approved 35 of 132 plans on Sep 17
+  (it approved 0–8 a day before); 215 of 217 plans read BULLISH.
+- **Dip orders: 40 → 9 filled, 28 expired, 3 cancelled** (end-of-day cutoff).
+  17 of the 28 expired orders never dipped even 0.1 stop distance; 18 of 28
+  ended above the approval price (median +0.48%). Biggest missed runs: SMCI
+  +5.5%, IONQ +3.7%, MU +3.5%, ARM +2.4%.
+- **Breakeven wait: 5 positions waited, 0 recovered.** Actual −$57.43 vs about
+  −$51.02 if sold when time ran out (≈ $6 worse). Far too few trades to judge
+  against the replay; kept, watched.
+- **Trend score V2 logging works live**: 2,959 of 2,973 SHADOW_SIGNAL records
+  carry a score.
+- `EQUITY_DRIFT` 2026-09-18 15:00 UTC: realized equity $26.56 below the
+  ledger (0.29%, under the 1% tolerance). Noted, not corrected.
+- **Dip entry, what-if** (replay of all 40 approvals with live exits): the 9
+  that filled would have lost more bought at approval (−$225, 0 winners; live
+  dip result −$66); the 28 that expired would have made +$132 bought at
+  approval (19 winners). The stocks that dip to the buy price tend to keep
+  falling and the ones that don't dip keep running (adverse selection). Over
+  all 40 it is roughly even; two sessions are far too few to change the rule.
+- **The day's biggest movers were mostly out of reach.** Of the top intraday
+  runs among tracked symbols, most small caps (BHVN +20%, FBYD +22%, SCTX,
+  ARCT, VOGX…) were never offered by discovery. Where the bot did see them:
+  SDGR +25.6% (Sep 17) scored 100 / V2 90 and was **AI-skipped 22 times**
+  ("discovered, no catalyst, pump profile"); HOOD +8.5% (Sep 18) hit the 7% ATR
+  ceiling 17× and was AI-skipped 8×; ELMT hit the ATR ceiling; ALMR was
+  AI-skipped. MARA and MSTR were blocked by the ethics filter (crypto names are
+  excluded by request — the log reason wrongly reads "gambling/alcohol/adult").
+
+### Bugs fixed
+
+- **False `UNTRACKED_POSITION` alerts after the bot's own closes.** eToro keeps
+  listing a closed position for a few seconds; the alert fired 4–8 s after the
+  bot's "Position closed" (ANET, NBIS 09-17; ISRG 09-18; SMCI, AFRM 09-11).
+  A symbol the bot closed less than `DT_CLOSE_SETTLE_GRACE_MINUTES` (5) ago is
+  now treated as settling; still listed after that → the alert fires as before.
+  `cooldown-tracker.checkCooldown()` also returns `minutesSinceExit`.
+- **Server test runs touched live data.** `test/capital-manager-v6.test.js`
+  swaps the real `data/capital-ledger.json` and deletes a real `data/halt.flag`
+  while it runs, and the tests log to the live `logs/errors.log` (the
+  "HALT FLAG WRITTEN … $7500 is 25% below peak $10000" lines on 09-17 00:54
+  Bahrain were a test run during the v8.4 deploy). No harm was found (no halt
+  flag, ledger peak $10,032.85 intact), but a trade closing during a test run
+  could have lost its ledger entry and a real halt could have been lifted.
+  **Deploys now run the tests in a scratch copy (`~/etoro-test`, no `data/`,
+  no `logs/`) and only then touch the live folder.** README → Deployment.
+
+Tests: 409 pass.
+
+---
+
+## 2026-09-17 — v8.4 · Trend score V2, logged beside the live score (no trading change)
+
+### Why
+
+The v8.3 review found the live desk score does not predict results. It is
+`(RSI − 55) × 3 + day change × 8 + bonuses`: driven by 5-minute RSI (a stock
+holding +4% swings between 40 and 100 from scan to scan), "no setup" above
+RSI 78 exactly when a move is strongest, and the move is measured only against
+yesterday's close, so a gap-down that rallies hard reads as weak all day.
+
+### What changed (logging only — nothing trades on V2)
+
+- `momentum-scanner.extractTrendFeatures()` + `scoreTrendV2()`: pure functions
+  over today's **completed** 5-minute bars (ET session), daily ATR, and SPY's
+  bars.
+- Every `SHADOW_SIGNAL` record now also carries `scoreV2`, `scoreV2Reason`,
+  `scoreV2Components` and `trendFeatures` (day open/low/high, VWAP, move from
+  open, rise from low in ATR, last-hour change vs SPY, share of last-hour bars
+  above VWAP, higher lows, stretch above VWAP, day range in ATR).
+- `market-data`: enrichment returns the 5-minute bars it already fetched
+  (carried non-enumerable, never journaled); `fetchSpyIntradayBars()` — one
+  cached SPY candle call per scan.
+- Setting `DT_SCORE_V2_LOGGING` (default true).
+- 7 new tests (407 total): dip-then-rally scores high while red vs yesterday,
+  below-VWAP scores 0, completed bars only, no leak from yesterday, no score
+  under 30 minutes of bars, shadow record carries V2 and the bars stay out of
+  JSON.
+
+### The formula (fixed before any V2 result was seen)
+
+| Component | Points |
+|---|---|
+| Holding above VWAP — share of the last hour's bars closing above VWAP | up to 25 |
+| Hour momentum — last hour's rise in daily-ATR units, full at 0.4 ATR | up to 25 |
+| Rally under way — rise from today's low, full at 0.6 ATR | up to 15 |
+| Beating SPY — last-hour % minus SPY's, full at +1.0% (7.5 if SPY unknown) | up to 15 |
+| Higher lows across three 20-minute windows | up to 10 |
+| Room left — full up to a 1.0 ATR rise from the low, zero at 2.0 ATR | up to 10 |
+| Stretch penalty — above VWAP by more than 0.6 ATR, full at 1.2 ATR | down to −20 |
+
+Hard zero when not above VWAP or not higher than an hour ago.
+
+### Pre-registered replay test
+
+Candidates: every tracked symbol, every 10 minutes 04:00–15:10 ET, sessions
+Sep 8–11 (A) and Sep 14–16 (B); price ≥ $5, ATR ≤ 7%. Groups: OLD80 (live
+formula, |change| ≥ 1%, score ≥ 80 — no CHOP penalty, AI veto or cooldowns
+modelled), NEW70 (V2 ≥ 70; 60/80 shown for context), ABOVE_VWAP baseline. One
+signal per symbol per group per hour, bought with the live rule (¼-stop dip in
+60 min, breakeven wait).
+**Pass:** NEW70 avgR > 0 in A and B · NEW70 $ > OLD80 $ in A and B ·
+≥ 20 fills per half · ≤ 25 trades per session.
+
+### Result: FAIL (5 of 6) — V2 stays logging-only
+
+45,710 symbol-scans. Run with the live 100-bar window (the bot fetches the 100
+most recent 5-minute bars); running on full-day bars gave the same picture.
+
+| Live entry (¼-stop dip) | Sep 8–11 (4 sessions) | Sep 14–16 (3 sessions) |
+|---|---|---|
+| OLD80 (live score ≥ 80) | −$455 · 78 fills · avgR −0.164 | −$91 · 50 fills · avgR −0.035 |
+| **NEW70 (V2 ≥ 70)** | **+$202** · 287 fills · 66% win · avgR +0.013 | **+$186** · 196 fills · 63% win · avgR +0.024 |
+| NEW60 | +$23 · avgR +0.002 | −$14 · avgR −0.003 |
+| NEW80 | −$253 · avgR −0.034 | +$76 · avgR +0.017 |
+| Above VWAP (baseline) | −$114 · avgR −0.006 | −$230 · avgR −0.011 |
+
+- ✔ NEW70 positive in both halves; ✔ beats OLD80 in both; ✔ ≥ 20 fills.
+- ✘ **≈ 70 trades per session** against a limit of 25: across 180 symbols V2
+  fires far too often to use as it stands.
+- The edge is thin (about +0.02 R per trade) and **not monotonic**: V2 60–69
+  +0.010 / +0.007, 70–79 −0.004 / −0.011, 80–89 −0.011 / +0.016, 90+ +0.011 /
+  −0.037. A higher V2 is not yet a better trade.
+- Bought at the signal (no dip) every group loses, V2 included (NEW70 −0.049 /
+  −0.014 avgR), so the small dip still does most of the work.
+- **Side finding:** with the live dip entry, the old score ≥ 80 did *worse*
+  than buying any stock above VWAP in both halves — it steers the bot toward
+  RSI spikes.
+
+Live wiring verified with real eToro data (read-only smoke test on the server:
+NVDA/AMD, 100 bars + SPY bars → features and score computed; bars absent from
+JSON). Caveat: live V2 logging only covers stocks that already pass the old
+1% move filter; the candle-based replay above (all ~180 captured symbols) stays
+the main evaluation.
+
+**Next (pre-registered now, evaluated on NEW data Sep 17 → ~Oct 1, not on the
+data above):** model the bot's real limits — ≤ 12 candidates per scan ranked by
+score, 7 slots, one position per symbol, 30-minute cooldown — and compare a
+V2-ranked book against the old-score book with the live dip entry.
+Pass: V2 book positive in both weeks and ahead of the old-score book in both.
+Only then is V2 switched on for trading.
+
+---
+
+## 2026-09-16 — v8.3 · Realistic dip, wait for breakeven, trend-label fix, score floor re-checked
+
+### What the latest logs showed (Sep 14–16, the first three live days of dip entry)
+
+- **Zero buys.** 11 AI-approved stocks, 11 dip orders expired. The dip was one
+  full stop distance, which since the v8 1.0 × ATR stop means **4–5%** on most
+  names (AMD 4.07%, PANW/MRVL/ARM/NBIS 4.91%). The deepest any order got was
+  45% of the way (ARM); most under 10%. PANW ran +6.6% after approval; AMD was
+  approved at $519.83, asked to dip to $498.67, and went to $527.18 instead.
+- **Before the dip, most candidates die earlier** (3-day totals):
+  below VWAP 2,063 · weak strength vs SPY 748 · "no setup" 632 · score floor
+  721 plan rejections · AI SKIP 199 of 210 plans (92/95 Mon, 76/76 Tue, 31/39 Wed).
+- **Traced examples.**
+  - *AMD Sep 14*: opened −6%, rallied +3.7% off the low → rejected 36× as "weak
+    RS" because the move is measured only vs yesterday's close.
+  - *AMD Sep 16*: at its strongest (RSI 80–82) it was "no setup" (RSI cap 78);
+    when RSI cooled to 57–60 while holding +4% its score fell to 41–56 (floor
+    80); one AI TAKE → 4% dip order → expired.
+  - *META Sep 14*: RSI 83–89 pre-market = no setup; score-93 plan skipped by the
+    AI's extended-hours "RSI ≥ 74" rule; then a re-entry penalty (prior loss).
+    META's Sep 15/16 runs were only +1–2% vs the prior close → scores 8–67.
+  - *MSFT Sep 14*: 4 plans scored 80–90, all AI SKIP citing "sideways trend".
+  - *SNAP*: RSI 79–80 = no setup / AI SKIP ("overbought", 0.7× volume).
+  - *AAPL*: never moved more than ~1.3% intraday — no opportunity to miss.
+- **"Sideways" was a mislabel.** `classifyTrend()` returned BULLISH only when
+  SPY itself was green, so every stock above VWAP and beating a flat/red market
+  was SIDEWAYS — the AI's most common SKIP reason, and an automatic SKIP
+  outside regular hours.
+
+### Re-checked with replay (every trade, every skipped plan, every Sep 14–16 candidate; live exits; 10 bps)
+
+**Dip size**
+| Entry | Jul 1–Aug 21 candidates | Aug 22–Sep 11 candidates | Sep 14–16 all candidates |
+|---|---|---|---|
+| Buy immediately | −$3,805 | −$2,463 | −$1,869 |
+| Dip 1.0 stop / 120 min (v8.2) | 282 buys | 70 buys | **1 buy of 1,055** |
+| **Dip 0.25 stop / 60 min** | −$607 | +$161 | **+$524** (209 buys, 58% win) |
+| Dip 0.5 stop / 60 min | −$146 | −$147 | +$144 |
+| Dip 0.1 stop / 30 min | −$742 | −$361 | −$70 |
+| Small dip or buy anyway after 15–30 min | +$1,614…+$1,873 | −$837…−$1,222 | −$446…−$787 |
+
+**Positions that go red**
+- The existing behaviour: hard stop; after the time budget (150 session-min,
+  ×0.7 volatile / ×1.5 calm) anything under +0.5% exits, with one 45-min grace
+  if the short trend is rising; Mon–Thu end-of-day closes losers.
+- History: 79 stale exits −$751; 51 of 75 got back above entry within 6 h, but
+  only 8 reached Target 1 (median best +0.41%). Stop-losses were mostly right
+  (5 of 26 recovered).
+- Holding longer (240 min, 390 min, no time exit) was **worse** than the current
+  rule in every recent sample. "Wait for breakeven, then sell" also hurt with
+  immediate entries (Sep 14–16 −$2,619 vs −$1,869) but **helped with the small
+  dip** — and is what was adopted:
+
+| Small dip (0.25 / 60 min) | without the wait | **with the wait** |
+|---|---|---|
+| Real trades Jul 1–Aug 21 | +$357 | +$337 |
+| Real trades Aug 22–Sep 11 | −$65 | **+$42** |
+| Candidates Jul 1–Aug 21 | −$607 | **−$237** |
+| Candidates Aug 22–Sep 11 | +$161 | **+$315** |
+| All candidates Sep 14–16 | +$524 | **+$541** |
+
+**Score floor 80** ("every score band under 80 lost money across 114 audited trades")
+| Bought at signal | Jul 1–Aug 21 | Aug 22–Sep 11 | Sep 14–16 |
+|---|---|---|---|
+| score 80+ | +$1,416 | **−$2,011** | −$109 |
+| score <80 | −$5,221 | −$161 | −$603 |
+| 90+ band | +$897 | −$1,529 | −$99 |
+
+Real trades since the floor went live (Aug 6): 80–89 −$48 (40), 90+ −$74 (56).
+With the small dip the bands flip again (<80: −$1,135 / +$46 / +$399; 70–79:
+−$172 / −$3 / +$149). **The old claim is outdated, but no band wins
+consistently**, so the floor was neither lowered nor raised.
+
+**Per-stock dynamic threshold — not supported.** Across 30 symbols with ≥ 8
+candidates in both periods, early results predicted later results *backwards*
+(correlation −0.23): the best third early went on to −0.068R, the worst third
+to +0.021R. Real trades flip the same way (MU +$105 → −$79, AMD −$89 → +$77,
+TSLA −$120 → +$6).
+
+**AI veto.** Early on, plans it took beat plans it skipped; since Aug 22 its
+TAKEs did no better than its SKIPs in either recent sample (small dip:
+Aug 22–Sep 11 −0.034 vs +0.011 avgR; Sep 14–16 −0.186 vs −0.030). Not changed
+beyond the trend-label fix; flagged for review.
+
+### What changed
+
+- **Dip entry** `DT_DIP_ENTRY_DEPTH_OF_STOP` 1.0 → **0.25**,
+  `DT_DIP_ENTRY_WINDOW_MINUTES` 120 → **60** (≈ 0.5–1.25% dips).
+- **Wait for breakeven** (`DT_STALE_WAIT_FOR_BREAKEVEN=true`,
+  `DT_STALE_BREAKEVEN_EXIT_PCT=0.1`): a position **bought on a dip** whose time
+  budget runs out while red is held and sold as soon as it is back at +0.1%
+  (`STALE_RECOVERED`). Stop, profit protection, Mon–Thu end-of-day loser close,
+  Friday close-all and the 8× wall-clock ceiling all still apply.
+  Immediate/adopted/manual positions keep the old time exit.
+  Telegram: "⏳ SYM — time's up but it's red… holding until breakeven";
+  status line state `WAITING_BREAKEVEN`; trade records carry
+  `waitedForBreakevenSince`.
+- **Trend label**: BULLISH = above VWAP with relative strength ≥ floor,
+  regardless of SPY's sign (CHOP regime still SIDEWAYS).
+- **Score-floor rejection text** no longer cites the outdated 114-trade claim.
+- `src/replay-exits.js`: variants `DIP_010_30M`, `DIP_025_30M`,
+  `DIP_*_OR_MKT_*`, `HOLD_240M`, `HOLD_390M`, `NO_STALE_EXIT`,
+  `STALE_TO_BREAKEVEN*`, `DIP_025_60M_BE`, `NO_BREAKEVEN_WAIT`,
+  `DIP_025_60M_NO_WAIT`; shadow samples carry `outcomeDetail`; the engine's
+  breakeven wait is mirrored.
+- Tests: 400 pass (new: breakeven wait, dip-only scope, ceiling, stop while
+  waiting, status line, Telegram label, trend label).
+
+### Not changed, and why (evidence did not support it)
+
+- Score floor stays 80; no per-stock thresholds.
+- RSI 78 cap: the "RSI too high" group broke even when bought at the signal
+  (+$3 on 32) and RSI 78+ was mixed across periods (−0.669 / −0.012 / +0.091 avgR).
+- Relative strength vs SPY: "weak RS" rejections lost when bought (−$427 on 137).
+
+### Open for the next review
+
+The score is dominated by 5-minute RSI and the move is measured only against
+yesterday's close, so intraday reversals and steady grinders are structurally
+invisible. That needs a scoring redesign tested on the shadow data, not a
+threshold tweak.
+
+---
+
 ## 2026-09-14 — docs · README rewritten for humans and AI agents
 
 `README.md` previously described only the July 2026 eToro API probe scripts.

@@ -16,6 +16,7 @@
 // candidate — taken or not — becomes a labelled sample that
 // `node src/replay-exits.js --set shadow` can replay with real exits.
 const tradePlanner = require("./trade-planner");
+const momentumScanner = require("./momentum-scanner");
 
 function createShadowBook() {
   return new Map();
@@ -66,7 +67,35 @@ function buildShadowSignal(candidate, scored, context) {
     stopDistancePct: round(tradePlanner.computeStopDistancePct("DAY", atrPercent) * 100, 3),
     outcome: scored && scored.rejected ? "SCORING_REJECTED" : "SCORED",
     outcomeDetail: scored && scored.rejected ? scored.rejectReason || null : null,
+    ...trendScoreFields(candidate, context, price, changePercent, atrPercent),
   };
+}
+
+// v8.4: trend score V2 logged beside the live score (momentum-scanner.js).
+// Observation only — nothing reads these fields to trade.
+function trendScoreFields(candidate, context, price, changePercent, atrPercent) {
+  if (!context || !context.scoreV2 || !Array.isArray(candidate.intradayBars)) return {};
+  try {
+    const previousClose = price && changePercent != null ? price / (1 + changePercent / 100) : null;
+    const features = momentumScanner.extractTrendFeatures({
+      bars: candidate.intradayBars,
+      nowMs: context.nowMs || Date.now(),
+      price,
+      previousClose,
+      atrPercent,
+      spyBars: context.spyBars,
+      spyPrice: context.spyPrice,
+    });
+    const trend = momentumScanner.scoreTrendV2(features);
+    return {
+      scoreV2: trend.score,
+      scoreV2Reason: trend.reason,
+      scoreV2Components: trend.components,
+      trendFeatures: features,
+    };
+  } catch (error) {
+    return { scoreV2: null, scoreV2Reason: "trend score error: " + error.message };
+  }
 }
 
 function recordShadowCandidate(book, candidate, scored, context) {

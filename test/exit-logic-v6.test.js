@@ -31,6 +31,9 @@ process.env.DT_STOP_WICK_BAND_PCT = "0.005";
 process.env.DT_SESSION_AWARE_TIME_BUDGETS = "false";
 
 const riskManager = require("../src/strategies/risk-manager");
+// v8.3: this suite pins the ORIGINAL time-exit behaviour (sell on the clock);
+// the wait-for-breakeven rule has its own tests in audit-followups-v8-1.
+const config = require("../src/config");
 
 const MIN = 60000;
 const DAY = 86400000;
@@ -56,6 +59,8 @@ module.exports = {
   run: async () => {
     const results = [];
     const check = (label, pass) => results.push({ label, pass });
+    const savedStaleWait = config.staleWaitForBreakeven;
+    config.staleWaitForBreakeven = false;
 
     // ── 1. DAY stale-exit: no recovery signal → exits immediately ────────
     let meta = {
@@ -218,6 +223,7 @@ module.exports = {
       decision.action === "EXIT" && decision.reason === "SWING_TIME_EXIT",
     );
 
+    config.staleWaitForBreakeven = savedStaleWait;
     return results;
   },
 };

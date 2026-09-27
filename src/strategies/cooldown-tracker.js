@@ -106,8 +106,10 @@ function checkCooldown(symbol) {
     : config.tradeCooldownMinutes;
   const elapsedMinutes = (Date.now() - record.exitAtMs) / 60000;
   const remaining = cooldownMinutes - elapsedMinutes;
-  if (remaining <= 0) return { onCooldown: false, minutesRemaining: 0 };
-  return { onCooldown: true, minutesRemaining: Math.ceil(remaining) };
+  // v8.5: minutesSinceExit lets the untracked-position check recognise a
+  // position the bot itself closed moments ago (eToro still lists it briefly).
+  if (remaining <= 0) return { onCooldown: false, minutesRemaining: 0, minutesSinceExit: elapsedMinutes };
+  return { onCooldown: true, minutesRemaining: Math.ceil(remaining), minutesSinceExit: elapsedMinutes };
 }
 
 // v6: after the raw cooldown window expires, does re-entering this symbol

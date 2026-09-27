@@ -593,6 +593,14 @@ function confirmStopBreach(meta, currentPrice, stopLevel, peak, label) {
   return null; // confirmed (or deep) — caller exits
 }
 
+// v8.3: the wait-for-breakeven rule was replay-tested only on DIP entries —
+// with immediate entries it made results worse — so it applies only to
+// positions actually bought on a dip (plan.dipEntry), never to adopted,
+// manual or buy-immediately positions.
+function breakevenWaitApplies(meta) {
+  return config.staleWaitForBreakeven && !!(meta.plan && meta.plan.dipEntry);
+}
+
 // The MFE giveback floor for a DAY position. Factored out of decideDayAction
 // (v8) so position diagnostics and the replay harness read the SAME level the
 // exit engine enforces instead of re-deriving it and drifting from it.
@@ -759,6 +767,17 @@ function decideDayAction(meta, currentPrice, peak) {
   const budgetSpent = holdElapsed.effectiveMinutes >= effectiveMaxHoldMinutes;
   const ceilingHit = holdElapsed.wallClockMinutes >= absoluteCeilingMinutes;
 
+  // v8.3 WAIT FOR BREAKEVEN: a position whose time ran out while red is held
+  // (see below) and sold as soon as it is back to breakeven + a small margin.
+  if (
+    breakevenWaitApplies(meta) &&
+    meta.waitingForBreakevenSince &&
+    !ceilingHit &&
+    currentPrice >= entryPrice * (1 + config.staleBreakevenExitPct / 100)
+  ) {
+    return { action: "EXIT", reason: "STALE_RECOVERED", newPeak: peak };
+  }
+
   if ((budgetSpent || ceilingHit) && currentPrice < entryPrice * 1.005) {
     if (config.recoveryCheckEnabled && !meta.staleGraceUsedAt) {
       const trend = computeRecentTrend(meta.recentPrices);
@@ -783,6 +802,18 @@ function decideDayAction(meta, currentPrice, peak) {
         action: "HOLD",
         reason: "in stale-exit recovery grace window",
         newPeak: peak,
+      };
+    }
+    // v8.3: red at the end of the session budget — do not sell at a loss on
+    // the clock. The hard stop above, the MFE floor, the Mon-Thu end-of-day
+    // loser close and Friday close-all still apply; the wall-clock ceiling
+    // still force-exits. Replay-tested together with the dip entry.
+    if (breakevenWaitApplies(meta) && !ceilingHit && currentPrice < entryPrice) {
+      return {
+        action: "HOLD",
+        reason: "time budget spent while red — waiting to get back to breakeven (stop stays active)",
+        newPeak: peak,
+        startBreakevenWait: !meta.waitingForBreakevenSince,
       };
     }
     return {
@@ -983,8 +1014,14 @@ function describePositionState(meta, currentPrice) {
     if (!meta.partialDone) {
       status.exitConditions.push(
         budgetLeft > 0
-          ? "time exit in " + budgetLeft + " session-min if still under +0.5%"
-          : "time budget spent — exits if under +0.5%",
+          ? "time exit in " + budgetLeft + " session-min if still under +0.5%" +
+            (breakevenWaitApplies(meta) ? " (if red then, waits for breakeven)" : "")
+          : meta.waitingForBreakevenSince
+            ? "time spent while red — sells at breakeven $" +
+              round(entryPrice * (1 + config.staleBreakevenExitPct / 100)) +
+              " if it recovers; still-red losers close at end of day"
+            : "time budget spent — exits if under +0.5%" +
+              (breakevenWaitApplies(meta) ? " (waits for breakeven if red)" : ""),
       );
     }
 
@@ -1002,6 +1039,10 @@ function describePositionState(meta, currentPrice) {
     }
   }
 
+  // v8.3: a red position past its time budget, held for breakeven.
+  if (status.tradeType === "DAY" && meta.waitingForBreakevenSince && decision.action === "HOLD" && !meta.partialDone) {
+    status.state = "WAITING_BREAKEVEN";
+  }
   if (decision.action === "EXIT") status.state = "EXIT";
   return status;
 }

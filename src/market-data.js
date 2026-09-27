@@ -445,6 +445,8 @@ async function enrichCandidateFromEtoro(symbol, instrumentId) {
    rsi,
    volumeRatio,
    averageVolume,
+   // v8.4: the same 5-minute pull, chronological, for the logged trend score V2.
+   intradayBars: toCompactBars(todaysFiveMinuteBars),
  };
 }
 
@@ -710,6 +712,41 @@ async function fetchDailyAtrPercentFallback(symbol) {
   }
 }
 
+// ── v8.4: compact chronological bars + SPY's 5-minute bars (trend score V2) ──
+function toCompactBars(candles) {
+  return (candles || [])
+    .map((bar) => ({
+      t: bar.fromDate ? new Date(bar.fromDate).getTime() : NaN,
+      o: bar.open,
+      h: bar.high,
+      l: bar.low,
+      c: bar.close,
+      v: bar.volume || 0,
+    }))
+    .filter((bar) => Number.isFinite(bar.t) && Number.isFinite(bar.c))
+    .sort((a, b) => a.t - b.t);
+}
+
+// One call per ~4 minutes at most, shared by every candidate in a scan.
+// Fails soft: null just means the SPY comparison is scored neutral.
+let spyIntradayCache = { atMs: 0, bars: null };
+async function fetchSpyIntradayBars() {
+  if (!etoroMarketData.isConfigured()) return null;
+  if (spyIntradayCache.bars && Date.now() - spyIntradayCache.atMs < 4 * 60 * 1000) {
+    return spyIntradayCache.bars;
+  }
+  try {
+    const spyInstrumentId = await etoroClient.resolveTickerToInstrumentId("SPY");
+    if (!spyInstrumentId) return null;
+    const bars = toCompactBars(await etoroMarketData.fetchCandles(spyInstrumentId, "FiveMinutes", 100));
+    spyIntradayCache = { atMs: Date.now(), bars };
+    return bars;
+  } catch (error) {
+    logger.warn("SPY 5-minute bars unavailable for the trend score: " + error.message);
+    return null;
+  }
+}
+
 // ── SPY quote (FAIL-CLOSED — null on any failure, now with ALERT) ──────────
 // v5.3: prefers the Alpaca stream snapshot (instant) when configured and
 // SPY has streamed data yet; falls back to the original Twelve Data REST
@@ -856,6 +893,8 @@ module.exports = {
   fetchDailyAtrPercent,
   fetchSpyChangePercent,
   fetchSpyQuote,
+  fetchSpyIntradayBars, // v8.4
+  toCompactBars, // v8.4
   fetchCurrentPrice,
   sleep,
 };

@@ -508,6 +508,10 @@ const config = {
   // restored automatically (that is the RIVN scenario).
   readoptWindowMinutes: int("DT_READOPT_WINDOW_MINUTES", 720), // 12h
 
+  // v8.5: a position the bot closed less than this many minutes ago that
+  // eToro still lists is treated as settling, not untracked (no alert).
+  closeSettleGraceMinutes: num("DT_CLOSE_SETTLE_GRACE_MINUTES", 5),
+
   // Positions the bot never opened (a manual trade, say) are ALERTED on
   // but not touched, because closing someone else's deliberate trade is
   // not the bot's business. Turn this on to have it adopt and protect
@@ -534,6 +538,20 @@ const config = {
   // monotonic across four bands and the mechanism is plausible, NOT
   // because the number is precise. It is fitted to 114 observations
   // against ~135 tunables. Re-derive it once the replay harness exists.
+  //
+  // v8.3 RE-DERIVED (2026-09-16) on every scored plan, same exits, 10 bps:
+  //   bought at signal     Jul1-Aug21   Aug22-Sep11   Sep14-16
+  //   score 80+            +$1,416      -$2,011        -$109
+  //   score <80            -$5,221      -$161          -$603
+  //   (90+ band: +$897 / -$1,529 / -$99. Real trades since the floor went
+  //   live Aug 6: 80-89 -$48 on 40, 90+ -$74 on 56.)
+  // With the dip entry the bands flip again (<80: -$1,135 / +$46 / +$399).
+  // The old "every band under 80 lost" no longer holds, but no band wins
+  // consistently either, so neither a lower floor nor a per-stock floor is
+  // supported: per-symbol early results predicted later results BACKWARDS
+  // (correlation -0.23 across 30 symbols). Kept at 80 pending a scoring
+  // redesign — the score is dominated by 5-minute RSI, which swings a steady
+  // +4% mover between 40 and 100 from one scan to the next.
   minEntryScore: num("DT_MIN_ENTRY_SCORE", 80),
 
   // OVERNIGHT DEAD ZONE (Eastern time). The audit tested whether the
@@ -686,9 +704,71 @@ const config = {
   // distance and buying there averaged +0.05R (Jul 1 - Aug 21) and +0.13R
   // (Aug 22 - Sep 11), buying ~15% of approvals. No dip in time = no trade.
   // DT_DIP_ENTRY_ENABLED=false restores the old buy-immediately behaviour.
+  //
+  // v8.3 (2026-09-16): depth 1.0 -> 0.25, window 120 -> 60 min. Live Sep 14-16
+  // the full-stop dip (4-5% on most names since the v8 1.0 ATR stop) bought
+  // NOTHING: 11 approvals, 11 expired, deepest dip reached 0.45 of the way,
+  // PANW ran +6.6% after approval. Replay incl. every Sep 14-16 candidate:
+  //   entry                 Jul1-Aug21   Aug22-Sep11   Sep14-16 (all cands)
+  //   buy immediately        -$3,805      -$2,463        -$1,869
+  //   dip 1.0 stop, 120m     282 buys     70 buys        1 buy of 1,055
+  //   dip 0.25 stop, 60m      -$607       +$161          +$524 (209 buys)
+  //   dip 0.10 stop, 30m      -$742       -$361          -$70
+  //   dip-or-buy-anyway 15m  +$1,669     -$1,147        -$583
+  // (candidates = taken + AI-skipped + score-floor-rejected plans; 10 bps.)
   dipEntryEnabled: bool("DT_DIP_ENTRY_ENABLED", true),
-  dipEntryDepthOfStop: num("DT_DIP_ENTRY_DEPTH_OF_STOP", 1.0),
-  dipEntryWindowMinutes: int("DT_DIP_ENTRY_WINDOW_MINUTES", 120),
+  dipEntryDepthOfStop: num("DT_DIP_ENTRY_DEPTH_OF_STOP", 0.25),
+  dipEntryWindowMinutes: int("DT_DIP_ENTRY_WINDOW_MINUTES", 60),
+
+  // v8.6 (2026-09-27): DIP MEASURED FROM THE RUNNING HIGH, NEVER PAYING UP.
+  // The buy level used to be frozen at the approval price, so a stock that
+  // ran first and pulled back later could never fill: the pullback came from
+  // a higher price and the old trigger sat far below it. That is exactly what
+  // the owner saw in Telegram - "waiting to buy the dip" on names that were
+  // already gone. Sep 17-25, 93 real approvals replayed with the live exits:
+  //   anchor                                        fills  win   total
+  //   frozen at the approval price (v8.3-v8.5)       27    48%   -$81.21
+  //   trails the high, capped at the approval price  39    49%   -$70.28
+  //   trails the high, allowed to pay up to +1 stop  41    51%   -$73.49
+  // So the trigger now follows the highest price seen while waiting, clamped
+  // at the approval price: the bot buys a pullback, and if the stock takes
+  // off it will still take it if it comes back to where it was spotted, but
+  // it never chases higher (paying up tested worse and is the exact late
+  // entry v8.2 was built to stop).
+  //
+  // Also checked and NOT changed, same 93 approvals: removing the dip
+  // entirely averaged +0.001R per trade vs -0.114R on the live dip, but
+  // through the real book (7 slots, one per symbol) it lost more - $168 vs
+  // $3 for the best selection rule - because immediate buying fills the slots
+  // with whatever arrives first (155 candidates blocked by a full book vs 44)
+  // and pays the ~10 bps spread far more often. Tightening the stop to 0.5
+  // ATR also looked good until the dip depth and position size were held
+  // constant, after which it was -0.101R vs -0.114R: no real gain.
+  // See CHANGELOG v8.6.
+  dipEntryTrailFromHigh: bool("DT_DIP_TRAIL_FROM_HIGH", true),
+
+  // v8.3 WAIT FOR BREAKEVEN. When a DAY position's time budget runs out while
+  // it is RED, it is no longer sold at a loss on the clock: it is held (stop,
+  // profit protection, the Mon-Thu end-of-day loser close and the Friday
+  // close-all all stay active) and sold as soon as it is back to breakeven +
+  // this %. The 8x wall-clock ceiling still force-exits. Flat-green positions
+  // under +0.5% still exit on time as before.
+  // Evidence: 79 historical stale exits lost -$751; 51 of 75 got back above
+  // entry within 6h. Replay: with immediate entries this rule HURT (Sep 14-16
+  // -$2,619 vs -$1,869), but with the 0.25-stop dip entry it helped in 4 of 5
+  // samples (real trades Aug22+ -$65 -> +$46; candidates Aug22+ +$161 ->
+  // +$362; Sep 14-16 +$524 -> +$548; Jul-Aug candidates -$607 -> -$347; real
+  // trades Jul-Aug +$357 -> +$315). Simply holding longer (240/390 min or no
+  // time exit) was worse than the current rule in every recent sample.
+  staleWaitForBreakeven: bool("DT_STALE_WAIT_FOR_BREAKEVEN", true),
+  staleBreakevenExitPct: num("DT_STALE_BREAKEVEN_EXIT_PCT", 0.1),
+
+  // v8.4 TREND SCORE V2 — LOGGING ONLY. Every SHADOW_SIGNAL record also
+  // carries scoreV2 (see momentum-scanner.scoreTrendV2) and the intraday
+  // trend features behind it. Costs one extra cached SPY 5-minute candle call
+  // per scan. Nothing trades on it until it has passed the replay test and
+  // enough live logging (CHANGELOG v8.4).
+  scoreV2LoggingEnabled: bool("DT_SCORE_V2_LOGGING", true),
 
   // ── v8.1 (2026-09-13) ─────────────────────────────────────────────
   // EQUITY DRIFT TRAIL. Since v8 the reconciliation compares REALIZED equity

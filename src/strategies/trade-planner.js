@@ -49,10 +49,14 @@ function classifyTrend(candidate, spyChangePercent, regime) {
   const aboveVwap = candidate.aboveVwap === true;
   const strongRelativeStrength =
     (candidate.relativeStrength || 0) >= config.minRelativeStrengthVsSpyPct;
-  const marketUp = (spyChangePercent || 0) > 0;
 
   if (regime && regime.regime === "CHOP") return "SIDEWAYS";
-  if (aboveVwap && strongRelativeStrength && marketUp) return "BULLISH";
+  // v8.3: relative strength already measures the stock AGAINST SPY. Also
+  // requiring SPY itself to be green labelled every stock rising above VWAP
+  // while beating a flat/red market as SIDEWAYS — the AI screener's most
+  // common SKIP reason Sep 14-16 (MSFT x4, SNAP, AMD, ANET...) and an
+  // automatic SKIP outside regular hours ("trend read is SIDEWAYS").
+  if (aboveVwap && strongRelativeStrength) return "BULLISH";
   if (!aboveVwap && (candidate.priceChangePercent || 0) < 0) return "BEARISH";
   return "SIDEWAYS";
 }
@@ -218,7 +222,9 @@ function buildTradePlan(
         candidate.score.toFixed(1) +
         " below the entry floor of " +
         config.minEntryScore +
-        " (every score band under 80 lost money across 114 audited trades)",
+        // v8.3: the old "(every score band under 80 lost money across 114
+        // audited trades)" is no longer true — see config.minEntryScore.
+        " (desk-score floor; the 2026-09-16 recheck found no score band that wins consistently — CHANGELOG v8.3)",
     };
   }
 
@@ -592,7 +598,7 @@ function formatPlanForTelegram(plan, aiReasoning) {
 // windowMinutes. The plan is then moved to the fill price with the SAME stop
 // percentage, so size and dollar risk are unchanged.
 // ══════════════════════════════════════════════════════════════════════
-function buildDipEntryOrder(plan, { depthOfStop, windowMinutes, nowMs }) {
+function buildDipEntryOrder(plan, { depthOfStop, windowMinutes, nowMs, trailFromHigh = false }) {
   const stopFraction = plan.stopDistancePct / 100;
   const triggerPrice = plan.entryPrice * (1 - stopFraction * depthOfStop);
   return {
@@ -600,6 +606,12 @@ function buildDipEntryOrder(plan, { depthOfStop, windowMinutes, nowMs }) {
     plan,
     signalPrice: plan.entryPrice,
     triggerPrice: Number(triggerPrice.toFixed(4)),
+    // v8.6: with trailFromHigh the buy level is re-measured from the highest
+    // price seen while waiting, so a stock that runs first and pulls back
+    // later can still fill. stopFraction is stored because the order is
+    // re-priced on every check, long after the plan was built.
+    trailFromHigh: !!trailFromHigh,
+    stopFraction,
     // A further full stop distance below the buy price is where the new
     // position's stop would sit — a breakdown, not a dip. Never buy there.
     breakdownPrice: Number((triggerPrice * (1 - stopFraction)).toFixed(4)),
@@ -615,12 +627,37 @@ function buildDipEntryOrder(plan, { depthOfStop, windowMinutes, nowMs }) {
   };
 }
 
+// v8.6: the buy level, re-measured on every check. With trailFromHigh it sits
+// one dip below the highest price seen since approval, but is never allowed
+// above the approval price itself - the bot buys a pullback, and will still
+// take the stock if it comes back to where it was spotted, but never pays up
+// to chase it.
+function dipLevels(order) {
+  const stopFraction =
+    order.stopFraction != null ? order.stopFraction : (order.plan.stopDistancePct || 0) / 100;
+  const dip = 1 - stopFraction * order.depthOfStop;
+  const trigger = order.trailFromHigh
+    ? Math.min(order.highestPrice * dip, order.signalPrice)
+    : order.signalPrice * dip;
+  return {
+    triggerPrice: Number(trigger.toFixed(4)),
+    // A further full stop distance below the buy level is a breakdown, not a
+    // dip. It moves with the trigger so the guard keeps the same meaning.
+    breakdownPrice: Number((trigger * (1 - stopFraction)).toFixed(4)),
+  };
+}
+
 // askPrice null = no usable quote this minute (the order just waits).
 function evaluateDipEntry(order, askPrice, nowMs) {
   if (Number.isFinite(askPrice) && askPrice > 0) {
     order.lastPrice = askPrice;
     order.lowestPrice = Math.min(order.lowestPrice, askPrice);
     order.highestPrice = Math.max(order.highestPrice, askPrice);
+    if (order.trailFromHigh) {
+      const levels = dipLevels(order);
+      order.triggerPrice = levels.triggerPrice;
+      order.breakdownPrice = levels.breakdownPrice;
+    }
     if (askPrice <= order.breakdownPrice) {
       return { action: "CANCEL", reason: "fell through $" + order.breakdownPrice + " — a breakdown, not a dip" };
     }
@@ -661,6 +698,7 @@ function describeDipEntryOrder(order, nowMs) {
     triggerPrice: order.triggerPrice,
     breakdownPrice: order.breakdownPrice,
     depthOfStop: order.depthOfStop,
+    trailFromHigh: !!order.trailFromHigh,
     windowMinutes: order.windowMinutes,
     armedAt: new Date(order.armedAtMs).toISOString(),
     minutesWaited: Math.round((nowMs - order.armedAtMs) / 60000),
@@ -670,6 +708,13 @@ function describeDipEntryOrder(order, nowMs) {
     deepestDipOfStop: deepestDip != null ? Number(deepestDip.toFixed(2)) : null,
     moveFromSignalPct:
       order.signalPrice > 0 ? Number(((order.lastPrice / order.signalPrice - 1) * 100).toFixed(2)) : null,
+    // v8.6: how far the stock ran while the order waited. On an EXPIRED order
+    // this is the size of the move the bot stood and watched - the one number
+    // the two-week review needs to judge the dip rule.
+    runUpFromSignalPct:
+      order.signalPrice > 0
+        ? Number(((order.highestPrice / order.signalPrice - 1) * 100).toFixed(2))
+        : null,
     stopDistancePct: order.plan.stopDistancePct,
     atrPercent: order.plan.atrPercent != null ? order.plan.atrPercent : null,
     score: order.plan.score != null ? order.plan.score : null,
