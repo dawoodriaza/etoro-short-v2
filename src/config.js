@@ -383,6 +383,33 @@ const config = {
   // conditioned on the evidence the model just wrote out). That costs more
   // output tokens than v6's bare verdict+reasoning, so the old max_tokens
   // of 300 would truncate mid-JSON and fail the parse.
+  // ── v8.7 (2026-10-08) — THE CLAUDE MODEL, IN ONE PLACE ────────────
+  // The model used to be hardcoded in ai-screener.js and
+  // ai-position-reviewer.js, so changing it meant editing code twice.
+  //
+  // Moved to Claude Haiku 5.5 from Haiku 4.5 on 2026-10-08. Measured on a
+  // real probe of this server's own key and SDK (0.24.3), same evidence:
+  //   model                            in/out tokens   cost/call   verdict
+  //   haiku-4-5 (previous)                132/60        $0.00043    TAKE/8
+  //   haiku-5-5, thinking off (now)       186/127       $0.00008    TAKE/6
+  // About 5x cheaper per call: list price is 10x lower ($0.10/$0.50 per
+  // million vs $1.00/$5.00), partly offset by a new tokenizer that counts
+  // ~40% more input tokens for the same text. Context window 1M vs 200K,
+  // which this bot does not need - its prompts are ~1-2K tokens.
+  //
+  // THINKING IS DELIBERATELY OFF. Haiku 5.5 runs adaptive thinking by
+  // DEFAULT (Haiku 4.5 ran none unless asked), and thinking tokens are
+  // charged against max_tokens below. On the probe, thinking ON spent 252
+  // output tokens of the screener's 600 budget on a tiny prompt - the real
+  // prompt is far longer, and a truncated reply is thrown away as an
+  // "unparseable screener response", which with the AI as the entry gate
+  // would stop the bot trading. Thinking also CHANGED the verdict on
+  // identical evidence (SKIP/5 with it on, TAKE/6 with it off), so it is a
+  // strategy change, not a model swap, and belongs in its own test with a
+  // raised token budget. DT_AI_THINKING=true turns it on.
+  aiModel: process.env.DT_AI_MODEL || "claude-haiku-5-5",
+  aiThinking: bool("DT_AI_THINKING", false),
+
   screenerMaxTokens: int("DT_SCREENER_MAX_TOKENS", 600),
   reviewerMaxTokens: int("DT_REVIEWER_MAX_TOKENS", 900),
 

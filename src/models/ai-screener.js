@@ -251,7 +251,11 @@ function composeReasoning(parsed) {
 async function screenCandidate(plan, currentPositions, context) {
   try {
     const response = await anthropic.messages.create({
-      model: "claude-haiku-4-5",
+      model: config.aiModel, // v8.7: one setting, see config.js
+      // Haiku 5.5 thinks by default and its thinking is billed against
+      // max_tokens; off by default here so a long reasoning pass cannot
+      // truncate the JSON verdict. See config.aiThinking.
+      ...(config.aiThinking ? {} : { thinking: { type: "disabled" } }),
       max_tokens: config.screenerMaxTokens,
       system: SCREENER_SYSTEM_PROMPT,
       messages: [

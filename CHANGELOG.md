@@ -5,6 +5,54 @@ repairs, reverted experiments). See README.md → "For AI agents".
 
 ---
 
+## v8.7 (2026-10-08) — Claude Haiku 5.5 for the screener and reviewer, thinking off
+
+The screener and the daily position reviewer ran `claude-haiku-4-5`, hardcoded in
+two files. Both now read **one setting**, `config.aiModel`, defaulting to
+**`claude-haiku-5-5`** (`DT_AI_MODEL`).
+
+**Measured on this server's own key and SDK (0.24.3), same evidence, before
+changing anything:**
+
+| model | in/out tokens | cost per call | verdict |
+|---|---|---|---|
+| `claude-haiku-4-5` (previous) | 132 / 60 | $0.00043 | TAKE/8 |
+| `claude-haiku-5-5`, thinking off (now) | 186 / 127 | $0.00008 | TAKE/6 |
+| `claude-haiku-5-5`, thinking on | 187 / 252 | — | SKIP/5 |
+
+About **5× cheaper per call**: list price is 10× lower ($0.10/$0.50 per million
+versus $1.00/$5.00), partly offset by a new tokenizer that counts ~40% more
+input tokens for the same text. Context window is 1M instead of 200K, which this
+bot does not need — its prompts run 1–2K tokens.
+
+**Thinking is deliberately OFF** (`DT_AI_THINKING=false`). Two reasons found on
+the probe, not assumed:
+
+1. Haiku 5.5 runs adaptive thinking **by default** where Haiku 4.5 ran none, and
+   thinking tokens are charged against `max_tokens`. On a tiny test prompt
+   thinking spent 252 of the screener's 600-token budget; the real prompt is far
+   longer. A truncated reply is discarded as an "unparseable screener response",
+   and with the AI as the entry gate that would stop the bot trading entirely.
+2. Thinking **changed the verdict** on identical evidence (SKIP/5 with it on,
+   TAKE/6 with it off). That is a strategy change, not a model swap, so it gets
+   its own test with a raised token budget rather than riding along with this.
+
+**Verified before and after deploying**, not assumed: the installed SDK (0.24.3,
+older than the thinking parameter) accepts both the new model string and
+`thinking: {type: "disabled"}` and passes them through; four real Oct 7 plans
+replayed through the bot's own `screenCandidates` returned parseable verdicts in
+1.7–2.2 s with the dedupe cache working and no truncation. Both call sites
+already filtered `block.type === "text"`, so the extra block types thinking would
+add could not have broken parsing.
+
+Changed: `src/config.js` (new `aiModel`, `aiThinking`), `src/models/ai-screener.js`,
+`src/models/ai-position-reviewer.js` (read the config instead of a hardcoded
+string), `src/index.js` (startup line now prints the model, thinking state and
+token caps). 416 tests pass. Restarted 09:07 ET with no open positions and no
+pending dip orders, 23 minutes before the open.
+
+---
+
 ## v8.6 (2026-09-27) — the dip is measured from the running high, and never paid up
 
 **The bug the owner spotted.** Telegram kept sending "waiting to buy the dip" on

@@ -41,11 +41,11 @@ Detailed history, evidence and the reasoning behind every change:
 
 ---
 
-## Status snapshot (2026-09-27)
+## Status snapshot (2026-10-08)
 
 | Item | Value |
 |---|---|
-| Version | **v8.6** — the dip is measured from the running high and never paid up; v8.5 untracked-alert race fixed, safe server tests; v8.4 trend score V2 logged (not traded); v8.3 small dip + wait for breakeven (see CHANGELOG) |
+| Version | **v8.7** — Claude Haiku 5.5 for the AI screener and reviewer (thinking off); v8.6 — the dip is measured from the running high and never paid up; v8.5 untracked-alert race fixed, safe server tests; v8.4 trend score V2 logged (not traded); v8.3 small dip + wait for breakeven (see CHANGELOG) |
 | Mode | `TRADING_MODE=live` |
 | Server | `ubuntu@130.110.113.198` (Oracle Cloud), directory `~/etoro-v2-short`, Node 20.20.2, ~1 GB RAM + **2 GB swap** (`/swapfile`, swappiness 10, added 2026-09-22 after a freeze during an automatic kernel update). If SSH times out "during banner exchange", the box is starved: reboot it from the Oracle console (data is kept) |
 | PM2 memory limit | `etoro-daytrade` restarts itself above 300 MB (`--max-memory-restart 300M`, saved with `pm2 save`) |
@@ -163,7 +163,7 @@ A scan runs every `DT_SCAN_INTERVAL_MINUTES` (10) on weekdays, whenever eToro's
    1–5%, Target 1 at +1× the stop distance (sell half), Target 2 at +2×, size so
    that hitting the stop loses 0.5% of capital (max 35% of capital per position;
    high-volatility stocks ×0.7).
-9. **AI check** (`ai-screener.js`, Claude Haiku 4.5, acting as a risk officer):
+9. **AI check** (`ai-screener.js`, **Claude Haiku 5.5** since v8.7 — `config.aiModel`, thinking off — acting as a risk officer):
    one TAKE/SKIP verdict per plan with a market brief (SPY, VIX, sectors,
    breadth, today's P&L). The AI never sets prices. A TAKE below confidence 4 is
    downgraded to SKIP. Identical plans within 30 minutes reuse the verdict.
@@ -413,6 +413,7 @@ design; the running bot uses **Claude Haiku 4.5 only** (screener and reviewer).
 | Entry quality | `DT_MIN_ENTRY_SCORE`, `DT_MAX_ENTRY_ATR_PCT`, `DT_PREFILTER_MIN_MOVE_PCT` | 80, 7.0, 1.0 (defaults) |
 | Momentum | `DT_RSI_MOMENTUM_MIN`/`MAX`, `DT_MIN_VOLUME_RATIO`, `DT_MIN_RS_VS_SPY_PCT` | 55/78, 1.5, 0.5 |
 | Market filter | `DT_SPY_MIN_CHANGE_PCT`, `DT_REQUIRE_ABOVE_VWAP` | −1.0, true |
+| AI model | `DT_AI_MODEL`, `DT_AI_THINKING`, `DT_SCREENER_MAX_TOKENS`, `DT_REVIEWER_MAX_TOKENS` | `claude-haiku-5-5`, false, 600, 900 (v8.7 — thinking is billed against the token caps, see CHANGELOG) |
 | Sessions | `DT_TRADE_24_5`, `DT_HOLD_24_5_OVERNIGHT`, `DT_ALLOW_PREMARKET` | true, true, true |
 | Close rules | `DT_FRIDAY_CLOSE_ALL`, `DT_FORCE_CLOSE_MINUTES_BEFORE_CLOSE` | true, 15 |
 | Freeze | `DT_OVERNIGHT_FREEZE_*` | 00:00–04:00 America/New_York |
@@ -656,6 +657,7 @@ Details for every line: `CHANGELOG.md`.
 | 2026-09-17 | v8.4 | Trend score V2 logged beside the live score in every scan record (not traded on); first replay failed its pre-set bar on trade count |
 | 2026-09-18 | v8.5 | First live v8.3 sessions reviewed (9 trades, −$66); false untracked-position alerts after the bot's own closes fixed; server tests moved to a scratch copy |
 | 2026-09-22 | ops | Server freeze during an automatic kernel update: 2 GB swap added, PM2 memory limits on both bots |
+| 2026-10-08 | v8.7 | Screener + reviewer moved to **Claude Haiku 5.5** (~5x cheaper per call), model and thinking switch moved into `config.js`; thinking left OFF because it is billed against `max_tokens` and changed verdicts on identical evidence |
 | 2026-09-27 | v8.6 | **Dip measured from the running high, capped at the approval price** (the frozen buy level was why approved runners never filled); run-up while waiting now logged and shown in Telegram; tighter stops, looser profit keeper and earlier partials all tested and rejected |
 
 ---

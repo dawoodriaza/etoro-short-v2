@@ -3720,6 +3720,14 @@ async function main() {
   // v5.3: optional Alpaca WebSocket stream — no-op if not configured
   marketDataStream.start();
 
+  // v8.7: say which Claude model is deciding, and whether it is thinking.
+  logger.info(
+    "AI model: " + config.aiModel +
+      " · thinking " + (config.aiThinking ? "ON (billed against max_tokens)" : "off") +
+      " · screener/reviewer token caps " + config.screenerMaxTokens + "/" + config.reviewerMaxTokens +
+      " (DT_AI_MODEL, DT_AI_THINKING)",
+  );
+
   if (finnhub.isConfigured()) {
     logger.info(
       "Finnhub: CONFIGURED — earnings blackout, dynamic sector buckets, and " +
