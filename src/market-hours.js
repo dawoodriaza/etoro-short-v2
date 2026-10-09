@@ -343,7 +343,18 @@ function easternClockToLogZone(easternHour, easternMinute = 0) {
 // on America/New_York, and Bahrain does not change its clocks, so from
 // 2026-11-01 (US daylight saving ends) every Bahrain time below moves one hour
 // later on its own — 16:00 ET stops being 23:00 Bahrain and becomes 00:00.
-// v8.8: an actual instant on the operator's wall clock, e.g. "22:21 Bahrain".
+// v8.9: DISPLAY ONLY — "3:45 PM" from a 24-hour hour/minute pair. Every clock
+// time an operator reads goes through here. The h23 hour cycle is still used
+// everywhere a time is COMPUTED or COMPARED (getMarketTime, the freeze window,
+// session minute maths) — this is purely how it is printed.
+function to12h(hour, minute) {
+  const h24 = normaliseHour(Number(hour));
+  const suffix = h24 >= 12 ? "PM" : "AM";
+  const h12 = h24 % 12 === 0 ? 12 : h24 % 12;
+  return h12 + ":" + String(Number(minute)).padStart(2, "0") + " " + suffix;
+}
+
+// v8.8: an actual instant on the operator's wall clock, e.g. "10:21 PM Bahrain".
 // Used for deadlines that are not fixed times of day, such as when a waiting
 // dip order expires.
 function localClock(atDate) {
@@ -354,22 +365,16 @@ function localClock(atDate) {
     minute: "2-digit",
   }).formatToParts(atDate || new Date());
   const get = (type) => parts.find((x) => x.type === type).value;
-  return (
-    String(normaliseHour(Number(get("hour")))).padStart(2, "0") +
-    ":" +
-    get("minute") +
-    " " +
-    getLogTimeZoneLabel()
-  );
+  return to12h(get("hour"), get("minute")) + " " + getLogTimeZoneLabel();
 }
 
 function describeEtClock(easternHour, easternMinute = 0) {
-  const et =
-    String(easternHour).padStart(2, "0") + ":" + String(easternMinute).padStart(2, "0") + " ET";
+  const et = to12h(easternHour, easternMinute) + " ET";
   if (LOG_TIME_ZONE === ET_TIME_ZONE) return et;
-  return (
-    et + " (" + easternClockToLogZone(easternHour, easternMinute) + " " + getLogTimeZoneLabel() + ")"
-  );
+  // easternClockToLogZone returns "HH:MM" on the 24-hour clock (it is also
+  // used for comparisons); re-print it for the reader.
+  const [lh, lm] = easternClockToLogZone(easternHour, easternMinute).split(":");
+  return et + " (" + to12h(lh, lm) + " " + getLogTimeZoneLabel() + ")";
 }
 
 function getFreezeTimeZoneLabel() {
@@ -428,4 +433,5 @@ module.exports = {
   easternClockToLogZone,
   describeEtClock, // v8.8
   localClock, // v8.8
+  to12h, // v8.9
 };

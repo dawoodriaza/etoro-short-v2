@@ -5,6 +5,26 @@ repairs, reverted experiments). See README.md → "For AI agents".
 
 ---
 
+## v8.9 (2026-10-09) — clock times read as 12-hour am/pm
+
+Owner request: every time shown in Telegram in 12-hour format, not 24-hour.
+
+`to12h(hour, minute)` in `src/market-hours.js` is now the single display
+formatter, used by `describeEtClock` (both the ET and the operator side) and
+`localClock`, and by the force-close label in `src/strategies/session-timing.js`
+that reaches the "dip order cancelled" message. So the review header, the
+market-closed summary, the session timetable, the dip deadline and the startup
+log all read "3:00 PM ET (10:00 PM Bahrain)" instead of "15:00 ET (22:00
+Bahrain)".
+
+Display only. Every place a time is computed or compared still uses the `h23`
+hour cycle — `getMarketTime`, `getEasternHourMinute`, the overnight freeze
+window and the session-minute arithmetic are untouched, so no scheduling
+behaviour changed. Midnight and noon verified (12:00 AM / 12:00 PM). 416 tests
+pass; deployed and restarted with no open positions.
+
+---
+
 ## v8.8 (2026-10-09) — every notification now says what time it is, in both clocks
 
 **The complaint.** A notification arrives at 22:00 Bahrain and reads like the

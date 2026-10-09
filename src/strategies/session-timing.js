@@ -191,11 +191,10 @@ function getEntryCutoffStatus(atDate) {
   const { hour, minute } = marketHours.getEasternHourMinute(when);
   const nowMinute = hour * 60 + minute;
   const forceCloseMinute = 16 * 60 - config.forceCloseMinutesBeforeClose;
+  // v8.9: 12-hour for the reader — this label reaches Telegram in the
+  // "dip order cancelled" message.
   const forceCloseLabel =
-    Math.floor(forceCloseMinute / 60) +
-    ":" +
-    String(forceCloseMinute % 60).padStart(2, "0") +
-    " ET";
+    marketHours.to12h(Math.floor(forceCloseMinute / 60), forceCloseMinute % 60) + " ET";
 
   if (weekday === 5 && config.fridayCloseAll && nowMinute >= forceCloseMinute) {
     return {
