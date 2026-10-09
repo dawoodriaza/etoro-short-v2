@@ -335,6 +335,43 @@ function easternClockToLogZone(easternHour, easternMinute = 0) {
   return String(easternHour).padStart(2, "0") + ":" + String(easternMinute).padStart(2, "0");
 }
 
+// v8.8 — THE ONE WAY TO PRINT A SCHEDULED TIME.
+//
+// Every "when does X happen" line the operator reads goes through here, so a
+// 22:00 Bahrain notification can never again look like it means the market is
+// closing. Both clocks are COMPUTED, never hardcoded: the schedulers all run
+// on America/New_York, and Bahrain does not change its clocks, so from
+// 2026-11-01 (US daylight saving ends) every Bahrain time below moves one hour
+// later on its own — 16:00 ET stops being 23:00 Bahrain and becomes 00:00.
+// v8.8: an actual instant on the operator's wall clock, e.g. "22:21 Bahrain".
+// Used for deadlines that are not fixed times of day, such as when a waiting
+// dip order expires.
+function localClock(atDate) {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: LOG_TIME_ZONE,
+    hourCycle: "h23",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).formatToParts(atDate || new Date());
+  const get = (type) => parts.find((x) => x.type === type).value;
+  return (
+    String(normaliseHour(Number(get("hour")))).padStart(2, "0") +
+    ":" +
+    get("minute") +
+    " " +
+    getLogTimeZoneLabel()
+  );
+}
+
+function describeEtClock(easternHour, easternMinute = 0) {
+  const et =
+    String(easternHour).padStart(2, "0") + ":" + String(easternMinute).padStart(2, "0") + " ET";
+  if (LOG_TIME_ZONE === ET_TIME_ZONE) return et;
+  return (
+    et + " (" + easternClockToLogZone(easternHour, easternMinute) + " " + getLogTimeZoneLabel() + ")"
+  );
+}
+
 function getFreezeTimeZoneLabel() {
   const zone = getOvernightFreezeWindow().timeZone;
   if (zone === "America/New_York") return "ET";
@@ -389,4 +426,6 @@ module.exports = {
   isInOvernightFreezeWindow,
   getFreezeTimeZoneLabel,
   easternClockToLogZone,
+  describeEtClock, // v8.8
+  localClock, // v8.8
 };

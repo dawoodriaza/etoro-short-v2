@@ -41,11 +41,11 @@ Detailed history, evidence and the reasoning behind every change:
 
 ---
 
-## Status snapshot (2026-10-08)
+## Status snapshot (2026-10-09)
 
 | Item | Value |
 |---|---|
-| Version | **v8.7** — Claude Haiku 5.5 for the AI screener and reviewer (thinking off); v8.6 — the dip is measured from the running high and never paid up; v8.5 untracked-alert race fixed, safe server tests; v8.4 trend score V2 logged (not traded); v8.3 small dip + wait for breakeven (see CHANGELOG) |
+| Version | **v8.8** — dual-clock times in every notification; v8.7 — Claude Haiku 5.5 for the AI screener and reviewer (thinking off); v8.6 — the dip is measured from the running high and never paid up; v8.5 untracked-alert race fixed, safe server tests; v8.4 trend score V2 logged (not traded); v8.3 small dip + wait for breakeven (see CHANGELOG) |
 | Mode | `TRADING_MODE=live` |
 | Server | `ubuntu@130.110.113.198` (Oracle Cloud), directory `~/etoro-v2-short`, Node 20.20.2, ~1 GB RAM + **2 GB swap** (`/swapfile`, swappiness 10, added 2026-09-22 after a freeze during an automatic kernel update). If SSH times out "during banner exchange", the box is starved: reboot it from the Oracle console (data is kept) |
 | PM2 memory limit | `etoro-daytrade` restarts itself above 300 MB (`--max-memory-restart 300M`, saved with `pm2 save`) |
@@ -657,6 +657,7 @@ Details for every line: `CHANGELOG.md`.
 | 2026-09-17 | v8.4 | Trend score V2 logged beside the live score in every scan record (not traded on); first replay failed its pre-set bar on trade count |
 | 2026-09-18 | v8.5 | First live v8.3 sessions reviewed (9 trades, −$66); false untracked-position alerts after the bot's own closes fixed; server tests moved to a scratch copy |
 | 2026-09-22 | ops | Server freeze during an automatic kernel update: 2 GB swap added, PM2 memory limits on both bots |
+| 2026-10-09 | v8.8 | Every scheduled time in the logs and in Telegram now prints in **both ET and the operator's clock**, derived from the live settings; the 22:00 Bahrain review is labelled mid-session with the time left; the day's summary moved to the real 16:00 ET close |
 | 2026-10-08 | v8.7 | Screener + reviewer moved to **Claude Haiku 5.5** (~5x cheaper per call), model and thinking switch moved into `config.js`; thinking left OFF because it is billed against `max_tokens` and changed verdicts on identical evidence |
 | 2026-09-27 | v8.6 | **Dip measured from the running high, capped at the approval price** (the frozen buy level was why approved runners never filled); run-up while waiting now logged and shown in Telegram; tighter stops, looser profit keeper and earlier partials all tested and rejected |
 

@@ -5,6 +5,71 @@ repairs, reverted experiments). See README.md → "For AI agents".
 
 ---
 
+## v8.8 (2026-10-09) — every notification now says what time it is, in both clocks
+
+**The complaint.** A notification arrives at 22:00 Bahrain and reads like the
+day is over, but the US market trades until 23:00 Bahrain. The owner was not
+even sure when the close was ("11:30 pm or 11 pm").
+
+**What was actually wrong.** Nothing was mis-scheduled. Every `CronJob` is
+anchored to `America/New_York`, so the whole timetable already tracks US
+daylight saving, and the 22:00 message is the **15:00 ET position review** —
+deliberately an hour before the close. The bug was that the messages never
+said the time: the review's only hint was the word "pre-close". Confirmed by
+reading the schedulers rather than assuming:
+
+| Event | ET | Bahrain now | Bahrain from 2026-11-01 |
+|---|---|---|---|
+| Market opens | 09:30 | 16:30 | 17:30 |
+| Position review (Mon–Thu) | 15:00 | **22:00** | 23:00 |
+| Bot stops opening new trades | 15:15 | 22:15 | 23:15 |
+| Bot force-closes day trades | 15:45 | 22:45 | 23:45 |
+| Market closes | 16:00 | **23:00** | 00:00 |
+| eToro overnight trading ends | 20:00 | 03:00 | 04:00 |
+
+The "11:30 pm" instinct was half right: `DT_TRADE_24_5=true`, so eToro keeps
+filling the overnight-eligible names well past the 23:00 close, until 03:00
+Bahrain. The Bahrain column moves one hour later on 2026-11-01 when the US
+leaves daylight saving and Bahrain does not — which is why every time below is
+computed at send time, never stored.
+
+**Shipped.**
+
+- `src/market-hours.js`: `describeEtClock(h, m)` → `"15:00 ET (22:00 Bahrain)"`,
+  and `localClock(date)` → `"22:21 Bahrain"` for deadlines that are not fixed
+  times of day. Both derive the operator's clock from the ET instant through
+  `Intl`, so neither can drift at a DST boundary.
+- `src/notifications/format-helpers.js`: `sessionSchedule(weekday)` is now the
+  single source of truth for the day's moments, **derived from the same
+  settings the schedulers use** (`forceCloseMinutesBeforeClose`,
+  `eodNoEntryMinutesBeforeClose`, `fridayNoEntryMinutesBeforeClose`,
+  `reviewerHourET/MinuteET`, `trade24_5`), so a message cannot describe a
+  timetable the bot does not run. Plus `formatSessionSchedule` (ticks off what
+  has already happened), `formatMinutesUntil` and `scheduleMoment`.
+- **The 22:00 review message** is retitled "Position review — mid-session",
+  states its own clock time, says how long trading is still open ("another
+  1 hour — this is a check-up, not the end of the day"), and lists the rest of
+  the day's timetable.
+- **The day's summary moved from 15:45 ET to the real 16:00 ET close.** It used
+  to ride along with the force-close job, which runs 15 minutes early so exits
+  fill before the bell — so the last message of the day arrived while the
+  market was still open. It is now its own cron, titled "🔔 Market closed —
+  16:00 ET (23:00 Bahrain)", and it says what the force-close did and at what
+  time, how many winners are held overnight (with correct singular/plural), and
+  the full timetable with every past moment ticked.
+- **The dip message** now gives the deadline as a wall-clock time — "within 60
+  min (by 22:40 Bahrain)" — instead of a duration the reader has to add up.
+- **Startup logs the session clock** in both zones, recomputed every boot.
+
+Deliberately NOT changed: the 15:45 ET force-close (15 minutes of fill-safety
+before the bell), the 15:15 ET entry cutoff (evidence: entries in the last 30
+minutes went 2/7, −$113 — CHANGELOG v8) and the 15:00 ET review time. Those are
+trading decisions with evidence behind them; only the wording was unclear.
+
+416 tests pass. Deployed and restarted 11:41 ET Friday with no open positions.
+
+---
+
 ## v8.7 (2026-10-08) — Claude Haiku 5.5 for the screener and reviewer, thinking off
 
 The screener and the daily position reviewer ran `claude-haiku-4-5`, hardcoded in

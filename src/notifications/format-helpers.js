@@ -168,10 +168,101 @@ function describeExitReason(reasonCode) {
   );
 }
 
+
+// ── v8.8 — THE SESSION CLOCK ──────────────────────────────────────────
+//
+// WHY THIS EXISTS: the operator is in Bahrain and the bot runs on New York
+// time. The 15:00 ET position review arrives at 22:00 Bahrain, an hour before
+// the 16:00 ET close, and said only "pre-close" — so a 22:00 message looked
+// like the day was over when the market still had an hour to run. Nothing was
+// mis-scheduled (every CronJob is anchored to America/New_York and so tracks
+// US daylight saving); the messages simply never said the time.
+//
+// Every moment below is DERIVED from the live settings the schedulers use, so
+// a message cannot drift from the behaviour, and both clocks are computed, so
+// they stay correct when the US leaves daylight saving on 2026-11-01 and all
+// the Bahrain times move one hour later.
+const MARKET_OPEN_MINUTE = 9 * 60 + 30;
+const MARKET_CLOSE_MINUTE = 16 * 60;
+
+function hhmm(minuteOfDay) {
+  return [Math.floor(minuteOfDay / 60), minuteOfDay % 60];
+}
+
+function sessionSchedule(weekday) {
+  const forceClose = MARKET_CLOSE_MINUTE - config.forceCloseMinutesBeforeClose;
+  const entryWindow =
+    weekday === 5 ? config.fridayNoEntryMinutesBeforeClose : config.eodNoEntryMinutesBeforeClose;
+  const closesAll = weekday === 5 && config.fridayCloseAll;
+  return [
+    { key: "open", label: "Market opens", minute: MARKET_OPEN_MINUTE },
+    {
+      key: "review",
+      label: "Position review (Mon–Thu)",
+      minute: config.reviewerHourET * 60 + config.reviewerMinuteET,
+    },
+    { key: "entryCutoff", label: "Bot stops opening new trades", minute: forceClose - entryWindow },
+    {
+      key: "forceClose",
+      label: closesAll ? "Bot closes EVERYTHING (Friday)" : "Bot closes day trades (winners may be kept)",
+      minute: forceClose,
+    },
+    { key: "marketClose", label: "Market closes", minute: MARKET_CLOSE_MINUTE },
+    // With DT_TRADE_24_5 on, eToro keeps filling the overnight-eligible names
+    // after the US close, which is why the operator sees the market "open"
+    // past 23:00 Bahrain. Held winners are still managed in this window; the
+    // bot just does not open anything new.
+    ...(config.trade24_5
+      ? [
+          {
+            key: "overnightEnd",
+            label:
+              weekday === 5
+                ? "eToro overnight trading ends for the week"
+                : "eToro overnight trading ends (held winners managed until then)",
+            minute: 20 * 60,
+          },
+        ]
+      : []),
+  ];
+}
+
+// The timetable as Telegram lines, with the current moment marked.
+function formatSessionSchedule(weekday, nowMinuteET) {
+  const marketHours = require("../market-hours");
+  return sessionSchedule(weekday)
+    .filter((row) => !(row.key === "review" && weekday === 5))
+    .map((row) => {
+      const [h, m] = hhmm(row.minute);
+      const past = typeof nowMinuteET === "number" && nowMinuteET >= row.minute;
+      return (past ? "✅ " : "• ") + marketHours.describeEtClock(h, m) + " — " + row.label;
+    });
+}
+
+// "1 h 0 min" / "45 min" — how long until an ET moment.
+function formatMinutesUntil(nowMinuteET, targetMinuteET) {
+  const left = targetMinuteET - nowMinuteET;
+  if (left <= 0) return null;
+  const h = Math.floor(left / 60);
+  const m = left % 60;
+  if (h && m) return h + " h " + m + " min";
+  if (h) return h + (h === 1 ? " hour" : " hours");
+  return m + " min";
+}
+
+function scheduleMoment(weekday, key) {
+  return sessionSchedule(weekday).find((row) => row.key === key) || null;
+}
+
 module.exports = {
   escapeHtml,
   humanize,
   describeExitReason,
   toRealDollars,
   formatDualAmount,
+  // v8.8 session clock
+  sessionSchedule,
+  formatSessionSchedule,
+  formatMinutesUntil,
+  scheduleMoment,
 };

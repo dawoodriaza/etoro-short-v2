@@ -94,7 +94,17 @@ const {
   describeExitReason,
   toRealDollars,
   formatDualAmount,
+  // v8.8 session clock — every scheduled time is printed in ET and Bahrain
+  formatSessionSchedule,
+  formatMinutesUntil,
+  scheduleMoment,
 } = require("./notifications/format-helpers");
+
+// v8.8: minutes since ET midnight, for "what is left of the session" lines.
+function easternMinuteOfDay() {
+  const et = marketHours.getEasternHourMinute();
+  return et.hour * 60 + et.minute;
+}
 
 const TIMEZONE = "America/New_York";
 
@@ -1417,7 +1427,9 @@ async function notifyDipOrdersArmed(orders) {
         "AI-approved, but the bot does not buy the spike. Each is bought only if it " +
         "dips to the price shown within " +
         orders[0].windowMinutes +
-        " min — otherwise no trade.\n" +
+        " min (by " +
+        marketHours.localClock(new Date(orders[0].expiresAtMs)) +
+        ") — otherwise no trade.\n" +
         (orders[0].trailFromHigh
           ? "If it runs up first, the buy price rises with it but never goes above the " +
             "approval price — so a pullback later still counts (v8.6).\n"
@@ -3496,11 +3508,30 @@ async function runDailyPositionReview() {
     }
 
     if (reviewSummaryLines.length > 0) {
+      // v8.8: this lands at 22:00 Bahrain while the market still has an hour
+      // to run, and used to say only "pre-close", which read as though the day
+      // were over. State the clock, the time left, and the rest of the day.
+      const reviewWeekday = getEasternWeekday();
+      const reviewNowMinute = easternMinuteOfDay();
+      const reviewCloseMoment = scheduleMoment(reviewWeekday, "marketClose");
+      const untilClose = reviewCloseMoment
+        ? formatMinutesUntil(reviewNowMinute, reviewCloseMoment.minute)
+        : null;
       await notifications.sendTelegramMessage(
-        "🔎 <b>Daily Position Review</b> (" +
+        "🔎 <b>Position review — mid-session</b>\n" +
+          "<b>" +
           easternWeekdayName +
-          ", pre-close)\n\n" +
+          " " +
+          marketHours.describeEtClock(config.reviewerHourET, config.reviewerMinuteET) +
+          "</b>\n" +
+          (untilClose
+            ? "<i>Trading is still open for another " +
+              untilClose +
+              " — this is a check-up, not the end of the day.</i>\n\n"
+            : "\n") +
           reviewSummaryLines.join("\n\n") +
+          "\n\n<b>Rest of today</b>\n" +
+          formatSessionSchedule(reviewWeekday, reviewNowMinute).join("\n") +
           "\n\n<i>EXTEND = holds overnight as a swing · TIGHTEN = stop pulled " +
           "in · Friday still closes everything.</i>",
       );
@@ -3520,6 +3551,69 @@ async function runDailyPositionReview() {
   }
 }
 
+// v8.8 — THE DAY'S SUMMARY, SENT WHEN THE MARKET ACTUALLY CLOSES.
+// Set by the force-close job at 15:45 ET so this message can say what it did.
+let lastEodCloseMode = null;
+
+async function sendEndOfDaySummary() {
+  try {
+    const weekday = getEasternWeekday();
+    const mode = lastEodCloseMode || (weekday === 5 && config.fridayCloseAll ? "ALL" : "DAY_ONLY");
+    lastEodCloseMode = null;
+    const stats = performance.computeStats();
+    journal.eodSummary({ mode, stats, dipEntry: { ...dipEntryDayStats } });
+
+    const todayNy = new Date().toLocaleDateString("en-US", { timeZone: TIMEZONE });
+    const dipDayLine = !config.dipEntryEnabled
+      ? ""
+      : dipEntryDayStats.day === todayNy
+        ? "\n\n📉 Dip orders today: " +
+          dipEntryDayStats.armed +
+          " approved · " +
+          dipEntryDayStats.bought +
+          " bought on a dip · " +
+          dipEntryDayStats.notBought +
+          " not bought"
+        : "\n\n📉 Dip orders today: none";
+
+    const stillOpen = Object.keys(loadPositionMeta() || {}).length;
+    // One source for the force-close time: the same timetable the message prints.
+    const forceCloseMoment = scheduleMoment(weekday, "forceClose");
+    const forceCloseText = forceCloseMoment
+      ? marketHours.describeEtClock(
+          Math.floor(forceCloseMoment.minute / 60),
+          forceCloseMoment.minute % 60,
+        )
+      : "the scheduled close";
+    const closeAction =
+      mode === "ALL"
+        ? "Everything was closed at " + forceCloseText + " (Friday — no weekend exposure)."
+        : "Day trades were closed at " +
+          forceCloseText +
+          (stillOpen
+            ? ", and " +
+              stillOpen +
+              (stillOpen === 1 ? " winner is" : " winners are") +
+              " being held overnight."
+            : ".");
+
+    await notifications.sendTelegramMessage(
+      "🔔 <b>Market closed</b> — " +
+        marketHours.describeEtClock(16, 0) +
+        "\n" +
+        "<i>" +
+        closeAction +
+        "</i>\n\n" +
+        performance.formatStatsForTelegram(stats) +
+        dipDayLine +
+        "\n\n<b>Today's timetable</b>\n" +
+        formatSessionSchedule(weekday, 16 * 60).join("\n"),
+    );
+  } catch (summaryError) {
+    logger.warn("End-of-day summary failed: " + summaryError.message);
+  }
+}
+
 // -----------------------------
 // SCHEDULER
 // -----------------------------
@@ -3533,6 +3627,10 @@ function startScheduler() {
   );
 
   new CronJob("* * * * 1-5", runExitMonitorTick, null, true, TIMEZONE);
+
+  // v8.8: the day's wrap-up at the REAL 16:00 ET close (23:00 Bahrain, and
+  // 00:00 Bahrain once US daylight saving ends), not 15 minutes before it.
+  new CronJob("0 16 * * 1-5", sendEndOfDaySummary, null, true, TIMEZONE);
 
   // V6: daily position review — Mon-Thu ONLY (Friday closes everything
   // anyway, so extending on Friday would be meaningless).
@@ -3606,30 +3704,13 @@ function startScheduler() {
         ),
       );
 
-      // EOD performance summary
-      try {
-        const stats = performance.computeStats();
-        journal.eodSummary({ mode, stats, dipEntry: { ...dipEntryDayStats } });
-        // v8.2: what happened to today's dip orders, under the stats.
-        const todayNy = new Date().toLocaleDateString("en-US", { timeZone: TIMEZONE });
-        const dipDayLine = !config.dipEntryEnabled
-          ? ""
-          : dipEntryDayStats.day === todayNy
-            ? "\n\n📉 Dip orders today: " +
-              dipEntryDayStats.armed +
-              " approved · " +
-              dipEntryDayStats.bought +
-              " bought on a dip · " +
-              dipEntryDayStats.notBought +
-              " not bought" +
-              (pendingDipEntries.size ? " · " + pendingDipEntries.size + " still waiting" : "")
-            : "\n\n📉 Dip orders today: none";
-        await notifications.sendTelegramMessage(
-          performance.formatStatsForTelegram(stats) + dipDayLine,
-        );
-      } catch (statsError) {
-        logger.warn("EOD stats failed: " + statsError.message);
-      }
+      // v8.8: the day's summary is no longer sent from here. This job runs
+      // forceCloseMinutesBeforeClose EARLY (15:45 ET = 22:45 Bahrain) so the
+      // exits get filled before the bell, which meant the operator's last
+      // message of the day arrived while the market was still open. The
+      // summary now goes out at the real 16:00 ET close; this just records
+      // which mode ran so that message can say so.
+      lastEodCloseMode = mode;
     },
     null,
     true,
@@ -3719,6 +3800,16 @@ async function main() {
   // v5: report optional integrations honestly at startup
   // v5.3: optional Alpaca WebSocket stream — no-op if not configured
   marketDataStream.start();
+
+  // v8.8: the session clock, in both zones, so the log answers "when does
+  // anything happen" without arithmetic. Recomputed on every boot, so it
+  // follows US daylight saving on its own.
+  logger.info(
+    "Session clock (" + marketHours.getLogTimeZoneLabel() + " operator time):",
+  );
+  formatSessionSchedule(getEasternWeekday(), -1).forEach((line) =>
+    logger.info("   " + line.replace(/^[•✅] /, "")),
+  );
 
   // v8.7: say which Claude model is deciding, and whether it is thinking.
   logger.info(
