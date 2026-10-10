@@ -204,7 +204,42 @@ const config = {
   // ── Partial scaling & trailing ────────────────────────────────────
   partialExitFraction: num("DT_PARTIAL_EXIT_FRACTION", 0.5),
   trailingStopPct: num("DT_TRAILING_STOP_PCT", 0.025),
-  maxHoldMinutes: int("DT_MAX_HOLD_MINUTES", 90),
+  // ── v9 (2026-10-10) — THE TIME BUDGET, RAISED 150 -> 240 MINUTES ──
+  //
+  // The one change the pre-registered checkpoint adopted. 18 sessions
+  // (2026-09-16 -> 10-09) replayed through the live exit engine, split into
+  // Sep 16-25 (already mined while building v8.3-v8.6, so in-sample) and
+  // Sep 28 - Oct 9 (never used for any decision). A change had to beat the
+  // live rule on BOTH halves to be adopted; the bar was set before any
+  // result was read.
+  //
+  //   time budget      Sep 16-25 (mined)   Sep 28-Oct 9 (FRESH)
+  //   150 min (live)      -$96.93  -2.49/t     -$106.62  -3.05/t
+  //   240 min             -$82.95  -2.24/t      -$21.53  -0.62/t   <- adopted
+  //   390 min             -$80.05  -2.16/t       -$7.01  -0.20/t
+  //   no time exit        -$96.14  -2.60/t      +$10.25  +0.29/t
+  //
+  // WHY, mechanically: the stale time exit was selling positions at roughly
+  // breakeven before they could reach the profit keeper. Of 76 filled orders,
+  // 20 changed outcome at a longer budget - 14 better, 6 worse, net +$115.78 -
+  // and TIME_EXIT_STALE fell from 15 exits to 1 while MFE_GIVEBACK rose from
+  // 21 to 29. The trades it was cutting were worth about $0 at the moment of
+  // the cut (+$1.41, -$0.71, +$2.51, +$2.05 ...), which is a large part of why
+  // the average win was $5.52 against an average loss of $11.42.
+  //
+  // WHY 240 AND NOT 390 OR NONE, which both scored better: the extra gain is
+  // concentrated in a couple of trades. One trade (MELI, 10-05) is 37% of the
+  // whole +$115.78 and the top three are 79%. The DIRECTION is well supported
+  // (14 better vs 6 worse, with a clear mechanism, in both halves); the
+  // MAGNITUDE is not, so this takes the conservative step rather than buying
+  // the tail. The six that got worse were mostly positions held past a
+  // breakeven exit into a worse end-of-day close (SNAP 09-30, -$21.67).
+  //
+  // Still a REGULAR-SESSION budget, so the x0.7/x1.5 volatility buckets, the
+  // 8x wall-clock ceiling, the stop, the profit keeper, the Mon-Thu loser
+  // close and the Friday close-all all still apply on top. Revert with
+  // DT_MAX_HOLD_MINUTES=150. See CHANGELOG v9.
+  maxHoldMinutes: int("DT_MAX_HOLD_MINUTES", 240),
 
   // ── Momentum scanner thresholds ───────────────────────────────────
   minVolumeRatio: num("DT_MIN_VOLUME_RATIO", 1.5),

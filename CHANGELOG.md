@@ -5,6 +5,116 @@ repairs, reverted experiments). See README.md → "For AI agents".
 
 ---
 
+## v9 (2026-10-10) — the pre-registered checkpoint: one change adopted, three rejected
+
+18 sessions (2026-09-16 → 10-09), 66,397 journal events, 21,889 candidate
+snapshots and 177 armed dip orders, replayed through the live exit engine on the
+bot's own 5-minute bars at 10 bps, with the fill bar's own high never counted as
+profit.
+
+**The method, fixed before any result was read.** The window was split into
+**Sep 16–25**, which had already been mined while building v8.3–v8.6 and is
+therefore in-sample, and **Sep 28 – Oct 9**, which had never been used for any
+decision. To be adopted, a change had to beat the live rule on the fresh half
+*and* on the full window, not flip the sign on the mined half, and clear 25
+trades in the fresh half and 60 overall. Everything runs through the real book
+— 7 slots, one position per symbol, ranked when candidates collide — and each
+question changes exactly one thing.
+
+### Q1 — dip depth: REJECTED, keep 0.25
+
+| Dip required | Sep 16–25 (mined) | Sep 28 – Oct 9 (fresh) |
+|---|---|---|
+| Buy at once, no dip | −$161.77 (−2.31/t) | −$223.41 (−3.33/t) |
+| 0.10 of the stop | −$110.87 (−1.98/t) | −$80.32 (−1.46/t) |
+| **0.25 of the stop ← live** | **−$96.93 (−2.49/t)** | **−$106.62 (−3.05/t)** |
+| 0.50 of the stop | −$67.99 (−5.23/t) | −$43.46 (−3.34/t) |
+
+The shallow dip that looked promising during the v8.6 work beat live on the
+fresh half but lost on the mined half, and by $1.59 per trade — below the $2 per
+trade that is distinguishable at this sample size and spread. Not adopted. The
+useful reading is that **every depth loses $1.7–$4.3 per trade**: entry timing
+is not where the money is going.
+
+### Q2 — selection: REJECTED, and the reason matters
+
+| Rule | Sep 16–25 (mined) | Sep 28 – Oct 9 (fresh) |
+|---|---|---|
+| **old ≥ 80 + AI take ← live** | **−$70.16 (−1.63/t)** | **−$88.88 (−2.54/t)** |
+| old ≥ 80, no AI veto | −$111.24 (−1.25/t) | −$161.29 (−1.77/t) |
+| **trend score V2 ≥ 80** | **+$93.69 (+1.04/t), 70% win** | **−$254.32 (−2.14/t), 55% win** |
+| V2 ≥ 80, watchlist only | −$74.39 | −$189.17 |
+| V2 ≥ 80 and old ≥ 80 | +$86.99 (+1.45/t) | −$176.14 (−2.55/t) |
+| V2 ≥ 90 | −$53.56 | −$338.56 |
+
+**The trend score V2 does not generalise.** On the half it was designed against
+it returned +$1.04 per trade at a 70% win rate; on data it had never seen,
+−$2.14 per trade. Every V2 variant collapses the same way. Without the split
+this would have shipped as the headline improvement — it was the leading
+candidate going in. V2 stays logged and untraded, and the "dynamic per-stock
+threshold" idea built on it stays rejected.
+
+Dropping the AI veto was also worse on both halves, so the veto stays. **Flagged
+risk:** v8.7's move to Haiku 5.5 took approvals from 1-of-43 to 9-of-17, which
+pushes the live gate toward the "no AI veto" row that tested worse here. It has
+only 2 closed trades behind it — watch it through the freeze below.
+
+### Q3 — the exits: ADOPTED, time budget 150 → 240 minutes
+
+| Exit rule | Sep 16–25 (mined) | Sep 28 – Oct 9 (fresh) |
+|---|---|---|
+| **live (150 min) ← was** | **−$96.93 (−2.49/t)** | **−$106.62 (−3.05/t)** |
+| **240 min ← adopted** | **−$82.95 (−2.24/t)** | **−$21.53 (−0.62/t)** |
+| 390 min | −$80.05 (−2.16/t) | −$7.01 (−0.20/t) |
+| no time exit at all | −$96.14 (−2.60/t) | +$10.25 (+0.29/t) |
+| keep 80% of the peak | −$73.10 | −$131.38 |
+| arm profit keeper later | −$86.61 | −$103.24 |
+
+The stale time exit was **selling positions at roughly breakeven before they
+could reach the profit keeper**. Of 76 filled orders, 20 change outcome at a
+longer budget — 14 better, 6 worse, net +$115.78 — and `TIME_EXIT_STALE` falls
+from 15 exits to 1 while `MFE_GIVEBACK` rises from 21 to 29. The trades being
+cut were worth about $0 at the moment of the cut (+$1.41, −$0.71, +$2.51,
++$2.05 …), which is much of why the average win was $5.52 against an average
+loss of $11.42.
+
+**Why 240 and not 390 or none, which both scored better:** the extra gain is
+concentrated. One trade (MELI, 10-05) is 37% of the whole +$115.78 and the top
+three are 79%. The direction is well supported — 14 better versus 6 worse, a
+clear mechanism, consistent across both halves — but the magnitude is not, so
+this takes the conservative step instead of buying the tail. The six that got
+worse were mostly positions carried past a breakeven exit into a worse
+end-of-day close (SNAP 09-30, −$21.67). "Arm the profit keeper later" passed the
+letter of the bar by $3.38 on the fresh half, i.e. $0.10 per trade, which is far
+inside the noise — the bar should have carried a minimum effect size, and it was
+not adopted.
+
+Changed: `src/config.js` (`maxHoldMinutes` default 90 → 240, with the evidence
+recorded beside it), and `DT_MAX_HOLD_MINUTES` 150 → 240 in the server `.env`
+(backup in `~/etoro-audit/`). Still a regular-session budget, so the ×0.7/×1.5
+volatility buckets, the 8× wall-clock ceiling, the stop, the profit keeper, the
+Mon–Thu loser close and the Friday close-all all still apply on top. 416 tests
+pass; deployed Saturday with no open positions. Full output:
+`~/etoro-audit/checkpoint-2026-10-10.txt`.
+
+### What this means, plainly
+
+Nothing here turns the bot profitable. Every selection rule and every entry
+depth loses $0.7–$3.8 per trade; the adopted change takes the fresh half from
+−$3.05 to −$0.62 per trade, which is most of the way to breakeven but not past
+it. The honest position is that the exits were giving away the wins, that this
+is now partly fixed, and that the next question is why the average loss is
+still roughly double the average win.
+
+**Now the config freezes.** Per the data-requirement work of 2026-10-09: at the
+current spread ($11.32 per trade) and rate (4.2 trades per session, likely
+higher with the looser Haiku 5.5 gate), proving a +$3 per trade edge needs about
+112 trades, or 3–5 weeks. Every change resets that count — only 2 trades had
+closed under the previous configuration. No further strategy changes until
+roughly 100 trades have closed on this one, unless something breaks.
+
+---
+
 ## v8.9 (2026-10-09) — clock times read as 12-hour am/pm
 
 Owner request: every time shown in Telegram in 12-hour format, not 24-hour.

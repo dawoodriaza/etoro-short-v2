@@ -41,11 +41,11 @@ Detailed history, evidence and the reasoning behind every change:
 
 ---
 
-## Status snapshot (2026-10-09)
+## Status snapshot (2026-10-10)
 
 | Item | Value |
 |---|---|
-| Version | **v8.8** — dual-clock times in every notification; v8.7 — Claude Haiku 5.5 for the AI screener and reviewer (thinking off); v8.6 — the dip is measured from the running high and never paid up; v8.5 untracked-alert race fixed, safe server tests; v8.4 trend score V2 logged (not traded); v8.3 small dip + wait for breakeven (see CHANGELOG) |
+| Version | **v9** — time budget 240 min after the pre-registered checkpoint (trend score V2 rejected as overfit); v8.9 12-hour clock times; v8.8 dual-clock times in every notification; v8.7 — Claude Haiku 5.5 for the AI screener and reviewer (thinking off); v8.6 — the dip is measured from the running high and never paid up; v8.5 untracked-alert race fixed, safe server tests; v8.4 trend score V2 logged (not traded); v8.3 small dip + wait for breakeven (see CHANGELOG) |
 | Mode | `TRADING_MODE=live` |
 | Server | `ubuntu@130.110.113.198` (Oracle Cloud), directory `~/etoro-v2-short`, Node 20.20.2, ~1 GB RAM + **2 GB swap** (`/swapfile`, swappiness 10, added 2026-09-22 after a freeze during an automatic kernel update). If SSH times out "during banner exchange", the box is starved: reboot it from the Oracle console (data is kept) |
 | PM2 memory limit | `etoro-daytrade` restarts itself above 300 MB (`--max-memory-restart 300M`, saved with `pm2 save`) |
@@ -409,7 +409,7 @@ design; the running bot uses **Claude Haiku 4.5 only** (screener and reviewer).
 | Breakeven wait | `DT_STALE_WAIT_FOR_BREAKEVEN`, `DT_STALE_BREAKEVEN_EXIT_PCT` | true, 0.1 (defaults, v8.3; dip buys only) |
 | Take profit | `DT_PARTIAL_EXIT_FRACTION`, `DT_TRAILING_STOP_PCT` | 0.5, 0.025 |
 | Profit protection | `DT_MFE_ARM_ATR_FRACTION`, `DT_MFE_RETENTION`, `DT_MFE_GIVEBACK_ATR_CAP` | 0.25, 0.6, 0.3 (defaults) |
-| Time | `DT_MAX_HOLD_MINUTES`, `DT_SESSION_AWARE_TIME_BUDGETS` | 150, true |
+| Time | `DT_MAX_HOLD_MINUTES`, `DT_SESSION_AWARE_TIME_BUDGETS` | **240** (v9, was 150), true |
 | Entry quality | `DT_MIN_ENTRY_SCORE`, `DT_MAX_ENTRY_ATR_PCT`, `DT_PREFILTER_MIN_MOVE_PCT` | 80, 7.0, 1.0 (defaults) |
 | Momentum | `DT_RSI_MOMENTUM_MIN`/`MAX`, `DT_MIN_VOLUME_RATIO`, `DT_MIN_RS_VS_SPY_PCT` | 55/78, 1.5, 0.5 |
 | Market filter | `DT_SPY_MIN_CHANGE_PCT`, `DT_REQUIRE_ABOVE_VWAP` | −1.0, true |
@@ -657,6 +657,8 @@ Details for every line: `CHANGELOG.md`.
 | 2026-09-17 | v8.4 | Trend score V2 logged beside the live score in every scan record (not traded on); first replay failed its pre-set bar on trade count |
 | 2026-09-18 | v8.5 | First live v8.3 sessions reviewed (9 trades, −$66); false untracked-position alerts after the bot's own closes fixed; server tests moved to a scratch copy |
 | 2026-09-22 | ops | Server freeze during an automatic kernel update: 2 GB swap added, PM2 memory limits on both bots |
+| 2026-10-10 | **v9** | **Pre-registered checkpoint run** on 18 sessions split into a mined half and a never-seen half: time budget 150 to 240 min **adopted** (the stale exit was selling positions at breakeven before the profit keeper could work); trend score V2, dip-depth changes and dropping the AI veto all **rejected** - V2 returned +$1.04/trade on the half it was built against and -$2.14/trade on fresh data. Config now frozen for ~100 trades |
+| 2026-10-09 | v8.9 | Clock times in Telegram switched to 12-hour am/pm (display only; all time arithmetic unchanged) |
 | 2026-10-09 | v8.8 | Every scheduled time in the logs and in Telegram now prints in **both ET and the operator's clock**, derived from the live settings; the 22:00 Bahrain review is labelled mid-session with the time left; the day's summary moved to the real 16:00 ET close |
 | 2026-10-08 | v8.7 | Screener + reviewer moved to **Claude Haiku 5.5** (~5x cheaper per call), model and thinking switch moved into `config.js`; thinking left OFF because it is billed against `max_tokens` and changed verdicts on identical evidence |
 | 2026-09-27 | v8.6 | **Dip measured from the running high, capped at the approval price** (the frozen buy level was why approved runners never filled); run-up while waiting now logged and shown in Telegram; tighter stops, looser profit keeper and earlier partials all tested and rejected |
