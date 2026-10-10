@@ -1,0 +1,236 @@
+{
+  "MRVL": {
+    "exitAtMs": 1791314162695,
+    "wasLoss": false,
+    "scoreAtExit": 100
+  },
+  "RIVN": {
+    "exitAtMs": 1787664762415,
+    "wasLoss": true,
+    "scoreAtExit": 85.46394677972683
+  },
+  "ASML": {
+    "exitAtMs": 1786648621599,
+    "wasLoss": false,
+    "scoreAtExit": 83.92814953998092
+  },
+  "META": {
+    "exitAtMs": 1788975722319,
+    "wasLoss": true,
+    "scoreAtExit": 100
+  },
+  "SOFI": {
+    "exitAtMs": 1791227583539,
+    "wasLoss": false,
+    "scoreAtExit": 85.84053339774718
+  },
+  "NFLX": {
+    "exitAtMs": 1787152322001,
+    "wasLoss": false,
+    "scoreAtExit": 93.48528765828323
+  },
+  "PLTR": {
+    "exitAtMs": 1791226863551,
+    "wasLoss": true,
+    "scoreAtExit": 86.84354324631798
+  },
+  "AVGO": {
+    "exitAtMs": 1790695387025,
+    "wasLoss": false,
+    "scoreAtExit": 87.16774587854314
+  },
+  "MU": {
+    "exitAtMs": 1790365503153,
+    "wasLoss": true,
+    "scoreAtExit": 85.94617833211123
+  },
+  "BRAI": 1784036525262,
+  "AMD": {
+    "exitAtMs": 1790970304235,
+    "wasLoss": true,
+    "scoreAtExit": 94.65961157245655
+  },
+  "QCOM": {
+    "exitAtMs": 1790794862443,
+    "wasLoss": true,
+    "scoreAtExit": 84.74061934386447
+  },
+  "NVDA": {
+    "exitAtMs": 1790797501990,
+    "wasLoss": true,
+    "scoreAtExit": 85.0819349386164
+  },
+  "IONQ": {
+    "exitAtMs": 1790018582701,
+    "wasLoss": false,
+    "scoreAtExit": 82.26287506284447
+  },
+  "HOOD": {
+    "exitAtMs": 1790004783156,
+    "wasLoss": false,
+    "scoreAtExit": 80.95961539010693
+  },
+  "RKLB": {
+    "exitAtMs": 1791315907062,
+    "wasLoss": true,
+    "scoreAtExit": 100
+  },
+  "DKNG": 1784057159494,
+  "SNAP": {
+    "exitAtMs": 1790785743240,
+    "wasLoss": false,
+    "scoreAtExit": 100
+  },
+  "MSFT": {
+    "exitAtMs": 1785440704086,
+    "wasLoss": true,
+    "scoreAtExit": 100
+  },
+  "AAPL": {
+    "exitAtMs": 1790797504301,
+    "wasLoss": true,
+    "scoreAtExit": 97.23779576403327
+  },
+  "BA": {
+    "exitAtMs": 1790708462193,
+    "wasLoss": true,
+    "scoreAtExit": 92.79867568149187
+  },
+  "AFRM": {
+    "exitAtMs": 1791291721452,
+    "wasLoss": false,
+    "scoreAtExit": 95.3808739027023
+  },
+  "GOOGL": {
+    "exitAtMs": 1785744542071,
+    "wasLoss": true,
+    "scoreAtExit": 71.307047785514
+  },
+  "CDNA": 1784226723347,
+  "RHI": 1784226726013,
+  "AMZN": {
+    "exitAtMs": 1787946301488,
+    "wasLoss": true,
+    "scoreAtExit": 82.80888872173111
+  },
+  "TSLA": {
+    "exitAtMs": 1789674301302,
+    "wasLoss": true,
+    "scoreAtExit": 97.17352290067637
+  },
+  "ANET": {
+    "exitAtMs": 1789652402377,
+    "wasLoss": false,
+    "scoreAtExit": 93.06408105056994
+  },
+  "NBIS": {
+    "exitAtMs": 1789652405007,
+    "wasLoss": true,
+    "scoreAtExit": 100
+  },
+  "SMCI": {
+    "exitAtMs": 1790966822460,
+    "wasLoss": false,
+    "scoreAtExit": 100
+  },
+  "DELL": {
+    "exitAtMs": 1784738224065,
+    "wasLoss": true,
+    "scoreAtExit": 100
+  },
+  "CRWV": {
+    "exitAtMs": 1784738823534,
+    "wasLoss": true,
+    "scoreAtExit": 51.121172053345866
+  },
+  "RDDT": {
+    "exitAtMs": 1791553022090,
+    "wasLoss": false,
+    "scoreAtExit": 100
+  },
+  "UPST": {
+    "exitAtMs": 1791315904711,
+    "wasLoss": true,
+    "scoreAtExit": 92.44838863185436
+  },
+  "ARM": {
+    "exitAtMs": 1789155902583,
+    "wasLoss": true,
+    "scoreAtExit": 100
+  },
+  "TSM": {
+    "exitAtMs": 1785941646568,
+    "wasLoss": true,
+    "scoreAtExit": 75.89491011137451
+  },
+  "SOUN": {
+    "exitAtMs": 1787841303287,
+    "wasLoss": false,
+    "scoreAtExit": 94.69308504486297
+  },
+  "CRM": {
+    "exitAtMs": 1788454562602,
+    "wasLoss": true,
+    "scoreAtExit": 94.70855043044483
+  },
+  "LLY": {
+    "exitAtMs": 1791301563679,
+    "wasLoss": false,
+    "scoreAtExit": 81.61194323167939
+  },
+  "ISRG": {
+    "exitAtMs": 1789743601822,
+    "wasLoss": false,
+    "scoreAtExit": 90.46858768818103
+  },
+  "NKE": {
+    "exitAtMs": 1790084882396,
+    "wasLoss": false,
+    "scoreAtExit": 85.24026122621564
+  },
+  "HD": {
+    "exitAtMs": 1790107681350,
+    "wasLoss": false,
+    "scoreAtExit": 82.50700242041704
+  },
+  "GM": {
+    "exitAtMs": 1790365505450,
+    "wasLoss": false,
+    "scoreAtExit": 94.58891790136921
+  },
+  "DE": {
+    "exitAtMs": 1790960643191,
+    "wasLoss": false,
+    "scoreAtExit": 85.83953401373147
+  },
+  "CAT": {
+    "exitAtMs": 1791306123676,
+    "wasLoss": false,
+    "scoreAtExit": 86.55632228790573
+  },
+  "LIN": {
+    "exitAtMs": 1790970301947,
+    "wasLoss": true,
+    "scoreAtExit": 82.37495372325915
+  },
+  "SHOP": {
+    "exitAtMs": 1791230642367,
+    "wasLoss": false,
+    "scoreAtExit": 100
+  },
+  "MELI": {
+    "exitAtMs": 1791288182009,
+    "wasLoss": false,
+    "scoreAtExit": 88.34345899997794
+  },
+  "PANW": {
+    "exitAtMs": 1791315902317,
+    "wasLoss": true,
+    "scoreAtExit": 100
+  },
+  "CCI": {
+    "exitAtMs": 1791573181150,
+    "wasLoss": false,
+    "scoreAtExit": 100
+  }
+}

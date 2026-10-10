@@ -1,0 +1,208 @@
+{"ts":"2026-07-07T08:00:00.009Z","bahrainTime":"7/7/2026, 11:00:00 AM","event":"SCAN_START","bahrain":"11:00:00 AM"}
+{"ts":"2026-07-07T08:00:00.012Z","bahrainTime":"7/7/2026, 11:00:00 AM","event":"GATE_BLOCK","gate":"SESSION_TIMING","reason":"Pre-market — regular session opens at 9:30 AM ET (330 min from now)"}
+{"ts":"2026-07-07T08:10:00.006Z","bahrainTime":"7/7/2026, 11:10:00 AM","event":"SCAN_SKIPPED","reason":"ADAPTIVE_CHOP","minutesSinceLastScan":10,"lastKnownRegime":"CHOP","lastKnownSpyChangePercent":0.8861677273825858}
+{"ts":"2026-07-07T08:20:00.006Z","bahrainTime":"7/7/2026, 11:20:00 AM","event":"SCAN_SKIPPED","reason":"ADAPTIVE_CHOP","minutesSinceLastScan":20,"lastKnownRegime":"CHOP","lastKnownSpyChangePercent":0.8861677273825858}
+{"ts":"2026-07-07T08:30:00.007Z","bahrainTime":"7/7/2026, 11:30:00 AM","event":"SCAN_START","bahrain":"11:30:00 AM"}
+{"ts":"2026-07-07T08:30:00.008Z","bahrainTime":"7/7/2026, 11:30:00 AM","event":"GATE_BLOCK","gate":"SESSION_TIMING","reason":"Pre-market — regular session opens at 9:30 AM ET (300 min from now)"}
+{"ts":"2026-07-07T08:40:00.006Z","bahrainTime":"7/7/2026, 11:40:00 AM","event":"SCAN_SKIPPED","reason":"ADAPTIVE_CHOP","minutesSinceLastScan":10,"lastKnownRegime":"CHOP","lastKnownSpyChangePercent":0.8861677273825858}
+{"ts":"2026-07-07T08:50:00.008Z","bahrainTime":"7/7/2026, 11:50:00 AM","event":"SCAN_SKIPPED","reason":"ADAPTIVE_CHOP","minutesSinceLastScan":20,"lastKnownRegime":"CHOP","lastKnownSpyChangePercent":0.8861677273825858}
+{"ts":"2026-07-07T09:00:00.007Z","bahrainTime":"7/7/2026, 12:00:00 PM","event":"SCAN_START","bahrain":"12:00:00 PM"}
+{"ts":"2026-07-07T09:00:00.009Z","bahrainTime":"7/7/2026, 12:00:00 PM","event":"GATE_BLOCK","gate":"SESSION_TIMING","reason":"Pre-market — regular session opens at 9:30 AM ET (270 min from now)"}
+{"ts":"2026-07-07T09:10:00.006Z","bahrainTime":"7/7/2026, 12:10:00 PM","event":"SCAN_SKIPPED","reason":"ADAPTIVE_CHOP","minutesSinceLastScan":10,"lastKnownRegime":"CHOP","lastKnownSpyChangePercent":0.8861677273825858}
+{"ts":"2026-07-07T09:20:00.011Z","bahrainTime":"7/7/2026, 12:20:00 PM","event":"SCAN_SKIPPED","reason":"ADAPTIVE_CHOP","minutesSinceLastScan":20,"lastKnownRegime":"CHOP","lastKnownSpyChangePercent":0.8861677273825858}
+{"ts":"2026-07-07T09:30:00.013Z","bahrainTime":"7/7/2026, 12:30:00 PM","event":"SCAN_START","bahrain":"12:30:00 PM"}
+{"ts":"2026-07-07T09:30:00.014Z","bahrainTime":"7/7/2026, 12:30:00 PM","event":"GATE_BLOCK","gate":"SESSION_TIMING","reason":"Pre-market — regular session opens at 9:30 AM ET (240 min from now)"}
+{"ts":"2026-07-07T09:40:00.008Z","bahrainTime":"7/7/2026, 12:40:00 PM","event":"SCAN_SKIPPED","reason":"ADAPTIVE_CHOP","minutesSinceLastScan":10,"lastKnownRegime":"CHOP","lastKnownSpyChangePercent":0.8861677273825858}
+{"ts":"2026-07-07T09:50:00.007Z","bahrainTime":"7/7/2026, 12:50:00 PM","event":"SCAN_SKIPPED","reason":"ADAPTIVE_CHOP","minutesSinceLastScan":20,"lastKnownRegime":"CHOP","lastKnownSpyChangePercent":0.8861677273825858}
+{"ts":"2026-07-07T10:00:00.008Z","bahrainTime":"7/7/2026, 1:00:00 PM","event":"SCAN_START","bahrain":"1:00:00 PM"}
+{"ts":"2026-07-07T10:00:00.009Z","bahrainTime":"7/7/2026, 1:00:00 PM","event":"GATE_BLOCK","gate":"SESSION_TIMING","reason":"Pre-market — regular session opens at 9:30 AM ET (210 min from now)"}
+{"ts":"2026-07-07T10:10:00.007Z","bahrainTime":"7/7/2026, 1:10:00 PM","event":"SCAN_SKIPPED","reason":"ADAPTIVE_CHOP","minutesSinceLastScan":10,"lastKnownRegime":"CHOP","lastKnownSpyChangePercent":0.8861677273825858}
+{"ts":"2026-07-07T10:20:00.008Z","bahrainTime":"7/7/2026, 1:20:00 PM","event":"SCAN_SKIPPED","reason":"ADAPTIVE_CHOP","minutesSinceLastScan":20,"lastKnownRegime":"CHOP","lastKnownSpyChangePercent":0.8861677273825858}
+{"ts":"2026-07-07T10:30:00.007Z","bahrainTime":"7/7/2026, 1:30:00 PM","event":"SCAN_START","bahrain":"1:30:00 PM"}
+{"ts":"2026-07-07T10:30:00.008Z","bahrainTime":"7/7/2026, 1:30:00 PM","event":"GATE_BLOCK","gate":"SESSION_TIMING","reason":"Pre-market — regular session opens at 9:30 AM ET (180 min from now)"}
+{"ts":"2026-07-07T10:40:00.006Z","bahrainTime":"7/7/2026, 1:40:00 PM","event":"SCAN_SKIPPED","reason":"ADAPTIVE_CHOP","minutesSinceLastScan":10,"lastKnownRegime":"CHOP","lastKnownSpyChangePercent":0.8861677273825858}
+{"ts":"2026-07-07T10:50:00.014Z","bahrainTime":"7/7/2026, 1:50:00 PM","event":"SCAN_START","bahrain":"1:50:00 PM"}
+{"ts":"2026-07-07T10:50:00.015Z","bahrainTime":"7/7/2026, 1:50:00 PM","event":"GATE_BLOCK","gate":"SESSION_TIMING","reason":"Pre-market — regular session opens at 9:30 AM ET (160 min from now)"}
+{"ts":"2026-07-07T11:00:00.007Z","bahrainTime":"7/7/2026, 2:00:00 PM","event":"SCAN_SKIPPED","reason":"ADAPTIVE_CHOP","minutesSinceLastScan":10,"lastKnownRegime":"CHOP","lastKnownSpyChangePercent":0.8861677273825858}
+{"ts":"2026-07-07T11:10:00.007Z","bahrainTime":"7/7/2026, 2:10:00 PM","event":"SCAN_SKIPPED","reason":"ADAPTIVE_CHOP","minutesSinceLastScan":20,"lastKnownRegime":"CHOP","lastKnownSpyChangePercent":0.8861677273825858}
+{"ts":"2026-07-07T11:20:00.007Z","bahrainTime":"7/7/2026, 2:20:00 PM","event":"SCAN_START","bahrain":"2:20:00 PM"}
+{"ts":"2026-07-07T11:20:00.009Z","bahrainTime":"7/7/2026, 2:20:00 PM","event":"GATE_BLOCK","gate":"SESSION_TIMING","reason":"Pre-market — regular session opens at 9:30 AM ET (130 min from now)"}
+{"ts":"2026-07-07T11:30:00.006Z","bahrainTime":"7/7/2026, 2:30:00 PM","event":"SCAN_SKIPPED","reason":"ADAPTIVE_CHOP","minutesSinceLastScan":10,"lastKnownRegime":"CHOP","lastKnownSpyChangePercent":0.8861677273825858}
+{"ts":"2026-07-07T11:40:00.007Z","bahrainTime":"7/7/2026, 2:40:00 PM","event":"SCAN_SKIPPED","reason":"ADAPTIVE_CHOP","minutesSinceLastScan":20,"lastKnownRegime":"CHOP","lastKnownSpyChangePercent":0.8861677273825858}
+{"ts":"2026-07-07T11:50:00.006Z","bahrainTime":"7/7/2026, 2:50:00 PM","event":"SCAN_START","bahrain":"2:50:00 PM"}
+{"ts":"2026-07-07T11:50:00.007Z","bahrainTime":"7/7/2026, 2:50:00 PM","event":"GATE_BLOCK","gate":"SESSION_TIMING","reason":"Pre-market — regular session opens at 9:30 AM ET (100 min from now)"}
+{"ts":"2026-07-07T12:00:00.007Z","bahrainTime":"7/7/2026, 3:00:00 PM","event":"SCAN_SKIPPED","reason":"ADAPTIVE_CHOP","minutesSinceLastScan":10,"lastKnownRegime":"CHOP","lastKnownSpyChangePercent":0.8861677273825858}
+{"ts":"2026-07-07T12:10:00.007Z","bahrainTime":"7/7/2026, 3:10:00 PM","event":"SCAN_SKIPPED","reason":"ADAPTIVE_CHOP","minutesSinceLastScan":20,"lastKnownRegime":"CHOP","lastKnownSpyChangePercent":0.8861677273825858}
+{"ts":"2026-07-07T12:20:00.010Z","bahrainTime":"7/7/2026, 3:20:00 PM","event":"SCAN_START","bahrain":"3:20:00 PM"}
+{"ts":"2026-07-07T12:20:00.011Z","bahrainTime":"7/7/2026, 3:20:00 PM","event":"GATE_BLOCK","gate":"SESSION_TIMING","reason":"Pre-market — regular session opens at 9:30 AM ET (70 min from now)"}
+{"ts":"2026-07-07T12:30:00.007Z","bahrainTime":"7/7/2026, 3:30:00 PM","event":"SCAN_SKIPPED","reason":"ADAPTIVE_CHOP","minutesSinceLastScan":10,"lastKnownRegime":"CHOP","lastKnownSpyChangePercent":0.8861677273825858}
+{"ts":"2026-07-07T12:40:00.013Z","bahrainTime":"7/7/2026, 3:40:00 PM","event":"SCAN_START","bahrain":"3:40:00 PM"}
+{"ts":"2026-07-07T12:40:00.014Z","bahrainTime":"7/7/2026, 3:40:00 PM","event":"GATE_BLOCK","gate":"SESSION_TIMING","reason":"Pre-market — regular session opens at 9:30 AM ET (50 min from now)"}
+{"ts":"2026-07-07T12:50:00.008Z","bahrainTime":"7/7/2026, 3:50:00 PM","event":"SCAN_SKIPPED","reason":"ADAPTIVE_CHOP","minutesSinceLastScan":10,"lastKnownRegime":"CHOP","lastKnownSpyChangePercent":0.8861677273825858}
+{"ts":"2026-07-07T13:00:00.007Z","bahrainTime":"7/7/2026, 4:00:00 PM","event":"SCAN_SKIPPED","reason":"ADAPTIVE_CHOP","minutesSinceLastScan":20,"lastKnownRegime":"CHOP","lastKnownSpyChangePercent":0.8861677273825858}
+{"ts":"2026-07-07T13:10:00.007Z","bahrainTime":"7/7/2026, 4:10:00 PM","event":"SCAN_START","bahrain":"4:10:00 PM"}
+{"ts":"2026-07-07T13:10:00.008Z","bahrainTime":"7/7/2026, 4:10:00 PM","event":"GATE_BLOCK","gate":"SESSION_TIMING","reason":"Pre-market — regular session opens at 9:30 AM ET (20 min from now)"}
+{"ts":"2026-07-07T13:20:00.015Z","bahrainTime":"7/7/2026, 4:20:00 PM","event":"SCAN_SKIPPED","reason":"ADAPTIVE_CHOP","minutesSinceLastScan":10,"lastKnownRegime":"CHOP","lastKnownSpyChangePercent":0.8861677273825858}
+{"ts":"2026-07-07T13:30:00.012Z","bahrainTime":"7/7/2026, 4:30:00 PM","event":"SCAN_START","bahrain":"4:30:00 PM"}
+{"ts":"2026-07-07T13:30:00.013Z","bahrainTime":"7/7/2026, 4:30:00 PM","event":"GATE_BLOCK","gate":"SESSION_TIMING","reason":"Opening auction window — waiting for spreads to settle"}
+{"ts":"2026-07-07T13:40:00.010Z","bahrainTime":"7/7/2026, 4:40:00 PM","event":"SCAN_SKIPPED","reason":"ADAPTIVE_CHOP","minutesSinceLastScan":10,"lastKnownRegime":"CHOP","lastKnownSpyChangePercent":0.8861677273825858}
+{"ts":"2026-07-07T13:50:00.004Z","bahrainTime":"7/7/2026, 4:50:00 PM","event":"SCAN_SKIPPED","reason":"ADAPTIVE_CHOP","minutesSinceLastScan":20,"lastKnownRegime":"CHOP","lastKnownSpyChangePercent":0.8861677273825858}
+{"ts":"2026-07-07T14:00:00.006Z","bahrainTime":"7/7/2026, 5:00:00 PM","event":"SCAN_START","bahrain":"5:00:00 PM"}
+{"ts":"2026-07-07T14:00:14.256Z","bahrainTime":"7/7/2026, 5:00:14 PM","event":"GATE_BLOCK","gate":"SPY_DIRECTION","reason":"SPY -0.32% below floor"}
+{"ts":"2026-07-07T14:10:00.013Z","bahrainTime":"7/7/2026, 5:10:00 PM","event":"SCAN_START","bahrain":"5:10:00 PM"}
+{"ts":"2026-07-07T14:10:03.239Z","bahrainTime":"7/7/2026, 5:10:03 PM","event":"GATE_BLOCK","gate":"SPY_DIRECTION","reason":"SPY -0.40% below floor"}
+{"ts":"2026-07-07T14:20:00.006Z","bahrainTime":"7/7/2026, 5:20:00 PM","event":"SCAN_START","bahrain":"5:20:00 PM"}
+{"ts":"2026-07-07T14:20:01.050Z","bahrainTime":"7/7/2026, 5:20:01 PM","event":"GATE_BLOCK","gate":"SPY_DIRECTION","reason":"SPY -0.50% below floor"}
+{"ts":"2026-07-07T14:30:00.006Z","bahrainTime":"7/7/2026, 5:30:00 PM","event":"SCAN_START","bahrain":"5:30:00 PM"}
+{"ts":"2026-07-07T14:30:02.092Z","bahrainTime":"7/7/2026, 5:30:02 PM","event":"GATE_BLOCK","gate":"SPY_DIRECTION","reason":"SPY -0.62% below floor"}
+{"ts":"2026-07-07T14:40:00.008Z","bahrainTime":"7/7/2026, 5:40:00 PM","event":"SCAN_START","bahrain":"5:40:00 PM"}
+{"ts":"2026-07-07T14:40:01.380Z","bahrainTime":"7/7/2026, 5:40:01 PM","event":"GATE_BLOCK","gate":"SPY_DIRECTION","reason":"SPY -0.72% below floor"}
+{"ts":"2026-07-07T14:50:00.007Z","bahrainTime":"7/7/2026, 5:50:00 PM","event":"SCAN_START","bahrain":"5:50:00 PM"}
+{"ts":"2026-07-07T14:50:01.314Z","bahrainTime":"7/7/2026, 5:50:01 PM","event":"GATE_BLOCK","gate":"SPY_DIRECTION","reason":"SPY -0.68% below floor"}
+{"ts":"2026-07-07T15:00:00.011Z","bahrainTime":"7/7/2026, 6:00:00 PM","event":"SCAN_START","bahrain":"6:00:00 PM"}
+{"ts":"2026-07-07T15:00:01.235Z","bahrainTime":"7/7/2026, 6:00:01 PM","event":"GATE_BLOCK","gate":"SPY_DIRECTION","reason":"SPY -0.64% below floor"}
+{"ts":"2026-07-07T15:10:00.018Z","bahrainTime":"7/7/2026, 6:10:00 PM","event":"SCAN_START","bahrain":"6:10:00 PM"}
+{"ts":"2026-07-07T15:10:01.030Z","bahrainTime":"7/7/2026, 6:10:01 PM","event":"GATE_BLOCK","gate":"SPY_DIRECTION","reason":"SPY -0.63% below floor"}
+{"ts":"2026-07-07T15:20:00.006Z","bahrainTime":"7/7/2026, 6:20:00 PM","event":"SCAN_START","bahrain":"6:20:00 PM"}
+{"ts":"2026-07-07T15:20:01.334Z","bahrainTime":"7/7/2026, 6:20:01 PM","event":"GATE_BLOCK","gate":"SPY_DIRECTION","reason":"SPY -0.70% below floor"}
+{"ts":"2026-07-07T15:30:00.027Z","bahrainTime":"7/7/2026, 6:30:00 PM","event":"SCAN_START","bahrain":"6:30:00 PM"}
+{"ts":"2026-07-07T15:30:00.054Z","bahrainTime":"7/7/2026, 6:30:00 PM","event":"GATE_BLOCK","gate":"SESSION_TIMING","reason":"Lunch chop window — skipping new entries"}
+{"ts":"2026-07-07T15:40:00.006Z","bahrainTime":"7/7/2026, 6:40:00 PM","event":"SCAN_START","bahrain":"6:40:00 PM"}
+{"ts":"2026-07-07T15:40:00.007Z","bahrainTime":"7/7/2026, 6:40:00 PM","event":"GATE_BLOCK","gate":"SESSION_TIMING","reason":"Lunch chop window — skipping new entries"}
+{"ts":"2026-07-07T15:50:00.006Z","bahrainTime":"7/7/2026, 6:50:00 PM","event":"SCAN_START","bahrain":"6:50:00 PM"}
+{"ts":"2026-07-07T15:50:00.007Z","bahrainTime":"7/7/2026, 6:50:00 PM","event":"GATE_BLOCK","gate":"SESSION_TIMING","reason":"Lunch chop window — skipping new entries"}
+{"ts":"2026-07-07T16:00:00.011Z","bahrainTime":"7/7/2026, 7:00:00 PM","event":"SCAN_START","bahrain":"7:00:00 PM"}
+{"ts":"2026-07-07T16:00:00.012Z","bahrainTime":"7/7/2026, 7:00:00 PM","event":"GATE_BLOCK","gate":"SESSION_TIMING","reason":"Lunch chop window — skipping new entries"}
+{"ts":"2026-07-07T16:10:00.006Z","bahrainTime":"7/7/2026, 7:10:00 PM","event":"SCAN_START","bahrain":"7:10:00 PM"}
+{"ts":"2026-07-07T16:10:00.007Z","bahrainTime":"7/7/2026, 7:10:00 PM","event":"GATE_BLOCK","gate":"SESSION_TIMING","reason":"Lunch chop window — skipping new entries"}
+{"ts":"2026-07-07T16:20:00.011Z","bahrainTime":"7/7/2026, 7:20:00 PM","event":"SCAN_START","bahrain":"7:20:00 PM"}
+{"ts":"2026-07-07T16:20:00.012Z","bahrainTime":"7/7/2026, 7:20:00 PM","event":"GATE_BLOCK","gate":"SESSION_TIMING","reason":"Lunch chop window — skipping new entries"}
+{"ts":"2026-07-07T16:30:00.007Z","bahrainTime":"7/7/2026, 7:30:00 PM","event":"SCAN_START","bahrain":"7:30:00 PM"}
+{"ts":"2026-07-07T16:30:00.008Z","bahrainTime":"7/7/2026, 7:30:00 PM","event":"GATE_BLOCK","gate":"SESSION_TIMING","reason":"Lunch chop window — skipping new entries"}
+{"ts":"2026-07-07T16:40:00.006Z","bahrainTime":"7/7/2026, 7:40:00 PM","event":"SCAN_START","bahrain":"7:40:00 PM"}
+{"ts":"2026-07-07T16:40:00.007Z","bahrainTime":"7/7/2026, 7:40:00 PM","event":"GATE_BLOCK","gate":"SESSION_TIMING","reason":"Lunch chop window — skipping new entries"}
+{"ts":"2026-07-07T16:50:00.010Z","bahrainTime":"7/7/2026, 7:50:00 PM","event":"SCAN_START","bahrain":"7:50:00 PM"}
+{"ts":"2026-07-07T16:50:00.011Z","bahrainTime":"7/7/2026, 7:50:00 PM","event":"GATE_BLOCK","gate":"SESSION_TIMING","reason":"Lunch chop window — skipping new entries"}
+{"ts":"2026-07-07T17:00:00.007Z","bahrainTime":"7/7/2026, 8:00:00 PM","event":"SCAN_START","bahrain":"8:00:00 PM"}
+{"ts":"2026-07-07T17:00:00.008Z","bahrainTime":"7/7/2026, 8:00:00 PM","event":"GATE_BLOCK","gate":"SESSION_TIMING","reason":"Lunch chop window — skipping new entries"}
+{"ts":"2026-07-07T17:10:00.007Z","bahrainTime":"7/7/2026, 8:10:00 PM","event":"SCAN_START","bahrain":"8:10:00 PM"}
+{"ts":"2026-07-07T17:10:00.007Z","bahrainTime":"7/7/2026, 8:10:00 PM","event":"GATE_BLOCK","gate":"SESSION_TIMING","reason":"Lunch chop window — skipping new entries"}
+{"ts":"2026-07-07T17:20:00.006Z","bahrainTime":"7/7/2026, 8:20:00 PM","event":"SCAN_START","bahrain":"8:20:00 PM"}
+{"ts":"2026-07-07T17:20:00.007Z","bahrainTime":"7/7/2026, 8:20:00 PM","event":"GATE_BLOCK","gate":"SESSION_TIMING","reason":"Lunch chop window — skipping new entries"}
+{"ts":"2026-07-07T17:30:00.006Z","bahrainTime":"7/7/2026, 8:30:00 PM","event":"SCAN_START","bahrain":"8:30:00 PM"}
+{"ts":"2026-07-07T17:30:00.007Z","bahrainTime":"7/7/2026, 8:30:00 PM","event":"GATE_BLOCK","gate":"SESSION_TIMING","reason":"Lunch chop window — skipping new entries"}
+{"ts":"2026-07-07T17:40:00.006Z","bahrainTime":"7/7/2026, 8:40:00 PM","event":"SCAN_START","bahrain":"8:40:00 PM"}
+{"ts":"2026-07-07T17:40:00.007Z","bahrainTime":"7/7/2026, 8:40:00 PM","event":"GATE_BLOCK","gate":"SESSION_TIMING","reason":"Lunch chop window — skipping new entries"}
+{"ts":"2026-07-07T17:50:00.006Z","bahrainTime":"7/7/2026, 8:50:00 PM","event":"SCAN_START","bahrain":"8:50:00 PM"}
+{"ts":"2026-07-07T17:50:00.007Z","bahrainTime":"7/7/2026, 8:50:00 PM","event":"GATE_BLOCK","gate":"SESSION_TIMING","reason":"Lunch chop window — skipping new entries"}
+{"ts":"2026-07-07T18:00:00.006Z","bahrainTime":"7/7/2026, 9:00:00 PM","event":"SCAN_START","bahrain":"9:00:00 PM"}
+{"ts":"2026-07-07T18:00:03.446Z","bahrainTime":"7/7/2026, 9:00:03 PM","event":"DISCOVERY_RESULT","discoveredSymbols":[]}
+{"ts":"2026-07-07T18:00:07.531Z","bahrainTime":"7/7/2026, 9:00:07 PM","event":"CANDIDATE_REJECTED","symbol":"RIVN","stage":"SCORING","reason":"below VWAP","snapshot":{"aboveVwap":false,"rsi":43.41114849834945,"volumeRatio":2.745196160527105}}
+{"ts":"2026-07-07T18:00:09.929Z","bahrainTime":"7/7/2026, 9:00:09 PM","event":"CANDIDATE_REJECTED","symbol":"NVDA","stage":"SCORING","reason":"volumeRatio 0.83x below floor 1.5x","snapshot":{"aboveVwap":true,"rsi":64.91804921555561,"volumeRatio":0.8322932573227424}}
+{"ts":"2026-07-07T18:00:12.266Z","bahrainTime":"7/7/2026, 9:00:12 PM","event":"CANDIDATE_REJECTED","symbol":"TSM","stage":"SCORING","reason":"volumeRatio 1.03x below floor 1.5x","snapshot":{"aboveVwap":true,"rsi":48.6430559627411,"volumeRatio":1.032009199259145}}
+{"ts":"2026-07-07T18:00:14.752Z","bahrainTime":"7/7/2026, 9:00:14 PM","event":"CANDIDATE_REJECTED","symbol":"AMD","stage":"SCORING","reason":"volumeRatio 1.02x below floor 1.5x","snapshot":{"aboveVwap":true,"rsi":58.91822278286515,"volumeRatio":1.018576041841886}}
+{"ts":"2026-07-07T18:00:17.216Z","bahrainTime":"7/7/2026, 9:00:17 PM","event":"CANDIDATE_REJECTED","symbol":"SMCI","stage":"SCORING","reason":"volumeRatio 0.49x below floor 1.5x","snapshot":{"aboveVwap":true,"rsi":62.75654291153316,"volumeRatio":0.48656555533236245}}
+{"ts":"2026-07-07T18:00:19.118Z","bahrainTime":"7/7/2026, 9:00:19 PM","event":"CANDIDATE_REJECTED","symbol":"MU","stage":"SCORING","reason":"volumeRatio 1.02x below floor 1.5x","snapshot":{"aboveVwap":true,"rsi":58.6499800371138,"volumeRatio":1.0188977929514356}}
+{"ts":"2026-07-07T18:00:21.415Z","bahrainTime":"7/7/2026, 9:00:21 PM","event":"CANDIDATE_REJECTED","symbol":"ARM","stage":"SCORING","reason":"volumeRatio 0.74x below floor 1.5x","snapshot":{"aboveVwap":true,"rsi":53.468764795439476,"volumeRatio":0.7416381183949656}}
+{"ts":"2026-07-07T18:00:23.883Z","bahrainTime":"7/7/2026, 9:00:23 PM","event":"CANDIDATE_REJECTED","symbol":"ASML","stage":"SCORING","reason":"volumeRatio 0.94x below floor 1.5x","snapshot":{"aboveVwap":true,"rsi":57.01408962378746,"volumeRatio":0.9378724225645398}}
+{"ts":"2026-07-07T18:00:26.231Z","bahrainTime":"7/7/2026, 9:00:26 PM","event":"CANDIDATE_REJECTED","symbol":"QCOM","stage":"SCORING","reason":"volumeRatio 0.45x below floor 1.5x","snapshot":{"aboveVwap":true,"rsi":60.28863515183722,"volumeRatio":0.44635338086109516}}
+{"ts":"2026-07-07T18:00:28.658Z","bahrainTime":"7/7/2026, 9:00:28 PM","event":"CANDIDATE_REJECTED","symbol":"MRVL","stage":"SCORING","reason":"volumeRatio 0.59x below floor 1.5x","snapshot":{"aboveVwap":true,"rsi":51.134553553819835,"volumeRatio":0.5927987912981829}}
+{"ts":"2026-07-07T18:00:31.179Z","bahrainTime":"7/7/2026, 9:00:31 PM","event":"CANDIDATE_REJECTED","symbol":"ANET","stage":"SCORING","reason":"volumeRatio 1.03x below floor 1.5x","snapshot":{"aboveVwap":true,"rsi":48.11099558716875,"volumeRatio":1.0312406679242145}}
+{"ts":"2026-07-07T18:00:33.757Z","bahrainTime":"7/7/2026, 9:00:33 PM","event":"CANDIDATE_REJECTED","symbol":"SOFI","stage":"SCORING","reason":"volumeRatio 0.95x below floor 1.5x","snapshot":{"aboveVwap":true,"rsi":51.367094831763104,"volumeRatio":0.9506631839124682}}
+{"ts":"2026-07-07T18:00:36.135Z","bahrainTime":"7/7/2026, 9:00:36 PM","event":"CANDIDATE_REJECTED","symbol":"HOOD","stage":"SCORING","reason":"volumeRatio 0.74x below floor 1.5x","snapshot":{"aboveVwap":true,"rsi":58.70075978850876,"volumeRatio":0.7395128752897427}}
+{"ts":"2026-07-07T18:00:38.545Z","bahrainTime":"7/7/2026, 9:00:38 PM","event":"CANDIDATE_REJECTED","symbol":"AFRM","stage":"SCORING","reason":"volumeRatio 0.64x below floor 1.5x","snapshot":{"aboveVwap":false,"rsi":42.459400333065275,"volumeRatio":0.6409116400798769}}
+{"ts":"2026-07-07T18:00:40.932Z","bahrainTime":"7/7/2026, 9:00:40 PM","event":"CANDIDATE_REJECTED","symbol":"UPST","stage":"SCORING","reason":"volumeRatio 0.72x below floor 1.5x","snapshot":{"aboveVwap":true,"rsi":62.26867664579981,"volumeRatio":0.7240985699771538}}
+{"ts":"2026-07-07T18:00:43.269Z","bahrainTime":"7/7/2026, 9:00:43 PM","event":"CANDIDATE_REJECTED","symbol":"PLTR","stage":"SCORING","reason":"volumeRatio 1.20x below floor 1.5x","snapshot":{"aboveVwap":true,"rsi":67.97657191745608,"volumeRatio":1.1963297550652323}}
+{"ts":"2026-07-07T18:00:45.734Z","bahrainTime":"7/7/2026, 9:00:45 PM","event":"CANDIDATE_REJECTED","symbol":"SOUN","stage":"SCORING","reason":"volumeRatio 1.29x below floor 1.5x","snapshot":{"aboveVwap":true,"rsi":59.25199249964738,"volumeRatio":1.2873601247696802}}
+{"ts":"2026-07-07T18:00:48.227Z","bahrainTime":"7/7/2026, 9:00:48 PM","event":"CANDIDATE_REJECTED","symbol":"IONQ","stage":"SCORING","reason":"volumeRatio 1.00x below floor 1.5x","snapshot":{"aboveVwap":true,"rsi":69.0690102405208,"volumeRatio":0.9993256391858211}}
+{"ts":"2026-07-07T18:00:50.493Z","bahrainTime":"7/7/2026, 9:00:50 PM","event":"CANDIDATE_REJECTED","symbol":"NBIS","stage":"SCORING","reason":"volumeRatio 0.97x below floor 1.5x","snapshot":{"aboveVwap":true,"rsi":50.95273104271843,"volumeRatio":0.9664735464894381}}
+{"ts":"2026-07-07T18:00:52.742Z","bahrainTime":"7/7/2026, 9:00:52 PM","event":"CANDIDATE_REJECTED","symbol":"RKLB","stage":"SCORING","reason":"volumeRatio 0.87x below floor 1.5x","snapshot":{"aboveVwap":true,"rsi":63.796422065476676,"volumeRatio":0.8733997960552984}}
+{"ts":"2026-07-07T18:00:54.986Z","bahrainTime":"7/7/2026, 9:00:54 PM","event":"CANDIDATE_REJECTED","symbol":"RDDT","stage":"SCORING","reason":"volumeRatio 0.95x below floor 1.5x","snapshot":{"aboveVwap":true,"rsi":51.27244314483036,"volumeRatio":0.9531017556272586}}
+{"ts":"2026-07-07T18:00:57.262Z","bahrainTime":"7/7/2026, 9:00:57 PM","event":"CANDIDATE_REJECTED","symbol":"SNAP","stage":"SCORING","reason":"volumeRatio 0.84x below floor 1.5x","snapshot":{"aboveVwap":true,"rsi":46.921948203888,"volumeRatio":0.8395044174613936}}
+{"ts":"2026-07-07T18:00:59.612Z","bahrainTime":"7/7/2026, 9:00:59 PM","event":"CANDIDATE_REJECTED","symbol":"META","stage":"SCORING","reason":"volumeRatio 0.72x below floor 1.5x","snapshot":{"aboveVwap":true,"rsi":68.02175093863843,"volumeRatio":0.7171382676418322}}
+{"ts":"2026-07-07T18:01:02.043Z","bahrainTime":"7/7/2026, 9:01:02 PM","event":"CANDIDATE_REJECTED","symbol":"BA","stage":"SCORING","reason":"volumeRatio 0.79x below floor 1.5x","snapshot":{"aboveVwap":false,"rsi":39.65462298477788,"volumeRatio":0.7946754653828749}}
+{"ts":"2026-07-07T18:01:04.489Z","bahrainTime":"7/7/2026, 9:01:04 PM","event":"CANDIDATE_REJECTED","symbol":"DKNG","stage":"SCORING","reason":"volumeRatio 0.58x below floor 1.5x","snapshot":{"aboveVwap":true,"rsi":60.634735511427515,"volumeRatio":0.5827470907641636}}
+{"ts":"2026-07-07T18:10:00.006Z","bahrainTime":"7/7/2026, 9:10:00 PM","event":"SCAN_START","bahrain":"9:10:00 PM"}
+{"ts":"2026-07-07T18:10:01.238Z","bahrainTime":"7/7/2026, 9:10:01 PM","event":"GATE_BLOCK","gate":"SPY_DIRECTION","reason":"SPY -0.31% below floor"}
+{"ts":"2026-07-07T18:20:00.007Z","bahrainTime":"7/7/2026, 9:20:00 PM","event":"SCAN_START","bahrain":"9:20:00 PM"}
+{"ts":"2026-07-07T18:20:02.116Z","bahrainTime":"7/7/2026, 9:20:02 PM","event":"DISCOVERY_RESULT","discoveredSymbols":[]}
+{"ts":"2026-07-07T18:20:03.097Z","bahrainTime":"7/7/2026, 9:20:03 PM","event":"CANDIDATE_REJECTED","symbol":"RIVN","stage":"SCORING","reason":"below VWAP","snapshot":{"aboveVwap":false,"rsi":38.2615724041271,"volumeRatio":2.627148836916319}}
+{"ts":"2026-07-07T18:20:04.902Z","bahrainTime":"7/7/2026, 9:20:04 PM","event":"CANDIDATE_REJECTED","symbol":"NVDA","stage":"SCORING","reason":"volumeRatio 0.80x below floor 1.5x","snapshot":{"aboveVwap":true,"rsi":60.11012167858607,"volumeRatio":0.8000121798467769}}
+{"ts":"2026-07-07T18:20:06.724Z","bahrainTime":"7/7/2026, 9:20:06 PM","event":"CANDIDATE_REJECTED","symbol":"TSM","stage":"SCORING","reason":"volumeRatio 1.00x below floor 1.5x","snapshot":{"aboveVwap":true,"rsi":42.80406757663273,"volumeRatio":0.9983683491209073}}
+{"ts":"2026-07-07T18:20:08.521Z","bahrainTime":"7/7/2026, 9:20:08 PM","event":"CANDIDATE_REJECTED","symbol":"AMD","stage":"SCORING","reason":"volumeRatio 0.98x below floor 1.5x","snapshot":{"aboveVwap":true,"rsi":52.6948207288097,"volumeRatio":0.9783251986058279}}
+{"ts":"2026-07-07T18:20:10.385Z","bahrainTime":"7/7/2026, 9:20:10 PM","event":"CANDIDATE_REJECTED","symbol":"SMCI","stage":"SCORING","reason":"volumeRatio 0.46x below floor 1.5x","snapshot":{"aboveVwap":true,"rsi":60.20901779448464,"volumeRatio":0.4639992266000277}}
+{"ts":"2026-07-07T18:20:12.187Z","bahrainTime":"7/7/2026, 9:20:12 PM","event":"CANDIDATE_REJECTED","symbol":"MU","stage":"SCORING","reason":"volumeRatio 0.98x below floor 1.5x","snapshot":{"aboveVwap":true,"rsi":52.6948207288097,"volumeRatio":0.978361253598013}}
+{"ts":"2026-07-07T18:20:13.978Z","bahrainTime":"7/7/2026, 9:20:13 PM","event":"CANDIDATE_REJECTED","symbol":"ARM","stage":"SCORING","reason":"volumeRatio 0.72x below floor 1.5x","snapshot":{"aboveVwap":false,"rsi":38.87971833142734,"volumeRatio":0.721917048530569}}
+{"ts":"2026-07-07T18:20:15.786Z","bahrainTime":"7/7/2026, 9:20:15 PM","event":"CANDIDATE_REJECTED","symbol":"ASML","stage":"SCORING","reason":"volumeRatio 0.90x below floor 1.5x","snapshot":{"aboveVwap":true,"rsi":54.50250049327624,"volumeRatio":0.8959913857147153}}
+{"ts":"2026-07-07T18:20:17.594Z","bahrainTime":"7/7/2026, 9:20:17 PM","event":"CANDIDATE_REJECTED","symbol":"QCOM","stage":"SCORING","reason":"volumeRatio 0.43x below floor 1.5x","snapshot":{"aboveVwap":true,"rsi":50.1356677587302,"volumeRatio":0.4273911787845367}}
+{"ts":"2026-07-07T18:20:19.388Z","bahrainTime":"7/7/2026, 9:20:19 PM","event":"CANDIDATE_REJECTED","symbol":"MRVL","stage":"SCORING","reason":"volumeRatio 0.56x below floor 1.5x","snapshot":{"aboveVwap":true,"rsi":48.00609269232777,"volumeRatio":0.5644576531197767}}
+{"ts":"2026-07-07T18:20:21.190Z","bahrainTime":"7/7/2026, 9:20:21 PM","event":"CANDIDATE_REJECTED","symbol":"ANET","stage":"SCORING","reason":"volumeRatio 1.05x below floor 1.5x","snapshot":{"aboveVwap":true,"rsi":47.67147250074148,"volumeRatio":1.045571401165612}}
+{"ts":"2026-07-07T18:20:23.325Z","bahrainTime":"7/7/2026, 9:20:23 PM","event":"CANDIDATE_REJECTED","symbol":"SOFI","stage":"SCORING","reason":"volumeRatio 0.93x below floor 1.5x","snapshot":{"aboveVwap":true,"rsi":49.16641882353773,"volumeRatio":0.9325682776209816}}
+{"ts":"2026-07-07T18:20:25.164Z","bahrainTime":"7/7/2026, 9:20:25 PM","event":"CANDIDATE_REJECTED","symbol":"HOOD","stage":"SCORING","reason":"volumeRatio 0.71x below floor 1.5x","snapshot":{"aboveVwap":true,"rsi":51.68166880190119,"volumeRatio":0.7058194167618934}}
+{"ts":"2026-07-07T18:20:26.960Z","bahrainTime":"7/7/2026, 9:20:26 PM","event":"CANDIDATE_REJECTED","symbol":"AFRM","stage":"SCORING","reason":"volumeRatio 0.63x below floor 1.5x","snapshot":{"aboveVwap":false,"rsi":45.83232276600716,"volumeRatio":0.6275466084513646}}
+{"ts":"2026-07-07T18:20:28.760Z","bahrainTime":"7/7/2026, 9:20:28 PM","event":"CANDIDATE_REJECTED","symbol":"UPST","stage":"SCORING","reason":"volumeRatio 0.72x below floor 1.5x","snapshot":{"aboveVwap":true,"rsi":59.51690172074933,"volumeRatio":0.723439818565426}}
+{"ts":"2026-07-07T18:20:30.585Z","bahrainTime":"7/7/2026, 9:20:30 PM","event":"CANDIDATE_REJECTED","symbol":"PLTR","stage":"SCORING","reason":"volumeRatio 1.17x below floor 1.5x","snapshot":{"aboveVwap":true,"rsi":65.77247002507042,"volumeRatio":1.169978758059486}}
+{"ts":"2026-07-07T18:20:32.389Z","bahrainTime":"7/7/2026, 9:20:32 PM","event":"CANDIDATE_REJECTED","symbol":"SOUN","stage":"SCORING","reason":"volumeRatio 1.27x below floor 1.5x","snapshot":{"aboveVwap":true,"rsi":49.807330427158796,"volumeRatio":1.2654863531984613}}
+{"ts":"2026-07-07T18:20:34.361Z","bahrainTime":"7/7/2026, 9:20:34 PM","event":"CANDIDATE_REJECTED","symbol":"IONQ","stage":"SCORING","reason":"volumeRatio 0.95x below floor 1.5x","snapshot":{"aboveVwap":true,"rsi":58.71463631059334,"volumeRatio":0.953528009248875}}
+{"ts":"2026-07-07T18:20:36.153Z","bahrainTime":"7/7/2026, 9:20:36 PM","event":"CANDIDATE_REJECTED","symbol":"NBIS","stage":"SCORING","reason":"volumeRatio 0.93x below floor 1.5x","snapshot":{"aboveVwap":true,"rsi":49.199596837522016,"volumeRatio":0.9347892081409965}}
+{"ts":"2026-07-07T18:20:37.971Z","bahrainTime":"7/7/2026, 9:20:37 PM","event":"CANDIDATE_REJECTED","symbol":"RKLB","stage":"SCORING","reason":"volumeRatio 0.85x below floor 1.5x","snapshot":{"aboveVwap":true,"rsi":56.636167234630996,"volumeRatio":0.8450845089637988}}
+{"ts":"2026-07-07T18:20:39.772Z","bahrainTime":"7/7/2026, 9:20:39 PM","event":"CANDIDATE_REJECTED","symbol":"RDDT","stage":"SCORING","reason":"volumeRatio 0.92x below floor 1.5x","snapshot":{"aboveVwap":true,"rsi":61.156191508452046,"volumeRatio":0.9213396775498974}}
+{"ts":"2026-07-07T18:20:41.551Z","bahrainTime":"7/7/2026, 9:20:41 PM","event":"CANDIDATE_REJECTED","symbol":"META","stage":"SCORING","reason":"volumeRatio 0.80x below floor 1.5x","snapshot":{"aboveVwap":true,"rsi":83.77743524842907,"volumeRatio":0.7968525735868718}}
+{"ts":"2026-07-07T18:20:43.402Z","bahrainTime":"7/7/2026, 9:20:43 PM","event":"CANDIDATE_REJECTED","symbol":"DKNG","stage":"SCORING","reason":"volumeRatio 0.57x below floor 1.5x","snapshot":{"aboveVwap":true,"rsi":55.66184390446722,"volumeRatio":0.5652956749419284}}
+{"ts":"2026-07-07T18:30:00.007Z","bahrainTime":"7/7/2026, 9:30:00 PM","event":"SCAN_START","bahrain":"9:30:00 PM"}
+{"ts":"2026-07-07T18:30:01.451Z","bahrainTime":"7/7/2026, 9:30:01 PM","event":"GATE_BLOCK","gate":"SPY_DIRECTION","reason":"SPY -0.30% below floor"}
+{"ts":"2026-07-07T18:40:00.007Z","bahrainTime":"7/7/2026, 9:40:00 PM","event":"SCAN_START","bahrain":"9:40:00 PM"}
+{"ts":"2026-07-07T18:40:01.118Z","bahrainTime":"7/7/2026, 9:40:01 PM","event":"GATE_BLOCK","gate":"SPY_DIRECTION","reason":"SPY -0.31% below floor"}
+{"ts":"2026-07-07T18:50:00.005Z","bahrainTime":"7/7/2026, 9:50:00 PM","event":"SCAN_START","bahrain":"9:50:00 PM"}
+{"ts":"2026-07-07T18:50:01.061Z","bahrainTime":"7/7/2026, 9:50:01 PM","event":"GATE_BLOCK","gate":"SPY_DIRECTION","reason":"SPY -0.41% below floor"}
+{"ts":"2026-07-07T19:00:00.006Z","bahrainTime":"7/7/2026, 10:00:00 PM","event":"SCAN_START","bahrain":"10:00:00 PM"}
+{"ts":"2026-07-07T19:00:01.561Z","bahrainTime":"7/7/2026, 10:00:01 PM","event":"GATE_BLOCK","gate":"SPY_DIRECTION","reason":"SPY -0.50% below floor"}
+{"ts":"2026-07-07T19:10:00.013Z","bahrainTime":"7/7/2026, 10:10:00 PM","event":"SCAN_START","bahrain":"10:10:00 PM"}
+{"ts":"2026-07-07T19:10:01.442Z","bahrainTime":"7/7/2026, 10:10:01 PM","event":"GATE_BLOCK","gate":"SPY_DIRECTION","reason":"SPY -0.60% below floor"}
+{"ts":"2026-07-07T19:20:00.010Z","bahrainTime":"7/7/2026, 10:20:00 PM","event":"SCAN_START","bahrain":"10:20:00 PM"}
+{"ts":"2026-07-07T19:20:02.557Z","bahrainTime":"7/7/2026, 10:20:02 PM","event":"GATE_BLOCK","gate":"SPY_DIRECTION","reason":"SPY -0.62% below floor"}
+{"ts":"2026-07-07T19:30:00.007Z","bahrainTime":"7/7/2026, 10:30:00 PM","event":"SCAN_START","bahrain":"10:30:00 PM"}
+{"ts":"2026-07-07T19:30:01.076Z","bahrainTime":"7/7/2026, 10:30:01 PM","event":"GATE_BLOCK","gate":"SPY_DIRECTION","reason":"SPY -0.61% below floor"}
+{"ts":"2026-07-07T19:40:00.012Z","bahrainTime":"7/7/2026, 10:40:00 PM","event":"SCAN_START","bahrain":"10:40:00 PM"}
+{"ts":"2026-07-07T19:40:01.612Z","bahrainTime":"7/7/2026, 10:40:01 PM","event":"GATE_BLOCK","gate":"SPY_DIRECTION","reason":"SPY -0.60% below floor"}
+{"ts":"2026-07-07T19:45:01.577Z","bahrainTime":"7/7/2026, 10:45:01 PM","event":"EOD_SUMMARY","mode":"DAY_ONLY","stats":{"totalTrades":0}}
+{"ts":"2026-07-07T19:50:00.006Z","bahrainTime":"7/7/2026, 10:50:00 PM","event":"SCAN_START","bahrain":"10:50:00 PM"}
+{"ts":"2026-07-07T19:50:01.094Z","bahrainTime":"7/7/2026, 10:50:01 PM","event":"GATE_BLOCK","gate":"SPY_DIRECTION","reason":"SPY -0.56% below floor"}
+{"ts":"2026-07-07T20:00:00.007Z","bahrainTime":"7/7/2026, 11:00:00 PM","event":"SCAN_START","bahrain":"11:00:00 PM"}
+{"ts":"2026-07-07T20:00:03.876Z","bahrainTime":"7/7/2026, 11:00:03 PM","event":"GATE_BLOCK","gate":"SPY_DIRECTION","reason":"SPY -0.47% below floor"}
+{"ts":"2026-07-07T20:00:12.086Z","bahrainTime":"7/7/2026, 11:00:12 PM","event":"SCAN_START","bahrain":"11:00:12 PM"}
+{"ts":"2026-07-07T20:00:20.865Z","bahrainTime":"7/7/2026, 11:00:20 PM","event":"GATE_BLOCK","gate":"SPY_DIRECTION","reason":"SPY -0.46% below floor"}
+{"ts":"2026-07-07T20:10:00.011Z","bahrainTime":"7/7/2026, 11:10:00 PM","event":"SCAN_START","bahrain":"11:10:00 PM"}
+{"ts":"2026-07-07T20:10:00.997Z","bahrainTime":"7/7/2026, 11:10:00 PM","event":"GATE_BLOCK","gate":"SPY_DIRECTION","reason":"SPY -0.48% below floor"}
+{"ts":"2026-07-07T20:20:00.008Z","bahrainTime":"7/7/2026, 11:20:00 PM","event":"SCAN_START","bahrain":"11:20:00 PM"}
+{"ts":"2026-07-07T20:20:01.271Z","bahrainTime":"7/7/2026, 11:20:01 PM","event":"GATE_BLOCK","gate":"SPY_DIRECTION","reason":"SPY -0.53% below floor"}
+{"ts":"2026-07-07T20:30:00.008Z","bahrainTime":"7/7/2026, 11:30:00 PM","event":"SCAN_START","bahrain":"11:30:00 PM"}
+{"ts":"2026-07-07T20:30:01.027Z","bahrainTime":"7/7/2026, 11:30:01 PM","event":"GATE_BLOCK","gate":"SPY_DIRECTION","reason":"SPY -0.52% below floor"}
+{"ts":"2026-07-07T20:40:00.008Z","bahrainTime":"7/7/2026, 11:40:00 PM","event":"SCAN_START","bahrain":"11:40:00 PM"}
+{"ts":"2026-07-07T20:40:01.048Z","bahrainTime":"7/7/2026, 11:40:01 PM","event":"GATE_BLOCK","gate":"SPY_DIRECTION","reason":"SPY -0.50% below floor"}
+{"ts":"2026-07-07T20:50:00.008Z","bahrainTime":"7/7/2026, 11:50:00 PM","event":"SCAN_START","bahrain":"11:50:00 PM"}
+{"ts":"2026-07-07T20:50:00.947Z","bahrainTime":"7/7/2026, 11:50:00 PM","event":"GATE_BLOCK","gate":"SPY_DIRECTION","reason":"SPY -0.51% below floor"}
+{"ts":"2026-07-07T21:00:00.008Z","bahrainTime":"7/8/2026, 12:00:00 AM","event":"SCAN_START","bahrain":"12:00:00 AM"}
+{"ts":"2026-07-07T21:00:01.253Z","bahrainTime":"7/8/2026, 12:00:01 AM","event":"GATE_BLOCK","gate":"SPY_DIRECTION","reason":"SPY -0.50% below floor"}
+{"ts":"2026-07-07T21:10:00.008Z","bahrainTime":"7/8/2026, 12:10:00 AM","event":"SCAN_SKIPPED","reason":"ADAPTIVE_CHOP","minutesSinceLastScan":10,"lastKnownRegime":"CHOP","lastKnownSpyChangePercent":-0.4998136513683157}
+{"ts":"2026-07-07T21:20:00.014Z","bahrainTime":"7/8/2026, 12:20:00 AM","event":"SCAN_SKIPPED","reason":"ADAPTIVE_CHOP","minutesSinceLastScan":20,"lastKnownRegime":"CHOP","lastKnownSpyChangePercent":-0.4998136513683157}
+{"ts":"2026-07-07T21:30:00.013Z","bahrainTime":"7/8/2026, 12:30:00 AM","event":"SCAN_START","bahrain":"12:30:00 AM"}
+{"ts":"2026-07-07T21:30:01.122Z","bahrainTime":"7/8/2026, 12:30:01 AM","event":"GATE_BLOCK","gate":"SPY_DIRECTION","reason":"SPY -0.68% below floor"}
+{"ts":"2026-07-07T21:40:00.007Z","bahrainTime":"7/8/2026, 12:40:00 AM","event":"SCAN_SKIPPED","reason":"ADAPTIVE_CHOP","minutesSinceLastScan":10,"lastKnownRegime":"CHOP","lastKnownSpyChangePercent":-0.6795069747630735}
+{"ts":"2026-07-07T21:50:00.009Z","bahrainTime":"7/8/2026, 12:50:00 AM","event":"SCAN_SKIPPED","reason":"ADAPTIVE_CHOP","minutesSinceLastScan":20,"lastKnownRegime":"CHOP","lastKnownSpyChangePercent":-0.6795069747630735}
+{"ts":"2026-07-07T22:00:00.012Z","bahrainTime":"7/8/2026, 1:00:00 AM","event":"SCAN_START","bahrain":"1:00:00 AM"}
+{"ts":"2026-07-07T22:00:01.332Z","bahrainTime":"7/8/2026, 1:00:01 AM","event":"GATE_BLOCK","gate":"SPY_DIRECTION","reason":"SPY -0.63% below floor"}
+{"ts":"2026-07-07T22:10:00.007Z","bahrainTime":"7/8/2026, 1:10:00 AM","event":"SCAN_SKIPPED","reason":"ADAPTIVE_CHOP","minutesSinceLastScan":10,"lastKnownRegime":"CHOP","lastKnownSpyChangePercent":-0.6315887551911411}
+{"ts":"2026-07-07T22:20:00.007Z","bahrainTime":"7/8/2026, 1:20:00 AM","event":"SCAN_SKIPPED","reason":"ADAPTIVE_CHOP","minutesSinceLastScan":20,"lastKnownRegime":"CHOP","lastKnownSpyChangePercent":-0.6315887551911411}
+{"ts":"2026-07-07T22:30:00.007Z","bahrainTime":"7/8/2026, 1:30:00 AM","event":"SCAN_START","bahrain":"1:30:00 AM"}
+{"ts":"2026-07-07T22:30:01.168Z","bahrainTime":"7/8/2026, 1:30:01 AM","event":"GATE_BLOCK","gate":"SPY_DIRECTION","reason":"SPY -0.59% below floor"}
+{"ts":"2026-07-07T22:40:00.008Z","bahrainTime":"7/8/2026, 1:40:00 AM","event":"SCAN_SKIPPED","reason":"ADAPTIVE_CHOP","minutesSinceLastScan":10,"lastKnownRegime":"CHOP","lastKnownSpyChangePercent":-0.5869981897561453}
+{"ts":"2026-07-07T22:50:00.008Z","bahrainTime":"7/8/2026, 1:50:00 AM","event":"SCAN_SKIPPED","reason":"ADAPTIVE_CHOP","minutesSinceLastScan":20,"lastKnownRegime":"CHOP","lastKnownSpyChangePercent":-0.5869981897561453}
+{"ts":"2026-07-07T23:00:00.008Z","bahrainTime":"7/8/2026, 2:00:00 AM","event":"SCAN_START","bahrain":"2:00:00 AM"}
+{"ts":"2026-07-07T23:00:03.323Z","bahrainTime":"7/8/2026, 2:00:03 AM","event":"GATE_BLOCK","gate":"SPY_DIRECTION","reason":"SPY -0.58% below floor"}
+{"ts":"2026-07-07T23:10:00.006Z","bahrainTime":"7/8/2026, 2:10:00 AM","event":"SCAN_SKIPPED","reason":"ADAPTIVE_CHOP","minutesSinceLastScan":10,"lastKnownRegime":"CHOP","lastKnownSpyChangePercent":-0.5790118198274823}
+{"ts":"2026-07-07T23:20:00.007Z","bahrainTime":"7/8/2026, 2:20:00 AM","event":"SCAN_SKIPPED","reason":"ADAPTIVE_CHOP","minutesSinceLastScan":20,"lastKnownRegime":"CHOP","lastKnownSpyChangePercent":-0.5790118198274823}
+{"ts":"2026-07-07T23:30:00.007Z","bahrainTime":"7/8/2026, 2:30:00 AM","event":"SCAN_START","bahrain":"2:30:00 AM"}
+{"ts":"2026-07-07T23:30:01.535Z","bahrainTime":"7/8/2026, 2:30:01 AM","event":"GATE_BLOCK","gate":"SPY_DIRECTION","reason":"SPY -0.52% below floor"}
+{"ts":"2026-07-07T23:40:00.006Z","bahrainTime":"7/8/2026, 2:40:00 AM","event":"SCAN_SKIPPED","reason":"ADAPTIVE_CHOP","minutesSinceLastScan":10,"lastKnownRegime":"CHOP","lastKnownSpyChangePercent":-0.5177829837078035}
+{"ts":"2026-07-07T23:50:00.006Z","bahrainTime":"7/8/2026, 2:50:00 AM","event":"SCAN_SKIPPED","reason":"ADAPTIVE_CHOP","minutesSinceLastScan":20,"lastKnownRegime":"CHOP","lastKnownSpyChangePercent":-0.5177829837078035}

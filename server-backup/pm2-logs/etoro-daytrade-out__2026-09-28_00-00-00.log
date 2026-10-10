@@ -1,0 +1,34 @@
+[2026-09-27 14:52:39] [[32MINFO[39M] Price stream disconnected — reconnecting in 30s (1-min exit monitor unaffected)
+[2026-09-27 14:53:11] [[32MINFO[39M] 📶 Price stream connected — real-time exit watchdog live for 0 position(s)
+[2026-09-27 16:23:08] [[32MINFO[39M] ╔════════════════════════════════════════════════╗
+[2026-09-27 16:23:08] [[32MINFO[39M] ║  eToro Day + Swing Bot v5                       ║
+[2026-09-27 16:23:08] [[32MINFO[39M] ║  planner · discovery · reviewer · alerts        ║
+[2026-09-27 16:23:08] [[32MINFO[39M] ╚════════════════════════════════════════════════╝
+[2026-09-27 16:23:08] [[32MINFO[39M] Day-trade Telegram bot initialised
+[2026-09-27 16:23:08] [[32MINFO[39M] Watchlist: 54 symbols · Discovery: ON (Yahoo screeners)
+[2026-09-27 16:23:08] [[33MWARN[39M] Alpaca: NOT configured (ALPACA_API_KEY_ID/ALPACA_SECRET_KEY missing). Falling back to sequential Twelve Data polling for watchlist quotes. Free key: https://app.alpaca.markets/signup
+[2026-09-27 16:23:08] [[32MINFO[39M] Finnhub: CONFIGURED — earnings blackout, dynamic sector buckets, and reviewer headlines are ACTIVE
+[2026-09-27 16:23:08] [[32MINFO[39M] eToro market-data: CONFIGURED (primary quote source) — batched rates + real-volume candles on your existing trading credentials. Alpaca/Twelve Data are now pure fallbacks.
+[2026-09-27 16:23:08] [[33MWARN[39M] Alpaca stream: NOT configured (ALPACA_API_KEY_ID/ALPACA_SECRET_KEY missing). Falling back to sequential Twelve Data polling — free key: https://app.alpaca.markets/signup
+[2026-09-27 16:23:08] [[32MINFO[39M] Capital: $9330 effective (peak $10032.85) · Risk/trade: 0.5% day / 1.5% swing · Slots: 7 day + 0 swing · Drawdown breaker: 15% from peak · Friday closes ALL: true
+[2026-09-27 16:23:08] [[32MINFO[39M] 🎯 Dip entry ON: approved stocks are bought only on a dip of 0.25× the stop distance within 60 min (DT_DIP_ENTRY_ENABLED=false buys immediately)
+[2026-09-27 16:23:08] [[32MINFO[39M] Scheduler: scans every 10 min (adaptive slow-down in CHOP) · 1-min exit monitor · daily position review Mon-Thu 22:00 Bahrain · EOD close Mon-Thu (DAY) / Fri (ALL) at 22:45 Bahrain · Friday self-evaluation
+[2026-09-27 16:23:08] [[32MINFO[39M] Market closed — skipping scan (4:23:08 PM Bahrain)
+[2026-09-27 16:23:08] [[32MINFO[39M] Running (4:23:08 PM Bahrain)
+[2026-09-27 16:23:09] [[32MINFO[39M] 📶 Price stream connected — real-time exit watchdog live for 0 position(s)
+[2026-09-27 16:23:42] [[32MINFO[39M] ╔════════════════════════════════════════════════╗
+[2026-09-27 16:23:42] [[32MINFO[39M] ║  eToro Day + Swing Bot v5                       ║
+[2026-09-27 16:23:42] [[32MINFO[39M] ║  planner · discovery · reviewer · alerts        ║
+[2026-09-27 16:23:42] [[32MINFO[39M] ╚════════════════════════════════════════════════╝
+[2026-09-27 16:23:42] [[32MINFO[39M] Day-trade Telegram bot initialised
+[2026-09-27 16:23:42] [[32MINFO[39M] Watchlist: 54 symbols · Discovery: ON (Yahoo screeners)
+[2026-09-27 16:23:42] [[33MWARN[39M] Alpaca: NOT configured (ALPACA_API_KEY_ID/ALPACA_SECRET_KEY missing). Falling back to sequential Twelve Data polling for watchlist quotes. Free key: https://app.alpaca.markets/signup
+[2026-09-27 16:23:42] [[32MINFO[39M] Finnhub: CONFIGURED — earnings blackout, dynamic sector buckets, and reviewer headlines are ACTIVE
+[2026-09-27 16:23:42] [[32MINFO[39M] eToro market-data: CONFIGURED (primary quote source) — batched rates + real-volume candles on your existing trading credentials. Alpaca/Twelve Data are now pure fallbacks.
+[2026-09-27 16:23:42] [[33MWARN[39M] Alpaca stream: NOT configured (ALPACA_API_KEY_ID/ALPACA_SECRET_KEY missing). Falling back to sequential Twelve Data polling — free key: https://app.alpaca.markets/signup
+[2026-09-27 16:23:42] [[32MINFO[39M] Capital: $9330 effective (peak $10032.85) · Risk/trade: 0.5% day / 1.5% swing · Slots: 7 day + 0 swing · Drawdown breaker: 15% from peak · Friday closes ALL: true
+[2026-09-27 16:23:42] [[32MINFO[39M] 🎯 Dip entry ON: approved stocks are bought only on a dip of 0.25× the stop distance within 60 min, measured from the highest price seen while waiting but never above the approval price (v8.6) (DT_DIP_ENTRY_ENABLED=false buys immediately)
+[2026-09-27 16:23:42] [[32MINFO[39M] Scheduler: scans every 10 min (adaptive slow-down in CHOP) · 1-min exit monitor · daily position review Mon-Thu 22:00 Bahrain · EOD close Mon-Thu (DAY) / Fri (ALL) at 22:45 Bahrain · Friday self-evaluation
+[2026-09-27 16:23:42] [[32MINFO[39M] Market closed — skipping scan (4:23:42 PM Bahrain)
+[2026-09-27 16:23:42] [[32MINFO[39M] Running (4:23:42 PM Bahrain)
+[2026-09-27 16:23:44] [[32MINFO[39M] 📶 Price stream connected — real-time exit watchdog live for 0 position(s)

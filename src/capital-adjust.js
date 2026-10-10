@@ -37,21 +37,11 @@ function printStatus(heading) {
 
   console.log("\n" + heading);
   console.log("  base capital (.env DT_CAPITAL) : " + money(state.baseCapital));
-  console.log(
-    "  owner deposits/withdrawals     : " + money(state.ownerAdjustments),
-  );
-  console.log(
-    "  → capital base after transfers : " + money(state.effectiveBase),
-  );
-  console.log(
-    "  realized trading P&L           : " + money(state.cumulativeRealizedPnl),
-  );
-  console.log(
-    "  ═ effective capital            : " + money(state.effectiveCapital),
-  );
-  console.log(
-    "  drawdown peak                  : " + money(state.peakEffectiveCapital),
-  );
+  console.log("  owner deposits/withdrawals     : " + money(state.ownerAdjustments));
+  console.log("  → capital base after transfers : " + money(state.effectiveBase));
+  console.log("  realized trading P&L           : " + money(state.cumulativeRealizedPnl));
+  console.log("  ═ effective capital            : " + money(state.effectiveCapital));
+  console.log("  drawdown peak                  : " + money(state.peakEffectiveCapital));
   console.log(
     "  current drawdown               : " +
       drawdownPct.toFixed(1) +
@@ -70,7 +60,7 @@ const [rawAmount, rawNote] = process.argv.slice(2);
 if (!rawAmount || rawAmount === "--status" || rawAmount === "-s") {
   printStatus("📊 Capital state (unchanged):");
   console.log(
-    '\nTo declare a transfer:  node src/capital-adjust.js -3000 "reason"\n',
+    "\nTo declare a transfer:  node src/capital-adjust.js -3000 \"reason\"\n",
   );
   process.exit(0);
 }
@@ -80,7 +70,7 @@ if (!Number.isFinite(amount) || amount === 0) {
   console.error(
     "\n❌ Amount must be a non-zero number.\n" +
       "   Negative = withdrawal, positive = deposit.\n" +
-      '   e.g.  node src/capital-adjust.js -3000 "vacation"\n',
+      "   e.g.  node src/capital-adjust.js -3000 \"vacation\"\n",
   );
   process.exit(1);
 }
