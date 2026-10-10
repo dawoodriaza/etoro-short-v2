@@ -51,7 +51,7 @@ function startCommandListener(handlers) {
   telegramBot.on("polling_error", (e) => logger.warn("Telegram polling: " + (e.code || e.message)));
   telegramBot.on("message", async (msg) => {
     if (!msg || !msg.text || String(msg.chat.id) !== chatId) return;
-    const command = msg.text.trim().split(/[s@]/)[0].toLowerCase();
+    const command = msg.text.trim().toLowerCase().replace(/^\/\s+/, "/").split(/[\s@]/)[0];
     const handler = handlers[command] || handlers["/help"];
     try {
       await sendTelegramMessage(await handler());
