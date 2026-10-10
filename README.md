@@ -330,6 +330,9 @@ repair.
 
 | Path | Contents |
 |---|---|
+| `data/shadow-log/paper-*.jsonl` | (v9.1) The trade NOT taken: a paper position opened at the approval price whenever a dip order is armed, marked every minute against the same risk engine. `PAPER_OPEN` / `PAPER_MARK` / `PAPER_CLOSE`. Logging only |
+| `data/shadow-log/minute-*.jsonl` | (v9.1) One line per real open position per minute: price, P&L, peak, live stop and kind, state, exit conditions, next trim, engine action. `POSITION_STATUS` is the same payload but only every 10th tick |
+| `data/shadow-log/open-paper.json` | (v9.1) Open paper positions, so a restart does not truncate the comparison |
 | `data/position-meta.json` | Open positions the bot manages: entry, stop, targets, peak/trough, partial fills, full plan (incl. `plan.dipEntry`) |
 | `data/position-meta.lock` | Cross-process lock file (auto-removed; a dead holder is taken over) |
 | `data/trade-history.json` | Every closed trade (whole-trade P&L since v8, `pnlAccountingVersion: 2`) |
@@ -657,6 +660,7 @@ Details for every line: `CHANGELOG.md`.
 | 2026-09-17 | v8.4 | Trend score V2 logged beside the live score in every scan record (not traded on); first replay failed its pre-set bar on trade count |
 | 2026-09-18 | v8.5 | First live v8.3 sessions reviewed (9 trades, −$66); false untracked-position alerts after the bot's own closes fixed; server tests moved to a scratch copy |
 | 2026-09-22 | ops | Server freeze during an automatic kernel update: 2 GB swap added, PM2 memory limits on both bots |
+| 2026-10-10 | v9.1 | New **`data/shadow-log/`** folder, logging only: a paper position opened at the approval price every time a dip order is armed (so the cost of waiting for a dip is in the log, not a later replay), and one line per real open position **per minute** with price, stop, state and the exact exit conditions |
 | 2026-10-10 | **v9** | **Pre-registered checkpoint run** on 18 sessions split into a mined half and a never-seen half: time budget 150 to 240 min **adopted** (the stale exit was selling positions at breakeven before the profit keeper could work); trend score V2, dip-depth changes and dropping the AI veto all **rejected** - V2 returned +$1.04/trade on the half it was built against and -$2.14/trade on fresh data. Config now frozen for ~100 trades |
 | 2026-10-09 | v8.9 | Clock times in Telegram switched to 12-hour am/pm (display only; all time arithmetic unchanged) |
 | 2026-10-09 | v8.8 | Every scheduled time in the logs and in Telegram now prints in **both ET and the operator's clock**, derived from the live settings; the 22:00 Bahrain review is labelled mid-session with the time left; the day's summary moved to the real 16:00 ET close |

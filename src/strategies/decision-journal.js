@@ -44,6 +44,81 @@ function getBahrainTimeString() {
   });
 }
 
+// ── v9.1 — THE SHADOW LOG (data/shadow-log/) ────────────────────────────
+//
+// Two things the decision journal does NOT answer, both asked for by the
+// owner, both LOGGING ONLY — nothing here can place, hold or close a real
+// order:
+//
+//   paper-YYYY-MM-DD.jsonl      What would have happened if the bot had
+//                               bought the moment the AI approved, instead
+//                               of waiting for a dip. One PAPER_OPEN when an
+//                               order is armed, a PAPER_MARK every minute,
+//                               one PAPER_CLOSE when the SAME risk engine
+//                               says that paper position would have exited.
+//                               Makes "the dip never came and it would have
+//                               been profitable" answerable from the log
+//                               rather than from a replay weeks later.
+//
+//   minute-YYYY-MM-DD.jsonl     One line per REAL open position per minute:
+//                               price, P&L, peak, the live stop and its kind,
+//                               the state, and the exact exit conditions the
+//                               engine is waiting on. POSITION_STATUS already
+//                               records this but only every 10th tick, so
+//                               "why didn't it sell here" had 10-minute holes
+//                               in it. This has none.
+//
+// Kept in its own folder and its own files so the per-minute volume (a few
+// thousand lines a day) cannot bloat the decision journal that every review
+// script reads. Writing never throws, exactly as below.
+const shadowDirectory = path.join(__dirname, "../../data/shadow-log");
+
+function appendShadow(kind, eventType, payload) {
+  try {
+    if (!fs.existsSync(shadowDirectory)) {
+      fs.mkdirSync(shadowDirectory, { recursive: true });
+    }
+    const todayDate = new Date().toLocaleDateString("en-CA", {
+      timeZone: "America/New_York",
+    });
+    fs.appendFileSync(
+      path.join(shadowDirectory, kind + "-" + todayDate + ".jsonl"),
+      JSON.stringify({
+        ts: new Date().toISOString(),
+        bahrainTime: getBahrainTimeString(),
+        event: eventType,
+        ...payload,
+      }) + "\n",
+      "utf8",
+    );
+  } catch (shadowError) {
+    logger.warn("Shadow log write failed: " + shadowError.message);
+  }
+}
+
+// Open paper positions survive a restart — otherwise every deploy silently
+// truncates the comparison the folder exists to make.
+const paperStatePath = path.join(shadowDirectory, "open-paper.json");
+
+function readPaperState() {
+  try {
+    return JSON.parse(fs.readFileSync(paperStatePath, "utf8"));
+  } catch {
+    return {};
+  }
+}
+
+function writePaperState(state) {
+  try {
+    if (!fs.existsSync(shadowDirectory)) {
+      fs.mkdirSync(shadowDirectory, { recursive: true });
+    }
+    fs.writeFileSync(paperStatePath, JSON.stringify(state, null, 1), "utf8");
+  } catch (stateError) {
+    logger.warn("Shadow paper state write failed: " + stateError.message);
+  }
+}
+
 // Append one event. `payload` is any JSON-serializable object.
 function appendEvent(eventType, payload) {
   try {
@@ -155,6 +230,13 @@ const journal = {
   // v8.2: an approved stock waiting to be bought on a dip — ARMED, then
   // FILLED / BLOCKED_AT_FILL / EXPIRED / CANCELLED, with the deepest dip seen.
   dipEntry: (details) => appendEvent("DIP_ENTRY", details),
+  // v9.1 shadow log — logging only, see the block comment above
+  paperOpen: (details) => appendShadow("paper", "PAPER_OPEN", details),
+  paperMark: (details) => appendShadow("paper", "PAPER_MARK", details),
+  paperClose: (details) => appendShadow("paper", "PAPER_CLOSE", details),
+  positionMinute: (details) => appendShadow("minute", "POSITION_MINUTE", details),
+  readPaperState,
+  writePaperState,
   error: (where, message) => appendEvent("ERROR", { where, message }),
 };
 

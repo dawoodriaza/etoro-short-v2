@@ -5,6 +5,63 @@ repairs, reverted experiments). See README.md → "For AI agents".
 
 ---
 
+## v9.1 (2026-10-10) — data/shadow-log: the trade not taken, and a price every minute
+
+Two things the decision journal could not answer, both asked for by the owner,
+both **logging only** — nothing added here can place, size, hold or close a real
+order. Checked first that neither already existed: `POSITION_STATUS` was being
+written only every 10th tick, and the one existing counterfactual
+(`exit-shadow-tracker.js`) tests alternative *exits* on positions already open,
+not the immediate buy.
+
+**`data/shadow-log/paper-YYYY-MM-DD.jsonl` — what the dip wait costs.** Every
+time a dip order is armed, a paper position is opened at the price the AI
+approved — the trade the bot did **not** take — and marked every minute against
+the **same** risk engine (`decidePositionAction` / `describePositionState`) until
+that engine says it would have exited.
+
+- `PAPER_OPEN` — entry, stop, T1, size, score, source.
+- `PAPER_MARK` — price, P&L, peak, state, live stop and its kind, the engine's
+  action and the exact exit conditions it is waiting on. One per minute.
+- `PAPER_MARK` with `action: "PARTIAL"` — the T1 half is banked, the flag and
+  the locked floor are set and the tracked size shrinks, mirroring the live
+  partial handler, so the remainder trails as a real runner would instead of
+  re-signalling PARTIAL every minute and reporting a size it no longer holds.
+- `PAPER_CLOSE` — exit reason, the final leg's P&L, anything banked at T1,
+  `totalPnlDollars` for the whole paper trade, MFE, MAE and minutes held.
+
+The paper position deliberately carries **no** `plan.dipEntry`, because it is the
+bought-immediately counterfactual — so the v8.3 breakeven wait, which applies to
+dip buys only, correctly does not apply to it. "The dip never came and it would
+have been profitable" is now answerable from the log instead of from a replay
+weeks later.
+
+**`data/shadow-log/minute-YYYY-MM-DD.jsonl` — why it didn't sell.** One line per
+real open position per minute: price, P&L, peak, the live stop and its kind, the
+state, the exit conditions, the next trim, anything banked, the engine's action
+and minutes held. The console line and the `POSITION_STATUS` journal event stay
+on every 10th tick; this is the same payload with the 10-minute holes removed.
+
+Kept in its own folder and its own files so a few thousand lines a day cannot
+bloat the decision journal every review script reads. Writes never throw, like
+the rest of the journal, and both hooks sit in their own try/catch — a logging
+failure cannot touch exit management. Open paper positions persist to
+`data/shadow-log/open-paper.json` and are restored on boot, so a deploy does not
+silently truncate the comparison the folder exists to make.
+
+One batched rates call per minute while the paper book is non-empty (nothing at
+all when it is empty), separate from the dip-order call so the live dip path is
+untouched.
+
+Changed: `src/strategies/decision-journal.js` (the shadow writers and the paper
+state file), `src/index.js` (`openPaperPosition`, `markPaperPositions`, the arm
+hook, the 1-minute tick hook, the per-minute real-position line, and the restore
+on boot). 416 tests pass. Verified on the server before the market reopened: all
+three record types and the state round-trip write correctly through the real
+code path, and the folder is created on first write.
+
+---
+
 ## v9 (2026-10-10) — the pre-registered checkpoint: one change adopted, three rejected
 
 18 sessions (2026-09-16 → 10-09), 66,397 journal events, 21,889 candidate

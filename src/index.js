@@ -1403,6 +1403,12 @@ function armDipEntry(plan, aiResult) {
         : ""),
   );
   bumpDipEntryStat("armed");
+  // v9.1: log-only — the same stock bought at once, for comparison.
+  try {
+    openPaperPosition(plan, nowMs);
+  } catch (paperError) {
+    logger.warn("Paper position failed for " + order.symbol + ": " + paperError.message);
+  }
   return order;
 }
 
@@ -1533,6 +1539,166 @@ async function openDipEntry(plan, aiResult) {
     tryOpenPosition(plan, aiResult, portfolio, capitalManager.getCapitalState(), { committed: 0 }),
   );
   return outcome === true;
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// v9.1 — THE PAPER BOOK (data/shadow-log/paper-*.jsonl). LOGGING ONLY.
+//
+// Every time a dip order is armed, a PAPER position is opened at the price
+// the AI approved — the trade the bot did NOT take — and marked every minute
+// against the SAME risk engine until that engine says it would have exited.
+// Nothing in here can place, size, hold or close a real order; it only
+// writes files. It answers "the dip never came and it would have made money"
+// from the log, instead of from a replay weeks later.
+//
+// The paper position deliberately carries NO plan.dipEntry, because it is
+// the bought-immediately counterfactual — so the v8.3 breakeven wait, which
+// is dip-buys-only, correctly does not apply to it.
+// ══════════════════════════════════════════════════════════════════════
+const paperPositions = new Map(); // symbol -> position meta (paper)
+
+function openPaperPosition(plan, nowMs) {
+  const symbol = String(plan.symbol).toUpperCase();
+  if (paperPositions.has(symbol)) return; // one paper position per symbol
+  const meta = {
+    tradeType: "DAY",
+    entryPrice: plan.entryPrice,
+    stopPrice: plan.stopPrice,
+    targetT1: plan.targetT1,
+    targetT2: plan.targetT2,
+    lockedFloor: null,
+    peakPrice: plan.entryPrice,
+    peakSetAt: nowMs,
+    recentPrices: [],
+    partialDone: false,
+    openedAt: nowMs,
+    dollarAmount: plan.positionDollars,
+    troughPrice: plan.entryPrice,
+    plan: {
+      symbol,
+      stopDistancePct: plan.stopDistancePct,
+      atrPercent: plan.atrPercent,
+      score: plan.score,
+      source: plan.source,
+    },
+    entryConditions: { atrPercent: plan.atrPercent },
+  };
+  paperPositions.set(symbol, meta);
+  journal.writePaperState(Object.fromEntries(paperPositions));
+  journal.paperOpen({
+    symbol,
+    entryPrice: meta.entryPrice,
+    stopPrice: meta.stopPrice,
+    targetT1: meta.targetT1,
+    stopDistancePct: plan.stopDistancePct,
+    atrPercent: plan.atrPercent,
+    sizeDollars: meta.dollarAmount,
+    score: plan.score,
+    source: plan.source,
+    note: "bought at the approval price — the trade the live bot skipped while waiting for a dip",
+  });
+}
+
+// One batched rates call per minute for the paper book; nothing when empty.
+async function markPaperPositions() {
+  if (!paperPositions.size) return;
+  const idBySymbol = {};
+  for (const symbol of paperPositions.keys()) {
+    const id = await etoroClient.resolveTickerToInstrumentId(symbol);
+    if (id) idBySymbol[symbol] = id;
+  }
+  const rates = await etoroMarketData.fetchBatchedRates(Object.values(idBySymbol));
+  const nowMs = Date.now();
+
+  for (const [symbol, meta] of [...paperPositions.entries()]) {
+    const rate = rates[idBySymbol[symbol]];
+    const price = rate && rate.ask > 0 ? rate.ask : null;
+    if (!price) continue;
+
+    meta.recentPrices = [...(meta.recentPrices || []), price].slice(-20);
+    if (price > (meta.peakPrice || meta.entryPrice)) {
+      meta.peakPrice = price;
+      meta.peakSetAt = nowMs;
+    }
+    if (price < (meta.troughPrice || meta.entryPrice)) meta.troughPrice = price;
+
+    let decision;
+    let status;
+    try {
+      decision = riskManager.decidePositionAction(meta, price);
+      status = riskManager.describePositionState(meta, price);
+    } catch (engineError) {
+      logger.warn("Paper engine failed for " + symbol + ": " + engineError.message);
+      continue;
+    }
+    if (decision.newPeak && decision.newPeak !== meta.peakPrice) meta.peakPrice = decision.newPeak;
+    if (decision.lockedFloor != null) meta.lockedFloor = decision.lockedFloor;
+
+    const pnlPct = (price / meta.entryPrice - 1) * 100;
+    const pnlDollars = (pnlPct / 100) * meta.dollarAmount;
+
+    // Mirror the live partial handler (index.js, decision.action === "PARTIAL"):
+    // bank the fraction, flip the flag, lift the floor and shrink the tracked
+    // size, so the remainder behaves as a real runner would.
+    if (decision.action === "PARTIAL" && decision.fraction) {
+      const banked = Number(((pnlPct / 100) * meta.dollarAmount * decision.fraction).toFixed(2));
+      if (!meta.originalDollarAmount) meta.originalDollarAmount = meta.dollarAmount;
+      meta.realizedPartialPnl = Number(((meta.realizedPartialPnl || 0) + banked).toFixed(2));
+      if (decision.flagOnSuccess) meta[decision.flagOnSuccess] = true;
+      if (decision.floorOnSuccess != null) meta.lockedFloor = decision.floorOnSuccess;
+      meta.dollarAmount = Number((meta.dollarAmount * (1 - decision.fraction)).toFixed(2));
+      journal.paperMark({
+        symbol,
+        price,
+        pnlPct: Number(pnlPct.toFixed(2)),
+        action: "PARTIAL",
+        fraction: decision.fraction,
+        bankedDollars: banked,
+        realizedPartialPnl: meta.realizedPartialPnl,
+        remainingDollars: meta.dollarAmount,
+        reason: decision.reason,
+        heldMinutes: Math.round((nowMs - meta.openedAt) / 60000),
+      });
+      journal.writePaperState(Object.fromEntries(paperPositions));
+      continue;
+    }
+
+    if (decision.action === "EXIT") {
+      journal.paperClose({
+        symbol,
+        entryPrice: meta.entryPrice,
+        exitPrice: price,
+        exitReason: decision.reason || decision.exitReason || "EXIT",
+        pnlPct: Number(pnlPct.toFixed(2)),
+        pnlDollars: Number(pnlDollars.toFixed(2)),
+        realizedPartialPnl: meta.realizedPartialPnl || 0,
+        // the whole paper trade: the final leg plus anything banked at T1
+        totalPnlDollars: Number((pnlDollars + (meta.realizedPartialPnl || 0)).toFixed(2)),
+        peakPrice: meta.peakPrice,
+        troughPrice: meta.troughPrice,
+        mfePct: Number(((meta.peakPrice / meta.entryPrice - 1) * 100).toFixed(2)),
+        maePct: Number(((meta.troughPrice / meta.entryPrice - 1) * 100).toFixed(2)),
+        heldMinutes: Math.round((nowMs - meta.openedAt) / 60000),
+      });
+      paperPositions.delete(symbol);
+    } else {
+      journal.paperMark({
+        symbol,
+        price,
+        pnlPct: Number(pnlPct.toFixed(2)),
+        pnlDollars: Number(pnlDollars.toFixed(2)),
+        peakPct: Number(((meta.peakPrice / meta.entryPrice - 1) * 100).toFixed(2)),
+        state: status.state,
+        stopPrice: status.stopPrice,
+        stopKind: status.stopKind,
+        action: decision.action,
+        reason: decision.reason || status.reason,
+        exitConditions: status.exitConditions,
+        heldMinutes: Math.round((nowMs - meta.openedAt) / 60000),
+      });
+    }
+  }
+  journal.writePaperState(Object.fromEntries(paperPositions));
 }
 
 // Runs on the 1-minute exit-monitor tick. One batched rates call for all
@@ -2894,6 +3060,31 @@ async function manageOpenPositions() {
       metaChanged = true;
     }
 
+    // v9.1: one line per open position per MINUTE into data/shadow-log, so
+    // "why didn't it sell here" has no 10-minute holes in it. The console
+    // line and the POSITION_STATUS journal event below stay on every 10th
+    // tick — this is the same payload, just complete.
+    try {
+      const minuteStatus = riskManager.describePositionState(positionMeta, currentPrice);
+      journal.positionMinute({
+        symbol,
+        price: currentPrice,
+        pnlPct: minuteStatus.pnlPct,
+        peakPct: minuteStatus.peakPct,
+        state: minuteStatus.state,
+        stopPrice: minuteStatus.stopPrice,
+        stopKind: minuteStatus.stopKind,
+        exitConditions: minuteStatus.exitConditions,
+        nextTrim: minuteStatus.nextTrim,
+        realizedPartialPnl: minuteStatus.realizedPartialPnl,
+        reason: minuteStatus.reason,
+        action: decision.action,
+        heldMinutes: Math.round((Date.now() - (positionMeta.openedAt || Date.now())) / 60000),
+      });
+    } catch (minuteError) {
+      logger.warn("Per-minute position log failed for " + symbol + ": " + minuteError.message);
+    }
+
     // v8: what the bot is doing with this position and what happens next,
     // read from the engine's own levels (see describePositionState).
     if (logPositionStatusThisPass) {
@@ -3298,6 +3489,13 @@ async function runExitMonitorTick() {
     }
     // v8.2: approved stocks waiting to be bought on a dip. Isolated like the
     // shadow check — a failure here must never touch exit management.
+    // v9.1: the paper book, isolated the same way — logging must never
+    // touch exit management.
+    try {
+      await markPaperPositions();
+    } catch (paperError) {
+      logger.warn("Paper book marking failed: " + paperError.message);
+    }
     try {
       await checkPendingDipEntries();
     } catch (dipError) {
@@ -3800,6 +3998,17 @@ async function main() {
   // v5: report optional integrations honestly at startup
   // v5.3: optional Alpaca WebSocket stream — no-op if not configured
   marketDataStream.start();
+
+  // v9.1: a restart must not truncate the paper comparison.
+  try {
+    const saved = journal.readPaperState();
+    Object.entries(saved || {}).forEach(([symbol, meta]) => paperPositions.set(symbol, meta));
+    if (paperPositions.size) {
+      logger.info("Paper book restored: " + [...paperPositions.keys()].join(", ") + " (log only)");
+    }
+  } catch (restoreError) {
+    logger.warn("Paper book restore failed: " + restoreError.message);
+  }
 
   // v8.8: the session clock, in both zones, so the log answers "when does
   // anything happen" without arithmetic. Recomputed on every boot, so it
