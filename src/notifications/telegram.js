@@ -35,6 +35,34 @@ async function sendTelegramMessage(text) {
   }
 }
 
+// v9.2 — COMMANDS FROM YOUR PHONE. Polls Telegram (no webhook: the server has
+// no public HTTPS) and answers ONLY the configured chat id, so nobody else who
+// finds the bot can read positions. Read-only: no command can trade.
+// handlers: { "/status": async () => html, ... }
+function startCommandListener(handlers) {
+  const chatId = String(process.env.DT_TELEGRAM_CHAT_ID || "");
+  if (!telegramBot || !chatId) return;
+  try {
+    telegramBot.startPolling({ restart: true });
+  } catch (pollError) {
+    logger.warn("Telegram command polling failed to start: " + pollError.message);
+    return;
+  }
+  telegramBot.on("polling_error", (e) => logger.warn("Telegram polling: " + (e.code || e.message)));
+  telegramBot.on("message", async (msg) => {
+    if (!msg || !msg.text || String(msg.chat.id) !== chatId) return;
+    const command = msg.text.trim().split(/[s@]/)[0].toLowerCase();
+    const handler = handlers[command] || handlers["/help"];
+    try {
+      await sendTelegramMessage(await handler());
+    } catch (cmdError) {
+      logger.warn("Telegram command " + command + " failed: " + cmdError.message);
+      await sendTelegramMessage("⚠️ " + command + " failed: " + cmdError.message);
+    }
+  });
+  logger.info("Telegram commands ON: " + Object.keys(handlers).join(" "));
+}
+
 async function notifyBotStarted(dayTradeCapital) {
   await sendTelegramMessage(
     "🤖 *Day-Trade Bot Started*\n\n" +
@@ -127,6 +155,7 @@ async function notifyDailyLossLimitHit(realizedLoss, limitDollars) {
 }
 
 module.exports = {
+  startCommandListener,
   initialiseTelegramBot,
   sendTelegramMessage,
   notifyBotStarted,

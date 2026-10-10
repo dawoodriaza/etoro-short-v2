@@ -3749,6 +3749,69 @@ async function runDailyPositionReview() {
   }
 }
 
+// v9.2 — TELEGRAM COMMANDS (/status, /positions, /help). Read-only.
+const BOT_STARTED_AT_MS = Date.now();
+function agoText(ms) {
+  if (!ms) return "never";
+  const m = Math.round((Date.now() - ms) / 60000);
+  return m < 60 ? m + " min ago" : Math.floor(m / 60) + " h " + (m % 60) + " min ago";
+}
+const usd = (v) => (v >= 0 ? "+" : "-") + "$" + Math.abs(v).toFixed(2);
+
+async function commandStatus() {
+  const cap = capitalManager.getCapitalState();
+  const meta = loadPositionMeta() || {};
+  const ledger = (() => { try { return JSON.parse(fs.readFileSync(path.join(__dirname, "../data/capital-ledger.json"), "utf8")); } catch { return {}; } })();
+  const todayNy = new Date().toLocaleDateString("en-CA", { timeZone: TIMEZONE });
+  const todayPnl = (ledger.dailyPnl || {})[todayNy] || 0;
+  const scanAgeMin = lastScanCompletedAtMs ? (Date.now() - lastScanCompletedAtMs) / 60000 : null;
+  const open = marketHours.isRegularMarketHours();
+  const healthy = !open || (scanAgeMin != null && scanAgeMin < config.scanIntervalMinutes * 3);
+  return (
+    (healthy ? "🟢" : "🔴") + " <b>Bot status</b> — " + (healthy ? "running" : "scans have stopped") + "\n" +
+    "Now: " + marketHours.localClock(new Date()) + " · market " + (open ? "OPEN" : "closed") + "\n" +
+    "Up since: " + agoText(BOT_STARTED_AT_MS) + " · last scan " + agoText(lastScanCompletedAtMs) + "\n\n" +
+    "Open positions: " + Object.keys(meta).length + " / " + config.maxDayPositions + "\n" +
+    "Waiting to buy on a dip: " + (pendingDipEntries.size ? [...pendingDipEntries.keys()].join(", ") : "none") + "\n" +
+    "Paper positions (log only): " + paperPositions.size + "\n\n" +
+    "Today P&L: " + formatDualAmount(todayPnl) + "\n" +
+    "Capital: $" + Number(cap.effectiveCapital).toFixed(2) + (ledger.peakEffectiveCapital ? " · peak $" + Number(ledger.peakEffectiveCapital).toFixed(2) : "") + "\n" +
+    "Mode: " + (process.env.TRADING_MODE || "?") + " · AI " + config.aiModel + "\n\n" +
+    "<i>/positions for what it holds · /help</i>"
+  );
+}
+
+async function commandPositions() {
+  const meta = loadPositionMeta() || {};
+  const symbols = Object.keys(meta);
+  if (!symbols.length) return "📭 <b>No open positions.</b>\n" + (pendingDipEntries.size ? "Waiting to buy on a dip: " + [...pendingDipEntries.keys()].join(", ") : "");
+  let live = {};
+  try {
+    const portfolio = etoroClient.parsePortfolioFromRawData(await etoroClient.fetchRawPortfolio());
+    await etoroClient.labelPositionsWithTickers(portfolio);
+    (portfolio.openPositions || []).forEach((p) => (live[String(p.symbol).toUpperCase()] = p));
+  } catch (e) {
+    logger.warn("/positions portfolio fetch failed: " + e.message);
+  }
+  const lines = symbols.map((symbol) => {
+    const m = meta[symbol];
+    const p = live[symbol];
+    const price = p ? (p.openPrice || m.entryPrice) * (1 + (p.unrealizedProfitLossPercent || 0)) : null;
+    let st = null;
+    try { if (price) st = riskManager.describePositionState(m, price); } catch {}
+    return (
+      "<b>" + symbol + "</b> " + (m.tradeType || "DAY") + (p ? " · " + usd(toRealDollars(p.unrealizedProfitLoss)) + " (" + ((p.unrealizedProfitLossPercent || 0) * 100).toFixed(2) + "%)" : "") + "\n" +
+      "  bought $" + Number(m.entryPrice).toFixed(2) + (price ? " → now $" + price.toFixed(2) : "") + " · held " + agoText(m.openedAt).replace(" ago", "") + "\n" +
+      (st ? "  " + st.state + " · stop $" + Number(st.stopPrice).toFixed(2) + " (" + humanize(String(st.stopKind || "")) + ")\n  sells if: " + (st.exitConditions || []).slice(0, 2).join(" · ") : "  (live price unavailable)")
+    );
+  });
+  return "📊 <b>Open positions (" + symbols.length + ")</b>\n\n" + lines.join("\n\n");
+}
+
+function commandHelp() {
+  return "🤖 <b>Commands</b>\n/status — is the bot working, P&L, capital\n/positions — what it holds, live P&L, when it will sell\n/help — this list";
+}
+
 // v8.8 — THE DAY'S SUMMARY, SENT WHEN THE MARKET ACTUALLY CLOSES.
 // Set by the force-close job at 15:45 ET so this message can say what it did.
 let lastEodCloseMode = null;
@@ -4112,6 +4175,14 @@ async function main() {
   );
 
   startScheduler();
+  // v9.2: answer /status and /positions from the owner's phone.
+  notifications.startCommandListener({
+    "/status": commandStatus,
+    "/positions": commandPositions,
+    "/held": commandPositions,
+    "/help": commandHelp,
+    "/start": commandHelp,
+  });
 
   // v6: real-time exit watchdog. A live tick crossing a held position's own
   // stop/floor triggers an IMMEDIATE off-cycle exit check instead of waiting
