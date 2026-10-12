@@ -1,0 +1,182 @@
+{
+ "SCORE_FLOOR:COP": {
+  "tradeType": "DAY",
+  "entryPrice": 136.755,
+  "stopPrice": 132.2648,
+  "targetT1": 141.2452,
+  "targetT2": 145.7354,
+  "lockedFloor": null,
+  "peakPrice": 136.94,
+  "peakSetAt": 1791813540288,
+  "recentPrices": [
+   136.66,
+   136.7,
+   136.94
+  ],
+  "partialDone": false,
+  "openedAt": 1791813415257,
+  "dollarAmount": 1405,
+  "troughPrice": 136.66,
+  "plan": {
+   "symbol": "COP",
+   "stopDistancePct": 3.28,
+   "atrPercent": 3.38,
+   "score": 78.01591109090376,
+   "source": "WATCHLIST"
+  },
+  "entryConditions": {
+   "atrPercent": 3.38
+  },
+  "paperReason": "SCORE_FLOOR"
+ },
+ "SCORE_FLOOR:SHOP": {
+  "tradeType": "DAY",
+  "entryPrice": 175.875,
+  "stopPrice": 167.6885,
+  "targetT1": 184.0615,
+  "targetT2": 192.2481,
+  "lockedFloor": null,
+  "peakPrice": 177.08,
+  "peakSetAt": 1791813540288,
+  "recentPrices": [
+   176.2,
+   176.67,
+   177.08
+  ],
+  "partialDone": false,
+  "openedAt": 1791813415259,
+  "dollarAmount": 990,
+  "troughPrice": 175.875,
+  "plan": {
+   "symbol": "SHOP",
+   "stopDistancePct": 4.65,
+   "atrPercent": 4.75,
+   "score": 57.53964969951426,
+   "source": "WATCHLIST"
+  },
+  "entryConditions": {
+   "atrPercent": 4.75
+  },
+  "paperReason": "SCORE_FLOOR"
+ },
+ "SCORE_FLOOR:GOOGL": {
+  "tradeType": "DAY",
+  "entryPrice": 356.18,
+  "stopPrice": 347.4089,
+  "targetT1": 364.9511,
+  "targetT2": 373.7223,
+  "lockedFloor": null,
+  "peakPrice": 356.18,
+  "peakSetAt": 1791813415261,
+  "recentPrices": [
+   355.05,
+   354.33,
+   353.7
+  ],
+  "partialDone": false,
+  "openedAt": 1791813415261,
+  "dollarAmount": 1875,
+  "troughPrice": 353.7,
+  "plan": {
+   "symbol": "GOOGL",
+   "stopDistancePct": 2.46,
+   "atrPercent": 2.56,
+   "score": 53.6101363847626,
+   "source": "WATCHLIST"
+  },
+  "entryConditions": {
+   "atrPercent": 2.56
+  },
+  "paperReason": "SCORE_FLOOR"
+ },
+ "SCORE_FLOOR:AAPL": {
+  "tradeType": "DAY",
+  "entryPrice": 340.935,
+  "stopPrice": 334.5187,
+  "targetT1": 347.3513,
+  "targetT2": 353.7677,
+  "lockedFloor": null,
+  "peakPrice": 341.45,
+  "peakSetAt": 1791813540288,
+  "recentPrices": [
+   340.82,
+   340.94,
+   341.45
+  ],
+  "partialDone": false,
+  "openedAt": 1791813415263,
+  "dollarAmount": 2450,
+  "troughPrice": 340.82,
+  "plan": {
+   "symbol": "AAPL",
+   "stopDistancePct": 1.88,
+   "atrPercent": 1.98,
+   "score": 51.66161417441256,
+   "source": "WATCHLIST"
+  },
+  "entryConditions": {
+   "atrPercent": 1.98
+  },
+  "paperReason": "SCORE_FLOOR"
+ },
+ "SCORE_FLOOR:DE": {
+  "tradeType": "DAY",
+  "entryPrice": 629.005,
+  "stopPrice": 605.0153,
+  "targetT1": 652.9947,
+  "targetT2": 676.9844,
+  "lockedFloor": null,
+  "peakPrice": 629.74,
+  "peakSetAt": 1791813420314,
+  "recentPrices": [
+   629.74,
+   628.62,
+   629.35
+  ],
+  "partialDone": false,
+  "openedAt": 1791813415264,
+  "dollarAmount": 1210,
+  "troughPrice": 628.62,
+  "plan": {
+   "symbol": "DE",
+   "stopDistancePct": 3.81,
+   "atrPercent": 3.91,
+   "score": 46.61627703031719,
+   "source": "WATCHLIST"
+  },
+  "entryConditions": {
+   "atrPercent": 3.91
+  },
+  "paperReason": "SCORE_FLOOR"
+ },
+ "SCORE_FLOOR:TMUS": {
+  "tradeType": "DAY",
+  "entryPrice": 152.13,
+  "stopPrice": 146.3888,
+  "targetT1": 157.8712,
+  "targetT2": 163.6124,
+  "lockedFloor": null,
+  "peakPrice": 152.76,
+  "peakSetAt": 1791813540288,
+  "recentPrices": [
+   151.98,
+   152.3,
+   152.76
+  ],
+  "partialDone": false,
+  "openedAt": 1791813415266,
+  "dollarAmount": 1220,
+  "troughPrice": 151.98,
+  "plan": {
+   "symbol": "TMUS",
+   "stopDistancePct": 3.77,
+   "atrPercent": 3.87,
+   "score": 42.224617286494734,
+   "source": "WATCHLIST"
+  },
+  "entryConditions": {
+   "atrPercent": 3.87
+  },
+  "paperReason": "SCORE_FLOOR"
+ }
+}

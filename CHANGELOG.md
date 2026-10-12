@@ -5,6 +5,64 @@ repairs, reverted experiments). See README.md → "For AI agents".
 
 ---
 
+## v9.2 (2026-10-12) — paper-trade what the score floor turns down; Telegram commands
+
+**Logging and Telegram only — no change to how the bot trades**, so the
+~110-trade evaluation count that started with v9 is not reset.
+
+**Paper trades for score-floor rejects.** On 10-12 MSFT (+1.22%, score 51) and
+AAPL (+1.16%, score 67) were turned down by the 80 floor, and the owner asked
+what buying them would have done. Every plan rejected *only* by the floor now
+also opens a paper position in `data/shadow-log/paper-*.jsonl` with
+`paperReason: "SCORE_FLOOR"`:
+
+- Built by the real planner with the floor lifted (`buildTradePlan(...,
+  { ignoreScoreFloor: true, quiet: true })`), so the stop, target and size are
+  exactly what the bot would have used. A candidate the planner rejects for any
+  *other* reason (ATR, earnings, …) is not paper-traded, because the bot would
+  not have bought it anyway. Checked on 10-12's real candidates: live still
+  rejects MSFT and AAPL; the paper copy of MSFT buys $541.60, stop $529.02
+  (2.32%), T1 $554.17, $2,000.
+- Run by the same exit engine as real positions, and now also by the **same
+  end-of-day rule**: the force-close job closes paper positions on Friday and
+  closes losers Mon–Thu while keeping winners. Before this, a paper position
+  could be carried indefinitely.
+- At most one paper trade per symbol per reason per hour
+  (`DT_PAPER_REPEAT_MINUTES=60`), so a stock scanned every 10 minutes is not
+  counted six times.
+- The paper book is now keyed reason + symbol, so the same stock can be held
+  once as a skipped dip (`DIP_WAIT`) and once as a floor reject
+  (`SCORE_FLOOR`). Old saved state restores unchanged.
+- Daily total in Telegram, in both `/status` and the market-closed message:
+  "If it had bought what it skipped today — Skipped by score: N closed, N won,
+  $X · Skipped waiting for dip: …". After a week or two this answers, in
+  dollars, whether the floor is saving money or costing it.
+- Switch off with `DT_PAPER_SCORE_REJECTED=false`.
+
+First live scan after deploy (09:56 ET) opened paper positions on COP, SHOP,
+GOOGL, AAPL, DE and TMUS; marks every minute since.
+
+**Telegram commands** (also in this release): `/status` (green/red health,
+last scan, market open, positions, dip orders, today's P&L, capital, mode),
+`/positions` or `/held` (each holding with live P&L, stop and what would make
+it sell), `/help`. Polling, not a webhook (the server has no public HTTPS);
+answers only the configured chat id; read-only. The first version split
+commands on the letter "s" instead of whitespace (a lost escape), so every
+command fell back to `/help`; fixed, and `/ status` with a space is accepted.
+
+**Server sync to GitHub.** The server now pushes the live code and all of this
+bot's data to `dawoodriaza/etoro-short-v2` (`server-backup/`) every Mon–Sat at
+05:50 UTC, from `~/etoro-v2-short-repo` with its own deploy key. The redaction
+step only treats keys whose names mark them as secret (KEY, TOKEN, SECRET,
+PASS…); the version copied from the other bot matched `America/New_York` and
+corrupted a line of code in the backup.
+
+Changed: `src/config.js`, `src/strategies/trade-planner.js`, `src/index.js`,
+`src/notifications/telegram.js`, `scripts/daily-github-backup.sh`. 416 tests
+pass, locally and in the server's scratch copy.
+
+---
+
 ## v9.1 (2026-10-10) — data/shadow-log: the trade not taken, and a price every minute
 
 Two things the decision journal could not answer, both asked for by the owner,

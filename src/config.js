@@ -809,6 +809,20 @@ const config = {
   // See CHANGELOG v8.6.
   dipEntryTrailFromHigh: bool("DT_DIP_TRAIL_FROM_HIGH", true),
 
+  // v9.2 (2026-10-12) — PAPER-TRADE THE STOCKS THE SCORE FLOOR TURNS DOWN.
+  // LOGGING ONLY. On 10-12 MSFT (+1.22%, score 51) and AAPL (+1.16%, score
+  // 67) were rejected by the 80 floor and the owner asked what buying them
+  // would have done. Every plan rejected ONLY by the floor now also opens a
+  // paper position (data/shadow-log/paper-*.jsonl, paperReason SCORE_FLOOR),
+  // built by the real planner with the floor lifted, so stop, target and size
+  // are exactly what the bot would have used, then run by the same exit engine
+  // and the same end-of-day rules. Over a week or two this answers, in
+  // dollars, whether the floor is saving money or costing it. One paper trade
+  // per symbol per paperRepeatMinutes so a stock scanned every 10 minutes is
+  // not counted six times. Changes no live behaviour.
+  paperScoreRejected: bool("DT_PAPER_SCORE_REJECTED", true),
+  paperRepeatMinutes: int("DT_PAPER_REPEAT_MINUTES", 60),
+
   // v8.3 WAIT FOR BREAKEVEN. When a DAY position's time budget runs out while
   // it is RED, it is no longer sold at a loss on the clock: it is held (stop,
   // profit protection, the Mon-Thu end-of-day loser close and the Friday

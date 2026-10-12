@@ -190,6 +190,7 @@ function buildTradePlan(
   capitalState,
   openCounts,
   isFirstTimeDiscovered,
+  options = {}, // v9.2: { ignoreScoreFloor, quiet } — used only by the paper book
 ) {
   const entryPrice = candidate.currentPrice;
   if (!entryPrice || entryPrice <= 0) {
@@ -208,6 +209,7 @@ function buildTradePlan(
   // journal — a silent filter is one nobody can evaluate afterwards.
   // ══════════════════════════════════════════════════════════════════════
   if (
+    !options.ignoreScoreFloor &&
     config.minEntryScore > 0 &&
     typeof candidate.score === "number" &&
     candidate.score < config.minEntryScore
@@ -464,7 +466,7 @@ function buildTradePlan(
     plannedAt: new Date().toISOString(),
   };
 
-  logger.info(
+  if (!options.quiet) logger.info(
     "📋 Plan " +
       plan.symbol +
       " [" +

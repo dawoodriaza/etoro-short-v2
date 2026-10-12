@@ -1171,6 +1171,20 @@ async function runScanCycle() {
           regime: regime.regime,
           spyChangePercent: spyChange,
         });
+        // v9.2: log-only paper copy of a floor reject (see config.paperScoreRejected)
+        if (/entry floor/.test(planResult.rejectReason || "")) {
+          try {
+            paperScoreFloorReject(
+              candidate,
+              { regime: regime.regime, spyChangePercent: spyChange, easternWeekday },
+              capitalState,
+              openCounts,
+              isFirstTimeDiscovered,
+            );
+          } catch (paperError) {
+            logger.warn("Paper copy failed for " + candidate.symbol + ": " + paperError.message);
+          }
+        }
         logger.info(
           candidate.symbol + " plan rejected: " + planResult.rejectReason,
         );
@@ -1557,9 +1571,15 @@ async function openDipEntry(plan, aiResult) {
 // ══════════════════════════════════════════════════════════════════════
 const paperPositions = new Map(); // symbol -> position meta (paper)
 
-function openPaperPosition(plan, nowMs) {
+// v9.2: keyed REASON:SYMBOL, so the same stock can be paper-held once as a
+// skipped dip (DIP_WAIT) and once as a score-floor reject (SCORE_FLOOR).
+const lastPaperOpenMs = new Map(); // key -> ms, for the one-per-hour cap
+function openPaperPosition(plan, nowMs, paperReason = "DIP_WAIT") {
   const symbol = String(plan.symbol).toUpperCase();
-  if (paperPositions.has(symbol)) return; // one paper position per symbol
+  const key = paperReason + ":" + symbol;
+  if (paperPositions.has(key)) return; // one open paper position per reason+symbol
+  if (nowMs - (lastPaperOpenMs.get(key) || 0) < config.paperRepeatMinutes * 60000) return;
+  lastPaperOpenMs.set(key, nowMs);
   const meta = {
     tradeType: "DAY",
     entryPrice: plan.entryPrice,
@@ -1582,8 +1602,9 @@ function openPaperPosition(plan, nowMs) {
       source: plan.source,
     },
     entryConditions: { atrPercent: plan.atrPercent },
+    paperReason,
   };
-  paperPositions.set(symbol, meta);
+  paperPositions.set(key, meta);
   journal.writePaperState(Object.fromEntries(paperPositions));
   journal.paperOpen({
     symbol,
@@ -1595,22 +1616,46 @@ function openPaperPosition(plan, nowMs) {
     sizeDollars: meta.dollarAmount,
     score: plan.score,
     source: plan.source,
-    note: "bought at the approval price — the trade the live bot skipped while waiting for a dip",
+    paperReason,
+    note:
+      paperReason === "SCORE_FLOOR"
+        ? "bought when the score floor turned it down (score " + plan.score + ")"
+        : "bought at the approval price — the trade the live bot skipped while waiting for a dip",
   });
 }
 
+function paperScoreFloorReject(candidate, context, capitalState, openCounts, isFirstTimeDiscovered) {
+  if (!config.paperScoreRejected) return;
+  const result = tradePlanner.buildTradePlan(
+    candidate,
+    context,
+    capitalState,
+    openCounts,
+    isFirstTimeDiscovered,
+    { ignoreScoreFloor: true, quiet: true },
+  );
+  // Rejected for another reason too (ATR, earnings, ...) = the bot would not
+  // have bought it even without the floor, so there is nothing to paper-trade.
+  if (result && result.accepted) openPaperPosition(result.plan, Date.now(), "SCORE_FLOOR");
+}
+
 // One batched rates call per minute for the paper book; nothing when empty.
-async function markPaperPositions() {
+// eodMode (v9.2): called by the force-close job so paper positions follow the
+// same end-of-day rule as real ones — Friday/ALL closes everything, Mon-Thu
+// keeps winners and closes the rest.
+async function markPaperPositions(eodMode = null) {
   if (!paperPositions.size) return;
   const idBySymbol = {};
-  for (const symbol of paperPositions.keys()) {
+  for (const symbol of new Set([...paperPositions.values()].map((m) => m.plan.symbol))) {
     const id = await etoroClient.resolveTickerToInstrumentId(symbol);
     if (id) idBySymbol[symbol] = id;
   }
   const rates = await etoroMarketData.fetchBatchedRates(Object.values(idBySymbol));
   const nowMs = Date.now();
 
-  for (const [symbol, meta] of [...paperPositions.entries()]) {
+  for (const [key, meta] of [...paperPositions.entries()]) {
+    const symbol = meta.plan.symbol;
+    const paperReason = meta.paperReason || "DIP_WAIT";
     const rate = rates[idBySymbol[symbol]];
     const price = rate && rate.ask > 0 ? rate.ask : null;
     if (!price) continue;
@@ -1626,6 +1671,13 @@ async function markPaperPositions() {
     let status;
     try {
       decision = riskManager.decidePositionAction(meta, price);
+      if (eodMode) {
+        const eodPnlPct = (price / meta.entryPrice - 1) * 100;
+        const keep = eodMode === "DAY_KEEP_WINNERS" && eodPnlPct > config.overnightHoldMinProfitPct;
+        decision = keep
+          ? { action: "HOLD", reason: "EOD: winner held overnight" }
+          : { action: "EXIT", reason: eodMode === "ALL" ? "FRIDAY_FORCE_CLOSE" : "EOD_FORCE_CLOSE" };
+      }
       status = riskManager.describePositionState(meta, price);
     } catch (engineError) {
       logger.warn("Paper engine failed for " + symbol + ": " + engineError.message);
@@ -1653,6 +1705,7 @@ async function markPaperPositions() {
         pnlPct: Number(pnlPct.toFixed(2)),
         action: "PARTIAL",
         fraction: decision.fraction,
+        paperReason,
         bankedDollars: banked,
         realizedPartialPnl: meta.realizedPartialPnl,
         remainingDollars: meta.dollarAmount,
@@ -1666,6 +1719,7 @@ async function markPaperPositions() {
     if (decision.action === "EXIT") {
       journal.paperClose({
         symbol,
+        paperReason,
         entryPrice: meta.entryPrice,
         exitPrice: price,
         exitReason: decision.reason || decision.exitReason || "EXIT",
@@ -1680,10 +1734,11 @@ async function markPaperPositions() {
         maePct: Number(((meta.troughPrice / meta.entryPrice - 1) * 100).toFixed(2)),
         heldMinutes: Math.round((nowMs - meta.openedAt) / 60000),
       });
-      paperPositions.delete(symbol);
+      paperPositions.delete(key);
     } else {
       journal.paperMark({
         symbol,
+        paperReason,
         price,
         pnlPct: Number(pnlPct.toFixed(2)),
         pnlDollars: Number(pnlDollars.toFixed(2)),
@@ -3758,6 +3813,32 @@ function agoText(ms) {
 }
 const usd = (v) => (v >= 0 ? "+" : "-") + "$" + Math.abs(v).toFixed(2);
 
+// v9.2: today's closed paper trades, by why the live bot did not take them.
+function paperSummaryLines() {
+  try {
+    const day = new Date().toLocaleDateString("en-CA", { timeZone: TIMEZONE });
+    const file = path.join(__dirname, "../data/shadow-log/paper-" + day + ".jsonl");
+    if (!fs.existsSync(file)) return [];
+    const by = {};
+    fs.readFileSync(file, "utf8").split("\n").forEach((line) => {
+      if (!line.includes("PAPER_CLOSE")) return;
+      try {
+        const r = JSON.parse(line);
+        const k = r.paperReason || "DIP_WAIT";
+        const b = by[k] || (by[k] = { n: 0, wins: 0, pnl: 0 });
+        const pnl = r.totalPnlDollars != null ? r.totalPnlDollars : r.pnlDollars || 0;
+        b.n++; b.pnl += pnl; if (pnl > 0) b.wins++;
+      } catch {}
+    });
+    const label = { SCORE_FLOOR: "Skipped by score", DIP_WAIT: "Skipped waiting for dip" };
+    return Object.entries(by).map(([k, b]) =>
+      (label[k] || k) + ": " + b.n + " closed, " + b.wins + " won, " + formatDualAmount(b.pnl),
+    );
+  } catch {
+    return [];
+  }
+}
+
 async function commandStatus() {
   const cap = capitalManager.getCapitalState();
   const meta = loadPositionMeta() || {};
@@ -3773,7 +3854,9 @@ async function commandStatus() {
     "Up since: " + agoText(BOT_STARTED_AT_MS) + " · last scan " + agoText(lastScanCompletedAtMs) + "\n\n" +
     "Open positions: " + Object.keys(meta).length + " / " + config.maxDayPositions + "\n" +
     "Waiting to buy on a dip: " + (pendingDipEntries.size ? [...pendingDipEntries.keys()].join(", ") : "none") + "\n" +
-    "Paper positions (log only): " + paperPositions.size + "\n\n" +
+    "Paper positions (log only): " + paperPositions.size + "\n" +
+    (paperSummaryLines().length ? "<i>If it had bought what it skipped today:</i>\n" + paperSummaryLines().map((l) => "  " + l).join("\n") + "\n" : "") +
+    "\n" +
     "Today P&L: " + formatDualAmount(todayPnl) + "\n" +
     "Capital: $" + Number(cap.effectiveCapital).toFixed(2) + (ledger.peakEffectiveCapital ? " · peak $" + Number(ledger.peakEffectiveCapital).toFixed(2) : "") + "\n" +
     "Mode: " + (process.env.TRADING_MODE || "?") + " · AI " + config.aiModel + "\n\n" +
@@ -3866,6 +3949,10 @@ async function sendEndOfDaySummary() {
         closeAction +
         "</i>\n\n" +
         performance.formatStatsForTelegram(stats) +
+        (paperSummaryLines().length
+          ? "\n\n🧪 <b>If it had bought what it skipped today</b> (paper, log only)\n" +
+            paperSummaryLines().join("\n")
+          : "") +
         dipDayLine +
         "\n\n<b>Today's timetable</b>\n" +
         formatSessionSchedule(weekday, 16 * 60).join("\n"),
@@ -3972,6 +4059,11 @@ function startScheduler() {
       // summary now goes out at the real 16:00 ET close; this just records
       // which mode ran so that message can say so.
       lastEodCloseMode = mode;
+      try {
+        await markPaperPositions(mode); // v9.2: same end-of-day rule, paper book
+      } catch (paperError) {
+        logger.warn("Paper end-of-day close failed: " + paperError.message);
+      }
     },
     null,
     true,
