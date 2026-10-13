@@ -6459,3 +6459,27 @@
 [2026-10-13 08:30:00] [INFO ] 🌙 Overnight freeze active (07:00-11:00 Bahrain, tracks 00:00-04:00 ET) — skipping new-trade scan (8:30:00 AM Bahrain). Exit management is unaffected — stops/exits keep running on the 1-minute tick.
 [2026-10-13 08:40:00] [INFO ] 🌙 Overnight freeze active (07:00-11:00 Bahrain, tracks 00:00-04:00 ET) — skipping new-trade scan (8:40:00 AM Bahrain). Exit management is unaffected — stops/exits keep running on the 1-minute tick.
 [2026-10-13 08:50:00] [INFO ] 🌙 Overnight freeze active (07:00-11:00 Bahrain, tracks 00:00-04:00 ET) — skipping new-trade scan (8:50:00 AM Bahrain). Exit management is unaffected — stops/exits keep running on the 1-minute tick.
+[2026-10-13 09:00:00] [INFO ] 🌙 Overnight freeze active (07:00-11:00 Bahrain, tracks 00:00-04:00 ET) — skipping new-trade scan (9:00:00 AM Bahrain). Exit management is unaffected — stops/exits keep running on the 1-minute tick.
+[2026-10-13 09:10:00] [INFO ] 🌙 Overnight freeze active (07:00-11:00 Bahrain, tracks 00:00-04:00 ET) — skipping new-trade scan (9:10:00 AM Bahrain). Exit management is unaffected — stops/exits keep running on the 1-minute tick.
+[2026-10-13 09:20:00] [INFO ] 🌙 Overnight freeze active (07:00-11:00 Bahrain, tracks 00:00-04:00 ET) — skipping new-trade scan (9:20:00 AM Bahrain). Exit management is unaffected — stops/exits keep running on the 1-minute tick.
+[2026-10-13 09:30:00] [INFO ] 🌙 Overnight freeze active (07:00-11:00 Bahrain, tracks 00:00-04:00 ET) — skipping new-trade scan (9:30:00 AM Bahrain). Exit management is unaffected — stops/exits keep running on the 1-minute tick.
+[2026-10-13 09:40:00] [INFO ] 🌙 Overnight freeze active (07:00-11:00 Bahrain, tracks 00:00-04:00 ET) — skipping new-trade scan (9:40:00 AM Bahrain). Exit management is unaffected — stops/exits keep running on the 1-minute tick.
+[2026-10-13 09:50:00] [INFO ] 🌙 Overnight freeze active (07:00-11:00 Bahrain, tracks 00:00-04:00 ET) — skipping new-trade scan (9:50:00 AM Bahrain). Exit management is unaffected — stops/exits keep running on the 1-minute tick.
+[2026-10-13 10:00:00] [INFO ] 🌙 Overnight freeze active (07:00-11:00 Bahrain, tracks 00:00-04:00 ET) — skipping new-trade scan (10:00:00 AM Bahrain). Exit management is unaffected — stops/exits keep running on the 1-minute tick.
+[2026-10-13 10:10:00] [INFO ] 🌙 Overnight freeze active (07:00-11:00 Bahrain, tracks 00:00-04:00 ET) — skipping new-trade scan (10:10:00 AM Bahrain). Exit management is unaffected — stops/exits keep running on the 1-minute tick.
+[2026-10-13 10:20:00] [INFO ] 🌙 Overnight freeze active (07:00-11:00 Bahrain, tracks 00:00-04:00 ET) — skipping new-trade scan (10:20:00 AM Bahrain). Exit management is unaffected — stops/exits keep running on the 1-minute tick.
+[2026-10-13 10:30:00] [INFO ] 🌙 Overnight freeze active (07:00-11:00 Bahrain, tracks 00:00-04:00 ET) — skipping new-trade scan (10:30:00 AM Bahrain). Exit management is unaffected — stops/exits keep running on the 1-minute tick.
+[2026-10-13 10:40:00] [INFO ] 🌙 Overnight freeze active (07:00-11:00 Bahrain, tracks 00:00-04:00 ET) — skipping new-trade scan (10:40:00 AM Bahrain). Exit management is unaffected — stops/exits keep running on the 1-minute tick.
+[2026-10-13 10:50:00] [INFO ] 🌙 Overnight freeze active (07:00-11:00 Bahrain, tracks 00:00-04:00 ET) — skipping new-trade scan (10:50:00 AM Bahrain). Exit management is unaffected — stops/exits keep running on the 1-minute tick.
+[2026-10-13 11:00:00] [INFO ] ═══ Scan start (11:00:00 AM Bahrain) ═══
+[2026-10-13 11:00:00] [INFO ] Fetching portfolio state from eToro...
+[2026-10-13 11:00:04] [INFO ] eToro closing-price cache refreshed: 16681 instruments (next refresh in 6h)
+[2026-10-13 11:00:04] [INFO ] VIX (FRED, 2026-10-09, 3 days old): 14.84
+[2026-10-13 11:00:04] [INFO ] Market regime: UNKNOWN — opens in 5h 30m (need 45+ min since open to judge). Range so far 0.30%
+[2026-10-13 11:00:04] [INFO ] 🌙 Overnight (24/5): scanning 20 night-eligible name(s); discovery paused until the regular session
+[2026-10-13 11:00:05] [INFO ] 📶 Quotes: 20/20 from eToro (1 batched rates call + cached closing-price)
+[2026-10-13 11:00:05] [INFO ] [11:00:05 AM Bahrain] 📡 Pre-filter: 6 stocks moving enough to enrich
+[2026-10-13 11:00:05] [INFO ] 🔄 Sector rotation: energy +1.47%, semi -2.60%, financials +0.59%, fintech +0.59%, healthcare +0.69%, consumer -0.50%
+[2026-10-13 11:00:05] [INFO ] Fetching portfolio state from eToro...
+[2026-10-13 11:00:17] [INFO ] No candidates passed scoring
+[2026-10-13 11:00:17] [INFO ] 🧮 Funnel: 20 quoted → 6 moving → 6 eligible → 0 scored [weak RS 4, below VWAP 2] → 0 plans → AI 0/0 take → 0 opened

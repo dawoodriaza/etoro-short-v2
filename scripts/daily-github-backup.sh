@@ -56,7 +56,7 @@ rsync -a --exclude='.env' --exclude='.env.*' --exclude='data/' --exclude='logs/'
   --exclude='node_modules/' --exclude='.git/' --exclude='*.log' \
   --include='src/***' --include='test/***' --include='scripts/***' \
   --include='*.md' --include='package.json' --include='package-lock.json' \
-  --include='ecosystem*.js' --include='.gitignore' --include='*.js' --exclude='*' \
+  --include='ecosystem*.js' --include='watchlist-*.json' --include='.gitignore' --include='*.js' --exclude='*' \
   "$BOT_DIR/" "$REPO_DIR/" || copy_failed="code "
 find src test scripts -type f \( -name '*.js' -o -name '*.json' -o -name '*.md' -o -name '*.sh' \) -exec sed -i 's/\r$//' {} + 2>/dev/null
 for f in *.md package.json package-lock.json *.js; do [ -f "$f" ] && sed -i 's/\r$//' "$f"; done
@@ -68,7 +68,7 @@ rsync -a "$BOT_DIR/logs/" "$SUB/logs/" 2>/dev/null || true
 rsync -a --include='etoro-daytrade*' --exclude='*' "$PM2_LOG_DIR/" "$SUB/pm2-logs/" || copy_failed="${copy_failed}pm2-logs"
 [ -z "$copy_failed" ] || alert "copy failed for: $copy_failed (continuing with what was copied)"
 
-git add -A -- src test scripts *.md package.json package-lock.json 2>/dev/null
+git add -A -- src test scripts *.md package.json package-lock.json watchlist-*.json 2>/dev/null
 git add -A -f -- "$SUB"
 
 # 3. Redact any .env secret value in what is about to be committed.
