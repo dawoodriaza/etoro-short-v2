@@ -1,0 +1,1301 @@
+[2026-10-14 03:10:00] [[32MINFO[39M] ═══ Scan start (3:10:00 AM Bahrain) ═══
+[2026-10-14 03:10:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 03:10:00] [[32MINFO[39M] VIX (FRED, 2026-10-12): 15.21
+[2026-10-14 03:10:00] [[32MINFO[39M] Market regime: CHOP (SPY range 0.13% after 390 min → projected full-day 0.13% vs 0.50% threshold, VIX-tightened)
+[2026-10-14 03:10:00] [[32MINFO[39M] 🌙 Overnight (24/5): scanning 20 night-eligible name(s); discovery paused until the regular session
+[2026-10-14 03:10:01] [[32MINFO[39M] 📶 Quotes: 20/20 from eToro (1 batched rates call + cached closing-price)
+[2026-10-14 03:10:01] [[32MINFO[39M] [3:10:01 AM Bahrain] 📡 Pre-filter: 10 stocks moving enough to enrich
+[2026-10-14 03:10:01] [[32MINFO[39M] 🔄 Sector rotation: energy +1.81%, healthcare -1.32%
+[2026-10-14 03:10:01] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 03:10:14] [[32MINFO[39M] 💰 Capital: effective $9228.38 (base $10000 $-771.62 realized, peak $10032.85) · risk ×1
+[2026-10-14 03:10:14] [[32MINFO[39M] AMD plan rejected: score 6.5 below the entry floor of 80 (desk-score floor; the 2026-09-16 recheck found no score band that wins consistently — CHANGELOG v8.3)
+[2026-10-14 03:10:14] [[32MINFO[39M] No plans survived geometry/slots/RRR checks
+[2026-10-14 03:10:14] [[32MINFO[39M] 🧮 Funnel: 20 quoted → 10 moving → 7 eligible [STALE_QUOTE 3] → 1 scored [weak RS 3, no setup 2, below VWAP 1] → 0 plans [score floor 1] → AI 0/0 take → 0 opened
+[2026-10-14 03:20:00] [[32MINFO[39M] 😴 Adaptive skip: CHOP + flat book + calm SPY — next full scan in ~11 min (saving API credits)
+[2026-10-14 03:30:00] [[32MINFO[39M] 😴 Adaptive skip: CHOP + flat book + calm SPY — next full scan in ~1 min (saving API credits)
+[2026-10-14 03:40:00] [[32MINFO[39M] ═══ Scan start (3:40:00 AM Bahrain) ═══
+[2026-10-14 03:40:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 03:40:00] [[32MINFO[39M] VIX (FRED, 2026-10-12): 15.21
+[2026-10-14 03:40:00] [[32MINFO[39M] Market regime: CHOP (SPY range 0.16% after 390 min → projected full-day 0.16% vs 0.50% threshold, VIX-tightened)
+[2026-10-14 03:40:00] [[32MINFO[39M] 🌙 Overnight (24/5): scanning 20 night-eligible name(s); discovery paused until the regular session
+[2026-10-14 03:40:01] [[32MINFO[39M] 📶 Quotes: 20/20 from eToro (1 batched rates call + cached closing-price)
+[2026-10-14 03:40:01] [[32MINFO[39M] [3:40:01 AM Bahrain] 📡 Pre-filter: 11 stocks moving enough to enrich
+[2026-10-14 03:40:01] [[32MINFO[39M] 🔄 Sector rotation: energy +1.81%, healthcare -1.32%
+[2026-10-14 03:40:01] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 03:40:19] [[32MINFO[39M] 💰 Capital: effective $9228.38 (base $10000 $-771.62 realized, peak $10032.85) · risk ×1
+[2026-10-14 03:40:19] [[32MINFO[39M] NVDA plan rejected: score 48.4 below the entry floor of 80 (desk-score floor; the 2026-09-16 recheck found no score band that wins consistently — CHANGELOG v8.3)
+[2026-10-14 03:40:19] [[32MINFO[39M] HOOD plan rejected: score 36.9 below the entry floor of 80 (desk-score floor; the 2026-09-16 recheck found no score band that wins consistently — CHANGELOG v8.3)
+[2026-10-14 03:40:19] [[32MINFO[39M] QCOM plan rejected: score 24.7 below the entry floor of 80 (desk-score floor; the 2026-09-16 recheck found no score band that wins consistently — CHANGELOG v8.3)
+[2026-10-14 03:40:19] [[32MINFO[39M] MRVL plan rejected: score 11.2 below the entry floor of 80 (desk-score floor; the 2026-09-16 recheck found no score band that wins consistently — CHANGELOG v8.3)
+[2026-10-14 03:40:19] [[32MINFO[39M] AMD plan rejected: score 0.0 below the entry floor of 80 (desk-score floor; the 2026-09-16 recheck found no score band that wins consistently — CHANGELOG v8.3)
+[2026-10-14 03:40:19] [[32MINFO[39M] No plans survived geometry/slots/RRR checks
+[2026-10-14 03:40:19] [[32MINFO[39M] 🧮 Funnel: 20 quoted → 11 moving → 10 eligible [STALE_QUOTE 1] → 5 scored [weak RS 3, below VWAP 1, no setup 1] → 0 plans [score floor 5] → AI 0/0 take → 0 opened
+[2026-10-14 03:50:00] [[32MINFO[39M] 😴 Adaptive skip: CHOP + flat book + calm SPY — next full scan in ~11 min (saving API credits)
+[2026-10-14 04:00:00] [[32MINFO[39M] 😴 Adaptive skip: CHOP + flat book + calm SPY — next full scan in ~1 min (saving API credits)
+[2026-10-14 04:10:00] [[32MINFO[39M] ═══ Scan start (4:10:00 AM Bahrain) ═══
+[2026-10-14 04:10:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 04:10:00] [[32MINFO[39M] VIX (FRED, 2026-10-12): 15.21
+[2026-10-14 04:10:00] [[32MINFO[39M] Market regime: CHOP (SPY range 0.17% after 390 min → projected full-day 0.17% vs 0.50% threshold, VIX-tightened)
+[2026-10-14 04:10:00] [[32MINFO[39M] 🌙 Overnight (24/5): scanning 20 night-eligible name(s); discovery paused until the regular session
+[2026-10-14 04:10:00] [[32MINFO[39M] 📶 Quotes: 20/20 from eToro (1 batched rates call + cached closing-price)
+[2026-10-14 04:10:00] [[32MINFO[39M] [4:10:00 AM Bahrain] 📡 Pre-filter: 11 stocks moving enough to enrich
+[2026-10-14 04:10:01] [[32MINFO[39M] 🔄 Sector rotation: energy +1.81%, healthcare -1.32%
+[2026-10-14 04:10:01] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 04:10:19] [[32MINFO[39M] No candidates passed scoring
+[2026-10-14 04:10:19] [[32MINFO[39M] 🧮 Funnel: 20 quoted → 11 moving → 10 eligible [STALE_QUOTE 1] → 0 scored [no setup 5, weak RS 3, below VWAP 2] → 0 plans → AI 0/0 take → 0 opened
+[2026-10-14 04:20:00] [[32MINFO[39M] 😴 Adaptive skip: CHOP + flat book + calm SPY — next full scan in ~11 min (saving API credits)
+[2026-10-14 04:30:00] [[32MINFO[39M] 😴 Adaptive skip: CHOP + flat book + calm SPY — next full scan in ~1 min (saving API credits)
+[2026-10-14 04:40:00] [[32MINFO[39M] ═══ Scan start (4:40:00 AM Bahrain) ═══
+[2026-10-14 04:40:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 04:40:00] [[32MINFO[39M] VIX (FRED, 2026-10-12): 15.21
+[2026-10-14 04:40:00] [[32MINFO[39M] Market regime: CHOP (SPY range 0.17% after 390 min → projected full-day 0.17% vs 0.50% threshold, VIX-tightened)
+[2026-10-14 04:40:00] [[32MINFO[39M] 🌙 Overnight (24/5): scanning 20 night-eligible name(s); discovery paused until the regular session
+[2026-10-14 04:40:01] [[32MINFO[39M] 📶 Quotes: 20/20 from eToro (1 batched rates call + cached closing-price)
+[2026-10-14 04:40:01] [[32MINFO[39M] [4:40:01 AM Bahrain] 📡 Pre-filter: 11 stocks moving enough to enrich
+[2026-10-14 04:40:01] [[32MINFO[39M] 🔄 Sector rotation: energy +1.81%, healthcare -1.32%
+[2026-10-14 04:40:01] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 04:40:19] [[32MINFO[39M] No candidates passed scoring
+[2026-10-14 04:40:19] [[32MINFO[39M] 🧮 Funnel: 20 quoted → 11 moving → 10 eligible [STALE_QUOTE 1] → 0 scored [no setup 5, weak RS 3, below VWAP 2] → 0 plans → AI 0/0 take → 0 opened
+[2026-10-14 04:50:00] [[32MINFO[39M] 😴 Adaptive skip: CHOP + flat book + calm SPY — next full scan in ~11 min (saving API credits)
+[2026-10-14 05:00:00] [[32MINFO[39M] 😴 Adaptive skip: CHOP + flat book + calm SPY — next full scan in ~1 min (saving API credits)
+[2026-10-14 05:10:00] [[32MINFO[39M] ═══ Scan start (5:10:00 AM Bahrain) ═══
+[2026-10-14 05:10:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 05:10:02] [[32MINFO[39M] eToro closing-price cache refreshed: 16681 instruments (next refresh in 6h)
+[2026-10-14 05:10:02] [[32MINFO[39M] VIX (FRED, 2026-10-12): 15.21
+[2026-10-14 05:10:02] [[32MINFO[39M] Market regime: CHOP (SPY range 0.19% after 390 min → projected full-day 0.19% vs 0.50% threshold, VIX-tightened)
+[2026-10-14 05:10:02] [[32MINFO[39M] 🌙 Overnight (24/5): scanning 20 night-eligible name(s); discovery paused until the regular session
+[2026-10-14 05:10:03] [[32MINFO[39M] 📶 Quotes: 20/20 from eToro (1 batched rates call + cached closing-price)
+[2026-10-14 05:10:03] [[32MINFO[39M] [5:10:03 AM Bahrain] 📡 Pre-filter: 2 stocks moving enough to enrich
+[2026-10-14 05:10:03] [[32MINFO[39M] 🔄 Sector rotation: energy +1.81%, healthcare -1.32%
+[2026-10-14 05:10:03] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 05:10:07] [[32MINFO[39M] 💰 Capital: effective $9228.38 (base $10000 $-771.62 realized, peak $10032.85) · risk ×1
+[2026-10-14 05:10:07] [[32MINFO[39M] AMD plan rejected: score 0.0 below the entry floor of 80 (desk-score floor; the 2026-09-16 recheck found no score band that wins consistently — CHANGELOG v8.3)
+[2026-10-14 05:10:07] [[32MINFO[39M] MRVL plan rejected: score 0.0 below the entry floor of 80 (desk-score floor; the 2026-09-16 recheck found no score band that wins consistently — CHANGELOG v8.3)
+[2026-10-14 05:10:07] [[32MINFO[39M] No plans survived geometry/slots/RRR checks
+[2026-10-14 05:10:07] [[32MINFO[39M] 🧮 Funnel: 20 quoted → 2 moving → 2 eligible → 2 scored → 0 plans [score floor 2] → AI 0/0 take → 0 opened
+[2026-10-14 05:20:00] [[32MINFO[39M] 😴 Adaptive skip: CHOP + flat book + calm SPY — next full scan in ~11 min (saving API credits)
+[2026-10-14 05:30:00] [[32MINFO[39M] 😴 Adaptive skip: CHOP + flat book + calm SPY — next full scan in ~1 min (saving API credits)
+[2026-10-14 05:40:00] [[32MINFO[39M] ═══ Scan start (5:40:00 AM Bahrain) ═══
+[2026-10-14 05:40:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 05:40:00] [[32MINFO[39M] VIX (FRED, 2026-10-12): 15.21
+[2026-10-14 05:40:00] [[32MINFO[39M] Market regime: CHOP (SPY range 0.22% after 390 min → projected full-day 0.22% vs 0.50% threshold, VIX-tightened)
+[2026-10-14 05:40:00] [[32MINFO[39M] 🌙 Overnight (24/5): scanning 20 night-eligible name(s); discovery paused until the regular session
+[2026-10-14 05:40:01] [[32MINFO[39M] 📶 Quotes: 20/20 from eToro (1 batched rates call + cached closing-price)
+[2026-10-14 05:40:01] [[32MINFO[39M] [5:40:01 AM Bahrain] 📡 Pre-filter: 1 stocks moving enough to enrich
+[2026-10-14 05:40:01] [[32MINFO[39M] 🔄 Sector rotation: energy +1.81%, healthcare -1.32%
+[2026-10-14 05:40:01] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 05:40:03] [[32MINFO[39M] 💰 Capital: effective $9228.38 (base $10000 $-771.62 realized, peak $10032.85) · risk ×1
+[2026-10-14 05:40:03] [[32MINFO[39M] AMD plan rejected: score 0.0 below the entry floor of 80 (desk-score floor; the 2026-09-16 recheck found no score band that wins consistently — CHANGELOG v8.3)
+[2026-10-14 05:40:03] [[32MINFO[39M] No plans survived geometry/slots/RRR checks
+[2026-10-14 05:40:03] [[32MINFO[39M] 🧮 Funnel: 20 quoted → 1 moving → 1 eligible → 1 scored → 0 plans [score floor 1] → AI 0/0 take → 0 opened
+[2026-10-14 05:50:00] [[32MINFO[39M] 😴 Adaptive skip: CHOP + flat book + calm SPY — next full scan in ~11 min (saving API credits)
+[2026-10-14 06:00:00] [[32MINFO[39M] 😴 Adaptive skip: CHOP + flat book + calm SPY — next full scan in ~1 min (saving API credits)
+[2026-10-14 06:10:00] [[32MINFO[39M] ═══ Scan start (6:10:00 AM Bahrain) ═══
+[2026-10-14 06:10:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 06:10:01] [[32MINFO[39M] VIX (FRED, 2026-10-12): 15.21
+[2026-10-14 06:10:01] [[32MINFO[39M] Market regime: CHOP (SPY range 0.23% after 390 min → projected full-day 0.23% vs 0.50% threshold, VIX-tightened)
+[2026-10-14 06:10:01] [[32MINFO[39M] 🌙 Overnight (24/5): scanning 20 night-eligible name(s); discovery paused until the regular session
+[2026-10-14 06:10:01] [[32MINFO[39M] 📶 Quotes: 20/20 from eToro (1 batched rates call + cached closing-price)
+[2026-10-14 06:10:01] [[32MINFO[39M] [6:10:01 AM Bahrain] 📡 Pre-filter: 1 stocks moving enough to enrich
+[2026-10-14 06:10:02] [[32MINFO[39M] 🔄 Sector rotation: energy +1.81%, healthcare -1.32%
+[2026-10-14 06:10:02] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 06:10:04] [[32MINFO[39M] 💰 Capital: effective $9228.38 (base $10000 $-771.62 realized, peak $10032.85) · risk ×1
+[2026-10-14 06:10:04] [[32MINFO[39M] AMD plan rejected: score 0.0 below the entry floor of 80 (desk-score floor; the 2026-09-16 recheck found no score band that wins consistently — CHANGELOG v8.3)
+[2026-10-14 06:10:04] [[32MINFO[39M] No plans survived geometry/slots/RRR checks
+[2026-10-14 06:10:04] [[32MINFO[39M] 🧮 Funnel: 20 quoted → 1 moving → 1 eligible → 1 scored → 0 plans [score floor 1] → AI 0/0 take → 0 opened
+[2026-10-14 06:19:05] [[32MINFO[39M] Price stream disconnected — reconnecting in 30s (1-min exit monitor unaffected)
+[2026-10-14 06:19:36] [[32MINFO[39M] 📶 Price stream connected — real-time exit watchdog live for 0 position(s)
+[2026-10-14 06:20:00] [[32MINFO[39M] 😴 Adaptive skip: CHOP + flat book + calm SPY — next full scan in ~11 min (saving API credits)
+[2026-10-14 06:30:00] [[32MINFO[39M] 😴 Adaptive skip: CHOP + flat book + calm SPY — next full scan in ~1 min (saving API credits)
+[2026-10-14 06:40:00] [[32MINFO[39M] ═══ Scan start (6:40:00 AM Bahrain) ═══
+[2026-10-14 06:40:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 06:40:04] [[32MINFO[39M] VIX (FRED, 2026-10-12): 15.21
+[2026-10-14 06:40:04] [[32MINFO[39M] Market regime: CHOP (SPY range 0.27% after 390 min → projected full-day 0.27% vs 0.50% threshold, VIX-tightened)
+[2026-10-14 06:40:04] [[32MINFO[39M] 🌙 Overnight (24/5): scanning 20 night-eligible name(s); discovery paused until the regular session
+[2026-10-14 06:40:04] [[32MINFO[39M] 📶 Quotes: 20/20 from eToro (1 batched rates call + cached closing-price)
+[2026-10-14 06:40:04] [[32MINFO[39M] [6:40:04 AM Bahrain] 📡 Pre-filter: 2 stocks moving enough to enrich
+[2026-10-14 06:40:04] [[32MINFO[39M] 🔄 Sector rotation: energy +1.81%, healthcare -1.32%
+[2026-10-14 06:40:04] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 06:40:08] [[32MINFO[39M] 💰 Capital: effective $9228.38 (base $10000 $-771.62 realized, peak $10032.85) · risk ×1
+[2026-10-14 06:40:08] [[32MINFO[39M] AMD plan rejected: score 0.0 below the entry floor of 80 (desk-score floor; the 2026-09-16 recheck found no score band that wins consistently — CHANGELOG v8.3)
+[2026-10-14 06:40:08] [[32MINFO[39M] No plans survived geometry/slots/RRR checks
+[2026-10-14 06:40:08] [[32MINFO[39M] 🧮 Funnel: 20 quoted → 2 moving → 2 eligible → 1 scored [below VWAP 1] → 0 plans [score floor 1] → AI 0/0 take → 0 opened
+[2026-10-14 06:50:00] [[32MINFO[39M] 😴 Adaptive skip: CHOP + flat book + calm SPY — next full scan in ~11 min (saving API credits)
+[2026-10-14 07:00:00] [[32MINFO[39M] 😴 Adaptive skip: CHOP + flat book + calm SPY — next full scan in ~1 min (saving API credits)
+[2026-10-14 07:10:00] [[32MINFO[39M] 🌙 Overnight freeze active (07:00-11:00 Bahrain, tracks 00:00-04:00 ET) — skipping new-trade scan (7:10:00 AM Bahrain). Exit management is unaffected — stops/exits keep running on the 1-minute tick.
+[2026-10-14 07:20:00] [[32MINFO[39M] 🌙 Overnight freeze active (07:00-11:00 Bahrain, tracks 00:00-04:00 ET) — skipping new-trade scan (7:20:00 AM Bahrain). Exit management is unaffected — stops/exits keep running on the 1-minute tick.
+[2026-10-14 07:30:00] [[32MINFO[39M] 🌙 Overnight freeze active (07:00-11:00 Bahrain, tracks 00:00-04:00 ET) — skipping new-trade scan (7:30:00 AM Bahrain). Exit management is unaffected — stops/exits keep running on the 1-minute tick.
+[2026-10-14 07:34:29] [[32MINFO[39M] Price stream disconnected — reconnecting in 30s (1-min exit monitor unaffected)
+[2026-10-14 07:35:00] [[32MINFO[39M] 📶 Price stream connected — real-time exit watchdog live for 0 position(s)
+[2026-10-14 07:40:00] [[32MINFO[39M] 🌙 Overnight freeze active (07:00-11:00 Bahrain, tracks 00:00-04:00 ET) — skipping new-trade scan (7:40:00 AM Bahrain). Exit management is unaffected — stops/exits keep running on the 1-minute tick.
+[2026-10-14 07:50:00] [[32MINFO[39M] 🌙 Overnight freeze active (07:00-11:00 Bahrain, tracks 00:00-04:00 ET) — skipping new-trade scan (7:50:00 AM Bahrain). Exit management is unaffected — stops/exits keep running on the 1-minute tick.
+[2026-10-14 08:00:00] [[32MINFO[39M] 🌙 Overnight freeze active (07:00-11:00 Bahrain, tracks 00:00-04:00 ET) — skipping new-trade scan (8:00:00 AM Bahrain). Exit management is unaffected — stops/exits keep running on the 1-minute tick.
+[2026-10-14 08:10:00] [[32MINFO[39M] 🌙 Overnight freeze active (07:00-11:00 Bahrain, tracks 00:00-04:00 ET) — skipping new-trade scan (8:10:00 AM Bahrain). Exit management is unaffected — stops/exits keep running on the 1-minute tick.
+[2026-10-14 08:20:00] [[32MINFO[39M] 🌙 Overnight freeze active (07:00-11:00 Bahrain, tracks 00:00-04:00 ET) — skipping new-trade scan (8:20:00 AM Bahrain). Exit management is unaffected — stops/exits keep running on the 1-minute tick.
+[2026-10-14 08:30:00] [[32MINFO[39M] 🌙 Overnight freeze active (07:00-11:00 Bahrain, tracks 00:00-04:00 ET) — skipping new-trade scan (8:30:00 AM Bahrain). Exit management is unaffected — stops/exits keep running on the 1-minute tick.
+[2026-10-14 08:40:00] [[32MINFO[39M] 🌙 Overnight freeze active (07:00-11:00 Bahrain, tracks 00:00-04:00 ET) — skipping new-trade scan (8:40:00 AM Bahrain). Exit management is unaffected — stops/exits keep running on the 1-minute tick.
+[2026-10-14 08:50:00] [[32MINFO[39M] 🌙 Overnight freeze active (07:00-11:00 Bahrain, tracks 00:00-04:00 ET) — skipping new-trade scan (8:50:00 AM Bahrain). Exit management is unaffected — stops/exits keep running on the 1-minute tick.
+[2026-10-14 09:00:00] [[32MINFO[39M] 🌙 Overnight freeze active (07:00-11:00 Bahrain, tracks 00:00-04:00 ET) — skipping new-trade scan (9:00:00 AM Bahrain). Exit management is unaffected — stops/exits keep running on the 1-minute tick.
+[2026-10-14 09:10:00] [[32MINFO[39M] 🌙 Overnight freeze active (07:00-11:00 Bahrain, tracks 00:00-04:00 ET) — skipping new-trade scan (9:10:00 AM Bahrain). Exit management is unaffected — stops/exits keep running on the 1-minute tick.
+[2026-10-14 09:20:00] [[32MINFO[39M] 🌙 Overnight freeze active (07:00-11:00 Bahrain, tracks 00:00-04:00 ET) — skipping new-trade scan (9:20:00 AM Bahrain). Exit management is unaffected — stops/exits keep running on the 1-minute tick.
+[2026-10-14 09:30:00] [[32MINFO[39M] 🌙 Overnight freeze active (07:00-11:00 Bahrain, tracks 00:00-04:00 ET) — skipping new-trade scan (9:30:00 AM Bahrain). Exit management is unaffected — stops/exits keep running on the 1-minute tick.
+[2026-10-14 09:40:00] [[32MINFO[39M] 🌙 Overnight freeze active (07:00-11:00 Bahrain, tracks 00:00-04:00 ET) — skipping new-trade scan (9:40:00 AM Bahrain). Exit management is unaffected — stops/exits keep running on the 1-minute tick.
+[2026-10-14 09:50:00] [[32MINFO[39M] 🌙 Overnight freeze active (07:00-11:00 Bahrain, tracks 00:00-04:00 ET) — skipping new-trade scan (9:50:00 AM Bahrain). Exit management is unaffected — stops/exits keep running on the 1-minute tick.
+[2026-10-14 10:00:00] [[32MINFO[39M] 🌙 Overnight freeze active (07:00-11:00 Bahrain, tracks 00:00-04:00 ET) — skipping new-trade scan (10:00:00 AM Bahrain). Exit management is unaffected — stops/exits keep running on the 1-minute tick.
+[2026-10-14 10:10:00] [[32MINFO[39M] 🌙 Overnight freeze active (07:00-11:00 Bahrain, tracks 00:00-04:00 ET) — skipping new-trade scan (10:10:00 AM Bahrain). Exit management is unaffected — stops/exits keep running on the 1-minute tick.
+[2026-10-14 10:20:00] [[32MINFO[39M] 🌙 Overnight freeze active (07:00-11:00 Bahrain, tracks 00:00-04:00 ET) — skipping new-trade scan (10:20:00 AM Bahrain). Exit management is unaffected — stops/exits keep running on the 1-minute tick.
+[2026-10-14 10:30:00] [[32MINFO[39M] 🌙 Overnight freeze active (07:00-11:00 Bahrain, tracks 00:00-04:00 ET) — skipping new-trade scan (10:30:00 AM Bahrain). Exit management is unaffected — stops/exits keep running on the 1-minute tick.
+[2026-10-14 10:40:00] [[32MINFO[39M] 🌙 Overnight freeze active (07:00-11:00 Bahrain, tracks 00:00-04:00 ET) — skipping new-trade scan (10:40:00 AM Bahrain). Exit management is unaffected — stops/exits keep running on the 1-minute tick.
+[2026-10-14 10:50:00] [[32MINFO[39M] 🌙 Overnight freeze active (07:00-11:00 Bahrain, tracks 00:00-04:00 ET) — skipping new-trade scan (10:50:00 AM Bahrain). Exit management is unaffected — stops/exits keep running on the 1-minute tick.
+[2026-10-14 11:00:00] [[32MINFO[39M] ═══ Scan start (11:00:00 AM Bahrain) ═══
+[2026-10-14 11:00:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 11:00:01] [[32MINFO[39M] VIX (FRED, 2026-10-12): 15.21
+[2026-10-14 11:00:01] [[32MINFO[39M] Market regime: UNKNOWN — opens in 5h 30m (need 45+ min since open to judge). Range so far 0.32%
+[2026-10-14 11:00:01] [[32MINFO[39M] 🌙 Overnight (24/5): scanning 20 night-eligible name(s); discovery paused until the regular session
+[2026-10-14 11:00:01] [[32MINFO[39M] 📶 Quotes: 20/20 from eToro (1 batched rates call + cached closing-price)
+[2026-10-14 11:00:01] [[32MINFO[39M] [11:00:01 AM Bahrain] 📡 Pre-filter: 0 stocks moving enough to enrich
+[2026-10-14 11:00:01] [[32MINFO[39M] 🔄 Sector rotation: energy +1.81%, healthcare -1.32%
+[2026-10-14 11:00:01] [[32MINFO[39M] 📡 Nothing moving enough (watchlist or discovered)
+[2026-10-14 11:00:01] [[32MINFO[39M] 🧮 Funnel: 20 quoted → 0 moving → 0 eligible → 0 scored → 0 plans → AI 0/0 take → 0 opened
+[2026-10-14 11:10:00] [[32MINFO[39M] ═══ Scan start (11:10:00 AM Bahrain) ═══
+[2026-10-14 11:10:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 11:10:01] [[32MINFO[39M] VIX (FRED, 2026-10-12): 15.21
+[2026-10-14 11:10:01] [[32MINFO[39M] Market regime: UNKNOWN — opens in 5h 20m (need 45+ min since open to judge). Range so far 0.32%
+[2026-10-14 11:10:01] [[32MINFO[39M] 🌙 Overnight (24/5): scanning 20 night-eligible name(s); discovery paused until the regular session
+[2026-10-14 11:10:01] [[32MINFO[39M] 📶 Quotes: 20/20 from eToro (1 batched rates call + cached closing-price)
+[2026-10-14 11:10:01] [[32MINFO[39M] [11:10:01 AM Bahrain] 📡 Pre-filter: 0 stocks moving enough to enrich
+[2026-10-14 11:10:01] [[32MINFO[39M] 📡 Nothing moving enough (watchlist or discovered)
+[2026-10-14 11:10:01] [[32MINFO[39M] 🧮 Funnel: 20 quoted → 0 moving → 0 eligible → 0 scored → 0 plans → AI 0/0 take → 0 opened
+[2026-10-14 11:20:00] [[32MINFO[39M] ═══ Scan start (11:20:00 AM Bahrain) ═══
+[2026-10-14 11:20:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 11:20:02] [[32MINFO[39M] eToro closing-price cache refreshed: 16681 instruments (next refresh in 6h)
+[2026-10-14 11:20:02] [[32MINFO[39M] VIX (FRED, 2026-10-12): 15.21
+[2026-10-14 11:20:02] [[32MINFO[39M] Market regime: UNKNOWN — opens in 5h 10m (need 45+ min since open to judge). Range so far 0.32%
+[2026-10-14 11:20:02] [[32MINFO[39M] 🌙 Overnight (24/5): scanning 20 night-eligible name(s); discovery paused until the regular session
+[2026-10-14 11:20:03] [[32MINFO[39M] 📶 Quotes: 20/20 from eToro (1 batched rates call + cached closing-price)
+[2026-10-14 11:20:03] [[32MINFO[39M] [11:20:03 AM Bahrain] 📡 Pre-filter: 0 stocks moving enough to enrich
+[2026-10-14 11:20:04] [[32MINFO[39M] 🔄 Sector rotation: energy +1.81%, healthcare -1.32%
+[2026-10-14 11:20:04] [[32MINFO[39M] 📡 Nothing moving enough (watchlist or discovered)
+[2026-10-14 11:20:04] [[32MINFO[39M] 🧮 Funnel: 20 quoted → 0 moving → 0 eligible → 0 scored → 0 plans → AI 0/0 take → 0 opened
+[2026-10-14 11:30:00] [[32MINFO[39M] ═══ Scan start (11:30:00 AM Bahrain) ═══
+[2026-10-14 11:30:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 11:30:00] [[32MINFO[39M] VIX (FRED, 2026-10-12): 15.21
+[2026-10-14 11:30:00] [[32MINFO[39M] Market regime: UNKNOWN — opens in 5h 0m (need 45+ min since open to judge). Range so far 0.32%
+[2026-10-14 11:30:00] [[32MINFO[39M] 🌙 Overnight (24/5): scanning 20 night-eligible name(s); discovery paused until the regular session
+[2026-10-14 11:30:01] [[32MINFO[39M] 📶 Quotes: 20/20 from eToro (1 batched rates call + cached closing-price)
+[2026-10-14 11:30:01] [[32MINFO[39M] [11:30:01 AM Bahrain] 📡 Pre-filter: 0 stocks moving enough to enrich
+[2026-10-14 11:30:01] [[32MINFO[39M] 📡 Nothing moving enough (watchlist or discovered)
+[2026-10-14 11:30:01] [[32MINFO[39M] 🧮 Funnel: 20 quoted → 0 moving → 0 eligible → 0 scored → 0 plans → AI 0/0 take → 0 opened
+[2026-10-14 11:40:00] [[32MINFO[39M] ═══ Scan start (11:40:00 AM Bahrain) ═══
+[2026-10-14 11:40:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 11:40:00] [[32MINFO[39M] VIX (FRED, 2026-10-12): 15.21
+[2026-10-14 11:40:00] [[32MINFO[39M] Market regime: UNKNOWN — opens in 4h 50m (need 45+ min since open to judge). Range so far 0.32%
+[2026-10-14 11:40:00] [[32MINFO[39M] 🌙 Overnight (24/5): scanning 20 night-eligible name(s); discovery paused until the regular session
+[2026-10-14 11:40:01] [[32MINFO[39M] 📶 Quotes: 20/20 from eToro (1 batched rates call + cached closing-price)
+[2026-10-14 11:40:01] [[32MINFO[39M] [11:40:01 AM Bahrain] 📡 Pre-filter: 0 stocks moving enough to enrich
+[2026-10-14 11:40:01] [[32MINFO[39M] 🔄 Sector rotation: energy +1.81%, healthcare -1.32%
+[2026-10-14 11:40:01] [[32MINFO[39M] 📡 Nothing moving enough (watchlist or discovered)
+[2026-10-14 11:40:01] [[32MINFO[39M] 🧮 Funnel: 20 quoted → 0 moving → 0 eligible → 0 scored → 0 plans → AI 0/0 take → 0 opened
+[2026-10-14 11:50:00] [[32MINFO[39M] ═══ Scan start (11:50:00 AM Bahrain) ═══
+[2026-10-14 11:50:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 11:50:00] [[32MINFO[39M] VIX (FRED, 2026-10-12): 15.21
+[2026-10-14 11:50:00] [[32MINFO[39M] Market regime: UNKNOWN — opens in 4h 40m (need 45+ min since open to judge). Range so far 0.32%
+[2026-10-14 11:50:00] [[32MINFO[39M] 🌙 Overnight (24/5): scanning 20 night-eligible name(s); discovery paused until the regular session
+[2026-10-14 11:50:01] [[32MINFO[39M] 📶 Quotes: 20/20 from eToro (1 batched rates call + cached closing-price)
+[2026-10-14 11:50:01] [[32MINFO[39M] [11:50:01 AM Bahrain] 📡 Pre-filter: 0 stocks moving enough to enrich
+[2026-10-14 11:50:01] [[32MINFO[39M] 📡 Nothing moving enough (watchlist or discovered)
+[2026-10-14 11:50:01] [[32MINFO[39M] 🧮 Funnel: 20 quoted → 0 moving → 0 eligible → 0 scored → 0 plans → AI 0/0 take → 0 opened
+[2026-10-14 12:00:00] [[32MINFO[39M] ═══ Scan start (12:00:00 PM Bahrain) ═══
+[2026-10-14 12:00:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 12:00:00] [[32MINFO[39M] VIX (FRED, 2026-10-12, 2 days old): 15.21
+[2026-10-14 12:00:00] [[32MINFO[39M] Market regime: UNKNOWN — opens in 4h 30m (need 45+ min since open to judge). Range so far 0.32%
+[2026-10-14 12:00:00] [[32MINFO[39M] 🌙 Overnight (24/5): scanning 20 night-eligible name(s); discovery paused until the regular session
+[2026-10-14 12:00:01] [[32MINFO[39M] 📶 Quotes: 20/20 from eToro (1 batched rates call + cached closing-price)
+[2026-10-14 12:00:01] [[32MINFO[39M] [12:00:01 PM Bahrain] 📡 Pre-filter: 2 stocks moving enough to enrich
+[2026-10-14 12:00:01] [[32MINFO[39M] 🔄 Sector rotation: energy +1.81%, healthcare -1.32%
+[2026-10-14 12:00:01] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 12:00:06] [[32MINFO[39M] No candidates passed scoring
+[2026-10-14 12:00:06] [[32MINFO[39M] 🧮 Funnel: 20 quoted → 2 moving → 2 eligible → 0 scored [below VWAP 2] → 0 plans → AI 0/0 take → 0 opened
+[2026-10-14 12:10:00] [[32MINFO[39M] ═══ Scan start (12:10:00 PM Bahrain) ═══
+[2026-10-14 12:10:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 12:10:00] [[32MINFO[39M] VIX (FRED, 2026-10-12, 2 days old): 15.21
+[2026-10-14 12:10:00] [[32MINFO[39M] Market regime: UNKNOWN — opens in 4h 20m (need 45+ min since open to judge). Range so far 0.32%
+[2026-10-14 12:10:00] [[32MINFO[39M] 🌙 Overnight (24/5): scanning 20 night-eligible name(s); discovery paused until the regular session
+[2026-10-14 12:10:01] [[32MINFO[39M] 📶 Quotes: 20/20 from eToro (1 batched rates call + cached closing-price)
+[2026-10-14 12:10:01] [[32MINFO[39M] [12:10:01 PM Bahrain] 📡 Pre-filter: 1 stocks moving enough to enrich
+[2026-10-14 12:10:01] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 12:10:03] [[32MINFO[39M] No candidates passed scoring
+[2026-10-14 12:10:03] [[32MINFO[39M] 🧮 Funnel: 20 quoted → 1 moving → 1 eligible → 0 scored [below VWAP 1] → 0 plans → AI 0/0 take → 0 opened
+[2026-10-14 12:20:00] [[32MINFO[39M] ═══ Scan start (12:20:00 PM Bahrain) ═══
+[2026-10-14 12:20:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 12:20:00] [[32MINFO[39M] VIX (FRED, 2026-10-12, 2 days old): 15.21
+[2026-10-14 12:20:00] [[32MINFO[39M] Market regime: UNKNOWN — opens in 4h 10m (need 45+ min since open to judge). Range so far 0.32%
+[2026-10-14 12:20:00] [[32MINFO[39M] 🌙 Overnight (24/5): scanning 20 night-eligible name(s); discovery paused until the regular session
+[2026-10-14 12:20:01] [[32MINFO[39M] 📶 Quotes: 20/20 from eToro (1 batched rates call + cached closing-price)
+[2026-10-14 12:20:01] [[32MINFO[39M] [12:20:01 PM Bahrain] 📡 Pre-filter: 1 stocks moving enough to enrich
+[2026-10-14 12:20:01] [[32MINFO[39M] 🔄 Sector rotation: energy +1.81%, healthcare -1.32%
+[2026-10-14 12:20:01] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 12:20:03] [[32MINFO[39M] No candidates passed scoring
+[2026-10-14 12:20:03] [[32MINFO[39M] 🧮 Funnel: 20 quoted → 1 moving → 1 eligible → 0 scored [below VWAP 1] → 0 plans → AI 0/0 take → 0 opened
+[2026-10-14 12:30:00] [[32MINFO[39M] ═══ Scan start (12:30:00 PM Bahrain) ═══
+[2026-10-14 12:30:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 12:30:00] [[32MINFO[39M] VIX (FRED, 2026-10-12, 2 days old): 15.21
+[2026-10-14 12:30:00] [[32MINFO[39M] Market regime: UNKNOWN — opens in 4h 0m (need 45+ min since open to judge). Range so far 0.32%
+[2026-10-14 12:30:00] [[32MINFO[39M] 🌙 Overnight (24/5): scanning 20 night-eligible name(s); discovery paused until the regular session
+[2026-10-14 12:30:01] [[32MINFO[39M] 📶 Quotes: 20/20 from eToro (1 batched rates call + cached closing-price)
+[2026-10-14 12:30:01] [[32MINFO[39M] [12:30:01 PM Bahrain] 📡 Pre-filter: 3 stocks moving enough to enrich
+[2026-10-14 12:30:01] [[32MINFO[39M] 🔄 Sector rotation: energy +1.81%, healthcare -1.32%
+[2026-10-14 12:30:01] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 12:30:07] [[32MINFO[39M] No candidates passed scoring
+[2026-10-14 12:30:07] [[32MINFO[39M] 🧮 Funnel: 20 quoted → 3 moving → 3 eligible → 0 scored [below VWAP 3] → 0 plans → AI 0/0 take → 0 opened
+[2026-10-14 12:40:00] [[32MINFO[39M] ═══ Scan start (12:40:00 PM Bahrain) ═══
+[2026-10-14 12:40:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 12:40:00] [[32MINFO[39M] VIX (FRED, 2026-10-12, 2 days old): 15.21
+[2026-10-14 12:40:00] [[32MINFO[39M] Market regime: UNKNOWN — opens in 3h 50m (need 45+ min since open to judge). Range so far 0.32%
+[2026-10-14 12:40:00] [[32MINFO[39M] 🌙 Overnight (24/5): scanning 20 night-eligible name(s); discovery paused until the regular session
+[2026-10-14 12:40:01] [[32MINFO[39M] 📶 Quotes: 20/20 from eToro (1 batched rates call + cached closing-price)
+[2026-10-14 12:40:01] [[32MINFO[39M] [12:40:01 PM Bahrain] 📡 Pre-filter: 2 stocks moving enough to enrich
+[2026-10-14 12:40:01] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 12:40:05] [[32MINFO[39M] No candidates passed scoring
+[2026-10-14 12:40:05] [[32MINFO[39M] 🧮 Funnel: 20 quoted → 2 moving → 2 eligible → 0 scored [below VWAP 2] → 0 plans → AI 0/0 take → 0 opened
+[2026-10-14 12:50:00] [[32MINFO[39M] ═══ Scan start (12:50:00 PM Bahrain) ═══
+[2026-10-14 12:50:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 12:50:02] [[32MINFO[39M] VIX (FRED, 2026-10-12, 2 days old): 15.21
+[2026-10-14 12:50:02] [[32MINFO[39M] Market regime: UNKNOWN — opens in 3h 40m (need 45+ min since open to judge). Range so far 0.32%
+[2026-10-14 12:50:02] [[32MINFO[39M] 🌙 Overnight (24/5): scanning 20 night-eligible name(s); discovery paused until the regular session
+[2026-10-14 12:50:02] [[32MINFO[39M] 📶 Quotes: 20/20 from eToro (1 batched rates call + cached closing-price)
+[2026-10-14 12:50:02] [[32MINFO[39M] [12:50:02 PM Bahrain] 📡 Pre-filter: 2 stocks moving enough to enrich
+[2026-10-14 12:50:03] [[32MINFO[39M] 🔄 Sector rotation: energy +1.81%, healthcare -1.32%
+[2026-10-14 12:50:03] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 12:50:07] [[32MINFO[39M] No candidates passed scoring
+[2026-10-14 12:50:07] [[32MINFO[39M] 🧮 Funnel: 20 quoted → 2 moving → 2 eligible → 0 scored [below VWAP 2] → 0 plans → AI 0/0 take → 0 opened
+[2026-10-14 12:53:31] [[32MINFO[39M] Price stream disconnected — reconnecting in 30s (1-min exit monitor unaffected)
+[2026-10-14 12:54:10] [[32MINFO[39M] 📶 Price stream connected — real-time exit watchdog live for 0 position(s)
+[2026-10-14 13:00:00] [[32MINFO[39M] ═══ Scan start (1:00:00 PM Bahrain) ═══
+[2026-10-14 13:00:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 13:00:00] [[32MINFO[39M] VIX (FRED, 2026-10-12, 2 days old): 15.21
+[2026-10-14 13:00:00] [[32MINFO[39M] Market regime: UNKNOWN — opens in 3h 30m (need 45+ min since open to judge). Range so far 0.32%
+[2026-10-14 13:00:00] [[32MINFO[39M] 🌙 Overnight (24/5): scanning 20 night-eligible name(s); discovery paused until the regular session
+[2026-10-14 13:00:01] [[32MINFO[39M] 📶 Quotes: 20/20 from eToro (1 batched rates call + cached closing-price)
+[2026-10-14 13:00:01] [[32MINFO[39M] [1:00:01 PM Bahrain] 📡 Pre-filter: 1 stocks moving enough to enrich
+[2026-10-14 13:00:01] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 13:00:03] [[32MINFO[39M] No candidates passed scoring
+[2026-10-14 13:00:03] [[32MINFO[39M] 🧮 Funnel: 20 quoted → 1 moving → 1 eligible → 0 scored [below VWAP 1] → 0 plans → AI 0/0 take → 0 opened
+[2026-10-14 13:07:20] [[32MINFO[39M] Price stream disconnected — reconnecting in 30s (1-min exit monitor unaffected)
+[2026-10-14 13:07:51] [[32MINFO[39M] 📶 Price stream connected — real-time exit watchdog live for 0 position(s)
+[2026-10-14 13:10:00] [[32MINFO[39M] ═══ Scan start (1:10:00 PM Bahrain) ═══
+[2026-10-14 13:10:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 13:10:00] [[32MINFO[39M] VIX (FRED, 2026-10-12, 2 days old): 15.21
+[2026-10-14 13:10:00] [[32MINFO[39M] Market regime: UNKNOWN — opens in 3h 20m (need 45+ min since open to judge). Range so far 0.32%
+[2026-10-14 13:10:00] [[32MINFO[39M] 🌙 Overnight (24/5): scanning 20 night-eligible name(s); discovery paused until the regular session
+[2026-10-14 13:10:01] [[32MINFO[39M] 📶 Quotes: 20/20 from eToro (1 batched rates call + cached closing-price)
+[2026-10-14 13:10:01] [[32MINFO[39M] [1:10:01 PM Bahrain] 📡 Pre-filter: 1 stocks moving enough to enrich
+[2026-10-14 13:10:01] [[32MINFO[39M] 🔄 Sector rotation: energy +1.81%, healthcare -1.32%
+[2026-10-14 13:10:01] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 13:10:03] [[32MINFO[39M] No candidates passed scoring
+[2026-10-14 13:10:03] [[32MINFO[39M] 🧮 Funnel: 20 quoted → 1 moving → 1 eligible → 0 scored [below VWAP 1] → 0 plans → AI 0/0 take → 0 opened
+[2026-10-14 13:20:00] [[32MINFO[39M] ═══ Scan start (1:20:00 PM Bahrain) ═══
+[2026-10-14 13:20:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 13:20:00] [[32MINFO[39M] VIX (FRED, 2026-10-12, 2 days old): 15.21
+[2026-10-14 13:20:00] [[32MINFO[39M] Market regime: UNKNOWN — opens in 3h 10m (need 45+ min since open to judge). Range so far 0.32%
+[2026-10-14 13:20:00] [[32MINFO[39M] 🌙 Overnight (24/5): scanning 20 night-eligible name(s); discovery paused until the regular session
+[2026-10-14 13:20:01] [[32MINFO[39M] 📶 Quotes: 20/20 from eToro (1 batched rates call + cached closing-price)
+[2026-10-14 13:20:01] [[32MINFO[39M] [1:20:01 PM Bahrain] 📡 Pre-filter: 1 stocks moving enough to enrich
+[2026-10-14 13:20:01] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 13:20:03] [[32MINFO[39M] No candidates passed scoring
+[2026-10-14 13:20:03] [[32MINFO[39M] 🧮 Funnel: 20 quoted → 1 moving → 1 eligible → 0 scored [below VWAP 1] → 0 plans → AI 0/0 take → 0 opened
+[2026-10-14 13:30:00] [[32MINFO[39M] ═══ Scan start (1:30:00 PM Bahrain) ═══
+[2026-10-14 13:30:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 13:30:00] [[32MINFO[39M] VIX (FRED, 2026-10-12, 2 days old): 15.21
+[2026-10-14 13:30:00] [[32MINFO[39M] Market regime: UNKNOWN — opens in 3h 0m (need 45+ min since open to judge). Range so far 0.32%
+[2026-10-14 13:30:00] [[32MINFO[39M] 🌙 Overnight (24/5): scanning 20 night-eligible name(s); discovery paused until the regular session
+[2026-10-14 13:30:01] [[32MINFO[39M] 📶 Quotes: 20/20 from eToro (1 batched rates call + cached closing-price)
+[2026-10-14 13:30:01] [[32MINFO[39M] [1:30:01 PM Bahrain] 📡 Pre-filter: 1 stocks moving enough to enrich
+[2026-10-14 13:30:01] [[32MINFO[39M] 🔄 Sector rotation: energy +1.81%, healthcare -1.32%
+[2026-10-14 13:30:01] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 13:30:03] [[32MINFO[39M] No candidates passed scoring
+[2026-10-14 13:30:03] [[32MINFO[39M] 🧮 Funnel: 20 quoted → 1 moving → 1 eligible → 0 scored [below VWAP 1] → 0 plans → AI 0/0 take → 0 opened
+[2026-10-14 13:40:00] [[32MINFO[39M] ═══ Scan start (1:40:00 PM Bahrain) ═══
+[2026-10-14 13:40:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 13:40:00] [[32MINFO[39M] VIX (FRED, 2026-10-12, 2 days old): 15.21
+[2026-10-14 13:40:00] [[32MINFO[39M] Market regime: UNKNOWN — opens in 2h 50m (need 45+ min since open to judge). Range so far 0.32%
+[2026-10-14 13:40:00] [[32MINFO[39M] 🌙 Overnight (24/5): scanning 20 night-eligible name(s); discovery paused until the regular session
+[2026-10-14 13:40:01] [[32MINFO[39M] 📶 Quotes: 20/20 from eToro (1 batched rates call + cached closing-price)
+[2026-10-14 13:40:01] [[32MINFO[39M] [1:40:01 PM Bahrain] 📡 Pre-filter: 1 stocks moving enough to enrich
+[2026-10-14 13:40:01] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 13:40:03] [[32MINFO[39M] No candidates passed scoring
+[2026-10-14 13:40:03] [[32MINFO[39M] 🧮 Funnel: 20 quoted → 1 moving → 1 eligible → 0 scored [below VWAP 1] → 0 plans → AI 0/0 take → 0 opened
+[2026-10-14 13:50:00] [[32MINFO[39M] ═══ Scan start (1:50:00 PM Bahrain) ═══
+[2026-10-14 13:50:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 13:50:00] [[32MINFO[39M] VIX (FRED, 2026-10-12, 2 days old): 15.21
+[2026-10-14 13:50:00] [[32MINFO[39M] Market regime: UNKNOWN — opens in 2h 40m (need 45+ min since open to judge). Range so far 0.32%
+[2026-10-14 13:50:00] [[32MINFO[39M] 🌙 Overnight (24/5): scanning 20 night-eligible name(s); discovery paused until the regular session
+[2026-10-14 13:50:01] [[32MINFO[39M] 📶 Quotes: 20/20 from eToro (1 batched rates call + cached closing-price)
+[2026-10-14 13:50:01] [[32MINFO[39M] [1:50:01 PM Bahrain] 📡 Pre-filter: 2 stocks moving enough to enrich
+[2026-10-14 13:50:01] [[32MINFO[39M] 🔄 Sector rotation: energy +1.81%, healthcare -1.32%
+[2026-10-14 13:50:01] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 13:50:05] [[32MINFO[39M] No candidates passed scoring
+[2026-10-14 13:50:05] [[32MINFO[39M] 🧮 Funnel: 20 quoted → 2 moving → 2 eligible → 0 scored [below VWAP 2] → 0 plans → AI 0/0 take → 0 opened
+[2026-10-14 14:00:00] [[32MINFO[39M] ═══ Scan start (2:00:00 PM Bahrain) ═══
+[2026-10-14 14:00:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 14:00:00] [[32MINFO[39M] VIX (FRED, 2026-10-12, 2 days old): 15.21
+[2026-10-14 14:00:00] [[32MINFO[39M] Market regime: UNKNOWN — opens in 2h 30m (need 45+ min since open to judge). Range so far 0.32%
+[2026-10-14 14:00:00] [[32MINFO[39M] 🌙 Overnight (24/5): scanning 20 night-eligible name(s); discovery paused until the regular session
+[2026-10-14 14:00:01] [[32MINFO[39M] 📶 Quotes: 20/20 from eToro (1 batched rates call + cached closing-price)
+[2026-10-14 14:00:01] [[32MINFO[39M] [2:00:01 PM Bahrain] 📡 Pre-filter: 3 stocks moving enough to enrich
+[2026-10-14 14:00:01] [[32MINFO[39M] 🔄 Sector rotation: energy +1.81%, healthcare -1.32%
+[2026-10-14 14:00:01] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 14:00:07] [[32MINFO[39M] 💰 Capital: effective $9228.38 (base $10000 $-771.62 realized, peak $10032.85) · risk ×1
+[2026-10-14 14:00:07] [[32MINFO[39M] GOOGL plan rejected: score 48.7 below the entry floor of 80 (desk-score floor; the 2026-09-16 recheck found no score band that wins consistently — CHANGELOG v8.3)
+[2026-10-14 14:00:07] [[32MINFO[39M] No plans survived geometry/slots/RRR checks
+[2026-10-14 14:00:07] [[32MINFO[39M] 🧮 Funnel: 20 quoted → 3 moving → 3 eligible → 1 scored [below VWAP 2] → 0 plans [score floor 1] → AI 0/0 take → 0 opened
+[2026-10-14 14:10:00] [[32MINFO[39M] ═══ Scan start (2:10:00 PM Bahrain) ═══
+[2026-10-14 14:10:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 14:10:00] [[32MINFO[39M] VIX (FRED, 2026-10-12, 2 days old): 15.21
+[2026-10-14 14:10:00] [[32MINFO[39M] Market regime: UNKNOWN — opens in 2h 20m (need 45+ min since open to judge). Range so far 0.32%
+[2026-10-14 14:10:00] [[32MINFO[39M] 🌙 Overnight (24/5): scanning 20 night-eligible name(s); discovery paused until the regular session
+[2026-10-14 14:10:05] [[32MINFO[39M] 📶 Quotes: 20/20 from eToro (1 batched rates call + cached closing-price)
+[2026-10-14 14:10:05] [[32MINFO[39M] [2:10:05 PM Bahrain] 📡 Pre-filter: 4 stocks moving enough to enrich
+[2026-10-14 14:10:05] [[32MINFO[39M] 🔄 Sector rotation: energy +1.81%, healthcare -1.32%
+[2026-10-14 14:10:05] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 14:10:13] [[32MINFO[39M] 💰 Capital: effective $9228.38 (base $10000 $-771.62 realized, peak $10032.85) · risk ×1
+[2026-10-14 14:10:13] [[32MINFO[39M] GOOGL plan rejected: score 48.6 below the entry floor of 80 (desk-score floor; the 2026-09-16 recheck found no score band that wins consistently — CHANGELOG v8.3)
+[2026-10-14 14:10:13] [[32MINFO[39M] No plans survived geometry/slots/RRR checks
+[2026-10-14 14:10:13] [[32MINFO[39M] 🧮 Funnel: 20 quoted → 4 moving → 4 eligible → 1 scored [below VWAP 3] → 0 plans [score floor 1] → AI 0/0 take → 0 opened
+[2026-10-14 14:20:00] [[32MINFO[39M] ═══ Scan start (2:20:00 PM Bahrain) ═══
+[2026-10-14 14:20:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 14:20:00] [[32MINFO[39M] VIX (FRED, 2026-10-12, 2 days old): 15.21
+[2026-10-14 14:20:00] [[32MINFO[39M] Market regime: UNKNOWN — opens in 2h 10m (need 45+ min since open to judge). Range so far 0.32%
+[2026-10-14 14:20:00] [[32MINFO[39M] 🌙 Overnight (24/5): scanning 20 night-eligible name(s); discovery paused until the regular session
+[2026-10-14 14:20:01] [[32MINFO[39M] 📶 Quotes: 20/20 from eToro (1 batched rates call + cached closing-price)
+[2026-10-14 14:20:01] [[32MINFO[39M] [2:20:01 PM Bahrain] 📡 Pre-filter: 4 stocks moving enough to enrich
+[2026-10-14 14:20:01] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 14:20:08] [[32MINFO[39M] No candidates passed scoring
+[2026-10-14 14:20:08] [[32MINFO[39M] 🧮 Funnel: 20 quoted → 4 moving → 4 eligible → 0 scored [below VWAP 3, no setup 1] → 0 plans → AI 0/0 take → 0 opened
+[2026-10-14 14:30:00] [[32MINFO[39M] ═══ Scan start (2:30:00 PM Bahrain) ═══
+[2026-10-14 14:30:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 14:30:02] [[32MINFO[39M] VIX (FRED, 2026-10-12, 2 days old): 15.21
+[2026-10-14 14:30:02] [[32MINFO[39M] Market regime: UNKNOWN — opens in 2h 0m (need 45+ min since open to judge). Range so far 0.32%
+[2026-10-14 14:30:02] [[32MINFO[39M] 🌙 Overnight (24/5): scanning 20 night-eligible name(s); discovery paused until the regular session
+[2026-10-14 14:30:02] [[32MINFO[39M] 📶 Quotes: 20/20 from eToro (1 batched rates call + cached closing-price)
+[2026-10-14 14:30:02] [[32MINFO[39M] [2:30:02 PM Bahrain] 📡 Pre-filter: 4 stocks moving enough to enrich
+[2026-10-14 14:30:03] [[32MINFO[39M] 🔄 Sector rotation: energy +1.81%, healthcare -1.32%
+[2026-10-14 14:30:03] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 14:30:11] [[32MINFO[39M] 💰 Capital: effective $9228.38 (base $10000 $-771.62 realized, peak $10032.85) · risk ×1
+[2026-10-14 14:30:11] [[32MINFO[39M] GOOGL plan rejected: score 77.0 below the entry floor of 80 (desk-score floor; the 2026-09-16 recheck found no score band that wins consistently — CHANGELOG v8.3)
+[2026-10-14 14:30:11] [[32MINFO[39M] No plans survived geometry/slots/RRR checks
+[2026-10-14 14:30:11] [[32MINFO[39M] 🧮 Funnel: 20 quoted → 4 moving → 4 eligible → 1 scored [below VWAP 3] → 0 plans [score floor 1] → AI 0/0 take → 0 opened
+[2026-10-14 14:40:00] [[32MINFO[39M] ═══ Scan start (2:40:00 PM Bahrain) ═══
+[2026-10-14 14:40:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 14:40:00] [[32MINFO[39M] VIX (FRED, 2026-10-12, 2 days old): 15.21
+[2026-10-14 14:40:00] [[32MINFO[39M] Market regime: UNKNOWN — opens in 1h 50m (need 45+ min since open to judge). Range so far 0.32%
+[2026-10-14 14:40:00] [[32MINFO[39M] 🌙 Overnight (24/5): scanning 20 night-eligible name(s); discovery paused until the regular session
+[2026-10-14 14:40:01] [[32MINFO[39M] 📶 Quotes: 20/20 from eToro (1 batched rates call + cached closing-price)
+[2026-10-14 14:40:01] [[32MINFO[39M] [2:40:01 PM Bahrain] 📡 Pre-filter: 4 stocks moving enough to enrich
+[2026-10-14 14:40:01] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 14:40:08] [[32MINFO[39M] No candidates passed scoring
+[2026-10-14 14:40:08] [[32MINFO[39M] 🧮 Funnel: 20 quoted → 4 moving → 4 eligible → 0 scored [below VWAP 3, no setup 1] → 0 plans → AI 0/0 take → 0 opened
+[2026-10-14 14:50:00] [[32MINFO[39M] ═══ Scan start (2:50:00 PM Bahrain) ═══
+[2026-10-14 14:50:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 14:50:00] [[32MINFO[39M] VIX (FRED, 2026-10-12, 2 days old): 15.21
+[2026-10-14 14:50:00] [[32MINFO[39M] Market regime: UNKNOWN — opens in 1h 40m (need 45+ min since open to judge). Range so far 0.32%
+[2026-10-14 14:50:00] [[32MINFO[39M] 🌙 Overnight (24/5): scanning 20 night-eligible name(s); discovery paused until the regular session
+[2026-10-14 14:50:01] [[32MINFO[39M] 📶 Quotes: 20/20 from eToro (1 batched rates call + cached closing-price)
+[2026-10-14 14:50:01] [[32MINFO[39M] [2:50:01 PM Bahrain] 📡 Pre-filter: 4 stocks moving enough to enrich
+[2026-10-14 14:50:01] [[32MINFO[39M] 🔄 Sector rotation: energy +1.81%, healthcare -1.32%
+[2026-10-14 14:50:01] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 14:50:08] [[32MINFO[39M] No candidates passed scoring
+[2026-10-14 14:50:08] [[32MINFO[39M] 🧮 Funnel: 20 quoted → 4 moving → 4 eligible → 0 scored [below VWAP 2, weak RS 1, no setup 1] → 0 plans → AI 0/0 take → 0 opened
+[2026-10-14 15:00:00] [[32MINFO[39M] ═══ Scan start (3:00:00 PM Bahrain) ═══
+[2026-10-14 15:00:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 15:00:00] [[32MINFO[39M] VIX (FRED, 2026-10-12, 2 days old): 15.21
+[2026-10-14 15:00:00] [[32MINFO[39M] Market regime: UNKNOWN — opens in 1h 30m (need 45+ min since open to judge). Range so far 0.32%
+[2026-10-14 15:00:00] [[32MINFO[39M] 🌙 Overnight (24/5): scanning 20 night-eligible name(s); discovery paused until the regular session
+[2026-10-14 15:00:01] [[32MINFO[39M] 📶 Quotes: 20/20 from eToro (1 batched rates call + cached closing-price)
+[2026-10-14 15:00:01] [[32MINFO[39M] [3:00:01 PM Bahrain] 📡 Pre-filter: 3 stocks moving enough to enrich
+[2026-10-14 15:00:01] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 15:00:07] [[32MINFO[39M] 💰 Capital: effective $9228.38 (base $10000 $-771.62 realized, peak $10032.85) · risk ×1
+[2026-10-14 15:00:07] [[32MINFO[39M] GOOGL plan rejected: score 46.9 below the entry floor of 80 (desk-score floor; the 2026-09-16 recheck found no score band that wins consistently — CHANGELOG v8.3)
+[2026-10-14 15:00:07] [[32MINFO[39M] No plans survived geometry/slots/RRR checks
+[2026-10-14 15:00:07] [[32MINFO[39M] 🧮 Funnel: 20 quoted → 3 moving → 3 eligible → 1 scored [below VWAP 1, weak RS 1] → 0 plans [score floor 1] → AI 0/0 take → 0 opened
+[2026-10-14 15:10:00] [[32MINFO[39M] ═══ Scan start (3:10:00 PM Bahrain) ═══
+[2026-10-14 15:10:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 15:10:00] [[32MINFO[39M] VIX (FRED, 2026-10-12, 2 days old): 15.21
+[2026-10-14 15:10:00] [[32MINFO[39M] Market regime: UNKNOWN — opens in 1h 20m (need 45+ min since open to judge). Range so far 0.32%
+[2026-10-14 15:10:00] [[32MINFO[39M] 🌙 Overnight (24/5): scanning 20 night-eligible name(s); discovery paused until the regular session
+[2026-10-14 15:10:01] [[32MINFO[39M] 📶 Quotes: 20/20 from eToro (1 batched rates call + cached closing-price)
+[2026-10-14 15:10:01] [[32MINFO[39M] [3:10:01 PM Bahrain] 📡 Pre-filter: 1 stocks moving enough to enrich
+[2026-10-14 15:10:01] [[32MINFO[39M] 🔄 Sector rotation: energy +1.81%, healthcare -1.32%
+[2026-10-14 15:10:01] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 15:10:03] [[32MINFO[39M] 💰 Capital: effective $9228.38 (base $10000 $-771.62 realized, peak $10032.85) · risk ×1
+[2026-10-14 15:10:03] [[32MINFO[39M] GOOGL plan rejected: score 47.8 below the entry floor of 80 (desk-score floor; the 2026-09-16 recheck found no score band that wins consistently — CHANGELOG v8.3)
+[2026-10-14 15:10:03] [[32MINFO[39M] No plans survived geometry/slots/RRR checks
+[2026-10-14 15:10:03] [[32MINFO[39M] 🧮 Funnel: 20 quoted → 1 moving → 1 eligible → 1 scored → 0 plans [score floor 1] → AI 0/0 take → 0 opened
+[2026-10-14 15:20:00] [[32MINFO[39M] ═══ Scan start (3:20:00 PM Bahrain) ═══
+[2026-10-14 15:20:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 15:20:00] [[32MINFO[39M] VIX (FRED, 2026-10-12, 2 days old): 15.21
+[2026-10-14 15:20:00] [[32MINFO[39M] Market regime: UNKNOWN — opens in 1h 10m (need 45+ min since open to judge). Range so far 0.33%
+[2026-10-14 15:20:00] [[32MINFO[39M] 🌙 Overnight (24/5): scanning 20 night-eligible name(s); discovery paused until the regular session
+[2026-10-14 15:20:01] [[32MINFO[39M] 📶 Quotes: 20/20 from eToro (1 batched rates call + cached closing-price)
+[2026-10-14 15:20:01] [[32MINFO[39M] [3:20:01 PM Bahrain] 📡 Pre-filter: 1 stocks moving enough to enrich
+[2026-10-14 15:20:01] [[32MINFO[39M] 🔄 Sector rotation: energy +1.81%, healthcare -1.32%
+[2026-10-14 15:20:01] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 15:20:03] [[32MINFO[39M] 💰 Capital: effective $9228.38 (base $10000 $-771.62 realized, peak $10032.85) · risk ×1
+[2026-10-14 15:20:03] [[32MINFO[39M] GOOGL plan rejected: score 53.2 below the entry floor of 80 (desk-score floor; the 2026-09-16 recheck found no score band that wins consistently — CHANGELOG v8.3)
+[2026-10-14 15:20:03] [[32MINFO[39M] No plans survived geometry/slots/RRR checks
+[2026-10-14 15:20:03] [[32MINFO[39M] 🧮 Funnel: 20 quoted → 1 moving → 1 eligible → 1 scored → 0 plans [score floor 1] → AI 0/0 take → 0 opened
+[2026-10-14 15:30:00] [[32MINFO[39M] ═══ Scan start (3:30:00 PM Bahrain) ═══
+[2026-10-14 15:30:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 15:30:00] [[32MINFO[39M] VIX (FRED, 2026-10-12, 2 days old): 15.21
+[2026-10-14 15:30:00] [[32MINFO[39M] Market regime: UNKNOWN — opens in 1h 0m (need 45+ min since open to judge). Range so far 0.37%
+[2026-10-14 15:30:00] [[32MINFO[39M] 🌙 Overnight (24/5): scanning 20 night-eligible name(s); discovery paused until the regular session
+[2026-10-14 15:30:01] [[32MINFO[39M] 📶 Quotes: 20/20 from eToro (1 batched rates call + cached closing-price)
+[2026-10-14 15:30:01] [[32MINFO[39M] [3:30:01 PM Bahrain] 📡 Pre-filter: 1 stocks moving enough to enrich
+[2026-10-14 15:30:01] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 15:30:03] [[32MINFO[39M] 💰 Capital: effective $9228.38 (base $10000 $-771.62 realized, peak $10032.85) · risk ×1
+[2026-10-14 15:30:03] [[32MINFO[39M] GOOGL plan rejected: score 59.3 below the entry floor of 80 (desk-score floor; the 2026-09-16 recheck found no score band that wins consistently — CHANGELOG v8.3)
+[2026-10-14 15:30:03] [[32MINFO[39M] No plans survived geometry/slots/RRR checks
+[2026-10-14 15:30:03] [[32MINFO[39M] 🧮 Funnel: 20 quoted → 1 moving → 1 eligible → 1 scored → 0 plans [score floor 1] → AI 0/0 take → 0 opened
+[2026-10-14 15:40:00] [[32MINFO[39M] ═══ Scan start (3:40:00 PM Bahrain) ═══
+[2026-10-14 15:40:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 15:40:00] [[32MINFO[39M] VIX (FRED, 2026-10-12, 2 days old): 15.21
+[2026-10-14 15:40:00] [[32MINFO[39M] Market regime: UNKNOWN — opens in 0h 50m (need 45+ min since open to judge). Range so far 0.64%
+[2026-10-14 15:40:00] [[32MINFO[39M] 🌙 Overnight (24/5): scanning 20 night-eligible name(s); discovery paused until the regular session
+[2026-10-14 15:40:01] [[32MINFO[39M] 📶 Quotes: 20/20 from eToro (1 batched rates call + cached closing-price)
+[2026-10-14 15:40:01] [[32MINFO[39M] [3:40:01 PM Bahrain] 📡 Pre-filter: 8 stocks moving enough to enrich
+[2026-10-14 15:40:01] [[32MINFO[39M] 🔄 Sector rotation: energy +1.81%, healthcare -1.32%
+[2026-10-14 15:40:01] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 15:40:17] [[32MINFO[39M] No candidates passed scoring
+[2026-10-14 15:40:17] [[32MINFO[39M] 🧮 Funnel: 20 quoted → 8 moving → 8 eligible → 0 scored [below VWAP 8] → 0 plans → AI 0/0 take → 0 opened
+[2026-10-14 15:50:00] [[32MINFO[39M] ═══ Scan start (3:50:00 PM Bahrain) ═══
+[2026-10-14 15:50:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 15:50:00] [[32MINFO[39M] VIX (FRED, 2026-10-12, 2 days old): 15.21
+[2026-10-14 15:50:00] [[32MINFO[39M] Market regime: UNKNOWN — opens in 0h 40m (need 45+ min since open to judge). Range so far 0.69%
+[2026-10-14 15:50:00] [[32MINFO[39M] 🌙 Overnight (24/5): scanning 20 night-eligible name(s); discovery paused until the regular session
+[2026-10-14 15:50:01] [[32MINFO[39M] 📶 Quotes: 20/20 from eToro (1 batched rates call + cached closing-price)
+[2026-10-14 15:50:01] [[32MINFO[39M] [3:50:01 PM Bahrain] 📡 Pre-filter: 9 stocks moving enough to enrich
+[2026-10-14 15:50:01] [[32MINFO[39M] 🔄 Sector rotation: energy +1.81%, healthcare -1.32%
+[2026-10-14 15:50:01] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 15:50:18] [[32MINFO[39M] No candidates passed scoring
+[2026-10-14 15:50:18] [[32MINFO[39M] 🧮 Funnel: 20 quoted → 9 moving → 9 eligible → 0 scored [below VWAP 9] → 0 plans → AI 0/0 take → 0 opened
+[2026-10-14 16:00:00] [[32MINFO[39M] ═══ Scan start (4:00:00 PM Bahrain) ═══
+[2026-10-14 16:00:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 16:00:01] [[32MINFO[39M] VIX (FRED, 2026-10-12, 2 days old): 15.21
+[2026-10-14 16:00:01] [[32MINFO[39M] Market regime: UNKNOWN — opens in 0h 30m (need 45+ min since open to judge). Range so far 0.72%
+[2026-10-14 16:00:01] [[32MINFO[39M] 🌙 Overnight (24/5): scanning 20 night-eligible name(s); discovery paused until the regular session
+[2026-10-14 16:00:01] [[32MINFO[39M] 📶 Quotes: 20/20 from eToro (1 batched rates call + cached closing-price)
+[2026-10-14 16:00:01] [[32MINFO[39M] [4:00:01 PM Bahrain] 📡 Pre-filter: 11 stocks moving enough to enrich
+[2026-10-14 16:00:01] [[32MINFO[39M] 🔄 Sector rotation: energy +1.81%, healthcare -1.32%
+[2026-10-14 16:00:01] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 16:00:23] [[32MINFO[39M] No candidates passed scoring
+[2026-10-14 16:00:23] [[32MINFO[39M] 🧮 Funnel: 20 quoted → 11 moving → 11 eligible → 0 scored [below VWAP 11] → 0 plans → AI 0/0 take → 0 opened
+[2026-10-14 16:10:00] [[32MINFO[39M] ═══ Scan start (4:10:00 PM Bahrain) ═══
+[2026-10-14 16:10:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 16:10:00] [[32MINFO[39M] VIX (FRED, 2026-10-12, 2 days old): 15.21
+[2026-10-14 16:10:00] [[32MINFO[39M] Market regime: UNKNOWN — opens in 0h 20m (need 45+ min since open to judge). Range so far 0.72%
+[2026-10-14 16:10:00] [[32MINFO[39M] 🌙 Overnight (24/5): scanning 20 night-eligible name(s); discovery paused until the regular session
+[2026-10-14 16:10:01] [[32MINFO[39M] 📶 Quotes: 20/20 from eToro (1 batched rates call + cached closing-price)
+[2026-10-14 16:10:01] [[32MINFO[39M] [4:10:01 PM Bahrain] 📡 Pre-filter: 10 stocks moving enough to enrich
+[2026-10-14 16:10:01] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 16:10:20] [[32MINFO[39M] No candidates passed scoring
+[2026-10-14 16:10:20] [[32MINFO[39M] 🧮 Funnel: 20 quoted → 10 moving → 10 eligible → 0 scored [below VWAP 10] → 0 plans → AI 0/0 take → 0 opened
+[2026-10-14 16:20:00] [[32MINFO[39M] ═══ Scan start (4:20:00 PM Bahrain) ═══
+[2026-10-14 16:20:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 16:20:01] [[32MINFO[39M] VIX (FRED, 2026-10-12, 2 days old): 15.21
+[2026-10-14 16:20:01] [[32MINFO[39M] Market regime: UNKNOWN — opens in 0h 10m (need 45+ min since open to judge). Range so far 0.72%
+[2026-10-14 16:20:01] [[32MINFO[39M] 🌙 Overnight (24/5): scanning 20 night-eligible name(s); discovery paused until the regular session
+[2026-10-14 16:20:01] [[32MINFO[39M] 📶 Quotes: 20/20 from eToro (1 batched rates call + cached closing-price)
+[2026-10-14 16:20:01] [[32MINFO[39M] [4:20:01 PM Bahrain] 📡 Pre-filter: 12 stocks moving enough to enrich
+[2026-10-14 16:20:01] [[32MINFO[39M] 🔄 Sector rotation: energy +1.81%, healthcare -1.32%
+[2026-10-14 16:20:01] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 16:20:24] [[32MINFO[39M] 💰 Capital: effective $9228.38 (base $10000 $-771.62 realized, peak $10032.85) · risk ×1
+[2026-10-14 16:20:24] [[32MINFO[39M] NFLX plan rejected: score 35.9 below the entry floor of 80 (desk-score floor; the 2026-09-16 recheck found no score band that wins consistently — CHANGELOG v8.3)
+[2026-10-14 16:20:24] [[32MINFO[39M] No plans survived geometry/slots/RRR checks
+[2026-10-14 16:20:24] [[32MINFO[39M] 🧮 Funnel: 20 quoted → 12 moving → 12 eligible → 1 scored [below VWAP 10, weak RS 1] → 0 plans [score floor 1] → AI 0/0 take → 0 opened
+[2026-10-14 16:30:00] [[32MINFO[39M] ═══ Scan start (4:30:00 PM Bahrain) ═══
+[2026-10-14 16:30:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 16:30:00] [[32MINFO[39M] VIX (FRED, 2026-10-12, 2 days old): 15.21
+[2026-10-14 16:30:00] [[32MINFO[39M] Market regime: UNKNOWN — 0 min since open (need 45+ min since open to judge). Range so far 0.73%
+[2026-10-14 16:30:01] [[32MINFO[39M] 📶 Quotes: 54/54 from eToro (1 batched rates call + cached closing-price)
+[2026-10-14 16:30:01] [[32MINFO[39M] [4:30:01 PM Bahrain] 📡 Pre-filter: 28 stocks moving enough to enrich
+[2026-10-14 16:30:05] [[32MINFO[39M] 📈 FMP movers (stable actives): 50 rows
+[2026-10-14 16:30:05] [[32MINFO[39M] 📈 FMP movers (stable gainers): 50 rows
+[2026-10-14 16:30:05] [[32MINFO[39M] 🔭 Discovery running on FMP movers only this scan (Yahoo dark, 99 FMP rows)
+[2026-10-14 16:30:13] [[32MINFO[39M] 🔭 Discovery: 6 new opportunity(ies) outside watchlist — FEDU +21.5%, GDXD +8.4%, SSEAU +7.6%, MMTXU +7.4%, FWRG +6.9%, OILU +5.6%
+[2026-10-14 16:30:13] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 16:30:13] [[32MINFO[39M] Resolving eToro instrument ID for FEDU...
+[2026-10-14 16:30:13] [[33MWARN[39M] FEDU not found on eToro instrument search — suppressing re-lookups for 6h
+[2026-10-14 16:30:13] [[32MINFO[39M] Resolving eToro instrument ID for GDXD...
+[2026-10-14 16:30:13] [[33MWARN[39M] GDXD not found on eToro instrument search — suppressing re-lookups for 6h
+[2026-10-14 16:30:13] [[32MINFO[39M] Resolving eToro instrument ID for SSEAU...
+[2026-10-14 16:30:14] [[33MWARN[39M] SSEAU not found on eToro instrument search — suppressing re-lookups for 6h
+[2026-10-14 16:30:14] [[32MINFO[39M] Resolving eToro instrument ID for MMTXU...
+[2026-10-14 16:30:14] [[33MWARN[39M] MMTXU not found on eToro instrument search — suppressing re-lookups for 6h
+[2026-10-14 16:30:14] [[32MINFO[39M] Resolving eToro instrument ID for FWRG...
+[2026-10-14 16:30:14] [[32MINFO[39M] Resolved FWRG → instrumentId 9975
+[2026-10-14 16:30:14] [[32MINFO[39M] Resolving eToro instrument ID for OILU...
+[2026-10-14 16:30:15] [[33MWARN[39M] OILU not found on eToro instrument search — suppressing re-lookups for 6h
+[2026-10-14 16:31:11] [[32MINFO[39M] 💰 Capital: effective $9228.38 (base $10000 $-771.62 realized, peak $10032.85) · risk ×1
+[2026-10-14 16:31:11] [[32MINFO[39M] LLY plan rejected: score 41.1 below the entry floor of 80 (desk-score floor; the 2026-09-16 recheck found no score band that wins consistently — CHANGELOG v8.3)
+[2026-10-14 16:31:11] [[32MINFO[39M] VRTX plan rejected: score 36.8 below the entry floor of 80 (desk-score floor; the 2026-09-16 recheck found no score band that wins consistently — CHANGELOG v8.3)
+[2026-10-14 16:31:11] [[32MINFO[39M] ABBV plan rejected: score 26.5 below the entry floor of 80 (desk-score floor; the 2026-09-16 recheck found no score band that wins consistently — CHANGELOG v8.3)
+[2026-10-14 16:31:11] [[32MINFO[39M] No plans survived geometry/slots/RRR checks
+[2026-10-14 16:31:11] [[32MINFO[39M] 🧮 Funnel: 54 quoted → 28 moving + 6 discovered → 28 eligible [NOT_ON_ETORO 5, STALE_QUOTE 1] → 3 scored [below VWAP 19, ATR ceiling 3, weak RS 2, low volume 1] → 0 plans [score floor 3] → AI 0/0 take → 0 opened
+[2026-10-14 16:38:51] [[32MINFO[39M] Price stream disconnected — reconnecting in 30s (1-min exit monitor unaffected)
+[2026-10-14 16:39:22] [[32MINFO[39M] 📶 Price stream connected — real-time exit watchdog live for 0 position(s)
+[2026-10-14 16:40:00] [[32MINFO[39M] ═══ Scan start (4:40:00 PM Bahrain) ═══
+[2026-10-14 16:40:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 16:40:01] [[32MINFO[39M] VIX (FRED, 2026-10-12, 2 days old): 15.21
+[2026-10-14 16:40:01] [[32MINFO[39M] Market regime: UNKNOWN — 10 min since open (need 45+ min since open to judge). Range so far 0.74%
+[2026-10-14 16:40:01] [[32MINFO[39M] 📶 Quotes: 54/54 from eToro (1 batched rates call + cached closing-price)
+[2026-10-14 16:40:01] [[32MINFO[39M] [4:40:01 PM Bahrain] 📡 Pre-filter: 27 stocks moving enough to enrich
+[2026-10-14 16:40:01] [[32MINFO[39M] 🔄 Sector rotation: energy +1.92%, semi -2.24%, financials -1.23%, fintech -1.23%, industrials -0.69%, consumer -0.53%
+[2026-10-14 16:40:02] [[32MINFO[39M] 🔭 Discovery running on FMP movers only this scan (Yahoo dark, 99 FMP rows)
+[2026-10-14 16:40:04] [[32MINFO[39M] 🔭 Discovery: 6 new opportunity(ies) outside watchlist — FEDU +21.5%, GDXD +8.4%, SSEAU +7.6%, MMTXU +7.4%, FWRG +6.9%, OILU +5.6%
+[2026-10-14 16:40:04] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 16:40:55] [[32MINFO[39M] 💰 Capital: effective $9228.38 (base $10000 $-771.62 realized, peak $10032.85) · risk ×1
+[2026-10-14 16:40:55] [[32MINFO[39M] VRTX plan rejected: score 77.8 below the entry floor of 80 (desk-score floor; the 2026-09-16 recheck found no score band that wins consistently — CHANGELOG v8.3)
+[2026-10-14 16:40:55] [[32MINFO[39M] AAPL plan rejected: score 65.1 below the entry floor of 80 (desk-score floor; the 2026-09-16 recheck found no score band that wins consistently — CHANGELOG v8.3)
+[2026-10-14 16:40:55] [[32MINFO[39M] ABBV plan rejected: score 42.0 below the entry floor of 80 (desk-score floor; the 2026-09-16 recheck found no score band that wins consistently — CHANGELOG v8.3)
+[2026-10-14 16:40:55] [[32MINFO[39M] No plans survived geometry/slots/RRR checks
+[2026-10-14 16:40:55] [[32MINFO[39M] 🧮 Funnel: 54 quoted → 27 moving + 6 discovered → 28 eligible [NOT_ON_ETORO 5] → 3 scored [below VWAP 14, weak RS 6, ATR ceiling 3, no setup 1, low volume 1] → 0 plans [score floor 3] → AI 0/0 take → 0 opened
+[2026-10-14 16:50:00] [[32MINFO[39M] ═══ Scan start (4:50:00 PM Bahrain) ═══
+[2026-10-14 16:50:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 16:50:00] [[32MINFO[39M] VIX (FRED, 2026-10-12, 2 days old): 15.21
+[2026-10-14 16:50:00] [[32MINFO[39M] Market regime: UNKNOWN — 20 min since open (need 45+ min since open to judge). Range so far 0.74%
+[2026-10-14 16:50:01] [[32MINFO[39M] 📶 Quotes: 54/54 from eToro (1 batched rates call + cached closing-price)
+[2026-10-14 16:50:01] [[32MINFO[39M] [4:50:01 PM Bahrain] 📡 Pre-filter: 29 stocks moving enough to enrich
+[2026-10-14 16:50:04] [[32MINFO[39M] 📈 FMP movers (stable actives): 50 rows
+[2026-10-14 16:50:04] [[32MINFO[39M] 📈 FMP movers (stable gainers): 50 rows
+[2026-10-14 16:50:04] [[32MINFO[39M] 🔭 Discovery running on FMP movers only this scan (Yahoo dark, 90 FMP rows)
+[2026-10-14 16:50:04] [[32MINFO[39M] 📰 AADX tagged NEWS_HIT: Applied Aerospace & Defense Outlook Supported by Defense Demand and Backlog, RBC Says
+[2026-10-14 16:50:05] [[32MINFO[39M] 📰 PLRZ tagged NEWS_HIT: 12 Health Care Stocks Moving In Tuesday's Pre-Market Session
+[2026-10-14 16:50:05] [[32MINFO[39M] 🔭 Discovery: 5 new opportunity(ies) outside watchlist — GDXD +10.2%, AADX [NEWS_HIT] +9.6%, ZSL +8.4%, PLRZ [NEWS_HIT] +8.2%, ALISU +8.1%
+[2026-10-14 16:50:05] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 16:50:05] [[32MINFO[39M] Resolving eToro instrument ID for AADX...
+[2026-10-14 16:50:05] [[32MINFO[39M] Resolved AADX → instrumentId 15562
+[2026-10-14 16:50:05] [[32MINFO[39M] Resolving eToro instrument ID for ZSL...
+[2026-10-14 16:50:06] [[33MWARN[39M] ZSL not found on eToro instrument search — suppressing re-lookups for 6h
+[2026-10-14 16:50:06] [[32MINFO[39M] Resolving eToro instrument ID for PLRZ...
+[2026-10-14 16:50:06] [[33MWARN[39M] PLRZ not found on eToro instrument search — suppressing re-lookups for 6h
+[2026-10-14 16:50:06] [[32MINFO[39M] Resolving eToro instrument ID for ALISU...
+[2026-10-14 16:50:06] [[33MWARN[39M] ALISU not found on eToro instrument search — suppressing re-lookups for 6h
+[2026-10-14 16:51:01] [[32MINFO[39M] 💰 Capital: effective $9228.38 (base $10000 $-771.62 realized, peak $10032.85) · risk ×1
+[2026-10-14 16:51:01] [[32MINFO[39M] HON plan rejected: score 74.4 below the entry floor of 80 (desk-score floor; the 2026-09-16 recheck found no score band that wins consistently — CHANGELOG v8.3)
+[2026-10-14 16:51:01] [[32MINFO[39M] ABBV plan rejected: score 66.1 below the entry floor of 80 (desk-score floor; the 2026-09-16 recheck found no score band that wins consistently — CHANGELOG v8.3)
+[2026-10-14 16:51:01] [[32MINFO[39M] SHOP plan rejected: score 64.0 below the entry floor of 80 (desk-score floor; the 2026-09-16 recheck found no score band that wins consistently — CHANGELOG v8.3)
+[2026-10-14 16:51:01] [[32MINFO[39M] AAPL plan rejected: score 46.4 below the entry floor of 80 (desk-score floor; the 2026-09-16 recheck found no score band that wins consistently — CHANGELOG v8.3)
+[2026-10-14 16:51:01] [[32MINFO[39M] GOOGL plan rejected: score 35.5 below the entry floor of 80 (desk-score floor; the 2026-09-16 recheck found no score band that wins consistently — CHANGELOG v8.3)
+[2026-10-14 16:51:01] [[32MINFO[39M] No plans survived geometry/slots/RRR checks
+[2026-10-14 16:51:01] [[32MINFO[39M] 🧮 Funnel: 54 quoted → 29 moving + 5 discovered → 30 eligible [NOT_ON_ETORO 4] → 5 scored [weak RS 10, below VWAP 9, ATR ceiling 3, no setup 3] → 0 plans [score floor 5] → AI 0/0 take → 0 opened
+[2026-10-14 17:00:00] [[32MINFO[39M] ═══ Scan start (5:00:00 PM Bahrain) ═══
+[2026-10-14 17:00:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 17:00:00] [[32MINFO[39M] VIX (FRED, 2026-10-12, 2 days old): 15.21
+[2026-10-14 17:00:00] [[32MINFO[39M] Market regime: UNKNOWN — 30 min since open (need 45+ min since open to judge). Range so far 0.92%
+[2026-10-14 17:00:01] [[32MINFO[39M] 📶 Quotes: 54/54 from eToro (1 batched rates call + cached closing-price)
+[2026-10-14 17:00:01] [[32MINFO[39M] [5:00:01 PM Bahrain] 📡 Pre-filter: 31 stocks moving enough to enrich
+[2026-10-14 17:00:01] [[32MINFO[39M] 🔄 Sector rotation: energy +1.97%, semi -2.94%, financials -1.64%, fintech -1.64%, industrials -0.91%, consumer -0.91%
+[2026-10-14 17:00:01] [[32MINFO[39M] 🔭 Discovery running on FMP movers only this scan (Yahoo dark, 90 FMP rows)
+[2026-10-14 17:00:04] [[32MINFO[39M] 📰 AADX tagged NEWS_HIT: Applied Aerospace & Defense Outlook Supported by Defense Demand and Backlog, RBC Says
+[2026-10-14 17:00:06] [[32MINFO[39M] 📰 PLRZ tagged NEWS_HIT: 12 Health Care Stocks Moving In Tuesday's Pre-Market Session
+[2026-10-14 17:00:08] [[32MINFO[39M] 🔭 Discovery: 5 new opportunity(ies) outside watchlist — GDXD +10.2%, AADX [NEWS_HIT] +9.6%, ZSL +8.4%, PLRZ [NEWS_HIT] +8.2%, ALISU +8.1%
+[2026-10-14 17:00:08] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 17:01:10] [[32MINFO[39M] 💰 Capital: effective $9228.38 (base $10000 $-771.62 realized, peak $10032.85) · risk ×1
+[2026-10-14 17:01:10] [[32MINFO[39M] 📋 Plan AADX [DAY/DISCOVERED/MOMENTUM_BREAKOUT] $330 | risk $16.19 (0.18%) | stop -4.91% | T1 $11.9697 T2 $12.5293 | RRR 2 | vol HIGH
+[2026-10-14 17:01:10] [[32MINFO[39M] ABBV plan rejected: score 77.5 below the entry floor of 80 (desk-score floor; the 2026-09-16 recheck found no score band that wins consistently — CHANGELOG v8.3)
+[2026-10-14 17:01:10] [[32MINFO[39M] HON plan rejected: score 54.1 below the entry floor of 80 (desk-score floor; the 2026-09-16 recheck found no score band that wins consistently — CHANGELOG v8.3)
+[2026-10-14 17:01:13] [[32MINFO[39M] 🧭 Market brief: RISK_OFF tone
+[2026-10-14 17:01:16] [[32MINFO[39M] 🤖 AI screener: 0/1 plans approved
+[2026-10-14 17:01:16] [[32MINFO[39M] ═══ Scan done in 76.6s ═══
+[2026-10-14 17:01:16] [[32MINFO[39M] 🧮 Funnel: 54 quoted → 31 moving + 5 discovered → 32 eligible [NOT_ON_ETORO 4] → 3 scored [below VWAP 22, ATR ceiling 3, weak RS 2, no setup 2] → 1 plans [score floor 2] → AI 0/1 take → 0 opened
+[2026-10-14 17:08:30] [[32MINFO[39M] Price stream disconnected — reconnecting in 30s (1-min exit monitor unaffected)
+[2026-10-14 17:09:01] [[32MINFO[39M] 📶 Price stream connected — real-time exit watchdog live for 0 position(s)
+[2026-10-14 17:10:00] [[32MINFO[39M] ═══ Scan start (5:10:00 PM Bahrain) ═══
+[2026-10-14 17:10:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 17:10:00] [[32MINFO[39M] VIX (FRED, 2026-10-12, 2 days old): 15.21
+[2026-10-14 17:10:00] [[32MINFO[39M] Market regime: UNKNOWN — 40 min since open (need 45+ min since open to judge). Range so far 0.97%
+[2026-10-14 17:10:01] [[32MINFO[39M] 📶 Quotes: 54/54 from eToro (1 batched rates call + cached closing-price)
+[2026-10-14 17:10:01] [[32MINFO[39M] [5:10:01 PM Bahrain] 📡 Pre-filter: 32 stocks moving enough to enrich
+[2026-10-14 17:10:03] [[32MINFO[39M] 📈 FMP movers (stable actives): 50 rows
+[2026-10-14 17:10:03] [[32MINFO[39M] 📈 FMP movers (stable gainers): 50 rows
+[2026-10-14 17:10:03] [[32MINFO[39M] 🔭 Discovery running on FMP movers only this scan (Yahoo dark, 90 FMP rows)
+[2026-10-14 17:10:04] [[32MINFO[39M] 📰 PLRZ tagged NEWS_HIT: 12 Health Care Stocks Moving In Tuesday's Pre-Market Session
+[2026-10-14 17:10:04] [[32MINFO[39M] 🔭 Discovery: 5 new opportunity(ies) outside watchlist — UCIB +17.1%, PLRZ [NEWS_HIT] +15.8%, ALISU +13.7%, GDXD +12.3%, ZSL +9.7%
+[2026-10-14 17:10:04] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 17:10:04] [[32MINFO[39M] Resolving eToro instrument ID for UCIB...
+[2026-10-14 17:10:05] [[33MWARN[39M] UCIB not found on eToro instrument search — suppressing re-lookups for 6h
+[2026-10-14 17:11:02] [[32MINFO[39M] 💰 Capital: effective $9228.38 (base $10000 $-771.62 realized, peak $10032.85) · risk ×1
+[2026-10-14 17:11:02] [[32MINFO[39M] 📋 Plan LLY [DAY/WATCHLIST/MOMENTUM_BREAKOUT] $1610 | risk $46.09 (0.5%) | stop -2.86% | T1 $1244.9504 T2 $1279.6008 | RRR 2 | vol MEDIUM
+[2026-10-14 17:11:02] [[32MINFO[39M] 📋 Plan ABBV [DAY/WATCHLIST/MOMENTUM_BREAKOUT] $1465 | risk $46.2 (0.5%) | stop -3.15% | T1 $290.9386 T2 $299.8322 | RRR 2 | vol MEDIUM
+[2026-10-14 17:11:02] [[32MINFO[39M] VRTX plan rejected: score 48.8 below the entry floor of 80 (desk-score floor; the 2026-09-16 recheck found no score band that wins consistently — CHANGELOG v8.3)
+[2026-10-14 17:11:02] [[32MINFO[39M] HON plan rejected: score 23.3 below the entry floor of 80 (desk-score floor; the 2026-09-16 recheck found no score band that wins consistently — CHANGELOG v8.3)
+[2026-10-14 17:11:02] [[32MINFO[39M] 🧭 Market brief: RISK_OFF tone
+[2026-10-14 17:11:05] [[32MINFO[39M] 🤖 AI screener: 1/2 plans approved
+[2026-10-14 17:11:05] [[32MINFO[39M] ⏳ LLY approved at $1210.30 — not buying the spike: will buy only on a dip to $1201.65 (-0.71%) within 60 min — buy level follows the high, never above $1210.30
+[2026-10-14 17:11:05] [[32MINFO[39M] ═══ Scan done in 65.8s ═══
+[2026-10-14 17:11:05] [[32MINFO[39M] 🧮 Funnel: 54 quoted → 32 moving + 5 discovered → 32 eligible [NOT_ON_ETORO 5] → 4 scored [below VWAP 25, ATR ceiling 3] → 2 plans [score floor 2] → AI 1/2 take → 1 waiting for a dip, 0 opened
+[2026-10-14 17:15:01] [[32MINFO[39M] ⏳ Waiting to buy LLY: now $1209.61, buy at $1202.34, lowest so far $1209.61, 56 min left
+[2026-10-14 17:20:00] [[32MINFO[39M] ═══ Scan start (5:20:00 PM Bahrain) ═══
+[2026-10-14 17:20:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 17:20:00] [[32MINFO[39M] ⏳ Waiting to buy LLY: now $1211.87, buy at $1204.33, lowest so far $1209.61, 51 min left
+[2026-10-14 17:20:02] [[32MINFO[39M] eToro closing-price cache refreshed: 16686 instruments (next refresh in 6h)
+[2026-10-14 17:20:02] [[32MINFO[39M] VIX (FRED, 2026-10-12, 2 days old): 15.21
+[2026-10-14 17:20:02] [[32MINFO[39M] Market regime: TRENDING (SPY range 1.00% after 50 min → projected full-day 2.79% vs 0.50% threshold, VIX-tightened)
+[2026-10-14 17:20:02] [[32MINFO[39M] 📶 Quotes: 54/54 from eToro (1 batched rates call + cached closing-price)
+[2026-10-14 17:20:02] [[32MINFO[39M] [5:20:02 PM Bahrain] 📡 Pre-filter: 32 stocks moving enough to enrich
+[2026-10-14 17:20:02] [[32MINFO[39M] 🔄 Sector rotation: semi -2.34%, financials -1.21%, fintech -1.21%, healthcare +1.76%, industrials -0.69%, consumer -1.19%
+[2026-10-14 17:20:04] [[32MINFO[39M] 📈 FMP movers (stable gainers): 50 rows
+[2026-10-14 17:20:04] [[32MINFO[39M] 📈 FMP movers (stable actives): 50 rows
+[2026-10-14 17:20:04] [[32MINFO[39M] 🔭 Discovery running on FMP movers only this scan (Yahoo dark, 89 FMP rows)
+[2026-10-14 17:20:06] [[32MINFO[39M] 📰 VEEE tagged NEWS_HIT: 12 Consumer Discretionary Stocks Moving In Wednesday's Pre-Market Session
+[2026-10-14 17:20:06] [[32MINFO[39M] 📰 PLRZ tagged NEWS_HIT: 12 Health Care Stocks Moving In Tuesday's Pre-Market Session
+[2026-10-14 17:20:06] [[32MINFO[39M] 🔭 Discovery: 6 new opportunity(ies) outside watchlist — UCIB +17.1%, ALISU +13.7%, GDXD +12.8%, VEEE [NEWS_HIT] +12.4%, PLRZ [NEWS_HIT] +10.9%, ZSL +10.4%
+[2026-10-14 17:20:06] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 17:20:06] [[32MINFO[39M] Resolving eToro instrument ID for VEEE...
+[2026-10-14 17:20:07] [[33MWARN[39M] VEEE not found on eToro instrument search — suppressing re-lookups for 6h
+[2026-10-14 17:21:06] [[32MINFO[39M] 💰 Capital: effective $9228.38 (base $10000 $-771.62 realized, peak $10032.85) · risk ×1
+[2026-10-14 17:21:06] [[32MINFO[39M] 📋 Plan LLY [DAY/WATCHLIST/MOMENTUM_BREAKOUT] $1610 | risk $46.09 (0.5%) | stop -2.86% | T1 $1245.6807 T2 $1280.3515 | RRR 2 | vol MEDIUM
+[2026-10-14 17:21:06] [[32MINFO[39M] 📋 Plan ABBV [DAY/WATCHLIST/MOMENTUM_BREAKOUT] $1465 | risk $46.2 (0.5%) | stop -3.15% | T1 $290.8045 T2 $299.694 | RRR 2 | vol MEDIUM
+[2026-10-14 17:21:06] [[32MINFO[39M] VRTX plan rejected: score 61.8 below the entry floor of 80 (desk-score floor; the 2026-09-16 recheck found no score band that wins consistently — CHANGELOG v8.3)
+[2026-10-14 17:21:06] [[32MINFO[39M] HON plan rejected: score 28.7 below the entry floor of 80 (desk-score floor; the 2026-09-16 recheck found no score band that wins consistently — CHANGELOG v8.3)
+[2026-10-14 17:21:06] [[32MINFO[39M] 🧭 Market brief: RISK_OFF tone
+[2026-10-14 17:21:09] [[32MINFO[39M] 🤖 AI screener: 1/1 plans approved
+[2026-10-14 17:21:09] [[32MINFO[39M] ⏳ ABBV approved at $281.92 — not buying the spike: will buy only on a dip to $279.69 (-0.79%) within 60 min — buy level follows the high, never above $281.92
+[2026-10-14 17:21:09] [[32MINFO[39M] ═══ Scan done in 69.2s ═══
+[2026-10-14 17:21:09] [[32MINFO[39M] 🧮 Funnel: 54 quoted → 32 moving + 6 discovered → 32 eligible [NOT_ON_ETORO 6] → 4 scored [below VWAP 22, weak RS 3, ATR ceiling 3] → 1 plans [score floor 2, waiting for dip 1] → AI 1/1 take → 1 waiting for a dip, 0 opened
+[2026-10-14 17:25:00] [[32MINFO[39M] ⏳ Waiting to buy LLY: now $1212.00, buy at $1204.33, lowest so far $1209.61, 46 min left
+[2026-10-14 17:25:00] [[32MINFO[39M] ⏳ Waiting to buy ABBV: now $282.62, buy at $280.39, lowest so far $281.91, 56 min left
+[2026-10-14 17:30:00] [[32MINFO[39M] ═══ Scan start (5:30:00 PM Bahrain) ═══
+[2026-10-14 17:30:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 17:30:00] [[32MINFO[39M] ⏳ Waiting to buy LLY: now $1211.00, buy at $1204.33, lowest so far $1209.61, 41 min left
+[2026-10-14 17:30:00] [[32MINFO[39M] ⏳ Waiting to buy ABBV: now $282.75, buy at $280.52, lowest so far $281.91, 51 min left
+[2026-10-14 17:30:00] [[32MINFO[39M] VIX (FRED, 2026-10-12, 2 days old): 15.21
+[2026-10-14 17:30:00] [[32MINFO[39M] Market regime: TRENDING (SPY range 1.00% after 60 min → projected full-day 2.55% vs 0.50% threshold, VIX-tightened)
+[2026-10-14 17:30:01] [[32MINFO[39M] 📶 Quotes: 54/54 from eToro (1 batched rates call + cached closing-price)
+[2026-10-14 17:30:01] [[32MINFO[39M] [5:30:01 PM Bahrain] 📡 Pre-filter: 33 stocks moving enough to enrich
+[2026-10-14 17:30:02] [[32MINFO[39M] 🔭 Discovery running on FMP movers only this scan (Yahoo dark, 89 FMP rows)
+[2026-10-14 17:30:06] [[32MINFO[39M] 📰 VEEE tagged NEWS_HIT: 12 Consumer Discretionary Stocks Moving In Wednesday's Pre-Market Session
+[2026-10-14 17:30:06] [[32MINFO[39M] 📰 PLRZ tagged NEWS_HIT: 12 Health Care Stocks Moving In Tuesday's Pre-Market Session
+[2026-10-14 17:30:07] [[32MINFO[39M] 🔭 Discovery: 6 new opportunity(ies) outside watchlist — UCIB +17.1%, ALISU +13.7%, GDXD +12.8%, VEEE [NEWS_HIT] +12.4%, PLRZ [NEWS_HIT] +10.9%, ZSL +10.4%
+[2026-10-14 17:30:07] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 17:31:06] [[32MINFO[39M] 💰 Capital: effective $9228.38 (base $10000 $-771.62 realized, peak $10032.85) · risk ×1
+[2026-10-14 17:31:06] [[32MINFO[39M] 📋 Plan LLY [DAY/WATCHLIST/MOMENTUM_BREAKOUT] $1610 | risk $46.09 (0.5%) | stop -2.86% | T1 $1245.4904 T2 $1280.1559 | RRR 2 | vol MEDIUM
+[2026-10-14 17:31:06] [[32MINFO[39M] VRTX plan rejected: score 65.5 below the entry floor of 80 (desk-score floor; the 2026-09-16 recheck found no score band that wins consistently — CHANGELOG v8.3)
+[2026-10-14 17:31:06] [[32MINFO[39M] AAPL plan rejected: score 33.0 below the entry floor of 80 (desk-score floor; the 2026-09-16 recheck found no score band that wins consistently — CHANGELOG v8.3)
+[2026-10-14 17:31:06] [[32MINFO[39M] HON plan rejected: score 11.9 below the entry floor of 80 (desk-score floor; the 2026-09-16 recheck found no score band that wins consistently — CHANGELOG v8.3)
+[2026-10-14 17:31:06] [[32MINFO[39M] No plans survived geometry/slots/RRR checks
+[2026-10-14 17:31:06] [[32MINFO[39M] 🧮 Funnel: 54 quoted → 33 moving + 6 discovered → 33 eligible [NOT_ON_ETORO 6] → 4 scored [below VWAP 22, weak RS 3, ATR ceiling 3, no setup 1] → 0 plans [score floor 3, waiting for dip 1] → AI 0/0 take → 0 opened
+[2026-10-14 17:35:00] [[32MINFO[39M] ⏳ Waiting to buy LLY: now $1208.51, buy at $1204.33, lowest so far $1208.51, 36 min left
+[2026-10-14 17:35:00] [[32MINFO[39M] ⏳ Waiting to buy ABBV: now $282.78, buy at $280.56, lowest so far $281.91, 46 min left
+[2026-10-14 17:40:00] [[32MINFO[39M] ═══ Scan start (5:40:00 PM Bahrain) ═══
+[2026-10-14 17:40:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 17:40:00] [[32MINFO[39M] ⏳ Waiting to buy LLY: now $1206.94, buy at $1204.33, lowest so far $1206.94, 31 min left
+[2026-10-14 17:40:00] [[32MINFO[39M] ⏳ Waiting to buy ABBV: now $282.63, buy at $280.56, lowest so far $281.91, 41 min left
+[2026-10-14 17:40:00] [[32MINFO[39M] VIX (FRED, 2026-10-12, 2 days old): 15.21
+[2026-10-14 17:40:00] [[32MINFO[39M] Market regime: TRENDING (SPY range 1.05% after 70 min → projected full-day 2.49% vs 0.50% threshold, VIX-tightened)
+[2026-10-14 17:40:01] [[32MINFO[39M] 📶 Quotes: 54/54 from eToro (1 batched rates call + cached closing-price)
+[2026-10-14 17:40:01] [[32MINFO[39M] [5:40:01 PM Bahrain] 📡 Pre-filter: 35 stocks moving enough to enrich
+[2026-10-14 17:40:01] [[32MINFO[39M] 🔄 Sector rotation: semi -2.54%, financials -1.29%, fintech -1.29%, healthcare +1.51%, industrials -0.90%, consumer -1.21%
+[2026-10-14 17:40:03] [[32MINFO[39M] 📈 FMP movers (stable actives): 50 rows
+[2026-10-14 17:40:03] [[32MINFO[39M] 📈 FMP movers (stable gainers): 50 rows
+[2026-10-14 17:40:03] [[32MINFO[39M] 🔭 Discovery running on FMP movers only this scan (Yahoo dark, 90 FMP rows)
+[2026-10-14 17:40:05] [[32MINFO[39M] 📰 VEEE tagged NEWS_HIT: 12 Consumer Discretionary Stocks Moving In Wednesday's Pre-Market Session
+[2026-10-14 17:40:05] [[32MINFO[39M] 📰 PLRZ tagged NEWS_HIT: 12 Health Care Stocks Moving In Tuesday's Pre-Market Session
+[2026-10-14 17:40:05] [[32MINFO[39M] 📰 SCTX tagged NEWS_HIT: Bending Spoons, Liquidia, Verastem And Other Big Stocks Moving Higher On Wednesday
+[2026-10-14 17:40:06] [[32MINFO[39M] 🔭 Discovery: 6 new opportunity(ies) outside watchlist — UCIB +17.1%, GDXD +12.4%, VEEE [NEWS_HIT] +12.0%, PLRZ [NEWS_HIT] +11.5%, SCTX [NEWS_HIT] +10.7%, ZSL +10.2%
+[2026-10-14 17:40:06] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 17:40:06] [[32MINFO[39M] Resolving eToro instrument ID for SCTX...
+[2026-10-14 17:40:06] [[32MINFO[39M] Resolved SCTX → instrumentId 15768
+[2026-10-14 17:41:11] [[32MINFO[39M] SCTX: daily ATR 12.34% of price (cached)
+[2026-10-14 17:41:13] [[32MINFO[39M] 💰 Capital: effective $9228.38 (base $10000 $-771.62 realized, peak $10032.85) · risk ×1
+[2026-10-14 17:41:13] [[32MINFO[39M] ABBV plan rejected: score 77.0 below the entry floor of 80 (desk-score floor; the 2026-09-16 recheck found no score band that wins consistently — CHANGELOG v8.3)
+[2026-10-14 17:41:13] [[32MINFO[39M] LLY plan rejected: score 72.7 below the entry floor of 80 (desk-score floor; the 2026-09-16 recheck found no score band that wins consistently — CHANGELOG v8.3)
+[2026-10-14 17:41:13] [[32MINFO[39M] VRTX plan rejected: score 41.3 below the entry floor of 80 (desk-score floor; the 2026-09-16 recheck found no score band that wins consistently — CHANGELOG v8.3)
+[2026-10-14 17:41:13] [[32MINFO[39M] AAPL plan rejected: score 24.4 below the entry floor of 80 (desk-score floor; the 2026-09-16 recheck found no score band that wins consistently — CHANGELOG v8.3)
+[2026-10-14 17:41:13] [[32MINFO[39M] No plans survived geometry/slots/RRR checks
+[2026-10-14 17:41:13] [[32MINFO[39M] 🧮 Funnel: 54 quoted → 35 moving + 6 discovered → 36 eligible [NOT_ON_ETORO 5] → 4 scored [below VWAP 24, weak RS 4, ATR ceiling 4] → 0 plans [score floor 4] → AI 0/0 take → 0 opened
+[2026-10-14 17:45:00] [[32MINFO[39M] ⏳ Waiting to buy LLY: now $1204.85, buy at $1204.33, lowest so far $1204.85, 26 min left
+[2026-10-14 17:45:00] [[32MINFO[39M] ⏳ Waiting to buy ABBV: now $282.88, buy at $280.75, lowest so far $281.91, 36 min left
+[2026-10-14 17:50:00] [[32MINFO[39M] ═══ Scan start (5:50:00 PM Bahrain) ═══
+[2026-10-14 17:50:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 17:50:00] [[32MINFO[39M] ⏳ Waiting to buy LLY: now $1205.37, buy at $1204.33, lowest so far $1204.85, 21 min left
+[2026-10-14 17:50:00] [[32MINFO[39M] ⏳ Waiting to buy ABBV: now $282.82, buy at $280.75, lowest so far $281.91, 31 min left
+[2026-10-14 17:50:01] [[32MINFO[39M] VIX (FRED, 2026-10-12, 2 days old): 15.21
+[2026-10-14 17:50:01] [[32MINFO[39M] Market regime: TRENDING (SPY range 1.05% after 80 min → projected full-day 2.33% vs 0.50% threshold, VIX-tightened)
+[2026-10-14 17:50:01] [[32MINFO[39M] 📶 Quotes: 54/54 from eToro (1 batched rates call + cached closing-price)
+[2026-10-14 17:50:01] [[32MINFO[39M] [5:50:01 PM Bahrain] 📡 Pre-filter: 38 stocks moving enough to enrich
+[2026-10-14 17:50:01] [[32MINFO[39M] 🔄 Sector rotation: semi -2.38%, financials -1.21%, fintech -1.21%, healthcare +1.49%, industrials -1.01%, consumer -1.07%
+[2026-10-14 17:50:03] [[32MINFO[39M] 📰 VEEE tagged NEWS_HIT: 12 Consumer Discretionary Stocks Moving In Wednesday's Pre-Market Session
+[2026-10-14 17:50:03] [[32MINFO[39M] 📰 PLRZ tagged NEWS_HIT: 12 Health Care Stocks Moving In Tuesday's Pre-Market Session
+[2026-10-14 17:50:03] [[32MINFO[39M] 📰 SCTX tagged NEWS_HIT: Bending Spoons, Liquidia, Verastem And Other Big Stocks Moving Higher On Wednesday
+[2026-10-14 17:50:04] [[32MINFO[39M] 🔭 Discovery: 6 new opportunity(ies) outside watchlist — UCIB +17.1%, GDXD +12.4%, VEEE [NEWS_HIT] +12.0%, PLRZ [NEWS_HIT] +11.5%, SCTX [NEWS_HIT] +10.7%, ZSL +10.2%
+[2026-10-14 17:50:04] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 17:51:05] [[32MINFO[39M] 💰 Capital: effective $9228.38 (base $10000 $-771.62 realized, peak $10032.85) · risk ×1
+[2026-10-14 17:51:05] [[32MINFO[39M] LLY plan rejected: score 59.7 below the entry floor of 80 (desk-score floor; the 2026-09-16 recheck found no score band that wins consistently — CHANGELOG v8.3)
+[2026-10-14 17:51:05] [[32MINFO[39M] No plans survived geometry/slots/RRR checks
+[2026-10-14 17:51:05] [[32MINFO[39M] 🧮 Funnel: 54 quoted → 38 moving + 6 discovered → 29 eligible [STALE_QUOTE 10, NOT_ON_ETORO 5] → 1 scored [below VWAP 20, weak RS 5, ATR ceiling 3] → 0 plans [score floor 1] → AI 0/0 take → 0 opened
+[2026-10-14 17:55:00] [[32MINFO[39M] ⏳ Waiting to buy LLY: now $1206.00, buy at $1204.33, lowest so far $1204.85, 16 min left
+[2026-10-14 17:55:00] [[32MINFO[39M] ⏳ Waiting to buy ABBV: now $282.82, buy at $280.75, lowest so far $281.91, 26 min left
+[2026-10-14 18:00:00] [[32MINFO[39M] ═══ Scan start (6:00:00 PM Bahrain) ═══
+[2026-10-14 18:00:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 18:00:00] [[32MINFO[39M] ⏳ Waiting to buy LLY: now $1205.98, buy at $1204.33, lowest so far $1204.85, 11 min left
+[2026-10-14 18:00:00] [[32MINFO[39M] ⏳ Waiting to buy ABBV: now $282.82, buy at $280.75, lowest so far $281.91, 21 min left
+[2026-10-14 18:00:00] [[32MINFO[39M] VIX (FRED, 2026-10-12, 2 days old): 15.21
+[2026-10-14 18:00:00] [[32MINFO[39M] Market regime: TRENDING (SPY range 1.10% after 90 min → projected full-day 2.30% vs 0.50% threshold, VIX-tightened)
+[2026-10-14 18:00:01] [[32MINFO[39M] 📶 Quotes: 54/54 from eToro (1 batched rates call + cached closing-price)
+[2026-10-14 18:00:01] [[32MINFO[39M] [6:00:01 PM Bahrain] 📡 Pre-filter: 39 stocks moving enough to enrich
+[2026-10-14 18:00:02] [[32MINFO[39M] 📈 FMP movers (stable gainers): 50 rows
+[2026-10-14 18:00:02] [[32MINFO[39M] 📈 FMP movers (stable actives): 50 rows
+[2026-10-14 18:00:05] [[32MINFO[39M] 📰 SCTX tagged NEWS_HIT: Bending Spoons, Liquidia, Verastem And Other Big Stocks Moving Higher On Wednesday
+[2026-10-14 18:00:06] [[32MINFO[39M] 📰 HALO tagged NEWS_HIT: Biotech Stocks To Watch: Regeneron Partner Has Breakout In Sight
+[2026-10-14 18:00:07] [[32MINFO[39M] 📰 GFS tagged NEWS_HIT: GlobalFoundries Tapped As Technology Provider, Operator For Two New Semiconductor Production Sites at Its New York Facility Under Japan-U.S. Initiative For Up To $21B In Funding
+[2026-10-14 18:00:07] [[32MINFO[39M] 📰 LEGN tagged NEWS_HIT: Barclays Maintains Overweight on Legend Biotech, Lowers Price Target to $68
+[2026-10-14 18:00:07] [[32MINFO[39M] 🔭 Discovery: 6 new opportunity(ies) outside watchlist — GDXD +12.0%, ZSL +10.2%, SCTX [NEWS_HIT] +10.2%, HALO [NEWS_HIT] +6.9%, GFS [NEWS_HIT] +6.0%, LEGN [NEWS_HIT] +5.5%
+[2026-10-14 18:00:07] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 18:00:07] [[32MINFO[39M] Resolving eToro instrument ID for HALO...
+[2026-10-14 18:00:08] [[32MINFO[39M] Resolved HALO → instrumentId 6438
+[2026-10-14 18:00:08] [[32MINFO[39M] Resolving eToro instrument ID for GFS...
+[2026-10-14 18:00:08] [[32MINFO[39M] Resolved GFS → instrumentId 8593
+[2026-10-14 18:00:08] [[32MINFO[39M] Resolving eToro instrument ID for LEGN...
+[2026-10-14 18:00:09] [[32MINFO[39M] Resolved LEGN → instrumentId 8883
+[2026-10-14 18:01:02] [[32MINFO[39M] 💰 Capital: effective $9228.38 (base $10000 $-771.62 realized, peak $10032.85) · risk ×1
+[2026-10-14 18:01:02] [[32MINFO[39M] GFS plan rejected: score 64.7 below the entry floor of 80 (desk-score floor; the 2026-09-16 recheck found no score band that wins consistently — CHANGELOG v8.3)
+[2026-10-14 18:01:02] [[32MINFO[39M] LLY plan rejected: score 63.8 below the entry floor of 80 (desk-score floor; the 2026-09-16 recheck found no score band that wins consistently — CHANGELOG v8.3)
+[2026-10-14 18:01:02] [[32MINFO[39M] No plans survived geometry/slots/RRR checks
+[2026-10-14 18:01:02] [[32MINFO[39M] 🧮 Funnel: 54 quoted → 39 moving + 6 discovered → 29 eligible [STALE_QUOTE 14, NOT_ON_ETORO 2] → 2 scored [below VWAP 18, weak RS 4, ATR ceiling 3, no setup 1, low volume 1] → 0 plans [score floor 2] → AI 0/0 take → 0 opened
+[2026-10-14 18:05:00] [[32MINFO[39M] ⏳ Waiting to buy LLY: now $1207.90, buy at $1204.33, lowest so far $1204.85, 6 min left
+[2026-10-14 18:05:00] [[32MINFO[39M] ⏳ Waiting to buy ABBV: now $282.82, buy at $280.75, lowest so far $281.91, 16 min left
+[2026-10-14 18:10:00] [[32MINFO[39M] ═══ Scan start (6:10:00 PM Bahrain) ═══
+[2026-10-14 18:10:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 18:10:00] [[32MINFO[39M] ⏳ Waiting to buy LLY: now $1208.26, buy at $1204.33, lowest so far $1204.85, 1 min left
+[2026-10-14 18:10:00] [[32MINFO[39M] ⏳ Waiting to buy ABBV: now $282.82, buy at $280.75, lowest so far $281.91, 11 min left
+[2026-10-14 18:10:00] [[32MINFO[39M] VIX (FRED, 2026-10-12, 2 days old): 15.21
+[2026-10-14 18:10:00] [[32MINFO[39M] Market regime: TRENDING (SPY range 1.17% after 100 min → projected full-day 2.31% vs 0.50% threshold, VIX-tightened)
+[2026-10-14 18:10:01] [[32MINFO[39M] 📶 Quotes: 54/54 from eToro (1 batched rates call + cached closing-price)
+[2026-10-14 18:10:01] [[32MINFO[39M] [6:10:01 PM Bahrain] 📡 Pre-filter: 41 stocks moving enough to enrich
+[2026-10-14 18:10:01] [[32MINFO[39M] 🔄 Sector rotation: semi -2.92%, financials -1.25%, fintech -1.25%, healthcare +1.68%, industrials -1.10%, consumer -1.04%
+[2026-10-14 18:10:02] [[32MINFO[39M] 🔭 Discovery running on FMP movers only this scan (Yahoo dark, 88 FMP rows)
+[2026-10-14 18:10:03] [[32MINFO[39M] 📰 SCTX tagged NEWS_HIT: Bending Spoons, Liquidia, Verastem And Other Big Stocks Moving Higher On Wednesday
+[2026-10-14 18:10:03] [[32MINFO[39M] 🔭 Discovery: 3 new opportunity(ies) outside watchlist — GDXD +12.0%, ZSL +10.2%, SCTX [NEWS_HIT] +10.2%
+[2026-10-14 18:10:03] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 18:10:55] [[32MINFO[39M] 💰 Capital: effective $9228.38 (base $10000 $-771.62 realized, peak $10032.85) · risk ×1
+[2026-10-14 18:10:55] [[32MINFO[39M] LLY plan rejected: score 74.4 below the entry floor of 80 (desk-score floor; the 2026-09-16 recheck found no score band that wins consistently — CHANGELOG v8.3)
+[2026-10-14 18:10:55] [[32MINFO[39M] XOM plan rejected: score 25.5 below the entry floor of 80 (desk-score floor; the 2026-09-16 recheck found no score band that wins consistently — CHANGELOG v8.3)
+[2026-10-14 18:10:55] [[32MINFO[39M] No plans survived geometry/slots/RRR checks
+[2026-10-14 18:10:55] [[32MINFO[39M] 🧮 Funnel: 54 quoted → 41 moving + 3 discovered → 28 eligible [STALE_QUOTE 14, NOT_ON_ETORO 2] → 2 scored [below VWAP 21, ATR ceiling 3, no setup 1, weak RS 1] → 0 plans [score floor 2] → AI 0/0 take → 0 opened
+[2026-10-14 18:12:00] [[32MINFO[39M] ⌛ LLY not bought — no dip to $1204.33 within 60 min (approved $1210.30, lowest $1204.85, now $1209.93 = -0.03% vs approval)
+[2026-10-14 18:15:00] [[32MINFO[39M] ⏳ Waiting to buy ABBV: now $282.82, buy at $280.75, lowest so far $281.91, 6 min left
+[2026-10-14 18:20:00] [[32MINFO[39M] ═══ Scan start (6:20:00 PM Bahrain) ═══
+[2026-10-14 18:20:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 18:20:00] [[32MINFO[39M] ⏳ Waiting to buy ABBV: now $282.82, buy at $280.75, lowest so far $281.91, 1 min left
+[2026-10-14 18:20:01] [[32MINFO[39M] VIX (FRED, 2026-10-12, 2 days old): 15.21
+[2026-10-14 18:20:01] [[32MINFO[39M] Market regime: TRENDING (SPY range 1.18% after 110 min → projected full-day 2.23% vs 0.50% threshold, VIX-tightened)
+[2026-10-14 18:20:01] [[32MINFO[39M] 📶 Quotes: 54/54 from eToro (1 batched rates call + cached closing-price)
+[2026-10-14 18:20:01] [[32MINFO[39M] [6:20:01 PM Bahrain] 📡 Pre-filter: 39 stocks moving enough to enrich
+[2026-10-14 18:20:01] [[32MINFO[39M] 🔄 Sector rotation: semi -2.91%, financials -1.07%, fintech -1.07%, healthcare +1.86%, industrials -1.09%, consumer -1.10%
+[2026-10-14 18:20:03] [[32MINFO[39M] 📈 FMP movers (stable actives): 50 rows
+[2026-10-14 18:20:03] [[32MINFO[39M] 📈 FMP movers (stable gainers): 50 rows
+[2026-10-14 18:20:03] [[32MINFO[39M] 🔭 Discovery running on FMP movers only this scan (Yahoo dark, 88 FMP rows)
+[2026-10-14 18:20:04] [[32MINFO[39M] 📰 PLRZ tagged NEWS_HIT: 12 Health Care Stocks Moving In Tuesday's Pre-Market Session
+[2026-10-14 18:20:04] [[32MINFO[39M] 📰 SCTX tagged NEWS_HIT: Bending Spoons, Liquidia, Verastem And Other Big Stocks Moving Higher On Wednesday
+[2026-10-14 18:20:05] [[32MINFO[39M] 🔭 Discovery: 6 new opportunity(ies) outside watchlist — PLRZ [NEWS_HIT] +14.1%, GDXD +13.5%, SCTX [NEWS_HIT] +11.3%, UCIB +11.0%, ZSL +10.8%, SQQQ +3.6%
+[2026-10-14 18:20:05] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 18:20:05] [[32MINFO[39M] Resolving eToro instrument ID for SQQQ...
+[2026-10-14 18:20:05] [[32MINFO[39M] Resolved SQQQ → instrumentId 4459
+[2026-10-14 18:20:55] [[32MINFO[39M] 💰 Capital: effective $9228.38 (base $10000 $-771.62 realized, peak $10032.85) · risk ×1
+[2026-10-14 18:20:55] [[32MINFO[39M] 📋 Plan LLY [DAY/WATCHLIST/MOMENTUM_BREAKOUT] $1610 | risk $46.09 (0.5%) | stop -2.86% | T1 $1247.7688 T2 $1282.4977 | RRR 2 | vol MEDIUM
+[2026-10-14 18:20:55] [[32MINFO[39M] SQQQ plan rejected: score 69.2 below the entry floor of 80 (desk-score floor; the 2026-09-16 recheck found no score band that wins consistently — CHANGELOG v8.3)
+[2026-10-14 18:20:55] [[32MINFO[39M] XOM plan rejected: score 27.5 below the entry floor of 80 (desk-score floor; the 2026-09-16 recheck found no score band that wins consistently — CHANGELOG v8.3)
+[2026-10-14 18:20:55] [[32MINFO[39M] 🧭 Market brief: RISK_OFF tone
+[2026-10-14 18:20:57] [[32MINFO[39M] 🤖 AI screener: 1/1 plans approved
+[2026-10-14 18:20:57] [[32MINFO[39M] ⏳ LLY approved at $1213.04 — not buying the spike: will buy only on a dip to $1204.37 (-0.71%) within 60 min — buy level follows the high, never above $1213.04
+[2026-10-14 18:20:57] [[32MINFO[39M] ═══ Scan done in 57.9s ═══
+[2026-10-14 18:20:57] [[32MINFO[39M] 🧮 Funnel: 54 quoted → 39 moving + 6 discovered → 28 eligible [STALE_QUOTE 13, NOT_ON_ETORO 4] → 3 scored [below VWAP 19, ATR ceiling 3, weak RS 2, no setup 1] → 1 plans [score floor 2] → AI 1/1 take → 1 waiting for a dip, 0 opened
+[2026-10-14 18:22:00] [[32MINFO[39M] ⌛ ABBV not bought — no dip to $280.75 within 60 min (approved $281.92, lowest $281.91, now $282.82 = +0.32% vs approval)
+[2026-10-14 18:25:00] [[32MINFO[39M] ⏳ Waiting to buy LLY: now $1214.31, buy at $1205.82, lowest so far $1212.69, 56 min left
+[2026-10-14 18:30:00] [[32MINFO[39M] ═══ Scan start (6:30:00 PM Bahrain) ═══
+[2026-10-14 18:30:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 18:30:00] [[32MINFO[39M] ⏳ Waiting to buy LLY: now $1214.00, buy at $1206.01, lowest so far $1212.69, 51 min left
+[2026-10-14 18:30:00] [[32MINFO[39M] VIX (FRED, 2026-10-12, 2 days old): 15.21
+[2026-10-14 18:30:00] [[32MINFO[39M] Market regime: TRENDING (SPY range 1.18% after 120 min → projected full-day 2.13% vs 0.50% threshold, VIX-tightened)
+[2026-10-14 18:30:01] [[32MINFO[39M] 📶 Quotes: 54/54 from eToro (1 batched rates call + cached closing-price)
+[2026-10-14 18:30:01] [[32MINFO[39M] [6:30:01 PM Bahrain] 📡 Pre-filter: 41 stocks moving enough to enrich
+[2026-10-14 18:30:02] [[32MINFO[39M] 🔭 Discovery running on FMP movers only this scan (Yahoo dark, 88 FMP rows)
+[2026-10-14 18:30:02] [[32MINFO[39M] 📰 PLRZ tagged NEWS_HIT: 12 Health Care Stocks Moving In Tuesday's Pre-Market Session
+[2026-10-14 18:30:05] [[32MINFO[39M] 📰 SCTX tagged NEWS_HIT: Bending Spoons, Liquidia, Verastem And Other Big Stocks Moving Higher On Wednesday
+[2026-10-14 18:30:07] [[32MINFO[39M] 🔭 Discovery: 6 new opportunity(ies) outside watchlist — PLRZ [NEWS_HIT] +14.1%, GDXD +13.5%, SCTX [NEWS_HIT] +11.3%, UCIB +11.0%, ZSL +10.8%, SQQQ +3.6%
+[2026-10-14 18:30:07] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 18:31:00] [[32MINFO[39M] 💰 Capital: effective $9228.38 (base $10000 $-771.62 realized, peak $10032.85) · risk ×1
+[2026-10-14 18:31:00] [[32MINFO[39M] 📋 Plan LLY [DAY/WATCHLIST/MOMENTUM_BREAKOUT] $1610 | risk $46.09 (0.5%) | stop -2.86% | T1 $1248.2883 T2 $1283.0316 | RRR 2 | vol MEDIUM
+[2026-10-14 18:31:00] [[32MINFO[39M] SQQQ plan rejected: score 75.0 below the entry floor of 80 (desk-score floor; the 2026-09-16 recheck found no score band that wins consistently — CHANGELOG v8.3)
+[2026-10-14 18:31:00] [[32MINFO[39M] XOM plan rejected: score 19.9 below the entry floor of 80 (desk-score floor; the 2026-09-16 recheck found no score band that wins consistently — CHANGELOG v8.3)
+[2026-10-14 18:31:00] [[32MINFO[39M] AAPL plan rejected: score 19.3 below the entry floor of 80 (desk-score floor; the 2026-09-16 recheck found no score band that wins consistently — CHANGELOG v8.3)
+[2026-10-14 18:31:00] [[32MINFO[39M] No plans survived geometry/slots/RRR checks
+[2026-10-14 18:31:00] [[32MINFO[39M] 🧮 Funnel: 54 quoted → 41 moving + 6 discovered → 29 eligible [STALE_QUOTE 14, NOT_ON_ETORO 4] → 4 scored [below VWAP 21, ATR ceiling 3, weak RS 1] → 0 plans [score floor 3, waiting for dip 1] → AI 0/0 take → 0 opened
+[2026-10-14 18:35:00] [[32MINFO[39M] ⏳ Waiting to buy LLY: now $1211.79, buy at $1206.01, lowest so far $1211.07, 46 min left
+[2026-10-14 18:40:00] [[32MINFO[39M] ═══ Scan start (6:40:00 PM Bahrain) ═══
+[2026-10-14 18:40:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 18:40:00] [[32MINFO[39M] ⏳ Waiting to buy LLY: now $1213.00, buy at $1206.01, lowest so far $1210.76, 41 min left
+[2026-10-14 18:40:00] [[32MINFO[39M] VIX (FRED, 2026-10-12, 2 days old): 15.21
+[2026-10-14 18:40:00] [[32MINFO[39M] Market regime: TRENDING (SPY range 1.24% after 130 min → projected full-day 2.14% vs 0.50% threshold, VIX-tightened)
+[2026-10-14 18:40:01] [[32MINFO[39M] 📶 Quotes: 54/54 from eToro (1 batched rates call + cached closing-price)
+[2026-10-14 18:40:01] [[32MINFO[39M] [6:40:01 PM Bahrain] 📡 Pre-filter: 41 stocks moving enough to enrich
+[2026-10-14 18:40:01] [[32MINFO[39M] 🔄 Sector rotation: semi -3.51%, financials -0.96%, fintech -0.96%, healthcare +1.97%, industrials -1.25%, consumer -1.23%
+[2026-10-14 18:40:03] [[32MINFO[39M] 📈 FMP movers (stable gainers): 50 rows
+[2026-10-14 18:40:03] [[32MINFO[39M] 📈 FMP movers (stable actives): 50 rows
+[2026-10-14 18:40:03] [[32MINFO[39M] 🔭 Discovery running on FMP movers only this scan (Yahoo dark, 88 FMP rows)
+[2026-10-14 18:40:04] [[32MINFO[39M] 📰 SCTX tagged NEWS_HIT: Bending Spoons, Liquidia, Verastem And Other Big Stocks Moving Higher On Wednesday
+[2026-10-14 18:40:04] [[32MINFO[39M] 📰 PLRZ tagged NEWS_HIT: 12 Health Care Stocks Moving In Tuesday's Pre-Market Session
+[2026-10-14 18:40:05] [[32MINFO[39M] 🔭 Discovery: 6 new opportunity(ies) outside watchlist — SCTX [NEWS_HIT] +14.3%, GDXD +13.8%, PLRZ [NEWS_HIT] +13.0%, ZSL +11.3%, UCIB +11.0%, SQQQ +4.3%
+[2026-10-14 18:40:05] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 18:40:56] [[32MINFO[39M] 💰 Capital: effective $9228.38 (base $10000 $-771.62 realized, peak $10032.85) · risk ×1
+[2026-10-14 18:40:56] [[32MINFO[39M] 📋 Plan SQQQ [DAY/DISCOVERED/MOMENTUM_BREAKOUT] $735 | risk $23.1 (0.25%) | stop -3.14% | T1 $36.555 T2 $37.669 | RRR 2 | vol MEDIUM
+[2026-10-14 18:40:56] [[32MINFO[39M] 📋 Plan LLY [DAY/WATCHLIST/MOMENTUM_CONTINUATION] $1610 | risk $46.09 (0.5%) | stop -2.86% | T1 $1247.3368 T2 $1282.0537 | RRR 2 | vol MEDIUM
+[2026-10-14 18:40:56] [[32MINFO[39M] AAPL plan rejected: score 26.6 below the entry floor of 80 (desk-score floor; the 2026-09-16 recheck found no score band that wins consistently — CHANGELOG v8.3)
+[2026-10-14 18:40:56] [[32MINFO[39M] 🧭 Market brief: RISK_OFF tone
+[2026-10-14 18:40:59] [[32MINFO[39M] 🤖 AI screener: 0/1 plans approved
+[2026-10-14 18:40:59] [[32MINFO[39M] ═══ Scan done in 59.7s ═══
+[2026-10-14 18:40:59] [[32MINFO[39M] 🧮 Funnel: 54 quoted → 41 moving + 6 discovered → 28 eligible [STALE_QUOTE 15, NOT_ON_ETORO 4] → 3 scored [below VWAP 21, ATR ceiling 3, weak RS 1] → 1 plans [score floor 1, waiting for dip 1] → AI 0/1 take → 0 opened
+[2026-10-14 18:45:00] [[32MINFO[39M] ⏳ Waiting to buy LLY: now $1213.90, buy at $1206.01, lowest so far $1210.76, 36 min left
+[2026-10-14 18:50:00] [[32MINFO[39M] ═══ Scan start (6:50:00 PM Bahrain) ═══
+[2026-10-14 18:50:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 18:50:00] [[32MINFO[39M] ⏳ Waiting to buy LLY: now $1214.00, buy at $1206.01, lowest so far $1210.76, 31 min left
+[2026-10-14 18:50:00] [[32MINFO[39M] VIX (FRED, 2026-10-12, 2 days old): 15.21
+[2026-10-14 18:50:00] [[32MINFO[39M] Market regime: TRENDING (SPY range 1.29% after 140 min → projected full-day 2.14% vs 0.50% threshold, VIX-tightened)
+[2026-10-14 18:50:01] [[32MINFO[39M] 📶 Quotes: 54/54 from eToro (1 batched rates call + cached closing-price)
+[2026-10-14 18:50:01] [[32MINFO[39M] [6:50:01 PM Bahrain] 📡 Pre-filter: 41 stocks moving enough to enrich
+[2026-10-14 18:50:01] [[32MINFO[39M] 🔭 Discovery running on FMP movers only this scan (Yahoo dark, 88 FMP rows)
+[2026-10-14 18:50:03] [[32MINFO[39M] 📰 SCTX tagged NEWS_HIT: Bending Spoons, Liquidia, Verastem And Other Big Stocks Moving Higher On Wednesday
+[2026-10-14 18:50:03] [[32MINFO[39M] 📰 PLRZ tagged NEWS_HIT: 12 Health Care Stocks Moving In Tuesday's Pre-Market Session
+[2026-10-14 18:50:04] [[32MINFO[39M] 🔭 Discovery: 6 new opportunity(ies) outside watchlist — SCTX [NEWS_HIT] +14.3%, GDXD +13.8%, PLRZ [NEWS_HIT] +13.0%, ZSL +11.3%, UCIB +11.0%, SQQQ +4.3%
+[2026-10-14 18:50:04] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 18:50:54] [[32MINFO[39M] 💰 Capital: effective $9228.38 (base $10000 $-771.62 realized, peak $10032.85) · risk ×1
+[2026-10-14 18:50:54] [[32MINFO[39M] 📋 Plan LLY [DAY/WATCHLIST/MOMENTUM_CONTINUATION] $1610 | risk $46.09 (0.5%) | stop -2.86% | T1 $1248.494 T2 $1283.2431 | RRR 2 | vol MEDIUM
+[2026-10-14 18:50:54] [[32MINFO[39M] 📋 Plan SQQQ [DAY/DISCOVERED/MOMENTUM_CONTINUATION] $735 | risk $23.1 (0.25%) | stop -3.14% | T1 $36.555 T2 $37.669 | RRR 2 | vol MEDIUM
+[2026-10-14 18:50:54] [[32MINFO[39M] XOM plan rejected: score 21.7 below the entry floor of 80 (desk-score floor; the 2026-09-16 recheck found no score band that wins consistently — CHANGELOG v8.3)
+[2026-10-14 18:50:54] [[32MINFO[39M] 🧭 Market brief: RISK_OFF tone
+[2026-10-14 18:50:56] [[32MINFO[39M] 🤖 AI screener: 1/1 plans approved
+[2026-10-14 18:50:56] [[32MINFO[39M] ⏳ SQQQ approved at $35.44 — not buying the spike: will buy only on a dip to $35.16 (-0.78%) within 60 min — buy level follows the high, never above $35.44
+[2026-10-14 18:50:57] [[32MINFO[39M] ═══ Scan done in 57.2s ═══
+[2026-10-14 18:50:57] [[32MINFO[39M] 🧮 Funnel: 54 quoted → 41 moving + 6 discovered → 28 eligible [STALE_QUOTE 15, NOT_ON_ETORO 4] → 3 scored [below VWAP 21, ATR ceiling 3, weak RS 1] → 1 plans [score floor 1, waiting for dip 1] → AI 1/1 take → 1 waiting for a dip, 0 opened
+[2026-10-14 18:55:01] [[32MINFO[39M] ⏳ Waiting to buy LLY: now $1215.87, buy at $1207.18, lowest so far $1210.76, 26 min left
+[2026-10-14 18:55:01] [[32MINFO[39M] ⏳ Waiting to buy SQQQ: now $35.42, buy at $35.26, lowest so far $35.42, 56 min left
+[2026-10-14 18:58:01] [[32MINFO[39M] Price stream disconnected — reconnecting in 30s (1-min exit monitor unaffected)
+[2026-10-14 18:58:32] [[32MINFO[39M] 📶 Price stream connected — real-time exit watchdog live for 0 position(s)
+[2026-10-14 19:00:00] [[32MINFO[39M] ═══ Scan start (7:00:00 PM Bahrain) ═══
+[2026-10-14 19:00:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 19:00:00] [[32MINFO[39M] ⏳ Waiting to buy LLY: now $1216.00, buy at $1208.05, lowest so far $1210.76, 21 min left
+[2026-10-14 19:00:00] [[32MINFO[39M] ⏳ Waiting to buy SQQQ: now $35.52, buy at $35.26, lowest so far $35.42, 51 min left
+[2026-10-14 19:00:05] [[32MINFO[39M] VIX (FRED, 2026-10-13): 15.27
+[2026-10-14 19:00:05] [[32MINFO[39M] Market regime: TRENDING (SPY range 1.29% after 150 min → projected full-day 2.07% vs 0.50% threshold, VIX-tightened)
+[2026-10-14 19:00:05] [[32MINFO[39M] 📶 Quotes: 54/54 from eToro (1 batched rates call + cached closing-price)
+[2026-10-14 19:00:05] [[32MINFO[39M] [7:00:05 PM Bahrain] 📡 Pre-filter: 41 stocks moving enough to enrich
+[2026-10-14 19:00:05] [[32MINFO[39M] 🔄 Sector rotation: semi -3.48%, financials -0.79%, fintech -0.79%, healthcare +2.00%, industrials -1.27%, consumer -1.06%
+[2026-10-14 19:00:07] [[32MINFO[39M] 📈 FMP movers (stable gainers): 50 rows
+[2026-10-14 19:00:09] [[32MINFO[39M] 📈 FMP movers (stable actives): 50 rows
+[2026-10-14 19:00:09] [[32MINFO[39M] 🔭 Discovery running on FMP movers only this scan (Yahoo dark, 88 FMP rows)
+[2026-10-14 19:00:11] [[32MINFO[39M] 📰 PLRZ tagged NEWS_HIT: 12 Health Care Stocks Moving In Tuesday's Pre-Market Session
+[2026-10-14 19:00:14] [[32MINFO[39M] 🔭 Discovery: 5 new opportunity(ies) outside watchlist — GDXD +14.3%, PLRZ [NEWS_HIT] +12.7%, ZSL +11.9%, UCIB +11.0%, SQQQ +4.5%
+[2026-10-14 19:00:14] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 19:01:04] [[32MINFO[39M] 💰 Capital: effective $9228.38 (base $10000 $-771.62 realized, peak $10032.85) · risk ×1
+[2026-10-14 19:01:04] [[32MINFO[39M] 📋 Plan LLY [DAY/WATCHLIST/MOMENTUM_CONTINUATION] $1610 | risk $46.09 (0.5%) | stop -2.86% | T1 $1250.0473 T2 $1284.8395 | RRR 2 | vol MEDIUM
+[2026-10-14 19:01:04] [[32MINFO[39M] 📋 Plan SQQQ [DAY/DISCOVERED/MOMENTUM_CONTINUATION] $735 | risk $23.1 (0.25%) | stop -3.14% | T1 $36.6365 T2 $37.753 | RRR 2 | vol MEDIUM
+[2026-10-14 19:01:04] [[32MINFO[39M] XOM plan rejected: score 38.2 below the entry floor of 80 (desk-score floor; the 2026-09-16 recheck found no score band that wins consistently — CHANGELOG v8.3)
+[2026-10-14 19:01:04] [[32MINFO[39M] No plans survived geometry/slots/RRR checks
+[2026-10-14 19:01:04] [[32MINFO[39M] 🧮 Funnel: 54 quoted → 41 moving + 5 discovered → 27 eligible [STALE_QUOTE 15, NOT_ON_ETORO 4] → 3 scored [below VWAP 21, ATR ceiling 2, weak RS 1] → 0 plans [waiting for dip 2, score floor 1] → AI 0/0 take → 0 opened
+[2026-10-14 19:05:00] [[32MINFO[39M] ⏳ Waiting to buy LLY: now $1214.14, buy at $1208.05, lowest so far $1210.76, 16 min left
+[2026-10-14 19:05:00] [[32MINFO[39M] ⏳ Waiting to buy SQQQ: now $35.59, buy at $35.32, lowest so far $35.42, 46 min left
+[2026-10-14 19:10:00] [[32MINFO[39M] ═══ Scan start (7:10:00 PM Bahrain) ═══
+[2026-10-14 19:10:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 19:10:00] [[32MINFO[39M] ⏳ Waiting to buy LLY: now $1214.88, buy at $1208.05, lowest so far $1210.76, 11 min left
+[2026-10-14 19:10:00] [[32MINFO[39M] ⏳ Waiting to buy SQQQ: now $35.58, buy at $35.32, lowest so far $35.42, 41 min left
+[2026-10-14 19:10:00] [[32MINFO[39M] VIX (FRED, 2026-10-13): 15.27
+[2026-10-14 19:10:00] [[32MINFO[39M] Market regime: TRENDING (SPY range 1.29% after 160 min → projected full-day 2.01% vs 0.50% threshold, VIX-tightened)
+[2026-10-14 19:10:01] [[32MINFO[39M] 📶 Quotes: 54/54 from eToro (1 batched rates call + cached closing-price)
+[2026-10-14 19:10:01] [[32MINFO[39M] [7:10:01 PM Bahrain] 📡 Pre-filter: 39 stocks moving enough to enrich
+[2026-10-14 19:10:01] [[32MINFO[39M] 🔭 Discovery running on FMP movers only this scan (Yahoo dark, 88 FMP rows)
+[2026-10-14 19:10:02] [[32MINFO[39M] 📰 PLRZ tagged NEWS_HIT: 12 Health Care Stocks Moving In Tuesday's Pre-Market Session
+[2026-10-14 19:10:03] [[32MINFO[39M] 🔭 Discovery: 5 new opportunity(ies) outside watchlist — GDXD +14.3%, PLRZ [NEWS_HIT] +12.7%, ZSL +11.9%, UCIB +11.0%, SQQQ +4.5%
+[2026-10-14 19:10:03] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 19:10:50] [[32MINFO[39M] 💰 Capital: effective $9228.38 (base $10000 $-771.62 realized, peak $10032.85) · risk ×1
+[2026-10-14 19:10:50] [[32MINFO[39M] 📋 Plan SQQQ [DAY/DISCOVERED/MOMENTUM_BREAKOUT] $735 | risk $23.1 (0.25%) | stop -3.14% | T1 $36.6365 T2 $37.753 | RRR 2 | vol MEDIUM
+[2026-10-14 19:10:50] [[32MINFO[39M] 📋 Plan LLY [DAY/WATCHLIST/MOMENTUM_CONTINUATION] $1610 | risk $46.09 (0.5%) | stop -2.86% | T1 $1249.3324 T2 $1284.1047 | RRR 2 | vol MEDIUM
+[2026-10-14 19:10:50] [[32MINFO[39M] XOM plan rejected: score 45.6 below the entry floor of 80 (desk-score floor; the 2026-09-16 recheck found no score band that wins consistently — CHANGELOG v8.3)
+[2026-10-14 19:10:50] [[32MINFO[39M] No plans survived geometry/slots/RRR checks
+[2026-10-14 19:10:50] [[32MINFO[39M] 🧮 Funnel: 54 quoted → 39 moving + 5 discovered → 26 eligible [STALE_QUOTE 14, NOT_ON_ETORO 4] → 3 scored [below VWAP 20, ATR ceiling 2, weak RS 1] → 0 plans [waiting for dip 2, score floor 1] → AI 0/0 take → 0 opened
+[2026-10-14 19:15:00] [[32MINFO[39M] ⏳ Waiting to buy LLY: now $1214.29, buy at $1208.05, lowest so far $1210.76, 6 min left
+[2026-10-14 19:15:00] [[32MINFO[39M] ⏳ Waiting to buy SQQQ: now $35.83, buy at $35.44, lowest so far $35.42, 36 min left
+[2026-10-14 19:20:00] [[32MINFO[39M] ═══ Scan start (7:20:00 PM Bahrain) ═══
+[2026-10-14 19:20:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 19:20:00] [[32MINFO[39M] ⏳ Waiting to buy LLY: now $1214.74, buy at $1208.05, lowest so far $1210.76, 1 min left
+[2026-10-14 19:20:00] [[32MINFO[39M] ⏳ Waiting to buy SQQQ: now $35.75, buy at $35.44, lowest so far $35.42, 31 min left
+[2026-10-14 19:20:00] [[32MINFO[39M] VIX (FRED, 2026-10-13): 15.27
+[2026-10-14 19:20:01] [[32MINFO[39M] Market regime: TRENDING (SPY range 1.45% after 170 min → projected full-day 2.19% vs 0.50% threshold, VIX-tightened)
+[2026-10-14 19:20:01] [[32MINFO[39M] 📶 Quotes: 54/54 from eToro (1 batched rates call + cached closing-price)
+[2026-10-14 19:20:01] [[32MINFO[39M] [7:20:01 PM Bahrain] 📡 Pre-filter: 42 stocks moving enough to enrich
+[2026-10-14 19:20:01] [[32MINFO[39M] 🔄 Sector rotation: semi -3.85%, financials -1.01%, fintech -1.01%, healthcare +2.03%, industrials -1.48%, consumer -1.05%
+[2026-10-14 19:20:03] [[32MINFO[39M] 📈 FMP movers (stable gainers): 50 rows
+[2026-10-14 19:20:03] [[32MINFO[39M] 📈 FMP movers (stable actives): 50 rows
+[2026-10-14 19:20:03] [[32MINFO[39M] 🔭 Discovery running on FMP movers only this scan (Yahoo dark, 89 FMP rows)
+[2026-10-14 19:20:04] [[32MINFO[39M] 📰 PLRZ tagged NEWS_HIT: 12 Health Care Stocks Moving In Tuesday's Pre-Market Session
+[2026-10-14 19:20:04] [[32MINFO[39M] 🔭 Discovery: 4 new opportunity(ies) outside watchlist — GDXD +14.7%, ZSL +12.3%, PLRZ [NEWS_HIT] +12.3%, SQQQ +5.2%
+[2026-10-14 19:20:04] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 19:20:55] [[32MINFO[39M] 💰 Capital: effective $9228.38 (base $10000 $-771.62 realized, peak $10032.85) · risk ×1
+[2026-10-14 19:20:55] [[32MINFO[39M] 📋 Plan SQQQ [DAY/DISCOVERED/MOMENTUM_BREAKOUT] $735 | risk $23.1 (0.25%) | stop -3.14% | T1 $36.8644 T2 $37.9879 | RRR 2 | vol MEDIUM
+[2026-10-14 19:20:55] [[32MINFO[39M] LLY plan rejected: score 80.0 below the entry floor of 80 (desk-score floor; the 2026-09-16 recheck found no score band that wins consistently — CHANGELOG v8.3)
+[2026-10-14 19:20:55] [[32MINFO[39M] XOM plan rejected: score 52.1 below the entry floor of 80 (desk-score floor; the 2026-09-16 recheck found no score band that wins consistently — CHANGELOG v8.3)
+[2026-10-14 19:20:55] [[32MINFO[39M] No plans survived geometry/slots/RRR checks
+[2026-10-14 19:20:55] [[32MINFO[39M] 🧮 Funnel: 54 quoted → 42 moving + 4 discovered → 28 eligible [STALE_QUOTE 15, NOT_ON_ETORO 3] → 3 scored [below VWAP 22, ATR ceiling 2, weak RS 1] → 0 plans [score floor 2, waiting for dip 1] → AI 0/0 take → 0 opened
+[2026-10-14 19:21:00] [[32MINFO[39M] ⌛ LLY not bought — no dip to $1208.05 within 60 min (approved $1213.04, lowest $1210.76, now $1214.50 = +0.12% vs approval)
+[2026-10-14 19:21:32] [[32MINFO[39M] Price stream disconnected — reconnecting in 30s (1-min exit monitor unaffected)
+[2026-10-14 19:22:03] [[32MINFO[39M] 📶 Price stream connected — real-time exit watchdog live for 0 position(s)
+[2026-10-14 19:25:00] [[32MINFO[39M] ⏳ Waiting to buy SQQQ: now $35.89, buy at $35.44, lowest so far $35.42, 26 min left
+[2026-10-14 19:30:00] [[32MINFO[39M] ═══ Scan start (7:30:00 PM Bahrain) ═══
+[2026-10-14 19:30:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 19:30:00] [[32MINFO[39M] ⏳ Waiting to buy SQQQ: now $35.86, buy at $35.44, lowest so far $35.42, 21 min left
+[2026-10-14 19:30:01] [[32MINFO[39M] VIX (FRED, 2026-10-13): 15.27
+[2026-10-14 19:30:01] [[32MINFO[39M] Market regime: TRENDING (SPY range 1.46% after 180 min → projected full-day 2.15% vs 0.50% threshold, VIX-tightened)
+[2026-10-14 19:30:02] [[32MINFO[39M] 📶 Quotes: 54/54 from eToro (1 batched rates call + cached closing-price)
+[2026-10-14 19:30:02] [[32MINFO[39M] [7:30:02 PM Bahrain] 📡 Pre-filter: 42 stocks moving enough to enrich
+[2026-10-14 19:30:02] [[32MINFO[39M] 🔄 Sector rotation: semi -4.22%, financials -0.88%, fintech -0.88%, healthcare +2.08%, industrials -1.48%, consumer -1.13%
+[2026-10-14 19:30:03] [[32MINFO[39M] 🔭 Discovery running on FMP movers only this scan (Yahoo dark, 89 FMP rows)
+[2026-10-14 19:30:05] [[32MINFO[39M] 📰 PLRZ tagged NEWS_HIT: 12 Health Care Stocks Moving In Tuesday's Pre-Market Session
+[2026-10-14 19:30:06] [[32MINFO[39M] 🔭 Discovery: 4 new opportunity(ies) outside watchlist — GDXD +14.7%, ZSL +12.3%, PLRZ [NEWS_HIT] +12.3%, SQQQ +5.2%
+[2026-10-14 19:30:06] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 19:30:57] [[32MINFO[39M] 💰 Capital: effective $9228.38 (base $10000 $-771.62 realized, peak $10032.85) · risk ×1
+[2026-10-14 19:30:57] [[32MINFO[39M] 📋 Plan SQQQ [DAY/DISCOVERED/MOMENTUM_BREAKOUT] $735 | risk $23.1 (0.25%) | stop -3.14% | T1 $36.8644 T2 $37.9879 | RRR 2 | vol MEDIUM
+[2026-10-14 19:30:57] [[32MINFO[39M] XOM plan rejected: score 61.9 below the entry floor of 80 (desk-score floor; the 2026-09-16 recheck found no score band that wins consistently — CHANGELOG v8.3)
+[2026-10-14 19:30:57] [[32MINFO[39M] LLY plan rejected: score 61.6 below the entry floor of 80 (desk-score floor; the 2026-09-16 recheck found no score band that wins consistently — CHANGELOG v8.3)
+[2026-10-14 19:30:57] [[32MINFO[39M] No plans survived geometry/slots/RRR checks
+[2026-10-14 19:30:57] [[32MINFO[39M] 🧮 Funnel: 54 quoted → 42 moving + 4 discovered → 28 eligible [STALE_QUOTE 15, NOT_ON_ETORO 3] → 3 scored [below VWAP 22, ATR ceiling 2, weak RS 1] → 0 plans [score floor 2, waiting for dip 1] → AI 0/0 take → 0 opened
+[2026-10-14 19:35:00] [[32MINFO[39M] ⏳ Waiting to buy SQQQ: now $35.81, buy at $35.44, lowest so far $35.42, 16 min left
+[2026-10-14 19:40:00] [[32MINFO[39M] ═══ Scan start (7:40:00 PM Bahrain) ═══
+[2026-10-14 19:40:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 19:40:00] [[32MINFO[39M] ⏳ Waiting to buy SQQQ: now $35.74, buy at $35.44, lowest so far $35.42, 11 min left
+[2026-10-14 19:40:01] [[32MINFO[39M] VIX (FRED, 2026-10-13): 15.27
+[2026-10-14 19:40:01] [[32MINFO[39M] Market regime: TRENDING (SPY range 1.46% after 190 min → projected full-day 2.09% vs 0.50% threshold, VIX-tightened)
+[2026-10-14 19:40:02] [[32MINFO[39M] 📶 Quotes: 54/54 from eToro (1 batched rates call + cached closing-price)
+[2026-10-14 19:40:02] [[32MINFO[39M] [7:40:02 PM Bahrain] 📡 Pre-filter: 39 stocks moving enough to enrich
+[2026-10-14 19:40:02] [[32MINFO[39M] 🔄 Sector rotation: energy +0.57%, semi -3.82%, financials -0.85%, fintech -0.85%, healthcare +2.07%, industrials -1.36%, consumer -1.14%
+[2026-10-14 19:40:04] [[32MINFO[39M] 📈 FMP movers (stable gainers): 50 rows
+[2026-10-14 19:40:04] [[32MINFO[39M] 📈 FMP movers (stable actives): 50 rows
+[2026-10-14 19:40:04] [[32MINFO[39M] 🔭 Discovery running on FMP movers only this scan (Yahoo dark, 90 FMP rows)
+[2026-10-14 19:40:04] [[32MINFO[39M] 📰 PLRZ tagged NEWS_HIT: 12 Health Care Stocks Moving In Tuesday's Pre-Market Session
+[2026-10-14 19:40:05] [[32MINFO[39M] 📰 SCTX tagged NEWS_HIT: Bending Spoons, Liquidia, Verastem And Other Big Stocks Moving Higher On Wednesday
+[2026-10-14 19:40:06] [[32MINFO[39M] 🔭 Discovery: 6 new opportunity(ies) outside watchlist — PLRZ [NEWS_HIT] +14.9%, GDXD +14.9%, ZSL +12.2%, SCTX [NEWS_HIT] +11.7%, UCIB +11.0%, SQQQ +5.2%
+[2026-10-14 19:40:06] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 19:40:55] [[32MINFO[39M] 💰 Capital: effective $9228.38 (base $10000 $-771.62 realized, peak $10032.85) · risk ×1
+[2026-10-14 19:40:55] [[32MINFO[39M] 📋 Plan XOM [DAY/WATCHLIST/MOMENTUM_BREAKOUT] $1935 | risk $46.1 (0.5%) | stop -2.38% | T1 $181.4371 T2 $185.6592 | RRR 2 | vol LOW
+[2026-10-14 19:40:55] [[32MINFO[39M] LLY plan rejected: score 58.2 below the entry floor of 80 (desk-score floor; the 2026-09-16 recheck found no score band that wins consistently — CHANGELOG v8.3)
+[2026-10-14 19:40:55] [[32MINFO[39M] 🧭 Market brief: RISK_OFF tone
+[2026-10-14 19:40:58] [[32MINFO[39M] 🤖 AI screener: 0/1 plans approved
+[2026-10-14 19:40:58] [[32MINFO[39M] ═══ Scan done in 58.1s ═══
+[2026-10-14 19:40:58] [[32MINFO[39M] 🧮 Funnel: 54 quoted → 39 moving + 6 discovered → 27 eligible [STALE_QUOTE 14, NOT_ON_ETORO 4] → 2 scored [below VWAP 21, ATR ceiling 3, low volume 1] → 1 plans [score floor 1] → AI 0/1 take → 0 opened
+[2026-10-14 19:45:00] [[32MINFO[39M] ⏳ Waiting to buy SQQQ: now $35.67, buy at $35.44, lowest so far $35.42, 6 min left
+[2026-10-14 19:50:00] [[32MINFO[39M] ═══ Scan start (7:50:00 PM Bahrain) ═══
+[2026-10-14 19:50:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 19:50:00] [[32MINFO[39M] ⏳ Waiting to buy SQQQ: now $35.68, buy at $35.44, lowest so far $35.42, 1 min left
+[2026-10-14 19:50:01] [[32MINFO[39M] VIX (FRED, 2026-10-13): 15.27
+[2026-10-14 19:50:01] [[32MINFO[39M] Market regime: TRENDING (SPY range 1.46% after 200 min → projected full-day 2.04% vs 0.50% threshold, VIX-tightened)
+[2026-10-14 19:50:01] [[32MINFO[39M] 📶 Quotes: 54/54 from eToro (1 batched rates call + cached closing-price)
+[2026-10-14 19:50:01] [[32MINFO[39M] [7:50:01 PM Bahrain] 📡 Pre-filter: 41 stocks moving enough to enrich
+[2026-10-14 19:50:02] [[32MINFO[39M] 🔭 Discovery running on FMP movers only this scan (Yahoo dark, 90 FMP rows)
+[2026-10-14 19:50:02] [[32MINFO[39M] 📰 PLRZ tagged NEWS_HIT: 12 Health Care Stocks Moving In Tuesday's Pre-Market Session
+[2026-10-14 19:50:03] [[32MINFO[39M] 📰 SCTX tagged NEWS_HIT: Bending Spoons, Liquidia, Verastem And Other Big Stocks Moving Higher On Wednesday
+[2026-10-14 19:50:04] [[32MINFO[39M] 🔭 Discovery: 6 new opportunity(ies) outside watchlist — PLRZ [NEWS_HIT] +14.9%, GDXD +14.9%, ZSL +12.2%, SCTX [NEWS_HIT] +11.7%, UCIB +11.0%, SQQQ +5.2%
+[2026-10-14 19:50:04] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 19:50:55] [[32MINFO[39M] 💰 Capital: effective $9228.38 (base $10000 $-771.62 realized, peak $10032.85) · risk ×1
+[2026-10-14 19:50:55] [[32MINFO[39M] XOM plan rejected: score 61.6 below the entry floor of 80 (desk-score floor; the 2026-09-16 recheck found no score band that wins consistently — CHANGELOG v8.3)
+[2026-10-14 19:50:55] [[32MINFO[39M] LLY plan rejected: score 58.0 below the entry floor of 80 (desk-score floor; the 2026-09-16 recheck found no score band that wins consistently — CHANGELOG v8.3)
+[2026-10-14 19:50:55] [[32MINFO[39M] No plans survived geometry/slots/RRR checks
+[2026-10-14 19:50:55] [[32MINFO[39M] 🧮 Funnel: 54 quoted → 41 moving + 6 discovered → 28 eligible [STALE_QUOTE 15, NOT_ON_ETORO 4] → 2 scored [below VWAP 21, ATR ceiling 3, weak RS 1, low volume 1] → 0 plans [score floor 2] → AI 0/0 take → 0 opened
+[2026-10-14 19:51:00] [[32MINFO[39M] ⌛ SQQQ not bought — no dip to $35.44 within 60 min (approved $35.44, lowest $35.42, now $35.73 = +0.82% vs approval)
+[2026-10-14 20:00:00] [[32MINFO[39M] ═══ Scan start (8:00:00 PM Bahrain) ═══
+[2026-10-14 20:00:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 20:00:00] [[32MINFO[39M] VIX (FRED, 2026-10-13): 15.27
+[2026-10-14 20:00:00] [[32MINFO[39M] Market regime: TRENDING (SPY range 1.46% after 210 min → projected full-day 1.99% vs 0.50% threshold, VIX-tightened)
+[2026-10-14 20:00:01] [[32MINFO[39M] 📶 Quotes: 54/54 from eToro (1 batched rates call + cached closing-price)
+[2026-10-14 20:00:01] [[32MINFO[39M] [8:00:01 PM Bahrain] 📡 Pre-filter: 41 stocks moving enough to enrich
+[2026-10-14 20:00:01] [[32MINFO[39M] 🔄 Sector rotation: energy +0.60%, semi -3.50%, financials -1.01%, fintech -1.01%, healthcare +2.05%, industrials -1.13%, consumer -1.18%
+[2026-10-14 20:00:04] [[32MINFO[39M] 📈 FMP movers (stable gainers): 50 rows
+[2026-10-14 20:00:04] [[32MINFO[39M] 📈 FMP movers (stable actives): 50 rows
+[2026-10-14 20:00:04] [[32MINFO[39M] 🔭 Discovery running on FMP movers only this scan (Yahoo dark, 91 FMP rows)
+[2026-10-14 20:00:06] [[32MINFO[39M] 📰 PLRZ tagged NEWS_HIT: 12 Health Care Stocks Moving In Tuesday's Pre-Market Session
+[2026-10-14 20:00:07] [[32MINFO[39M] 📰 SCTX tagged NEWS_HIT: Bending Spoons, Liquidia, Verastem And Other Big Stocks Moving Higher On Wednesday
+[2026-10-14 20:00:09] [[32MINFO[39M] 🔭 Discovery: 6 new opportunity(ies) outside watchlist — PLRZ [NEWS_HIT] +17.1%, GDXD +13.8%, SCTX [NEWS_HIT] +12.7%, ZSL +12.3%, UCIB +11.0%, SQQQ +4.8%
+[2026-10-14 20:00:09] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 20:01:04] [[32MINFO[39M] 💰 Capital: effective $9228.38 (base $10000 $-771.62 realized, peak $10032.85) · risk ×1
+[2026-10-14 20:01:04] [[32MINFO[39M] XOM plan rejected: score 61.3 below the entry floor of 80 (desk-score floor; the 2026-09-16 recheck found no score band that wins consistently — CHANGELOG v8.3)
+[2026-10-14 20:01:04] [[32MINFO[39M] COP plan rejected: score 45.6 below the entry floor of 80 (desk-score floor; the 2026-09-16 recheck found no score band that wins consistently — CHANGELOG v8.3)
+[2026-10-14 20:01:04] [[32MINFO[39M] No plans survived geometry/slots/RRR checks
+[2026-10-14 20:01:04] [[32MINFO[39M] 🧮 Funnel: 54 quoted → 41 moving + 6 discovered → 28 eligible [STALE_QUOTE 15, NOT_ON_ETORO 4] → 2 scored [below VWAP 19, ATR ceiling 3, weak RS 2, no setup 1, low volume 1] → 0 plans [score floor 2] → AI 0/0 take → 0 opened
+[2026-10-14 20:10:00] [[32MINFO[39M] ═══ Scan start (8:10:00 PM Bahrain) ═══
+[2026-10-14 20:10:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 20:10:00] [[32MINFO[39M] VIX (FRED, 2026-10-13): 15.27
+[2026-10-14 20:10:00] [[32MINFO[39M] Market regime: TRENDING (SPY range 1.46% after 220 min → projected full-day 1.95% vs 0.50% threshold, VIX-tightened)
+[2026-10-14 20:10:00] [[32MINFO[39M] SPY weak (-1.13%) — no longs
+[2026-10-14 20:10:00] [[32MINFO[39M] 🧮 Funnel: 0 quoted → 0 moving → 0 eligible → 0 scored → 0 plans → AI 0/0 take → 0 opened · stopped at gate SPY_DIRECTION
+[2026-10-14 20:20:00] [[32MINFO[39M] ═══ Scan start (8:20:00 PM Bahrain) ═══
+[2026-10-14 20:20:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 20:20:00] [[32MINFO[39M] VIX (FRED, 2026-10-13): 15.27
+[2026-10-14 20:20:00] [[32MINFO[39M] Market regime: TRENDING (SPY range 1.46% after 230 min → projected full-day 1.90% vs 0.50% threshold, VIX-tightened)
+[2026-10-14 20:20:00] [[32MINFO[39M] SPY weak (-1.12%) — no longs
+[2026-10-14 20:20:00] [[32MINFO[39M] 🧮 Funnel: 0 quoted → 0 moving → 0 eligible → 0 scored → 0 plans → AI 0/0 take → 0 opened · stopped at gate SPY_DIRECTION
+[2026-10-14 20:30:00] [[32MINFO[39M] ═══ Scan start (8:30:00 PM Bahrain) ═══
+[2026-10-14 20:30:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 20:30:00] [[32MINFO[39M] VIX (FRED, 2026-10-13): 15.27
+[2026-10-14 20:30:00] [[32MINFO[39M] Market regime: TRENDING (SPY range 1.59% after 240 min → projected full-day 2.03% vs 0.50% threshold, VIX-tightened)
+[2026-10-14 20:30:00] [[32MINFO[39M] SPY weak (-1.10%) — no longs
+[2026-10-14 20:30:00] [[32MINFO[39M] 🧮 Funnel: 0 quoted → 0 moving → 0 eligible → 0 scored → 0 plans → AI 0/0 take → 0 opened · stopped at gate SPY_DIRECTION
+[2026-10-14 20:40:00] [[32MINFO[39M] ═══ Scan start (8:40:00 PM Bahrain) ═══
+[2026-10-14 20:40:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 20:40:00] [[32MINFO[39M] VIX (FRED, 2026-10-13): 15.27
+[2026-10-14 20:40:00] [[32MINFO[39M] Market regime: TRENDING (SPY range 1.59% after 250 min → projected full-day 1.98% vs 0.50% threshold, VIX-tightened)
+[2026-10-14 20:40:00] [[32MINFO[39M] SPY weak (-1.02%) — no longs
+[2026-10-14 20:40:00] [[32MINFO[39M] 🧮 Funnel: 0 quoted → 0 moving → 0 eligible → 0 scored → 0 plans → AI 0/0 take → 0 opened · stopped at gate SPY_DIRECTION
+[2026-10-14 20:50:00] [[32MINFO[39M] ═══ Scan start (8:50:00 PM Bahrain) ═══
+[2026-10-14 20:50:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 20:50:00] [[32MINFO[39M] VIX (FRED, 2026-10-13): 15.27
+[2026-10-14 20:50:00] [[32MINFO[39M] Market regime: TRENDING (SPY range 1.61% after 260 min → projected full-day 1.97% vs 0.50% threshold, VIX-tightened)
+[2026-10-14 20:50:01] [[32MINFO[39M] 📶 Quotes: 54/54 from eToro (1 batched rates call + cached closing-price)
+[2026-10-14 20:50:01] [[32MINFO[39M] [8:50:01 PM Bahrain] 📡 Pre-filter: 41 stocks moving enough to enrich
+[2026-10-14 20:50:01] [[32MINFO[39M] 🔄 Sector rotation: semi -4.19%, financials -1.05%, fintech -1.05%, healthcare +2.14%, industrials -1.44%, consumer -1.18%
+[2026-10-14 20:50:03] [[32MINFO[39M] 📈 FMP movers (stable actives): 50 rows
+[2026-10-14 20:50:03] [[32MINFO[39M] 📈 FMP movers (stable gainers): 50 rows
+[2026-10-14 20:50:03] [[32MINFO[39M] 🔭 Discovery running on FMP movers only this scan (Yahoo dark, 90 FMP rows)
+[2026-10-14 20:50:04] [[32MINFO[39M] 📰 PLRZ tagged NEWS_HIT: 12 Health Care Stocks Moving In Tuesday's Pre-Market Session
+[2026-10-14 20:50:04] [[32MINFO[39M] 📰 SCTX tagged NEWS_HIT: Bending Spoons, Liquidia, Verastem And Other Big Stocks Moving Higher On Wednesday
+[2026-10-14 20:50:05] [[32MINFO[39M] 🔭 Discovery: 6 new opportunity(ies) outside watchlist — PLRZ [NEWS_HIT] +18.8%, GDXD +15.2%, SCTX [NEWS_HIT] +13.4%, ZSL +12.5%, SQQQ +6.0%, QID +4.1%
+[2026-10-14 20:50:05] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 20:50:05] [[32MINFO[39M] Resolving eToro instrument ID for QID...
+[2026-10-14 20:50:05] [[33MWARN[39M] QID not found on eToro instrument search — suppressing re-lookups for 6h
+[2026-10-14 20:50:59] [[32MINFO[39M] 💰 Capital: effective $9228.38 (base $10000 $-771.62 realized, peak $10032.85) · risk ×1
+[2026-10-14 20:50:59] [[32MINFO[39M] XOM plan rejected: score 34.4 below the entry floor of 80 (desk-score floor; the 2026-09-16 recheck found no score band that wins consistently — CHANGELOG v8.3)
+[2026-10-14 20:50:59] [[32MINFO[39M] COP plan rejected: score 22.0 below the entry floor of 80 (desk-score floor; the 2026-09-16 recheck found no score band that wins consistently — CHANGELOG v8.3)
+[2026-10-14 20:50:59] [[32MINFO[39M] No plans survived geometry/slots/RRR checks
+[2026-10-14 20:50:59] [[32MINFO[39M] 🧮 Funnel: 54 quoted → 41 moving + 6 discovered → 29 eligible [STALE_QUOTE 14, NOT_ON_ETORO 4] → 2 scored [below VWAP 22, ATR ceiling 3, no setup 1, low volume 1] → 0 plans [score floor 2] → AI 0/0 take → 0 opened
+[2026-10-14 21:00:00] [[32MINFO[39M] ═══ Scan start (9:00:00 PM Bahrain) ═══
+[2026-10-14 21:00:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 21:00:01] [[32MINFO[39M] VIX (FRED, 2026-10-13): 15.27
+[2026-10-14 21:00:01] [[32MINFO[39M] Market regime: TRENDING (SPY range 1.69% after 270 min → projected full-day 2.04% vs 0.50% threshold, VIX-tightened)
+[2026-10-14 21:00:01] [[32MINFO[39M] SPY weak (-1.08%) — no longs
+[2026-10-14 21:00:01] [[32MINFO[39M] 🧮 Funnel: 0 quoted → 0 moving → 0 eligible → 0 scored → 0 plans → AI 0/0 take → 0 opened · stopped at gate SPY_DIRECTION
+[2026-10-14 21:10:00] [[32MINFO[39M] ═══ Scan start (9:10:00 PM Bahrain) ═══
+[2026-10-14 21:10:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 21:10:01] [[32MINFO[39M] VIX (FRED, 2026-10-13): 15.27
+[2026-10-14 21:10:01] [[32MINFO[39M] Market regime: TRENDING (SPY range 1.77% after 280 min → projected full-day 2.09% vs 0.50% threshold, VIX-tightened)
+[2026-10-14 21:10:01] [[32MINFO[39M] SPY weak (-1.01%) — no longs
+[2026-10-14 21:10:01] [[32MINFO[39M] 🧮 Funnel: 0 quoted → 0 moving → 0 eligible → 0 scored → 0 plans → AI 0/0 take → 0 opened · stopped at gate SPY_DIRECTION
+[2026-10-14 21:20:00] [[32MINFO[39M] ═══ Scan start (9:20:00 PM Bahrain) ═══
+[2026-10-14 21:20:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 21:20:01] [[32MINFO[39M] VIX (FRED, 2026-10-13): 15.27
+[2026-10-14 21:20:01] [[32MINFO[39M] Market regime: TRENDING (SPY range 1.77% after 290 min → projected full-day 2.05% vs 0.50% threshold, VIX-tightened)
+[2026-10-14 21:20:01] [[32MINFO[39M] SPY weak (-1.07%) — no longs
+[2026-10-14 21:20:01] [[32MINFO[39M] 🧮 Funnel: 0 quoted → 0 moving → 0 eligible → 0 scored → 0 plans → AI 0/0 take → 0 opened · stopped at gate SPY_DIRECTION
+[2026-10-14 21:26:12] [[33MWARN[39M] Paper book marking failed: timeout of 12000ms exceeded
+[2026-10-14 21:30:00] [[32MINFO[39M] ═══ Scan start (9:30:00 PM Bahrain) ═══
+[2026-10-14 21:30:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 21:30:01] [[32MINFO[39M] VIX (FRED, 2026-10-13): 15.27
+[2026-10-14 21:30:01] [[32MINFO[39M] Market regime: TRENDING (SPY range 1.77% after 300 min → projected full-day 2.02% vs 0.50% threshold, VIX-tightened)
+[2026-10-14 21:30:01] [[32MINFO[39M] SPY weak (-1.10%) — no longs
+[2026-10-14 21:30:01] [[32MINFO[39M] 🧮 Funnel: 0 quoted → 0 moving → 0 eligible → 0 scored → 0 plans → AI 0/0 take → 0 opened · stopped at gate SPY_DIRECTION
+[2026-10-14 21:40:00] [[32MINFO[39M] ═══ Scan start (9:40:00 PM Bahrain) ═══
+[2026-10-14 21:40:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 21:40:00] [[32MINFO[39M] VIX (FRED, 2026-10-13): 15.27
+[2026-10-14 21:40:00] [[32MINFO[39M] Market regime: TRENDING (SPY range 1.77% after 310 min → projected full-day 1.99% vs 0.50% threshold, VIX-tightened)
+[2026-10-14 21:40:00] [[32MINFO[39M] SPY weak (-1.20%) — no longs
+[2026-10-14 21:40:00] [[32MINFO[39M] 🧮 Funnel: 0 quoted → 0 moving → 0 eligible → 0 scored → 0 plans → AI 0/0 take → 0 opened · stopped at gate SPY_DIRECTION
+[2026-10-14 21:50:00] [[32MINFO[39M] ═══ Scan start (9:50:00 PM Bahrain) ═══
+[2026-10-14 21:50:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 21:50:01] [[32MINFO[39M] VIX (FRED, 2026-10-13): 15.27
+[2026-10-14 21:50:01] [[32MINFO[39M] Market regime: TRENDING (SPY range 1.77% after 320 min → projected full-day 1.95% vs 0.50% threshold, VIX-tightened)
+[2026-10-14 21:50:01] [[32MINFO[39M] SPY weak (-1.19%) — no longs
+[2026-10-14 21:50:01] [[32MINFO[39M] 🧮 Funnel: 0 quoted → 0 moving → 0 eligible → 0 scored → 0 plans → AI 0/0 take → 0 opened · stopped at gate SPY_DIRECTION
+[2026-10-14 21:53:23] [[32MINFO[39M] Price stream disconnected — reconnecting in 30s (1-min exit monitor unaffected)
+[2026-10-14 21:53:54] [[32MINFO[39M] 📶 Price stream connected — real-time exit watchdog live for 0 position(s)
+[2026-10-14 22:00:00] [[32MINFO[39M] ═══ Scan start (10:00:00 PM Bahrain) ═══
+[2026-10-14 22:00:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 22:00:00] [[32MINFO[39M] 🔎 Daily review: no open positions — nothing to review
+[2026-10-14 22:00:01] [[32MINFO[39M] VIX (FRED, 2026-10-13): 15.27
+[2026-10-14 22:00:01] [[32MINFO[39M] Market regime: TRENDING (SPY range 1.77% after 330 min → projected full-day 1.93% vs 0.50% threshold, VIX-tightened)
+[2026-10-14 22:00:01] [[32MINFO[39M] SPY weak (-1.21%) — no longs
+[2026-10-14 22:00:01] [[32MINFO[39M] 🧮 Funnel: 0 quoted → 0 moving → 0 eligible → 0 scored → 0 plans → AI 0/0 take → 0 opened · stopped at gate SPY_DIRECTION
+[2026-10-14 22:10:00] [[32MINFO[39M] ═══ Scan start (10:10:00 PM Bahrain) ═══
+[2026-10-14 22:10:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 22:10:00] [[32MINFO[39M] VIX (FRED, 2026-10-13): 15.27
+[2026-10-14 22:10:00] [[32MINFO[39M] Market regime: TRENDING (SPY range 1.77% after 340 min → projected full-day 1.90% vs 0.50% threshold, VIX-tightened)
+[2026-10-14 22:10:00] [[32MINFO[39M] SPY weak (-1.24%) — no longs
+[2026-10-14 22:10:00] [[32MINFO[39M] 🧮 Funnel: 0 quoted → 0 moving → 0 eligible → 0 scored → 0 plans → AI 0/0 take → 0 opened · stopped at gate SPY_DIRECTION
+[2026-10-14 22:20:00] [[32MINFO[39M] ═══ Scan start (10:20:00 PM Bahrain) ═══
+[2026-10-14 22:20:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 22:20:00] [[32MINFO[39M] Entry blocked: within 30 min of the 3:45 PM ET force-close — a new DAY trade would be closed before its time budget
+[2026-10-14 22:20:00] [[32MINFO[39M] 🧮 Funnel: 0 quoted → 0 moving → 0 eligible → 0 scored → 0 plans → AI 0/0 take → 0 opened · stopped at gate PRE_EOD_CLOSE
+[2026-10-14 22:30:00] [[32MINFO[39M] ═══ Scan start (10:30:00 PM Bahrain) ═══
+[2026-10-14 22:30:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 22:30:00] [[32MINFO[39M] Entry blocked: within 30 min of the 3:45 PM ET force-close — a new DAY trade would be closed before its time budget
+[2026-10-14 22:30:00] [[32MINFO[39M] 🧮 Funnel: 0 quoted → 0 moving → 0 eligible → 0 scored → 0 plans → AI 0/0 take → 0 opened · stopped at gate PRE_EOD_CLOSE
+[2026-10-14 22:40:00] [[32MINFO[39M] ═══ Scan start (10:40:00 PM Bahrain) ═══
+[2026-10-14 22:40:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 22:40:00] [[32MINFO[39M] Entry blocked: within 30 min of the 3:45 PM ET force-close — a new DAY trade would be closed before its time budget
+[2026-10-14 22:40:00] [[32MINFO[39M] 🧮 Funnel: 0 quoted → 0 moving → 0 eligible → 0 scored → 0 plans → AI 0/0 take → 0 opened · stopped at gate PRE_EOD_CLOSE
+[2026-10-14 22:45:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 22:45:00] [[32MINFO[39M] EOD closer (DAY_KEEP_WINNERS): nothing to close
+[2026-10-14 22:50:00] [[32MINFO[39M] ═══ Scan start (10:50:00 PM Bahrain) ═══
+[2026-10-14 22:50:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 22:50:00] [[32MINFO[39M] VIX (FRED, 2026-10-13): 15.27
+[2026-10-14 22:50:00] [[32MINFO[39M] Market regime: TRENDING (SPY range 1.77% after 380 min → projected full-day 1.79% vs 0.50% threshold, VIX-tightened)
+[2026-10-14 22:50:00] [[32MINFO[39M] SPY weak (-1.25%) — no longs
+[2026-10-14 22:50:00] [[32MINFO[39M] 🧮 Funnel: 0 quoted → 0 moving → 0 eligible → 0 scored → 0 plans → AI 0/0 take → 0 opened · stopped at gate SPY_DIRECTION
+[2026-10-14 23:00:00] [[32MINFO[39M] ═══ Scan start (11:00:00 PM Bahrain) ═══
+[2026-10-14 23:00:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 23:00:01] [[32MINFO[39M] VIX (FRED, 2026-10-13): 15.27
+[2026-10-14 23:00:01] [[32MINFO[39M] Market regime: TRENDING (SPY range 1.77% after 390 min → projected full-day 1.77% vs 0.50% threshold, VIX-tightened)
+[2026-10-14 23:00:01] [[32MINFO[39M] SPY weak (-1.25%) — no longs
+[2026-10-14 23:00:01] [[32MINFO[39M] 🧮 Funnel: 0 quoted → 0 moving → 0 eligible → 0 scored → 0 plans → AI 0/0 take → 0 opened · stopped at gate SPY_DIRECTION
+[2026-10-14 23:10:00] [[32MINFO[39M] ═══ Scan start (11:10:00 PM Bahrain) ═══
+[2026-10-14 23:10:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 23:10:01] [[32MINFO[39M] VIX (FRED, 2026-10-13): 15.27
+[2026-10-14 23:10:01] [[32MINFO[39M] Market regime: TRENDING (SPY range 1.77% after 390 min → projected full-day 1.77% vs 0.50% threshold, VIX-tightened)
+[2026-10-14 23:10:01] [[32MINFO[39M] SPY weak (-1.34%) — no longs
+[2026-10-14 23:10:01] [[32MINFO[39M] 🧮 Funnel: 0 quoted → 0 moving → 0 eligible → 0 scored → 0 plans → AI 0/0 take → 0 opened · stopped at gate SPY_DIRECTION
+[2026-10-14 23:20:00] [[32MINFO[39M] ═══ Scan start (11:20:00 PM Bahrain) ═══
+[2026-10-14 23:20:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 23:20:02] [[32MINFO[39M] eToro closing-price cache refreshed: 16681 instruments (next refresh in 6h)
+[2026-10-14 23:20:02] [[32MINFO[39M] VIX (FRED, 2026-10-13): 15.27
+[2026-10-14 23:20:02] [[32MINFO[39M] Market regime: TRENDING (SPY range 1.77% after 390 min → projected full-day 1.77% vs 0.50% threshold, VIX-tightened)
+[2026-10-14 23:20:02] [[32MINFO[39M] SPY weak (-1.35%) — no longs
+[2026-10-14 23:20:02] [[32MINFO[39M] 🧮 Funnel: 0 quoted → 0 moving → 0 eligible → 0 scored → 0 plans → AI 0/0 take → 0 opened · stopped at gate SPY_DIRECTION
+[2026-10-14 23:30:00] [[32MINFO[39M] ═══ Scan start (11:30:00 PM Bahrain) ═══
+[2026-10-14 23:30:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 23:30:01] [[32MINFO[39M] VIX (FRED, 2026-10-13): 15.27
+[2026-10-14 23:30:01] [[32MINFO[39M] Market regime: TRENDING (SPY range 1.77% after 390 min → projected full-day 1.77% vs 0.50% threshold, VIX-tightened)
+[2026-10-14 23:30:01] [[32MINFO[39M] SPY weak (-1.35%) — no longs
+[2026-10-14 23:30:01] [[32MINFO[39M] 🧮 Funnel: 0 quoted → 0 moving → 0 eligible → 0 scored → 0 plans → AI 0/0 take → 0 opened · stopped at gate SPY_DIRECTION
+[2026-10-14 23:40:00] [[32MINFO[39M] ═══ Scan start (11:40:00 PM Bahrain) ═══
+[2026-10-14 23:40:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 23:40:01] [[32MINFO[39M] VIX (FRED, 2026-10-13): 15.27
+[2026-10-14 23:40:01] [[32MINFO[39M] Market regime: TRENDING (SPY range 1.77% after 390 min → projected full-day 1.77% vs 0.50% threshold, VIX-tightened)
+[2026-10-14 23:40:01] [[32MINFO[39M] SPY weak (-1.26%) — no longs
+[2026-10-14 23:40:01] [[32MINFO[39M] 🧮 Funnel: 0 quoted → 0 moving → 0 eligible → 0 scored → 0 plans → AI 0/0 take → 0 opened · stopped at gate SPY_DIRECTION
+[2026-10-14 23:50:00] [[32MINFO[39M] ═══ Scan start (11:50:00 PM Bahrain) ═══
+[2026-10-14 23:50:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-14 23:50:01] [[32MINFO[39M] VIX (FRED, 2026-10-13): 15.27
+[2026-10-14 23:50:01] [[32MINFO[39M] Market regime: TRENDING (SPY range 1.77% after 390 min → projected full-day 1.77% vs 0.50% threshold, VIX-tightened)
+[2026-10-14 23:50:01] [[32MINFO[39M] SPY weak (-1.31%) — no longs
+[2026-10-14 23:50:01] [[32MINFO[39M] 🧮 Funnel: 0 quoted → 0 moving → 0 eligible → 0 scored → 0 plans → AI 0/0 take → 0 opened · stopped at gate SPY_DIRECTION
+[2026-10-15 00:00:00] [[32MINFO[39M] ═══ Scan start (12:00:00 AM Bahrain) ═══
+[2026-10-15 00:00:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-15 00:00:01] [[32MINFO[39M] VIX (FRED, 2026-10-13): 15.27
+[2026-10-15 00:00:01] [[32MINFO[39M] Market regime: CHOP (SPY range 0.00% after 390 min → projected full-day 0.00% vs 0.50% threshold, VIX-tightened)
+[2026-10-15 00:00:01] [[32MINFO[39M] SPY weak (-1.32%) — no longs
+[2026-10-15 00:00:01] [[32MINFO[39M] 🧮 Funnel: 0 quoted → 0 moving → 0 eligible → 0 scored → 0 plans → AI 0/0 take → 0 opened · stopped at gate SPY_DIRECTION
+[2026-10-15 00:10:00] [[32MINFO[39M] ═══ Scan start (12:10:00 AM Bahrain) ═══
+[2026-10-15 00:10:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-15 00:10:01] [[32MINFO[39M] VIX (FRED, 2026-10-13): 15.27
+[2026-10-15 00:10:01] [[32MINFO[39M] Market regime: CHOP (SPY range 0.08% after 390 min → projected full-day 0.08% vs 0.50% threshold, VIX-tightened)
+[2026-10-15 00:10:01] [[32MINFO[39M] SPY weak (-1.33%) — no longs
+[2026-10-15 00:10:01] [[32MINFO[39M] 🧮 Funnel: 0 quoted → 0 moving → 0 eligible → 0 scored → 0 plans → AI 0/0 take → 0 opened · stopped at gate SPY_DIRECTION
+[2026-10-15 00:11:58] [[33MWARN[39M] Telegram polling: EFATAL
+[2026-10-15 00:11:58] [[33MWARN[39M] Telegram polling: EFATAL
+[2026-10-15 00:18:24] [[32MINFO[39M] Price stream disconnected — reconnecting in 30s (1-min exit monitor unaffected)
+[2026-10-15 00:18:54] [[32MINFO[39M] 📶 Price stream connected — real-time exit watchdog live for 0 position(s)
+[2026-10-15 00:20:00] [[32MINFO[39M] ═══ Scan start (12:20:00 AM Bahrain) ═══
+[2026-10-15 00:20:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-15 00:20:01] [[32MINFO[39M] VIX (FRED, 2026-10-13): 15.27
+[2026-10-15 00:20:01] [[32MINFO[39M] Market regime: CHOP (SPY range 0.08% after 390 min → projected full-day 0.08% vs 0.50% threshold, VIX-tightened)
+[2026-10-15 00:20:01] [[32MINFO[39M] SPY weak (-1.31%) — no longs
+[2026-10-15 00:20:01] [[32MINFO[39M] 🧮 Funnel: 0 quoted → 0 moving → 0 eligible → 0 scored → 0 plans → AI 0/0 take → 0 opened · stopped at gate SPY_DIRECTION
+[2026-10-15 00:30:00] [[32MINFO[39M] ═══ Scan start (12:30:00 AM Bahrain) ═══
+[2026-10-15 00:30:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-15 00:30:01] [[32MINFO[39M] VIX (FRED, 2026-10-13): 15.27
+[2026-10-15 00:30:01] [[32MINFO[39M] Market regime: CHOP (SPY range 0.08% after 390 min → projected full-day 0.08% vs 0.50% threshold, VIX-tightened)
+[2026-10-15 00:30:01] [[32MINFO[39M] SPY weak (-1.30%) — no longs
+[2026-10-15 00:30:01] [[32MINFO[39M] 🧮 Funnel: 0 quoted → 0 moving → 0 eligible → 0 scored → 0 plans → AI 0/0 take → 0 opened · stopped at gate SPY_DIRECTION
+[2026-10-15 00:40:00] [[32MINFO[39M] ═══ Scan start (12:40:00 AM Bahrain) ═══
+[2026-10-15 00:40:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-15 00:40:00] [[32MINFO[39M] VIX (FRED, 2026-10-13): 15.27
+[2026-10-15 00:40:00] [[32MINFO[39M] Market regime: CHOP (SPY range 0.08% after 390 min → projected full-day 0.08% vs 0.50% threshold, VIX-tightened)
+[2026-10-15 00:40:00] [[32MINFO[39M] SPY weak (-1.39%) — no longs
+[2026-10-15 00:40:00] [[32MINFO[39M] 🧮 Funnel: 0 quoted → 0 moving → 0 eligible → 0 scored → 0 plans → AI 0/0 take → 0 opened · stopped at gate SPY_DIRECTION
+[2026-10-15 00:50:00] [[32MINFO[39M] ═══ Scan start (12:50:00 AM Bahrain) ═══
+[2026-10-15 00:50:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-15 00:50:00] [[32MINFO[39M] VIX (FRED, 2026-10-13): 15.27
+[2026-10-15 00:50:00] [[32MINFO[39M] Market regime: CHOP (SPY range 0.08% after 390 min → projected full-day 0.08% vs 0.50% threshold, VIX-tightened)
+[2026-10-15 00:50:00] [[32MINFO[39M] SPY weak (-1.30%) — no longs
+[2026-10-15 00:50:00] [[32MINFO[39M] 🧮 Funnel: 0 quoted → 0 moving → 0 eligible → 0 scored → 0 plans → AI 0/0 take → 0 opened · stopped at gate SPY_DIRECTION
+[2026-10-15 00:55:29] [[32MINFO[39M] Price stream disconnected — reconnecting in 30s (1-min exit monitor unaffected)
+[2026-10-15 00:56:00] [[32MINFO[39M] 📶 Price stream connected — real-time exit watchdog live for 0 position(s)
+[2026-10-15 01:00:00] [[32MINFO[39M] ═══ Scan start (1:00:00 AM Bahrain) ═══
+[2026-10-15 01:00:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-15 01:00:01] [[32MINFO[39M] VIX (FRED, 2026-10-13): 15.27
+[2026-10-15 01:00:01] [[32MINFO[39M] Market regime: CHOP (SPY range 0.08% after 390 min → projected full-day 0.08% vs 0.50% threshold, VIX-tightened)
+[2026-10-15 01:00:01] [[32MINFO[39M] SPY weak (-1.22%) — no longs
+[2026-10-15 01:00:01] [[32MINFO[39M] 🧮 Funnel: 0 quoted → 0 moving → 0 eligible → 0 scored → 0 plans → AI 0/0 take → 0 opened · stopped at gate SPY_DIRECTION
+[2026-10-15 01:10:00] [[32MINFO[39M] ═══ Scan start (1:10:00 AM Bahrain) ═══
+[2026-10-15 01:10:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-15 01:10:02] [[32MINFO[39M] VIX (FRED, 2026-10-13): 15.27
+[2026-10-15 01:10:02] [[32MINFO[39M] Market regime: CHOP (SPY range 0.11% after 390 min → projected full-day 0.11% vs 0.50% threshold, VIX-tightened)
+[2026-10-15 01:10:02] [[32MINFO[39M] SPY weak (-1.19%) — no longs
+[2026-10-15 01:10:02] [[32MINFO[39M] 🧮 Funnel: 0 quoted → 0 moving → 0 eligible → 0 scored → 0 plans → AI 0/0 take → 0 opened · stopped at gate SPY_DIRECTION
+[2026-10-15 01:20:00] [[32MINFO[39M] ═══ Scan start (1:20:00 AM Bahrain) ═══
+[2026-10-15 01:20:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-15 01:20:00] [[32MINFO[39M] VIX (FRED, 2026-10-13): 15.27
+[2026-10-15 01:20:00] [[32MINFO[39M] Market regime: CHOP (SPY range 0.16% after 390 min → projected full-day 0.16% vs 0.50% threshold, VIX-tightened)
+[2026-10-15 01:20:00] [[32MINFO[39M] SPY weak (-1.10%) — no longs
+[2026-10-15 01:20:00] [[32MINFO[39M] 🧮 Funnel: 0 quoted → 0 moving → 0 eligible → 0 scored → 0 plans → AI 0/0 take → 0 opened · stopped at gate SPY_DIRECTION
+[2026-10-15 01:30:00] [[32MINFO[39M] ═══ Scan start (1:30:00 AM Bahrain) ═══
+[2026-10-15 01:30:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-15 01:30:01] [[32MINFO[39M] VIX (FRED, 2026-10-13): 15.27
+[2026-10-15 01:30:01] [[32MINFO[39M] Market regime: CHOP (SPY range 0.23% after 390 min → projected full-day 0.23% vs 0.50% threshold, VIX-tightened)
+[2026-10-15 01:30:01] [[32MINFO[39M] SPY weak (-1.20%) — no longs
+[2026-10-15 01:30:01] [[32MINFO[39M] 🧮 Funnel: 0 quoted → 0 moving → 0 eligible → 0 scored → 0 plans → AI 0/0 take → 0 opened · stopped at gate SPY_DIRECTION
+[2026-10-15 01:40:00] [[32MINFO[39M] ═══ Scan start (1:40:00 AM Bahrain) ═══
+[2026-10-15 01:40:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-15 01:40:01] [[32MINFO[39M] VIX (FRED, 2026-10-13): 15.27
+[2026-10-15 01:40:01] [[32MINFO[39M] Market regime: CHOP (SPY range 0.26% after 390 min → projected full-day 0.26% vs 0.50% threshold, VIX-tightened)
+[2026-10-15 01:40:01] [[32MINFO[39M] SPY weak (-1.21%) — no longs
+[2026-10-15 01:40:01] [[32MINFO[39M] 🧮 Funnel: 0 quoted → 0 moving → 0 eligible → 0 scored → 0 plans → AI 0/0 take → 0 opened · stopped at gate SPY_DIRECTION
+[2026-10-15 01:50:00] [[32MINFO[39M] ═══ Scan start (1:50:00 AM Bahrain) ═══
+[2026-10-15 01:50:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-15 01:50:01] [[32MINFO[39M] VIX (FRED, 2026-10-13): 15.27
+[2026-10-15 01:50:01] [[32MINFO[39M] Market regime: CHOP (SPY range 0.30% after 390 min → projected full-day 0.30% vs 0.50% threshold, VIX-tightened)
+[2026-10-15 01:50:01] [[32MINFO[39M] SPY weak (-1.10%) — no longs
+[2026-10-15 01:50:01] [[32MINFO[39M] 🧮 Funnel: 0 quoted → 0 moving → 0 eligible → 0 scored → 0 plans → AI 0/0 take → 0 opened · stopped at gate SPY_DIRECTION
+[2026-10-15 02:00:00] [[32MINFO[39M] ═══ Scan start (2:00:00 AM Bahrain) ═══
+[2026-10-15 02:00:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-15 02:00:01] [[32MINFO[39M] VIX (FRED, 2026-10-13): 15.27
+[2026-10-15 02:00:01] [[32MINFO[39M] Market regime: CHOP (SPY range 0.30% after 390 min → projected full-day 0.30% vs 0.50% threshold, VIX-tightened)
+[2026-10-15 02:00:01] [[32MINFO[39M] SPY weak (-1.14%) — no longs
+[2026-10-15 02:00:01] [[32MINFO[39M] 🧮 Funnel: 0 quoted → 0 moving → 0 eligible → 0 scored → 0 plans → AI 0/0 take → 0 opened · stopped at gate SPY_DIRECTION
+[2026-10-15 02:10:00] [[32MINFO[39M] ═══ Scan start (2:10:00 AM Bahrain) ═══
+[2026-10-15 02:10:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-15 02:10:00] [[32MINFO[39M] VIX (FRED, 2026-10-13): 15.27
+[2026-10-15 02:10:00] [[32MINFO[39M] Market regime: CHOP (SPY range 0.30% after 390 min → projected full-day 0.30% vs 0.50% threshold, VIX-tightened)
+[2026-10-15 02:10:00] [[32MINFO[39M] SPY weak (-1.15%) — no longs
+[2026-10-15 02:10:00] [[32MINFO[39M] 🧮 Funnel: 0 quoted → 0 moving → 0 eligible → 0 scored → 0 plans → AI 0/0 take → 0 opened · stopped at gate SPY_DIRECTION
+[2026-10-15 02:20:00] [[32MINFO[39M] ═══ Scan start (2:20:00 AM Bahrain) ═══
+[2026-10-15 02:20:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-15 02:20:00] [[32MINFO[39M] VIX (FRED, 2026-10-13): 15.27
+[2026-10-15 02:20:00] [[32MINFO[39M] Market regime: CHOP (SPY range 0.30% after 390 min → projected full-day 0.30% vs 0.50% threshold, VIX-tightened)
+[2026-10-15 02:20:00] [[32MINFO[39M] SPY weak (-1.15%) — no longs
+[2026-10-15 02:20:00] [[32MINFO[39M] 🧮 Funnel: 0 quoted → 0 moving → 0 eligible → 0 scored → 0 plans → AI 0/0 take → 0 opened · stopped at gate SPY_DIRECTION
+[2026-10-15 02:30:00] [[32MINFO[39M] ═══ Scan start (2:30:00 AM Bahrain) ═══
+[2026-10-15 02:30:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-15 02:30:00] [[32MINFO[39M] VIX (FRED, 2026-10-13): 15.27
+[2026-10-15 02:30:00] [[32MINFO[39M] Market regime: CHOP (SPY range 0.30% after 390 min → projected full-day 0.30% vs 0.50% threshold, VIX-tightened)
+[2026-10-15 02:30:00] [[32MINFO[39M] SPY weak (-1.14%) — no longs
+[2026-10-15 02:30:00] [[32MINFO[39M] 🧮 Funnel: 0 quoted → 0 moving → 0 eligible → 0 scored → 0 plans → AI 0/0 take → 0 opened · stopped at gate SPY_DIRECTION
+[2026-10-15 02:40:00] [[32MINFO[39M] ═══ Scan start (2:40:00 AM Bahrain) ═══
+[2026-10-15 02:40:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-15 02:40:00] [[32MINFO[39M] VIX (FRED, 2026-10-13): 15.27
+[2026-10-15 02:40:00] [[32MINFO[39M] Market regime: CHOP (SPY range 0.30% after 390 min → projected full-day 0.30% vs 0.50% threshold, VIX-tightened)
+[2026-10-15 02:40:00] [[32MINFO[39M] SPY weak (-1.17%) — no longs
+[2026-10-15 02:40:00] [[32MINFO[39M] 🧮 Funnel: 0 quoted → 0 moving → 0 eligible → 0 scored → 0 plans → AI 0/0 take → 0 opened · stopped at gate SPY_DIRECTION
+[2026-10-15 02:50:00] [[32MINFO[39M] ═══ Scan start (2:50:00 AM Bahrain) ═══
+[2026-10-15 02:50:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-10-15 02:50:00] [[32MINFO[39M] VIX (FRED, 2026-10-13): 15.27
+[2026-10-15 02:50:00] [[32MINFO[39M] Market regime: CHOP (SPY range 0.31% after 390 min → projected full-day 0.31% vs 0.50% threshold, VIX-tightened)
+[2026-10-15 02:50:00] [[32MINFO[39M] SPY weak (-1.18%) — no longs
+[2026-10-15 02:50:00] [[32MINFO[39M] 🧮 Funnel: 0 quoted → 0 moving → 0 eligible → 0 scored → 0 plans → AI 0/0 take → 0 opened · stopped at gate SPY_DIRECTION
+[2026-10-15 03:00:00] [[32MINFO[39M] ═══ Scan start (3:00:00 AM Bahrain) ═══
+[2026-10-15 03:00:00] [[32MINFO[39M] Fetching portfolio state from eToro...
