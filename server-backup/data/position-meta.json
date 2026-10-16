@@ -1,1 +1,150 @@
-{}
+{
+  "RDDT": {
+    "tradeType": "DAY",
+    "entryPrice": 155.51,
+    "stopPrice": 148.5984,
+    "targetT1": 162.4216,
+    "targetT2": 169.3334,
+    "targetT3": null,
+    "swingTrailPct": null,
+    "lockedFloor": null,
+    "peakPrice": 159.49045788461535,
+    "peakSetAt": 1792094101365,
+    "recentPrices": [
+      {
+        "price": 159.25121173076923,
+        "atMs": 1792129560787
+      },
+      {
+        "price": 159.25121173076923,
+        "atMs": 1792129620776
+      },
+      {
+        "price": 159.25121173076923,
+        "atMs": 1792129680804
+      },
+      {
+        "price": 159.25121173076923,
+        "atMs": 1792129740801
+      },
+      {
+        "price": 159.25121173076923,
+        "atMs": 1792129800835
+      }
+    ],
+    "partialDone": true,
+    "partialT1Done": false,
+    "partialT2Done": false,
+    "setup": "MOMENTUM_SURGE",
+    "source": "WATCHLIST",
+    "confidence": 5,
+    "dollarAmount": 520,
+    "plannedDollarAmount": 1040,
+    "originalDollarAmount": 1040,
+    "realizedPartialPnl": 3.51,
+    "partialFills": [
+      {
+        "at": "2026-10-15T18:28:02.783Z",
+        "reason": "PROFIT_STALL_LOCK",
+        "fraction": 0.5,
+        "price": 156.5597,
+        "pnlDollars": 3.51
+      }
+    ],
+    "troughPrice": 154.69955365384615,
+    "openedAt": 1792082167585,
+    "fillVerifiedAt": null,
+    "plan": {
+      "symbol": "RDDT",
+      "tradeType": "DAY",
+      "tradeTypeReason": "late-week entry — no room before Friday close",
+      "downgradedFromSwing": false,
+      "archetype": "MOMENTUM_BREAKOUT",
+      "catalyst": null,
+      "catalystLabel": null,
+      "source": "WATCHLIST",
+      "isFirstTimeDiscovered": false,
+      "setup": "MOMENTUM_SURGE",
+      "setupDetail": "RSI 67 with 5.3% move on 1.1x volume",
+      "score": 93.66526719430074,
+      "regime": "TRENDING",
+      "trendDirection": "BULLISH",
+      "volatilityBucket": "MEDIUM",
+      "atrPercent": 4.54,
+      "spyChangePercent": 0.05717255717254949,
+      "relativeStrength": 5.205276971764208,
+      "rsi": 67.18855698760223,
+      "aboveVwap": true,
+      "priceChangePercent": 5.262449528936758,
+      "moveToAtrRatio": 1.159,
+      "entryPrice": 155.21,
+      "stopPrice": 148.3117,
+      "stopDistancePct": 4.44,
+      "targetT1": 162.1083,
+      "targetT2": 169.0067,
+      "targetT3": null,
+      "swingTrailPct": null,
+      "averageDollarVolume": null,
+      "positionDollars": 1040,
+      "riskDollars": 46.22,
+      "riskPctOfCapital": 0.5,
+      "expectedReturnDollars": 92.45,
+      "riskRewardRatio": 2,
+      "sizingBreakdown": {
+        "effectiveCapital": 9228.38,
+        "baseRiskPct": 0.005,
+        "drawdownMultiplier": 1,
+        "volatilityMultiplier": 1,
+        "discoveryMultiplier": 1,
+        "symbolMultiplier": 1
+      },
+      "plannedAt": "2026-10-15T16:00:55.486Z",
+      "dipEntry": {
+        "signalPrice": 156.42,
+        "triggerPrice": 155.2474,
+        "armedAt": "2026-10-15T16:00:59.092Z",
+        "minutesWaited": 35
+      }
+    },
+    "entryConditions": {
+      "tradeType": "DAY",
+      "downgradedFromSwing": false,
+      "score": 93.66526719430074,
+      "regime": "TRENDING",
+      "spyChangePercent": 0.05717255717254949,
+      "relativeStrength": 5.205276971764208,
+      "rsi": 67.18855698760223,
+      "aboveVwap": true,
+      "atrPercent": 4.54,
+      "volatilityBucket": "MEDIUM",
+      "entryHourET": 12,
+      "priceChangePercent": 5.262449528936758,
+      "moveToAtrRatio": 1.159,
+      "sectorBucket": "social",
+      "sizeMultiplier": 1,
+      "filtersActive": {
+        "minEntryScore": 80,
+        "maxEntryAtrPct": 7,
+        "prefilterMinMovePct": 1,
+        "minMoveToAtrRatio": 0,
+        "overnightDeadZone": true
+      }
+    },
+    "confirmedInPortfolioAt": "2026-10-15T16:37:01.794Z",
+    "entryCorrectedAt": "2026-10-15T16:37:01.795Z",
+    "lastReview": {
+      "at": "2026-10-15T19:00:18.255Z",
+      "action": "HOLD",
+      "confidence": 5,
+      "thesisStatus": "INTACT",
+      "momentum": "STEADY",
+      "lossType": "NOT_LOSING",
+      "recoveryProbabilityPct": 60,
+      "expectedUpsideRemainingPct": 3.5,
+      "maxAcceptableDrawdownPct": 2.5,
+      "expectedHoldingPeriod": "1-2_DAYS",
+      "reviewIntervalMinutes": 60,
+      "scaleInCase": "NONE"
+    }
+  }
+}

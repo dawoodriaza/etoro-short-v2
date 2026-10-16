@@ -174,9 +174,9 @@
     "scoreAtExit": 94.70855043044483
   },
   "LLY": {
-    "exitAtMs": 1791301563679,
-    "wasLoss": false,
-    "scoreAtExit": 81.61194323167939
+    "exitAtMs": 1792093502289,
+    "wasLoss": true,
+    "scoreAtExit": 85.24264292340227
   },
   "ISRG": {
     "exitAtMs": 1789743601822,
@@ -232,5 +232,15 @@
     "exitAtMs": 1791573181150,
     "wasLoss": false,
     "scoreAtExit": 100
+  },
+  "SQQQ": {
+    "exitAtMs": 1792090862691,
+    "wasLoss": true,
+    "scoreAtExit": 96.26322277925442
+  },
+  "UPS": {
+    "exitAtMs": 1792094581717,
+    "wasLoss": false,
+    "scoreAtExit": 81.12447366972893
   }
 }
