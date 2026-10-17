@@ -2401,3 +2401,5 @@
 [2026-09-22 11:23:51] [ERROR] ALERT (throttled, 1x since last send) [SPY_QUOTE]: SPY quote fetch threw: timeout of 10000ms exceeded. New entries are blocked (fail-closed) until this recovers.
 [2026-09-22 11:49:00] [ERROR] ALERT [ETORO_MARKET_DATA]: eToro market-data (quotes) failed: timeout of 12000ms exceeded. Falling back to Twelve Data for this scan.
 [2026-10-06 22:50:00] [ERROR] ALERT [UNEXPLAINED_EQUITY_CHANGE]: Realized account equity and the bot's ledger disagreed by -$3.31 (1.0%) — money moved without a recorded trade. Likely causes: a position closed outside the bot (a manual close in the app, a ghost or untracked position) or fees. The ledger was corrected to the real account; check eToro's closed-position history around now (journal: EQUITY_DRIFT).
+[2026-10-16 16:41:26] [ERROR] ALERT [ETORO_MARKET_DATA_ENRICH]: eToro candle enrichment failed for UPS: timeout of 15000ms exceeded. Falling back to Twelve Data for this symbol.
+[2026-10-16 18:40:42] [ERROR] ALERT [ETORO_MARKET_DATA_ENRICH]: eToro candle enrichment failed for MSFT: timeout of 15000ms exceeded. Falling back to Twelve Data for this symbol.

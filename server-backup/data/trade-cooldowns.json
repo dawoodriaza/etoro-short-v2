@@ -114,14 +114,14 @@
     "scoreAtExit": 82.80888872173111
   },
   "TSLA": {
-    "exitAtMs": 1789674301302,
+    "exitAtMs": 1792157482217,
     "wasLoss": true,
-    "scoreAtExit": 97.17352290067637
+    "scoreAtExit": 100
   },
   "ANET": {
-    "exitAtMs": 1789652402377,
-    "wasLoss": false,
-    "scoreAtExit": 93.06408105056994
+    "exitAtMs": 1792157948239,
+    "wasLoss": true,
+    "scoreAtExit": 81.69809876877714
   },
   "NBIS": {
     "exitAtMs": 1789652405007,
@@ -144,14 +144,14 @@
     "scoreAtExit": 51.121172053345866
   },
   "RDDT": {
-    "exitAtMs": 1791553022090,
+    "exitAtMs": 1792159381584,
     "wasLoss": false,
-    "scoreAtExit": 100
+    "scoreAtExit": 93.66526719430074
   },
   "UPST": {
-    "exitAtMs": 1791315904711,
+    "exitAtMs": 1792176551232,
     "wasLoss": true,
-    "scoreAtExit": 92.44838863185436
+    "scoreAtExit": 100
   },
   "ARM": {
     "exitAtMs": 1789155902583,
@@ -184,9 +184,9 @@
     "scoreAtExit": 90.46858768818103
   },
   "NKE": {
-    "exitAtMs": 1790084882396,
-    "wasLoss": false,
-    "scoreAtExit": 85.24026122621564
+    "exitAtMs": 1792179904776,
+    "wasLoss": true,
+    "scoreAtExit": 88.76509387015508
   },
   "HD": {
     "exitAtMs": 1790107681350,
@@ -242,5 +242,25 @@
     "exitAtMs": 1792094581717,
     "wasLoss": false,
     "scoreAtExit": 81.12447366972893
+  },
+  "HON": {
+    "exitAtMs": 1792163222165,
+    "wasLoss": false,
+    "scoreAtExit": 89.11404775291325
+  },
+  "F": {
+    "exitAtMs": 1792179822691,
+    "wasLoss": true,
+    "scoreAtExit": 82.2083517088803
+  },
+  "AA": {
+    "exitAtMs": 1792179902361,
+    "wasLoss": true,
+    "scoreAtExit": 100
+  },
+  "PAYP": {
+    "exitAtMs": 1792179907067,
+    "wasLoss": false,
+    "scoreAtExit": 100
   }
 }
