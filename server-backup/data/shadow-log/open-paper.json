@@ -1,1 +1,143 @@
-{}
+{
+ "SCORE_FLOOR:BA": {
+  "tradeType": "DAY",
+  "entryPrice": 192.17,
+  "stopPrice": 187.6493,
+  "targetT1": 196.6907,
+  "targetT2": 201.2114,
+  "lockedFloor": null,
+  "peakPrice": 192.91,
+  "peakSetAt": 1792457940252,
+  "recentPrices": [
+   192.33,
+   192.43,
+   192.5,
+   192.5,
+   192.48,
+   192.43,
+   192.43,
+   192.43,
+   192.43,
+   192.43,
+   192.43,
+   192.43,
+   192.52,
+   192.52,
+   192.52,
+   192.53,
+   192.45,
+   192.52,
+   192.48,
+   192.48
+  ],
+  "partialDone": false,
+  "openedAt": 1792452607265,
+  "dollarAmount": 1935,
+  "troughPrice": 191.85,
+  "plan": {
+   "symbol": "BA",
+   "stopDistancePct": 2.35,
+   "atrPercent": 2.45,
+   "score": 0,
+   "source": "WATCHLIST"
+  },
+  "entryConditions": {
+   "atrPercent": 2.45
+  },
+  "paperReason": "SCORE_FLOOR"
+ },
+ "SCORE_FLOOR:MSFT": {
+  "tradeType": "DAY",
+  "entryPrice": 534.6,
+  "stopPrice": 522.2379,
+  "targetT1": 546.9621,
+  "targetT2": 559.3243,
+  "lockedFloor": null,
+  "peakPrice": 534.8601,
+  "peakSetAt": 1792461660337,
+  "recentPrices": [
+   534.1699,
+   534.52,
+   534.6201,
+   534.51,
+   534.6401,
+   534.3101,
+   534.26,
+   534.0601,
+   534.26,
+   534.26,
+   534.26,
+   534.26,
+   534.51,
+   534.51,
+   534.45,
+   534.45,
+   534.45,
+   534.45,
+   534.45,
+   534.45
+  ],
+  "partialDone": false,
+  "openedAt": 1792461630341,
+  "dollarAmount": 1970,
+  "troughPrice": 533.8701,
+  "plan": {
+   "symbol": "MSFT",
+   "stopDistancePct": 2.31,
+   "atrPercent": 2.41,
+   "score": 13.227039158153733,
+   "source": "WATCHLIST"
+  },
+  "entryConditions": {
+   "atrPercent": 2.41
+  },
+  "paperReason": "SCORE_FLOOR"
+ },
+ "SCORE_FLOOR:SNAP": {
+  "tradeType": "DAY",
+  "entryPrice": 6.29,
+  "stopPrice": 5.9815,
+  "targetT1": 6.5985,
+  "targetT2": 6.907,
+  "lockedFloor": null,
+  "peakPrice": 6.31,
+  "peakSetAt": 1792461660337,
+  "recentPrices": [
+   6.3,
+   6.3,
+   6.3,
+   6.3,
+   6.3,
+   6.3,
+   6.27,
+   6.3,
+   6.3,
+   6.3,
+   6.3,
+   6.3,
+   6.3,
+   6.3,
+   6.3,
+   6.3,
+   6.3,
+   6.3,
+   6.3,
+   6.3
+  ],
+  "partialDone": false,
+  "openedAt": 1792461630344,
+  "dollarAmount": 650,
+  "troughPrice": 6.27,
+  "plan": {
+   "symbol": "SNAP",
+   "stopDistancePct": 4.91,
+   "atrPercent": 5.93,
+   "score": 0,
+   "source": "WATCHLIST"
+  },
+  "entryConditions": {
+   "atrPercent": 5.93
+  },
+  "paperReason": "SCORE_FLOOR"
+ }
+}

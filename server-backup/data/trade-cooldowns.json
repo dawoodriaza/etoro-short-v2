@@ -40,15 +40,15 @@
     "scoreAtExit": 87.16774587854314
   },
   "MU": {
-    "exitAtMs": 1790365503153,
-    "wasLoss": true,
-    "scoreAtExit": 85.94617833211123
+    "exitAtMs": 1792426141535,
+    "wasLoss": false,
+    "scoreAtExit": 95.61516399347177
   },
   "BRAI": 1784036525262,
   "AMD": {
-    "exitAtMs": 1790970304235,
-    "wasLoss": true,
-    "scoreAtExit": 94.65961157245655
+    "exitAtMs": 1792425541868,
+    "wasLoss": false,
+    "scoreAtExit": 89.65680015455062
   },
   "QCOM": {
     "exitAtMs": 1790794862443,
