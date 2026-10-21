@@ -2406,3 +2406,4 @@
 [2026-10-19 15:20:26] [ERROR] ALERT [ETORO_MARKET_DATA_ENRICH]: eToro candle enrichment failed for MRVL: timeout of 15000ms exceeded. Falling back to Twelve Data for this symbol.
 [2026-10-19 17:50:43] [ERROR] ALERT [ETORO_MARKET_DATA_ENRICH]: eToro candle enrichment failed for META: timeout of 15000ms exceeded. Falling back to Twelve Data for this symbol.
 [2026-10-19 21:50:33] [ERROR] ALERT [ETORO_MARKET_DATA_ENRICH]: eToro candle enrichment failed for ANET: timeout of 15000ms exceeded. Falling back to Twelve Data for this symbol.
+[2026-10-20 14:50:23] [ERROR] ALERT [ETORO_MARKET_DATA_ENRICH]: eToro candle enrichment failed for SOFI: timeout of 15000ms exceeded. Falling back to Twelve Data for this symbol.

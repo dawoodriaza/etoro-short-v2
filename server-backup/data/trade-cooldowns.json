@@ -46,9 +46,9 @@
   },
   "BRAI": 1784036525262,
   "AMD": {
-    "exitAtMs": 1792425541868,
-    "wasLoss": false,
-    "scoreAtExit": 89.65680015455062
+    "exitAtMs": 1792525501637,
+    "wasLoss": true,
+    "scoreAtExit": 90.80625387791214
   },
   "QCOM": {
     "exitAtMs": 1790794862443,
@@ -189,9 +189,9 @@
     "scoreAtExit": 88.76509387015508
   },
   "HD": {
-    "exitAtMs": 1790107681350,
+    "exitAtMs": 1792509181279,
     "wasLoss": false,
-    "scoreAtExit": 82.50700242041704
+    "scoreAtExit": 100
   },
   "GM": {
     "exitAtMs": 1790365505450,
