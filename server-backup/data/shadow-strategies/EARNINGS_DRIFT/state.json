@@ -1,0 +1,18 @@
+{
+ "book": "EARNINGS_DRIFT",
+ "createdAt": "2026-10-22T13:40:53.189Z",
+ "lastProcessedSession": "2026-10-21",
+ "lastRebalanceWeek": null,
+ "open": {},
+ "pending": [],
+ "pendingExits": {},
+ "closed": [],
+ "marks": [
+  {
+   "date": "2026-10-21",
+   "realized": 0,
+   "unrealized": 0,
+   "open": 0
+  }
+ ]
+}

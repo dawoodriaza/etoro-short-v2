@@ -1,0 +1,809 @@
+{
+ "book": "ROTATION",
+ "createdAt": "2026-10-22T13:38:59.687Z",
+ "lastProcessedSession": "2026-10-21",
+ "lastRebalanceWeek": "2026-W43",
+ "open": {
+  "CRM": {
+   "symbol": "CRM",
+   "entryDate": "2026-09-09",
+   "entry": 249.19,
+   "stop": null,
+   "stopKind": null,
+   "size": 2000,
+   "riskDollars": null,
+   "peak": 262.28,
+   "trough": 220.21,
+   "heldSessions": 31,
+   "signal": "rank 1, 3-month return +37.94%",
+   "signalDate": "2026-09-08",
+   "lastClose": 241.59,
+   "lastDate": "2026-10-21"
+  },
+  "PLTR": {
+   "symbol": "PLTR",
+   "entryDate": "2026-09-09",
+   "entry": 171.01,
+   "stop": null,
+   "stopKind": null,
+   "size": 2000,
+   "riskDollars": null,
+   "peak": 212.8,
+   "trough": 164.54,
+   "heldSessions": 31,
+   "signal": "rank 2, 3-month return +32.18%",
+   "signalDate": "2026-09-08",
+   "lastClose": 201.73,
+   "lastDate": "2026-10-21"
+  },
+  "MSFT": {
+   "symbol": "MSFT",
+   "entryDate": "2026-09-29",
+   "entry": 508.47,
+   "stop": null,
+   "stopKind": null,
+   "size": 2000,
+   "riskDollars": null,
+   "peak": 551.05,
+   "trough": 502.43,
+   "heldSessions": 17,
+   "signal": "rank 3, 3-month return +34%",
+   "signalDate": "2026-09-28",
+   "lastClose": 532.76,
+   "lastDate": "2026-10-21"
+  },
+  "SHOP": {
+   "symbol": "SHOP",
+   "entryDate": "2026-10-06",
+   "entry": 166,
+   "stop": null,
+   "stopKind": null,
+   "size": 2000,
+   "riskDollars": null,
+   "peak": 180.8,
+   "trough": 161.43,
+   "heldSessions": 12,
+   "signal": "rank 5, 3-month return +27.37%",
+   "signalDate": "2026-10-05",
+   "lastClose": 174.21,
+   "lastDate": "2026-10-21"
+  },
+  "SNAP": {
+   "symbol": "SNAP",
+   "entryDate": "2026-10-20",
+   "entry": 6.28,
+   "stop": null,
+   "stopKind": null,
+   "size": 2000,
+   "riskDollars": null,
+   "peak": 6.5,
+   "trough": 6.18,
+   "heldSessions": 2,
+   "signal": "rank 3, 3-month return +40.91%",
+   "signalDate": "2026-10-19",
+   "lastClose": 6.34,
+   "lastDate": "2026-10-21"
+  }
+ },
+ "pending": [],
+ "pendingExits": {},
+ "closed": [
+  {
+   "symbol": "MU",
+   "entryDate": "2026-07-15",
+   "entry": 979.42,
+   "exitDate": "2026-07-21",
+   "exit": 918.42,
+   "reason": "ROTATED_OUT (lost its trend)",
+   "size": 2000,
+   "pnl": -126.56,
+   "pnlPct": -6.23,
+   "heldSessions": 4,
+   "peakPct": 0.16,
+   "troughPct": -17.91,
+   "riskDollars": null,
+   "r": null,
+   "signal": "rank 1, 3-month return +131.66%"
+  },
+  {
+   "symbol": "AMD",
+   "entryDate": "2026-07-15",
+   "entry": 558.62,
+   "exitDate": "2026-07-21",
+   "exit": 523.33,
+   "reason": "ROTATED_OUT (lost its trend)",
+   "size": 2000,
+   "pnl": -128.35,
+   "pnlPct": -6.32,
+   "heldSessions": 4,
+   "peakPct": 0.25,
+   "troughPct": -17.62,
+   "riskDollars": null,
+   "r": null,
+   "signal": "rank 2, 3-month return +124.62%"
+  },
+  {
+   "symbol": "AFRM",
+   "entryDate": "2026-07-15",
+   "entry": 85.04,
+   "exitDate": "2026-07-28",
+   "exit": 72.71,
+   "reason": "ROTATED_OUT (lost its trend)",
+   "size": 2000,
+   "pnl": -291.98,
+   "pnlPct": -14.5,
+   "heldSessions": 9,
+   "peakPct": 1.72,
+   "troughPct": -18.27,
+   "riskDollars": null,
+   "r": null,
+   "signal": "rank 4, 3-month return +68.11%"
+  },
+  {
+   "symbol": "HOOD",
+   "entryDate": "2026-07-21",
+   "entry": 102.2,
+   "exitDate": "2026-07-28",
+   "exit": 93.79,
+   "reason": "ROTATED_OUT (lost its trend)",
+   "size": 2000,
+   "pnl": -166.58,
+   "pnlPct": -8.23,
+   "heldSessions": 5,
+   "peakPct": 5.88,
+   "troughPct": -8.95,
+   "riskDollars": null,
+   "r": null,
+   "signal": "rank 4, 3-month return +38.05%"
+  },
+  {
+   "symbol": "RDDT",
+   "entryDate": "2026-07-15",
+   "entry": 203.41,
+   "exitDate": "2026-08-04",
+   "exit": 152,
+   "reason": "ROTATED_OUT (lost its trend)",
+   "size": 2000,
+   "pnl": -507.48,
+   "pnlPct": -25.27,
+   "heldSessions": 14,
+   "peakPct": 1.19,
+   "troughPct": -33.51,
+   "riskDollars": null,
+   "r": null,
+   "signal": "rank 5, 3-month return +60.45%"
+  },
+  {
+   "symbol": "LLY",
+   "entryDate": "2026-07-21",
+   "entry": 1138,
+   "exitDate": "2026-08-04",
+   "exit": 1122.01,
+   "reason": "ROTATED_OUT (lost its trend)",
+   "size": 2000,
+   "pnl": -30.1,
+   "pnlPct": -1.41,
+   "heldSessions": 10,
+   "peakPct": 8.2,
+   "troughPct": -2.61,
+   "riskDollars": null,
+   "r": null,
+   "signal": "rank 5, 3-month return +28.33%"
+  },
+  {
+   "symbol": "AAPL",
+   "entryDate": "2026-07-28",
+   "entry": 339.04,
+   "exitDate": "2026-08-04",
+   "exit": 302.57,
+   "reason": "ROTATED_OUT (lost its trend)",
+   "size": 2000,
+   "pnl": -217.14,
+   "pnlPct": -10.76,
+   "heldSessions": 5,
+   "peakPct": 1.62,
+   "troughPct": -11.51,
+   "riskDollars": null,
+   "r": null,
+   "signal": "rank 4, 3-month return +22.33%"
+  },
+  {
+   "symbol": "AFRM",
+   "entryDate": "2026-08-04",
+   "entry": 76.1,
+   "exitDate": "2026-08-18",
+   "exit": 71.5,
+   "reason": "ROTATED_OUT (lost its trend)",
+   "size": 2000,
+   "pnl": -122.89,
+   "pnlPct": -6.04,
+   "heldSessions": 10,
+   "peakPct": 5.9,
+   "troughPct": -4.19,
+   "riskDollars": null,
+   "r": null,
+   "signal": "rank 4, 3-month return +15.71%"
+  },
+  {
+   "symbol": "ABBV",
+   "entryDate": "2026-07-28",
+   "entry": 260.05,
+   "exitDate": "2026-08-25",
+   "exit": 263.72,
+   "reason": "ROTATED_OUT (rank 11)",
+   "size": 2000,
+   "pnl": 26.23,
+   "pnlPct": 1.41,
+   "heldSessions": 20,
+   "peakPct": 2.85,
+   "troughPct": -7.27,
+   "riskDollars": null,
+   "r": null,
+   "signal": "rank 3, 3-month return +22.46%"
+  },
+  {
+   "symbol": "GE",
+   "entryDate": "2026-08-04",
+   "entry": 371.75,
+   "exitDate": "2026-08-25",
+   "exit": 345.11,
+   "reason": "ROTATED_OUT (lost its trend)",
+   "size": 2000,
+   "pnl": -145.32,
+   "pnlPct": -7.17,
+   "heldSessions": 15,
+   "peakPct": 4.55,
+   "troughPct": -8.41,
+   "riskDollars": null,
+   "r": null,
+   "signal": "rank 3, 3-month return +25.28%"
+  },
+  {
+   "symbol": "PANW",
+   "entryDate": "2026-07-15",
+   "entry": 356,
+   "exitDate": "2026-09-09",
+   "exit": 337.5,
+   "reason": "ROTATED_OUT (lost its trend)",
+   "size": 2000,
+   "pnl": -105.93,
+   "pnlPct": -5.2,
+   "heldSessions": 39,
+   "peakPct": 12.01,
+   "troughPct": -13.4,
+   "riskDollars": null,
+   "r": null,
+   "signal": "rank 3, 3-month return +94.23%"
+  },
+  {
+   "symbol": "SHOP",
+   "entryDate": "2026-08-18",
+   "entry": 149.3,
+   "exitDate": "2026-09-09",
+   "exit": 138,
+   "reason": "ROTATED_OUT (lost its trend)",
+   "size": 2000,
+   "pnl": -153.37,
+   "pnlPct": -7.57,
+   "heldSessions": 15,
+   "peakPct": 4.78,
+   "troughPct": -11.18,
+   "riskDollars": null,
+   "r": null,
+   "signal": "rank 2, 3-month return +54.76%"
+  },
+  {
+   "symbol": "ANET",
+   "entryDate": "2026-08-25",
+   "entry": 191.7,
+   "exitDate": "2026-09-22",
+   "exit": 203.2,
+   "reason": "ROTATED_OUT (rank 13)",
+   "size": 2000,
+   "pnl": 117.98,
+   "pnlPct": 6,
+   "heldSessions": 19,
+   "peakPct": 7.4,
+   "troughPct": -5.5,
+   "riskDollars": null,
+   "r": null,
+   "signal": "rank 3, 3-month return +42.55%"
+  },
+  {
+   "symbol": "VRTX",
+   "entryDate": "2026-08-04",
+   "entry": 468.35,
+   "exitDate": "2026-09-29",
+   "exit": 522.21,
+   "reason": "ROTATED_OUT (rank 16)",
+   "size": 2000,
+   "pnl": 228,
+   "pnlPct": 11.5,
+   "heldSessions": 39,
+   "peakPct": 19.47,
+   "troughPct": -0.5,
+   "riskDollars": null,
+   "r": null,
+   "signal": "rank 5, 3-month return +11.71%"
+  },
+  {
+   "symbol": "HOOD",
+   "entryDate": "2026-08-25",
+   "entry": 104.18,
+   "exitDate": "2026-10-06",
+   "exit": 115,
+   "reason": "ROTATED_OUT (rank 12)",
+   "size": 2000,
+   "pnl": 205.72,
+   "pnlPct": 10.39,
+   "heldSessions": 29,
+   "peakPct": 21.61,
+   "troughPct": -3.35,
+   "riskDollars": null,
+   "r": null,
+   "signal": "rank 4, 3-month return +29.4%"
+  },
+  {
+   "symbol": "PANW",
+   "entryDate": "2026-09-22",
+   "entry": 373.37,
+   "exitDate": "2026-10-06",
+   "exit": 411.53,
+   "reason": "ROTATED_OUT (rank 13)",
+   "size": 2000,
+   "pnl": 202.41,
+   "pnlPct": 10.22,
+   "heldSessions": 10,
+   "peakPct": 9.55,
+   "troughPct": -2.64,
+   "riskDollars": null,
+   "r": null,
+   "signal": "rank 2, 3-month return +34.32%"
+  },
+  {
+   "symbol": "SMCI",
+   "entryDate": "2026-10-06",
+   "entry": 43.83,
+   "exitDate": "2026-10-20",
+   "exit": 31.38,
+   "reason": "ROTATED_OUT (lost its trend)",
+   "size": 2000,
+   "pnl": -570.1,
+   "pnlPct": -28.41,
+   "heldSessions": 10,
+   "peakPct": 4.36,
+   "troughPct": -28.29,
+   "riskDollars": null,
+   "r": null,
+   "signal": "rank 3, 3-month return +41.43%"
+  }
+ ],
+ "marks": [
+  {
+   "date": "2026-07-14",
+   "realized": 0,
+   "unrealized": 0,
+   "open": 0
+  },
+  {
+   "date": "2026-07-15",
+   "realized": 0,
+   "unrealized": -405.32,
+   "open": 5
+  },
+  {
+   "date": "2026-07-16",
+   "realized": 0,
+   "unrealized": -777.09,
+   "open": 5
+  },
+  {
+   "date": "2026-07-17",
+   "realized": 0,
+   "unrealized": -902.84,
+   "open": 5
+  },
+  {
+   "date": "2026-07-20",
+   "realized": 0,
+   "unrealized": -916.62,
+   "open": 5
+  },
+  {
+   "date": "2026-07-21",
+   "realized": -254.91,
+   "unrealized": -350.62,
+   "open": 5
+  },
+  {
+   "date": "2026-07-22",
+   "realized": -254.91,
+   "unrealized": -614.24,
+   "open": 5
+  },
+  {
+   "date": "2026-07-23",
+   "realized": -254.91,
+   "unrealized": -763.48,
+   "open": 5
+  },
+  {
+   "date": "2026-07-24",
+   "realized": -254.91,
+   "unrealized": -912.93,
+   "open": 5
+  },
+  {
+   "date": "2026-07-27",
+   "realized": -254.91,
+   "unrealized": -769.91,
+   "open": 5
+  },
+  {
+   "date": "2026-07-28",
+   "realized": -713.47,
+   "unrealized": -278.47,
+   "open": 5
+  },
+  {
+   "date": "2026-07-29",
+   "realized": -713.47,
+   "unrealized": -335.73,
+   "open": 5
+  },
+  {
+   "date": "2026-07-30",
+   "realized": -713.47,
+   "unrealized": -437.6,
+   "open": 5
+  },
+  {
+   "date": "2026-07-31",
+   "realized": -713.47,
+   "unrealized": -979.55,
+   "open": 5
+  },
+  {
+   "date": "2026-08-03",
+   "realized": -713.47,
+   "unrealized": -883.5,
+   "open": 5
+  },
+  {
+   "date": "2026-08-04",
+   "realized": -1468.19,
+   "unrealized": 57.86,
+   "open": 5
+  },
+  {
+   "date": "2026-08-05",
+   "realized": -1468.19,
+   "unrealized": 116.41,
+   "open": 5
+  },
+  {
+   "date": "2026-08-06",
+   "realized": -1468.19,
+   "unrealized": -15.44,
+   "open": 5
+  },
+  {
+   "date": "2026-08-07",
+   "realized": -1468.19,
+   "unrealized": 23.7,
+   "open": 5
+  },
+  {
+   "date": "2026-08-10",
+   "realized": -1468.19,
+   "unrealized": 260.81,
+   "open": 5
+  },
+  {
+   "date": "2026-08-11",
+   "realized": -1468.19,
+   "unrealized": 329.92,
+   "open": 5
+  },
+  {
+   "date": "2026-08-12",
+   "realized": -1468.19,
+   "unrealized": 223.65,
+   "open": 5
+  },
+  {
+   "date": "2026-08-13",
+   "realized": -1468.19,
+   "unrealized": 350.69,
+   "open": 5
+  },
+  {
+   "date": "2026-08-14",
+   "realized": -1468.19,
+   "unrealized": 272.45,
+   "open": 5
+  },
+  {
+   "date": "2026-08-17",
+   "realized": -1468.19,
+   "unrealized": 180.17,
+   "open": 5
+  },
+  {
+   "date": "2026-08-18",
+   "realized": -1591.08,
+   "unrealized": 332.03,
+   "open": 5
+  },
+  {
+   "date": "2026-08-19",
+   "realized": -1591.08,
+   "unrealized": 300.84,
+   "open": 5
+  },
+  {
+   "date": "2026-08-20",
+   "realized": -1591.08,
+   "unrealized": 108.25,
+   "open": 5
+  },
+  {
+   "date": "2026-08-21",
+   "realized": -1591.08,
+   "unrealized": 265.8,
+   "open": 5
+  },
+  {
+   "date": "2026-08-24",
+   "realized": -1591.08,
+   "unrealized": 190.35,
+   "open": 5
+  },
+  {
+   "date": "2026-08-25",
+   "realized": -1710.17,
+   "unrealized": 477.07,
+   "open": 5
+  },
+  {
+   "date": "2026-08-26",
+   "realized": -1710.17,
+   "unrealized": 445.91,
+   "open": 5
+  },
+  {
+   "date": "2026-08-27",
+   "realized": -1710.17,
+   "unrealized": 761.04,
+   "open": 5
+  },
+  {
+   "date": "2026-08-28",
+   "realized": -1710.17,
+   "unrealized": 486.12,
+   "open": 5
+  },
+  {
+   "date": "2026-08-31",
+   "realized": -1710.17,
+   "unrealized": 499.79,
+   "open": 5
+  },
+  {
+   "date": "2026-09-01",
+   "realized": -1710.17,
+   "unrealized": 199.69,
+   "open": 5
+  },
+  {
+   "date": "2026-09-02",
+   "realized": -1710.17,
+   "unrealized": 115.53,
+   "open": 5
+  },
+  {
+   "date": "2026-09-03",
+   "realized": -1710.17,
+   "unrealized": 588.4,
+   "open": 5
+  },
+  {
+   "date": "2026-09-04",
+   "realized": -1710.17,
+   "unrealized": 511.2,
+   "open": 5
+  },
+  {
+   "date": "2026-09-08",
+   "realized": -1710.17,
+   "unrealized": 229.36,
+   "open": 5
+  },
+  {
+   "date": "2026-09-09",
+   "realized": -1969.47,
+   "unrealized": 387.57,
+   "open": 5
+  },
+  {
+   "date": "2026-09-10",
+   "realized": -1969.47,
+   "unrealized": 233.94,
+   "open": 5
+  },
+  {
+   "date": "2026-09-11",
+   "realized": -1969.47,
+   "unrealized": 385.11,
+   "open": 5
+  },
+  {
+   "date": "2026-09-14",
+   "realized": -1969.47,
+   "unrealized": 479.21,
+   "open": 5
+  },
+  {
+   "date": "2026-09-15",
+   "realized": -1969.47,
+   "unrealized": 397.22,
+   "open": 5
+  },
+  {
+   "date": "2026-09-16",
+   "realized": -1969.47,
+   "unrealized": 306.85,
+   "open": 5
+  },
+  {
+   "date": "2026-09-17",
+   "realized": -1969.47,
+   "unrealized": 408.86,
+   "open": 5
+  },
+  {
+   "date": "2026-09-18",
+   "realized": -1969.47,
+   "unrealized": 538.1,
+   "open": 5
+  },
+  {
+   "date": "2026-09-21",
+   "realized": -1969.47,
+   "unrealized": 729.3,
+   "open": 5
+  },
+  {
+   "date": "2026-09-22",
+   "realized": -1851.49,
+   "unrealized": 624.27,
+   "open": 5
+  },
+  {
+   "date": "2026-09-23",
+   "realized": -1851.49,
+   "unrealized": 809.65,
+   "open": 5
+  },
+  {
+   "date": "2026-09-24",
+   "realized": -1851.49,
+   "unrealized": 809.23,
+   "open": 5
+  },
+  {
+   "date": "2026-09-25",
+   "realized": -1851.49,
+   "unrealized": 642.6,
+   "open": 5
+  },
+  {
+   "date": "2026-09-28",
+   "realized": -1851.49,
+   "unrealized": 603.26,
+   "open": 5
+  },
+  {
+   "date": "2026-09-29",
+   "realized": -1623.49,
+   "unrealized": 310.35,
+   "open": 5
+  },
+  {
+   "date": "2026-09-30",
+   "realized": -1623.49,
+   "unrealized": 341.07,
+   "open": 5
+  },
+  {
+   "date": "2026-10-01",
+   "realized": -1623.49,
+   "unrealized": 387.32,
+   "open": 5
+  },
+  {
+   "date": "2026-10-02",
+   "realized": -1623.49,
+   "unrealized": 451.46,
+   "open": 5
+  },
+  {
+   "date": "2026-10-05",
+   "realized": -1623.49,
+   "unrealized": 490.23,
+   "open": 5
+  },
+  {
+   "date": "2026-10-06",
+   "realized": -1215.36,
+   "unrealized": 98.95,
+   "open": 5
+  },
+  {
+   "date": "2026-10-07",
+   "realized": -1215.36,
+   "unrealized": 204.66,
+   "open": 5
+  },
+  {
+   "date": "2026-10-08",
+   "realized": -1215.36,
+   "unrealized": 143.03,
+   "open": 5
+  },
+  {
+   "date": "2026-10-09",
+   "realized": -1215.36,
+   "unrealized": 352.74,
+   "open": 5
+  },
+  {
+   "date": "2026-10-12",
+   "realized": -1215.36,
+   "unrealized": 430.79,
+   "open": 5
+  },
+  {
+   "date": "2026-10-13",
+   "realized": -1215.36,
+   "unrealized": 398.19,
+   "open": 5
+  },
+  {
+   "date": "2026-10-14",
+   "realized": -1215.36,
+   "unrealized": 52.8,
+   "open": 5
+  },
+  {
+   "date": "2026-10-15",
+   "realized": -1215.36,
+   "unrealized": 192,
+   "open": 5
+  },
+  {
+   "date": "2026-10-16",
+   "realized": -1215.36,
+   "unrealized": -325.97,
+   "open": 5
+  },
+  {
+   "date": "2026-10-19",
+   "realized": -1215.36,
+   "unrealized": -160.04,
+   "open": 5
+  },
+  {
+   "date": "2026-10-20",
+   "realized": -1785.46,
+   "unrealized": 408.56,
+   "open": 5
+  },
+  {
+   "date": "2026-10-21",
+   "realized": -1785.46,
+   "unrealized": 511.85,
+   "open": 5
+  }
+ ]
+}

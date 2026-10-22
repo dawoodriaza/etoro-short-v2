@@ -1,0 +1,63 @@
+{
+ "at": "2026-10-22T13:40:53.191Z",
+ "mode": "forward",
+ "from": null,
+ "to": null,
+ "latestCompleteSession": "2026-10-21",
+ "universe": 54,
+ "earnings": "11 watchlist reports since 2026-10-01",
+ "books": {
+  "SWING_BREAKOUT": {
+   "closed": 0,
+   "wins": 0,
+   "winRate": null,
+   "realized": 0,
+   "perTrade": null,
+   "open": 0,
+   "openSymbols": [],
+   "unrealized": 0,
+   "lastSession": "2026-10-21",
+   "sessionsProcessed": 1,
+   "signalsToday": 0
+  },
+  "DIP_IN_UPTREND": {
+   "closed": 0,
+   "wins": 0,
+   "winRate": null,
+   "realized": 0,
+   "perTrade": null,
+   "open": 0,
+   "openSymbols": [],
+   "unrealized": 0,
+   "lastSession": "2026-10-21",
+   "sessionsProcessed": 1,
+   "signalsToday": 0
+  },
+  "EARNINGS_DRIFT": {
+   "closed": 0,
+   "wins": 0,
+   "winRate": null,
+   "realized": 0,
+   "perTrade": null,
+   "open": 0,
+   "openSymbols": [],
+   "unrealized": 0,
+   "lastSession": "2026-10-21",
+   "sessionsProcessed": 1,
+   "signalsToday": 0
+  },
+  "ROTATION": {
+   "closed": 0,
+   "wins": 0,
+   "winRate": null,
+   "realized": 0,
+   "perTrade": null,
+   "open": 0,
+   "openSymbols": [],
+   "unrealized": 0,
+   "lastSession": "2026-10-21",
+   "sessionsProcessed": 1,
+   "signalsToday": 0
+  }
+ }
+}

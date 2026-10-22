@@ -41,11 +41,11 @@ Detailed history, evidence and the reasoning behind every change:
 
 ---
 
-## Status snapshot (2026-10-10)
+## Status snapshot (2026-10-22)
 
 | Item | Value |
 |---|---|
-| Version | **v9** — time budget 240 min after the pre-registered checkpoint (trend score V2 rejected as overfit); v8.9 12-hour clock times; v8.8 dual-clock times in every notification; v8.7 — Claude Haiku 5.5 for the AI screener and reviewer (thinking off); v8.6 — the dip is measured from the running high and never paid up; v8.5 untracked-alert race fixed, safe server tests; v8.4 trend score V2 logged (not traded); v8.3 small dip + wait for breakeven (see CHANGELOG) |
+| Version | **v10** — four shadow strategies with their own paper books (live trading unchanged); Telegram menu + buttons + `/today` `/perf` `/shadow`; v9.2 paper-trades score-floor rejects; v9 — time budget 240 min after the pre-registered checkpoint (trend score V2 rejected as overfit); v8.9 12-hour clock times; v8.8 dual-clock times in every notification; v8.7 — Claude Haiku 5.5 for the AI screener and reviewer (thinking off); v8.6 — the dip is measured from the running high and never paid up; v8.5 untracked-alert race fixed, safe server tests; v8.4 trend score V2 logged (not traded); v8.3 small dip + wait for breakeven (see CHANGELOG) |
 | Mode | `TRADING_MODE=live` |
 | Server | `ubuntu@130.110.113.198` (Oracle Cloud), directory `~/etoro-v2-short`, Node 20.20.2, ~1 GB RAM + **2 GB swap** (`/swapfile`, swappiness 10, added 2026-09-22 after a freeze during an automatic kernel update). If SSH times out "during banner exchange", the box is starved: reboot it from the Oracle console (data is kept) |
 | PM2 memory limit | `etoro-daytrade` restarts itself above 300 MB (`--max-memory-restart 300M`, saved with `pm2 save`) |
@@ -296,7 +296,8 @@ time**.
 | 15:00 Mon–Thu | Daily AI position review |
 | 15:45 Mon–Fri | EOD close (Mon–Thu keep winners; Friday close all) + daily stats to Telegram |
 | 15:50 Friday | Weekly self-evaluation report to Telegram |
-| 05:15 UTC Tue–Sat (server crontab) | `src/fetch-replay-candles.js` saves 1d/1h/15m/5m candles for replays |
+| 05:15 UTC Tue–Sat (server crontab) | `src/fetch-replay-candles.js` saves 1d/1h/15m/5m candles for replays, **then** `src/shadow-strategies.js` runs the four shadow books on the finished day (v10) |
+| 05:50 UTC Mon–Sat (server crontab) | `scripts/daily-github-backup.sh`: the server pushes the live code and all of `data/` to GitHub |
 
 eToro's 24/5 session runs Sunday 20:00 ET to Friday 20:00 ET. US market holidays
 are in `src/market-hours.js`.
@@ -304,6 +305,19 @@ are in `src/market-hours.js`.
 ---
 
 ## Telegram messages
+
+**Commands (v10)** — type them, use the phone's **/** menu, or tap the buttons under any reply. Read-only; only the configured chat gets an answer.
+
+| Command | Shows |
+|---|---|
+| `/status` | Is the bot working (🟢/🔴), last scan, market open, positions, dip orders, today's P&L, capital, mode |
+| `/positions` (`/held`) | Each holding: buy → live price, P&L, how long, stop, what would make it sell |
+| `/today` | Today's real trades, scans, plans, AI approvals, dip orders, and what the skipped stocks did on paper |
+| `/perf` (`/performance`) | Last 7 days, current rules, all time; average win/loss; how trades ended; drawdown and room before the 15% safety stop |
+| `/shadow` (`/strategies`) | The four shadow books against the live bot and the paper book |
+| `/help` (`/start`) | The list |
+
+`node src/index.js --render /perf` prints a screen and exits without starting the bot.
 
 Money in Telegram is shown in **real-account dollars** (and bot dollars where
 useful for reconciling with logs).
@@ -330,6 +344,9 @@ repair.
 
 | Path | Contents |
 |---|---|
+| `data/shadow-strategies/<BOOK>/state.json` | (v10) One per shadow strategy (`SWING_BREAKOUT`, `DIP_IN_UPTREND`, `EARNINGS_DRIFT`, `ROTATION`): open positions, entries queued for the next open, closed trades, daily marks. Paper only, written only by `src/shadow-strategies.js` |
+| `data/shadow-strategies/<BOOK>/events-YYYY-MM.jsonl` | (v10) `SIGNAL`, `SIGNAL_NO_SLOT`, `ENTRY`, `ENTRY_SKIPPED`, `EXIT`, `REBALANCE` |
+| `data/shadow-strategies/last-run.json`, `_backtest/` | (v10) The latest nightly run, and the one-off history check (14 Jul → 21 Oct) |
 | `data/shadow-log/paper-*.jsonl` | (v9.1) The trade NOT taken: a paper position opened at the approval price whenever a dip order is armed, marked every minute against the same risk engine. `PAPER_OPEN` / `PAPER_MARK` / `PAPER_CLOSE`. Logging only |
 | `data/shadow-log/minute-*.jsonl` | (v9.1) One line per real open position per minute: price, P&L, peak, live stop and kind, state, exit conditions, next trim, engine action. `POSITION_STATUS` is the same payload but only every 10th tick |
 | `data/shadow-log/open-paper.json` | (v9.1) Open paper positions, so a restart does not truncate the comparison |
@@ -439,6 +456,9 @@ src/
                             positions, 1-minute exit monitor, reconciliation (ghost,
                             untracked, duplicate positions), daily AI review, EOD, Telegram
   config.js                 All defaults + the evidence behind them
+  shadow-strategies.js      (v10) Four shadow strategies, each with its own paper book.
+                            Separate nightly process; reads candles, writes only
+                            data/shadow-strategies/. Never imported for trading
   etoro-client.js           eToro agent-portfolio API: portfolio, instrument search
                             (exact-symbol match; some stocks only resolve as SYMBOL.US),
                             open/close orders, duplicate detection
@@ -660,6 +680,7 @@ Details for every line: `CHANGELOG.md`.
 | 2026-09-17 | v8.4 | Trend score V2 logged beside the live score in every scan record (not traded on); first replay failed its pre-set bar on trade count |
 | 2026-09-18 | v8.5 | First live v8.3 sessions reviewed (9 trades, −$66); false untracked-position alerts after the bot's own closes fixed; server tests moved to a scratch copy |
 | 2026-09-22 | ops | Server freeze during an automatic kernel update: 2 GB swap added, PM2 memory limits on both bots |
+| 2026-10-22 | **v10** | **Four shadow strategies** (swing breakout, dip in uptrend, earnings drift, weekly rotation), each with its own $10,000 paper book, run nightly as a separate process on regular-session prices; first history check: only dip-in-uptrend did not lose. **Telegram**: command menu, tap-buttons, `/today` `/perf` `/shadow`. Live trading unchanged |
 | 2026-10-12 | v9.2 | Paper-trades every plan the score floor turns down (`paperReason: SCORE_FLOOR`) with the real planner and exit rules, plus end-of-day rules for the whole paper book; daily "if it had bought what it skipped" total in `/status` and the market-closed message; Telegram commands `/status` `/positions` `/help`; server pushes code + data to GitHub nightly. Logging only |
 | 2026-10-10 | v9.1 | New **`data/shadow-log/`** folder, logging only: a paper position opened at the approval price every time a dip order is armed (so the cost of waiting for a dip is in the log, not a later replay), and one line per real open position **per minute** with price, stop, state and the exact exit conditions |
 | 2026-10-10 | **v9** | **Pre-registered checkpoint run** on 18 sessions split into a mined half and a never-seen half: time budget 150 to 240 min **adopted** (the stale exit was selling positions at breakeven before the profit keeper could work); trend score V2, dip-depth changes and dropping the AI veto all **rejected** - V2 returned +$1.04/trade on the half it was built against and -$2.14/trade on fresh data. Config now frozen for ~100 trades |

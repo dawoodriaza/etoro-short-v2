@@ -417,6 +417,78 @@ module.exports = {
       trailRecord.trailFromHigh === true && trailRecord.runUpFromSignalPct === 6,
     );
 
+    {
+// ══ 15. v10 shadow strategies — own books, no look-ahead, isolated ══
+    const shadowBooks = require("../src/shadow-strategies");
+    check("shadow: 5-day average and 14-day ATR compute correctly",
+      shadowBooks.sma([1, 2, 3, 4, 5], 5) === 3 &&
+        Math.abs(shadowBooks.atr([{ h: 10, l: 9, c: 9.5 }, { h: 11, l: 10, c: 10.5 }, { h: 12, l: 11, c: 11.5 }], 2) - 1.5) < 1e-9);
+    check("shadow: 2-day RSI drops under 10 after three sharp down days, and is high after two up days",
+      shadowBooks.rsi([10, 11, 12, 13, 14, 15, 16, 14, 12, 10], 2) < 10 && shadowBooks.rsi([16, 15, 14, 13, 12, 11, 10, 11, 12], 2) > 70);
+    const open930 = Date.parse("2026-10-12T13:30:00Z"); // 09:30 ET (daylight time)
+    const p930 = shadowBooks.etParts(open930);
+    check("shadow: New York clock is right (09:30 ET on 2026-10-12)", p930.date === "2026-10-12" && p930.minute === 570);
+    const fiveMin = (iso, o, h, l, c) => ({ t: Date.parse(iso), o, h, l, c, v: 1 });
+    const sess = shadowBooks.buildSessions({
+      FiveMinutes: [
+        fiveMin("2026-10-12T04:00:00Z", 50, 200, 1, 50), // 00:00 ET overnight — must be ignored
+        fiveMin("2026-10-12T13:30:00Z", 100, 101, 99, 100.5),
+        fiveMin("2026-10-12T15:00:00Z", 100.5, 103, 100, 102),
+        fiveMin("2026-10-12T19:55:00Z", 102, 102.5, 101, 101.5),
+        fiveMin("2026-10-12T21:00:00Z", 101.5, 150, 1, 120), // 17:00 ET after-hours — ignored
+      ],
+    }).get("2026-10-12");
+    check("shadow: session prices use 09:30-16:00 ET only (overnight and after-hours ignored)",
+      sess && sess.o === 100 && sess.h === 103 && sess.l === 99 && sess.c === 101.5);
+    check("shadow: size risks $50 to the stop, capped at $3,500, refused at or below the stop",
+      shadowBooks.sizeFor(100, 98) === 2500 && shadowBooks.sizeFor(100, 99.5) === 3500 && shadowBooks.sizeFor(100, 100) === null);
+
+    const mkCtx = (sessions, daily) => {
+      const universe = { AAA: { daily: daily || [], sessions: new Map(Object.entries(sessions)) } };
+      const cal = Object.keys(sessions).sort();
+      return {
+        universe, symbols: ["AAA"],
+        prevSession: (d) => cal[Math.max(0, cal.indexOf(d) - 1)],
+        nextSessionAfter: (d) => cal.find((x) => x > d) || null,
+        nextSessionOnOrAfter: (d) => cal.find((x) => x >= d) || null,
+        earnings: null,
+      };
+    };
+    const noop = () => {};
+    const fillState = shadowBooks.emptyState("SWING_BREAKOUT");
+    fillState.pending = [{ symbol: "AAA", atr: 2, stopAtr: 2, stopAbove: null, reason: "test", signalDate: "2026-10-09" }];
+    shadowBooks.processSession("SWING_BREAKOUT", fillState, "2026-10-12",
+      mkCtx({ "2026-10-09": { o: 99, h: 99, l: 99, c: 99 }, "2026-10-12": { o: 100, h: 104, l: 99, c: 103 } }), noop);
+    const filled = fillState.open.AAA;
+    check("shadow: a signal fills at the NEXT session's open, with the stop set from that fill",
+      filled && filled.entry === 100 && filled.stop === 96 && filled.size === 1250);
+
+    const gapState = shadowBooks.emptyState("SWING_BREAKOUT");
+    gapState.open.AAA = { symbol: "AAA", entryDate: "2026-10-09", entry: 100, stop: 96, stopKind: "initial", size: 1250, riskDollars: 50, peak: 100, trough: 100, heldSessions: 1 };
+    shadowBooks.processSession("SWING_BREAKOUT", gapState, "2026-10-12",
+      mkCtx({ "2026-10-09": { o: 100, h: 100, l: 100, c: 100 }, "2026-10-12": { o: 90, h: 91, l: 88, c: 89 } }), noop);
+    const gapExit = gapState.closed[0];
+    check("shadow: a gap through the stop fills at the open, not at the stop", gapExit && gapExit.exit === 90 && gapExit.reason === "STOP");
+
+    const daily = ["2026-10-08", "2026-10-09", "2026-10-12"].map((d, i) => ({ date: d, t: Date.parse(d + "T00:00:00Z"), o: 1, h: 2, l: 0.5, c: 1 + i, v: 1 }));
+    const seen = shadowBooks.view({ AAA: { daily, sessions: new Map() } }, "AAA", "2026-10-09");
+    check("shadow: signals on a day see only bars up to that day (no look-ahead)",
+      seen.bars.length === 2 && seen.bars[seen.bars.length - 1].date === "2026-10-09");
+
+    const rotState = shadowBooks.emptyState("ROTATION");
+    const rotCtx = mkCtx({ "2026-10-12": { o: 1, h: 1, l: 1, c: 1 }, "2026-10-13": { o: 1, h: 1, l: 1, c: 1 } });
+    shadowBooks.processSession("ROTATION", rotState, "2026-10-12", rotCtx, noop);
+    const weekAfterFirst = rotState.lastRebalanceWeek;
+    let rebalances = 0;
+    shadowBooks.processSession("ROTATION", rotState, "2026-10-13", rotCtx, (e) => { if (e.event === "REBALANCE") rebalances++; });
+    check("shadow: rotation re-ranks once per week, not every day", weekAfterFirst === shadowBooks.isoWeek("2026-10-12") && rebalances === 0);
+
+    const shadowSource = fs.readFileSync(path.join(__dirname, "../src/shadow-strategies.js"), "utf8");
+    check("shadow: writes only data/shadow-strategies and never touches the live book",
+      /data", "shadow-strategies"/.test(shadowSource) &&
+        !/position-meta|capital-ledger|decision-journal|trade-history|etoro-client|cooldown/.test(shadowSource.replace(/^\s*\/\/.*$/gm, "")));
+
+    }
     return results;
   },
 };

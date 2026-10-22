@@ -1,0 +1,1096 @@
+{
+ "book": "SWING_BREAKOUT",
+ "createdAt": "2026-10-22T13:38:59.276Z",
+ "lastProcessedSession": "2026-10-21",
+ "lastRebalanceWeek": null,
+ "open": {
+  "ABBV": {
+   "symbol": "ABBV",
+   "entryDate": "2026-10-08",
+   "entry": 271.44,
+   "stop": 264,
+   "stopKind": "10-day low",
+   "size": 804.98,
+   "riskDollars": 50,
+   "peak": 291.21,
+   "trough": 265.32,
+   "heldSessions": 10,
+   "signal": "closed $271.42 above the 20-day high $269.34; 50-day average rising",
+   "signalDate": "2026-10-07",
+   "lastClose": 284.67,
+   "lastDate": "2026-10-21"
+  },
+  "ISRG": {
+   "symbol": "ISRG",
+   "entryDate": "2026-10-12",
+   "entry": 422,
+   "stop": 399.5,
+   "stopKind": "10-day low",
+   "size": 864.15,
+   "riskDollars": 50,
+   "peak": 440.02,
+   "trough": 399.94,
+   "heldSessions": 8,
+   "signal": "closed $423.86 above the 20-day high $416.61; 50-day average rising",
+   "signalDate": "2026-10-09",
+   "lastClose": 428.16,
+   "lastDate": "2026-10-21"
+  },
+  "SHOP": {
+   "symbol": "SHOP",
+   "entryDate": "2026-10-13",
+   "entry": 175,
+   "stop": 161,
+   "stopKind": "10-day low",
+   "size": 516.01,
+   "riskDollars": 50,
+   "peak": 180.16,
+   "trough": 163.85,
+   "heldSessions": 7,
+   "signal": "closed $179.12 above the 20-day high $171.03; 50-day average rising",
+   "signalDate": "2026-10-12",
+   "lastClose": 174.21,
+   "lastDate": "2026-10-21"
+  },
+  "XOM": {
+   "symbol": "XOM",
+   "entryDate": "2026-10-14",
+   "entry": 174.72,
+   "stop": 165.5629,
+   "stopKind": "initial",
+   "size": 954.01,
+   "riskDollars": 50,
+   "peak": 180.01,
+   "trough": 173.57,
+   "heldSessions": 6,
+   "signal": "closed $174.2 above the 20-day high $172.49; 50-day average rising",
+   "signalDate": "2026-10-13",
+   "lastClose": 178.1,
+   "lastDate": "2026-10-21"
+  },
+  "MSFT": {
+   "symbol": "MSFT",
+   "entryDate": "2026-10-14",
+   "entry": 544.87,
+   "stop": 518.79,
+   "stopKind": "10-day low",
+   "size": 1039.83,
+   "riskDollars": 50,
+   "peak": 545.19,
+   "trough": 524.4,
+   "heldSessions": 6,
+   "signal": "closed $543.59 above the 20-day high $542.7; 50-day average rising",
+   "signalDate": "2026-10-13",
+   "lastClose": 532.76,
+   "lastDate": "2026-10-21"
+  },
+  "COP": {
+   "symbol": "COP",
+   "entryDate": "2026-10-15",
+   "entry": 141.69,
+   "stop": 132.5286,
+   "stopKind": "initial",
+   "size": 773.3,
+   "riskDollars": 50,
+   "peak": 147.4,
+   "trough": 140.81,
+   "heldSessions": 5,
+   "signal": "closed $142.32 above the 20-day high $141.3; 50-day average rising",
+   "signalDate": "2026-10-14",
+   "lastClose": 145.76,
+   "lastDate": "2026-10-21"
+  },
+  "LLY": {
+   "symbol": "LLY",
+   "entryDate": "2026-10-21",
+   "entry": 1263,
+   "stop": 1175.8757,
+   "stopKind": "initial",
+   "size": 724.83,
+   "riskDollars": 50,
+   "peak": 1278,
+   "trough": 1260.63,
+   "heldSessions": 1,
+   "signal": "closed $1285.33 above the 20-day high $1275.14; 50-day average rising",
+   "signalDate": "2026-10-20",
+   "lastClose": 1271.3,
+   "lastDate": "2026-10-21"
+  }
+ },
+ "pending": [],
+ "pendingExits": {},
+ "closed": [
+  {
+   "symbol": "UPS",
+   "entryDate": "2026-07-17",
+   "entry": 117.05,
+   "exitDate": "2026-07-28",
+   "exit": 109.4,
+   "reason": "TRAIL_STOP",
+   "size": 590.91,
+   "pnl": -39.21,
+   "pnlPct": -6.54,
+   "heldSessions": 8,
+   "peakPct": 1.14,
+   "troughPct": -11.93,
+   "riskDollars": 50,
+   "r": -0.78,
+   "signal": "closed $117.07 above the 20-day high $115.43; 50-day average rising"
+  },
+  {
+   "symbol": "AAPL",
+   "entryDate": "2026-07-16",
+   "entry": 328.3,
+   "exitDate": "2026-07-31",
+   "exit": 308.2,
+   "reason": "TRAIL_STOP",
+   "size": 951.36,
+   "pnl": -59.2,
+   "pnlPct": -6.12,
+   "heldSessions": 12,
+   "peakPct": 4.95,
+   "troughPct": -8.62,
+   "riskDollars": 50,
+   "r": -1.18,
+   "signal": "closed $327.28 above the 20-day high $323.4; 50-day average rising"
+  },
+  {
+   "symbol": "ABBV",
+   "entryDate": "2026-07-29",
+   "entry": 263.42,
+   "exitDate": "2026-07-31",
+   "exit": 245.88,
+   "reason": "TRAIL_STOP",
+   "size": 650.92,
+   "pnl": -43.99,
+   "pnlPct": -6.66,
+   "heldSessions": 3,
+   "peakPct": 1.53,
+   "troughPct": -6.99,
+   "riskDollars": 50,
+   "r": -0.88,
+   "signal": "closed $263.25 above the 20-day high $261.86; 50-day average rising"
+  },
+  {
+   "symbol": "F",
+   "entryDate": "2026-07-29",
+   "entry": 15.72,
+   "exitDate": "2026-07-31",
+   "exit": 14.62,
+   "reason": "STOP",
+   "size": 714.55,
+   "pnl": -50.71,
+   "pnlPct": -7,
+   "heldSessions": 3,
+   "peakPct": 3.56,
+   "troughPct": -8.33,
+   "riskDollars": 50,
+   "r": -1.01,
+   "signal": "closed $14.96 above the 20-day high $14.89; 50-day average rising"
+  },
+  {
+   "symbol": "UNP",
+   "entryDate": "2026-07-17",
+   "entry": 300.7,
+   "exitDate": "2026-08-13",
+   "exit": 297.8,
+   "reason": "TIME_STOP",
+   "size": 715.03,
+   "pnl": -7.61,
+   "pnlPct": -0.96,
+   "heldSessions": 20,
+   "peakPct": 4.94,
+   "troughPct": -5.29,
+   "riskDollars": 50,
+   "r": -0.15,
+   "signal": "closed $299.26 above the 20-day high $291.21; 50-day average rising"
+  },
+  {
+   "symbol": "GM",
+   "entryDate": "2026-07-23",
+   "entry": 81.48,
+   "exitDate": "2026-08-17",
+   "exit": 85.7,
+   "reason": "TRAIL_STOP",
+   "size": 754.64,
+   "pnl": 38.33,
+   "pnlPct": 5.18,
+   "heldSessions": 18,
+   "peakPct": 12.68,
+   "troughPct": -3.06,
+   "riskDollars": 50,
+   "r": 0.77,
+   "signal": "closed $82.11 above the 20-day high $80.53; 50-day average rising"
+  },
+  {
+   "symbol": "DE",
+   "entryDate": "2026-07-29",
+   "entry": 633.5,
+   "exitDate": "2026-08-18",
+   "exit": 588.92,
+   "reason": "TRAIL_STOP",
+   "size": 552.37,
+   "pnl": -39.42,
+   "pnlPct": -7.04,
+   "heldSessions": 15,
+   "peakPct": 0.01,
+   "troughPct": -8.59,
+   "riskDollars": 50,
+   "r": -0.79,
+   "signal": "closed $640 above the 20-day high $638.06; 50-day average rising"
+  },
+  {
+   "symbol": "ETN",
+   "entryDate": "2026-08-04",
+   "entry": 450,
+   "exitDate": "2026-08-19",
+   "exit": 427.01,
+   "reason": "TRAIL_STOP",
+   "size": 478.35,
+   "pnl": -24.92,
+   "pnlPct": -5.11,
+   "heldSessions": 12,
+   "peakPct": 5.8,
+   "troughPct": -7.36,
+   "riskDollars": 50,
+   "r": -0.5,
+   "signal": "closed $438.45 above the 20-day high $420.01; 50-day average rising"
+  },
+  {
+   "symbol": "ANET",
+   "entryDate": "2026-08-05",
+   "entry": 211.45,
+   "exitDate": "2026-08-19",
+   "exit": 187,
+   "reason": "TRAIL_STOP",
+   "size": 414.03,
+   "pnl": -48.29,
+   "pnlPct": -11.56,
+   "heldSessions": 11,
+   "peakPct": 0.7,
+   "troughPct": -12.79,
+   "riskDollars": 50,
+   "r": -0.97,
+   "signal": "closed $190.62 above the 20-day high $189.39; 50-day average rising"
+  },
+  {
+   "symbol": "PANW",
+   "entryDate": "2026-08-14",
+   "entry": 395,
+   "exitDate": "2026-08-19",
+   "exit": 361.49,
+   "reason": "STOP",
+   "size": 589.38,
+   "pnl": -50.59,
+   "pnlPct": -8.48,
+   "heldSessions": 4,
+   "peakPct": 0.4,
+   "troughPct": -11.08,
+   "riskDollars": 50,
+   "r": -1.01,
+   "signal": "closed $395.82 above the 20-day high $389.19; 50-day average rising"
+  },
+  {
+   "symbol": "ASML",
+   "entryDate": "2026-08-18",
+   "entry": 1811.43,
+   "exitDate": "2026-08-24",
+   "exit": 1732.29,
+   "reason": "TRAIL_STOP",
+   "size": 579.4,
+   "pnl": -25.89,
+   "pnlPct": -4.37,
+   "heldSessions": 5,
+   "peakPct": 0.46,
+   "troughPct": -4.64,
+   "riskDollars": 50,
+   "r": -0.52,
+   "signal": "closed $1883.44 above the 20-day high $1873.4; 50-day average rising"
+  },
+  {
+   "symbol": "XOM",
+   "entryDate": "2026-08-19",
+   "entry": 166,
+   "exitDate": "2026-08-27",
+   "exit": 156.86,
+   "reason": "TRAIL_STOP",
+   "size": 852.41,
+   "pnl": -47.79,
+   "pnlPct": -5.51,
+   "heldSessions": 7,
+   "peakPct": 1.58,
+   "troughPct": -5.96,
+   "riskDollars": 50,
+   "r": -0.96,
+   "signal": "closed $165.6 above the 20-day high $162.49; 50-day average rising"
+  },
+  {
+   "symbol": "LLY",
+   "entryDate": "2026-08-20",
+   "entry": 1272.99,
+   "exitDate": "2026-08-28",
+   "exit": 1170.5429,
+   "reason": "STOP",
+   "size": 621.29,
+   "pnl": -50.62,
+   "pnlPct": -8.05,
+   "heldSessions": 7,
+   "peakPct": 0.15,
+   "troughPct": -8.72,
+   "riskDollars": 50,
+   "r": -1.01,
+   "signal": "closed $1279.94 above the 20-day high $1238.37; 50-day average rising"
+  },
+  {
+   "symbol": "MSFT",
+   "entryDate": "2026-08-05",
+   "entry": 496.4,
+   "exitDate": "2026-09-01",
+   "exit": 500.86,
+   "reason": "TIME_STOP",
+   "size": 667.28,
+   "pnl": 5.33,
+   "pnlPct": 0.9,
+   "heldSessions": 20,
+   "peakPct": 4.3,
+   "troughPct": -3.87,
+   "riskDollars": 50,
+   "r": 0.11,
+   "signal": "closed $492.76 above the 20-day high $491.56; 50-day average rising"
+  },
+  {
+   "symbol": "SHOP",
+   "entryDate": "2026-08-06",
+   "entry": 144,
+   "exitDate": "2026-09-01",
+   "exit": 143.03,
+   "reason": "TRAIL_STOP",
+   "size": 387.57,
+   "pnl": -3,
+   "pnlPct": -0.67,
+   "heldSessions": 19,
+   "peakPct": 10.22,
+   "troughPct": -3.31,
+   "riskDollars": 50,
+   "r": -0.06,
+   "signal": "closed $144.27 above the 20-day high $133.97; 50-day average rising"
+  },
+  {
+   "symbol": "UNP",
+   "entryDate": "2026-08-25",
+   "entry": 306.51,
+   "exitDate": "2026-09-01",
+   "exit": 291.14,
+   "reason": "TRAIL_STOP",
+   "size": 717.77,
+   "pnl": -36.71,
+   "pnlPct": -5.01,
+   "heldSessions": 6,
+   "peakPct": 2.47,
+   "troughPct": -5.83,
+   "riskDollars": 50,
+   "r": -0.73,
+   "signal": "closed $309.84 above the 20-day high $307.95; 50-day average rising"
+  },
+  {
+   "symbol": "PLTR",
+   "entryDate": "2026-08-28",
+   "entry": 184.89,
+   "exitDate": "2026-09-02",
+   "exit": 169.36,
+   "reason": "TRAIL_STOP",
+   "size": 590.11,
+   "pnl": -50.16,
+   "pnlPct": -8.4,
+   "heldSessions": 4,
+   "peakPct": 1.86,
+   "troughPct": -10.37,
+   "riskDollars": 50,
+   "r": -1,
+   "signal": "closed $185.95 above the 20-day high $182.4; 50-day average rising"
+  },
+  {
+   "symbol": "VRTX",
+   "entryDate": "2026-08-20",
+   "entry": 543.2,
+   "exitDate": "2026-09-08",
+   "exit": 525.08,
+   "reason": "TRAIL_STOP",
+   "size": 545.77,
+   "pnl": -18.75,
+   "pnlPct": -3.34,
+   "heldSessions": 13,
+   "peakPct": 3.01,
+   "troughPct": -4.09,
+   "riskDollars": 50,
+   "r": -0.38,
+   "signal": "closed $551.74 above the 20-day high $543.23; 50-day average rising"
+  },
+  {
+   "symbol": "AAPL",
+   "entryDate": "2026-09-02",
+   "entry": 326.75,
+   "exitDate": "2026-09-09",
+   "exit": 312.8343,
+   "reason": "STOP",
+   "size": 1174.03,
+   "pnl": -51.17,
+   "pnlPct": -4.26,
+   "heldSessions": 5,
+   "peakPct": 1.23,
+   "troughPct": -5.12,
+   "riskDollars": 50,
+   "r": -1.02,
+   "signal": "closed $325.12 above the 20-day high $322.34; 50-day average rising"
+  },
+  {
+   "symbol": "HOOD",
+   "entryDate": "2026-09-04",
+   "entry": 120.39,
+   "exitDate": "2026-09-16",
+   "exit": 104.9586,
+   "reason": "STOP",
+   "size": 390.08,
+   "pnl": -50.39,
+   "pnlPct": -12.82,
+   "heldSessions": 8,
+   "peakPct": 3.84,
+   "troughPct": -15.52,
+   "riskDollars": 50,
+   "r": -1.01,
+   "signal": "closed $124.66 above the 20-day high $112.43; 50-day average rising"
+  },
+  {
+   "symbol": "CRM",
+   "entryDate": "2026-08-20",
+   "entry": 204.82,
+   "exitDate": "2026-09-17",
+   "exit": 241.55,
+   "reason": "TRAIL_STOP",
+   "size": 556.66,
+   "pnl": 99.27,
+   "pnlPct": 17.93,
+   "heldSessions": 20,
+   "peakPct": 30.9,
+   "troughPct": -3.17,
+   "riskDollars": 50,
+   "r": 1.99,
+   "signal": "closed $206 above the 20-day high $204.1; 50-day average rising"
+  },
+  {
+   "symbol": "COP",
+   "entryDate": "2026-09-02",
+   "entry": 134,
+   "exitDate": "2026-09-17",
+   "exit": 130.04,
+   "reason": "TRAIL_STOP",
+   "size": 588.68,
+   "pnl": -17.99,
+   "pnlPct": -2.96,
+   "heldSessions": 11,
+   "peakPct": 5.68,
+   "troughPct": -2.96,
+   "riskDollars": 50,
+   "r": -0.36,
+   "signal": "closed $136.22 above the 20-day high $135.85; 50-day average rising"
+  },
+  {
+   "symbol": "DE",
+   "entryDate": "2026-09-02",
+   "entry": 677.62,
+   "exitDate": "2026-09-30",
+   "exit": 672.67,
+   "reason": "TIME_STOP",
+   "size": 570.69,
+   "pnl": -4.74,
+   "pnlPct": -0.73,
+   "heldSessions": 20,
+   "peakPct": 6.4,
+   "troughPct": -1.83,
+   "riskDollars": 50,
+   "r": -0.09,
+   "signal": "closed $675.81 above the 20-day high $660.33; 50-day average rising"
+  },
+  {
+   "symbol": "AAPL",
+   "entryDate": "2026-09-14",
+   "entry": 334.48,
+   "exitDate": "2026-10-01",
+   "exit": 328.78,
+   "reason": "TRAIL_STOP",
+   "size": 1057.91,
+   "pnl": -19.09,
+   "pnlPct": -1.7,
+   "heldSessions": 14,
+   "peakPct": 3.21,
+   "troughPct": -2.59,
+   "riskDollars": 50,
+   "r": -0.38,
+   "signal": "closed $332.18 above the 20-day high $330.78; 50-day average rising"
+  },
+  {
+   "symbol": "QCOM",
+   "entryDate": "2026-09-23",
+   "entry": 199.1,
+   "exitDate": "2026-10-06",
+   "exit": 180.3,
+   "reason": "TRAIL_STOP",
+   "size": 482.05,
+   "pnl": -46,
+   "pnlPct": -9.44,
+   "heldSessions": 10,
+   "peakPct": 3.38,
+   "troughPct": -9.93,
+   "riskDollars": 50,
+   "r": -0.92,
+   "signal": "closed $198.33 above the 20-day high $195.29; 50-day average rising"
+  },
+  {
+   "symbol": "META",
+   "entryDate": "2026-09-10",
+   "entry": 652.73,
+   "exitDate": "2026-10-07",
+   "exit": 721.08,
+   "reason": "TIME_STOP",
+   "size": 775.37,
+   "pnl": 80.42,
+   "pnlPct": 10.47,
+   "heldSessions": 20,
+   "peakPct": 19.44,
+   "troughPct": -1.62,
+   "riskDollars": 50,
+   "r": 1.61,
+   "signal": "closed $653.12 above the 20-day high $624.39; 50-day average rising"
+  },
+  {
+   "symbol": "ETN",
+   "entryDate": "2026-09-22",
+   "entry": 432.5,
+   "exitDate": "2026-10-09",
+   "exit": 420.28,
+   "reason": "TRAIL_STOP",
+   "size": 623.3,
+   "pnl": -18.23,
+   "pnlPct": -2.83,
+   "heldSessions": 14,
+   "peakPct": 4.46,
+   "troughPct": -3.1,
+   "riskDollars": 50,
+   "r": -0.36,
+   "signal": "closed $434.95 above the 20-day high $431.77; 50-day average rising"
+  },
+  {
+   "symbol": "AMD",
+   "entryDate": "2026-09-23",
+   "entry": 622,
+   "exitDate": "2026-10-12",
+   "exit": 596.16,
+   "reason": "TRAIL_STOP",
+   "size": 572.44,
+   "pnl": -24.35,
+   "pnlPct": -4.15,
+   "heldSessions": 14,
+   "peakPct": 5.86,
+   "troughPct": -5.7,
+   "riskDollars": 50,
+   "r": -0.49,
+   "signal": "closed $623.4 above the 20-day high $616.56; 50-day average rising"
+  },
+  {
+   "symbol": "MRVL",
+   "entryDate": "2026-10-02",
+   "entry": 278,
+   "exitDate": "2026-10-13",
+   "exit": 250.43,
+   "reason": "STOP",
+   "size": 504.17,
+   "pnl": -50.5,
+   "pnlPct": -9.92,
+   "heldSessions": 8,
+   "peakPct": 8.18,
+   "troughPct": -10.63,
+   "riskDollars": 50,
+   "r": -1.01,
+   "signal": "closed $268 above the 20-day high $267.33; 50-day average rising"
+  },
+  {
+   "symbol": "ANET",
+   "entryDate": "2026-10-07",
+   "entry": 211.45,
+   "exitDate": "2026-10-13",
+   "exit": 200.11,
+   "reason": "TRAIL_STOP",
+   "size": 718.66,
+   "pnl": -39.26,
+   "pnlPct": -5.36,
+   "heldSessions": 5,
+   "peakPct": 2.74,
+   "troughPct": -6.7,
+   "riskDollars": 50,
+   "r": -0.79,
+   "signal": "closed $215.45 above the 20-day high $211.73; 50-day average rising"
+  },
+  {
+   "symbol": "PANW",
+   "entryDate": "2026-10-01",
+   "entry": 395.3,
+   "exitDate": "2026-10-14",
+   "exit": 378.55,
+   "reason": "TRAIL_STOP",
+   "size": 483.86,
+   "pnl": -20.99,
+   "pnlPct": -4.24,
+   "heldSessions": 10,
+   "peakPct": 9.32,
+   "troughPct": -6.34,
+   "riskDollars": 50,
+   "r": -0.42,
+   "signal": "closed $397.41 above the 20-day high $396; 50-day average rising"
+  },
+  {
+   "symbol": "PLTR",
+   "entryDate": "2026-09-24",
+   "entry": 189.2,
+   "exitDate": "2026-10-16",
+   "exit": 187.61,
+   "reason": "TRAIL_STOP",
+   "size": 680.51,
+   "pnl": -6.4,
+   "pnlPct": -0.84,
+   "heldSessions": 17,
+   "peakPct": 12.47,
+   "troughPct": -2.51,
+   "riskDollars": 50,
+   "r": -0.13,
+   "signal": "closed $191.73 above the 20-day high $188.32; 50-day average rising"
+  }
+ ],
+ "marks": [
+  {
+   "date": "2026-07-14",
+   "realized": 0,
+   "unrealized": 0,
+   "open": 0
+  },
+  {
+   "date": "2026-07-15",
+   "realized": 0,
+   "unrealized": 0,
+   "open": 0
+  },
+  {
+   "date": "2026-07-16",
+   "realized": 0,
+   "unrealized": 14.63,
+   "open": 1
+  },
+  {
+   "date": "2026-07-17",
+   "realized": 0,
+   "unrealized": 21.48,
+   "open": 3
+  },
+  {
+   "date": "2026-07-20",
+   "realized": 0,
+   "unrealized": -34.76,
+   "open": 3
+  },
+  {
+   "date": "2026-07-21",
+   "realized": 0,
+   "unrealized": -24.72,
+   "open": 3
+  },
+  {
+   "date": "2026-07-22",
+   "realized": 0,
+   "unrealized": -32.21,
+   "open": 3
+  },
+  {
+   "date": "2026-07-23",
+   "realized": 0,
+   "unrealized": -33.08,
+   "open": 4
+  },
+  {
+   "date": "2026-07-24",
+   "realized": 0,
+   "unrealized": 26.8,
+   "open": 4
+  },
+  {
+   "date": "2026-07-27",
+   "realized": 0,
+   "unrealized": 51.16,
+   "open": 4
+  },
+  {
+   "date": "2026-07-28",
+   "realized": -39.21,
+   "unrealized": 99.47,
+   "open": 3
+  },
+  {
+   "date": "2026-07-29",
+   "realized": -39.21,
+   "unrealized": 38.55,
+   "open": 6
+  },
+  {
+   "date": "2026-07-30",
+   "realized": -39.21,
+   "unrealized": -27.76,
+   "open": 6
+  },
+  {
+   "date": "2026-07-31",
+   "realized": -193.11,
+   "unrealized": 10.37,
+   "open": 3
+  },
+  {
+   "date": "2026-08-03",
+   "realized": -193.11,
+   "unrealized": 10.84,
+   "open": 3
+  },
+  {
+   "date": "2026-08-04",
+   "realized": -193.11,
+   "unrealized": 32.33,
+   "open": 4
+  },
+  {
+   "date": "2026-08-05",
+   "realized": -193.11,
+   "unrealized": -2.15,
+   "open": 6
+  },
+  {
+   "date": "2026-08-06",
+   "realized": -193.11,
+   "unrealized": -6.85,
+   "open": 7
+  },
+  {
+   "date": "2026-08-07",
+   "realized": -193.11,
+   "unrealized": 6.48,
+   "open": 7
+  },
+  {
+   "date": "2026-08-10",
+   "realized": -193.11,
+   "unrealized": 16.48,
+   "open": 7
+  },
+  {
+   "date": "2026-08-11",
+   "realized": -193.11,
+   "unrealized": 53.19,
+   "open": 7
+  },
+  {
+   "date": "2026-08-12",
+   "realized": -193.11,
+   "unrealized": 39.82,
+   "open": 7
+  },
+  {
+   "date": "2026-08-13",
+   "realized": -200.72,
+   "unrealized": 54.38,
+   "open": 6
+  },
+  {
+   "date": "2026-08-14",
+   "realized": -200.72,
+   "unrealized": 13.45,
+   "open": 7
+  },
+  {
+   "date": "2026-08-17",
+   "realized": -162.39,
+   "unrealized": -80.67,
+   "open": 6
+  },
+  {
+   "date": "2026-08-18",
+   "realized": -201.81,
+   "unrealized": -102.42,
+   "open": 6
+  },
+  {
+   "date": "2026-08-19",
+   "realized": -325.61,
+   "unrealized": -35.15,
+   "open": 4
+  },
+  {
+   "date": "2026-08-20",
+   "realized": -325.61,
+   "unrealized": -45.14,
+   "open": 7
+  },
+  {
+   "date": "2026-08-21",
+   "realized": -325.61,
+   "unrealized": -17.4,
+   "open": 7
+  },
+  {
+   "date": "2026-08-24",
+   "realized": -351.5,
+   "unrealized": -2.96,
+   "open": 6
+  },
+  {
+   "date": "2026-08-25",
+   "realized": -351.5,
+   "unrealized": -7.01,
+   "open": 7
+  },
+  {
+   "date": "2026-08-26",
+   "realized": -351.5,
+   "unrealized": -49.56,
+   "open": 7
+  },
+  {
+   "date": "2026-08-27",
+   "realized": -399.29,
+   "unrealized": 127.22,
+   "open": 6
+  },
+  {
+   "date": "2026-08-28",
+   "realized": -449.91,
+   "unrealized": 189.73,
+   "open": 6
+  },
+  {
+   "date": "2026-08-31",
+   "realized": -449.91,
+   "unrealized": 158.2,
+   "open": 6
+  },
+  {
+   "date": "2026-09-01",
+   "realized": -484.29,
+   "unrealized": 132.05,
+   "open": 3
+  },
+  {
+   "date": "2026-09-02",
+   "realized": -534.45,
+   "unrealized": 178.7,
+   "open": 5
+  },
+  {
+   "date": "2026-09-03",
+   "realized": -534.45,
+   "unrealized": 201.63,
+   "open": 5
+  },
+  {
+   "date": "2026-09-04",
+   "realized": -534.45,
+   "unrealized": 144.99,
+   "open": 6
+  },
+  {
+   "date": "2026-09-08",
+   "realized": -553.2,
+   "unrealized": 78.75,
+   "open": 5
+  },
+  {
+   "date": "2026-09-09",
+   "realized": -604.37,
+   "unrealized": 100.71,
+   "open": 4
+  },
+  {
+   "date": "2026-09-10",
+   "realized": -604.37,
+   "unrealized": 84.37,
+   "open": 5
+  },
+  {
+   "date": "2026-09-11",
+   "realized": -604.37,
+   "unrealized": 97.47,
+   "open": 5
+  },
+  {
+   "date": "2026-09-14",
+   "realized": -604.37,
+   "unrealized": 153.58,
+   "open": 6
+  },
+  {
+   "date": "2026-09-15",
+   "realized": -604.37,
+   "unrealized": 152.39,
+   "open": 6
+  },
+  {
+   "date": "2026-09-16",
+   "realized": -654.76,
+   "unrealized": 129.93,
+   "open": 5
+  },
+  {
+   "date": "2026-09-17",
+   "realized": -573.48,
+   "unrealized": 50.76,
+   "open": 3
+  },
+  {
+   "date": "2026-09-18",
+   "realized": -573.48,
+   "unrealized": 24.08,
+   "open": 3
+  },
+  {
+   "date": "2026-09-21",
+   "realized": -573.48,
+   "unrealized": 126.2,
+   "open": 3
+  },
+  {
+   "date": "2026-09-22",
+   "realized": -573.48,
+   "unrealized": 152.49,
+   "open": 4
+  },
+  {
+   "date": "2026-09-23",
+   "realized": -573.48,
+   "unrealized": 139.2,
+   "open": 6
+  },
+  {
+   "date": "2026-09-24",
+   "realized": -573.48,
+   "unrealized": 186.45,
+   "open": 7
+  },
+  {
+   "date": "2026-09-25",
+   "realized": -573.48,
+   "unrealized": 176.33,
+   "open": 7
+  },
+  {
+   "date": "2026-09-28",
+   "realized": -573.48,
+   "unrealized": 47.85,
+   "open": 7
+  },
+  {
+   "date": "2026-09-29",
+   "realized": -573.48,
+   "unrealized": 32.08,
+   "open": 7
+  },
+  {
+   "date": "2026-09-30",
+   "realized": -578.22,
+   "unrealized": 26.62,
+   "open": 6
+  },
+  {
+   "date": "2026-10-01",
+   "realized": -597.31,
+   "unrealized": 49.87,
+   "open": 6
+  },
+  {
+   "date": "2026-10-02",
+   "realized": -597.31,
+   "unrealized": 68.12,
+   "open": 7
+  },
+  {
+   "date": "2026-10-05",
+   "realized": -597.31,
+   "unrealized": 71.35,
+   "open": 7
+  },
+  {
+   "date": "2026-10-06",
+   "realized": -643.31,
+   "unrealized": 202.95,
+   "open": 6
+  },
+  {
+   "date": "2026-10-07",
+   "realized": -562.89,
+   "unrealized": 76.85,
+   "open": 6
+  },
+  {
+   "date": "2026-10-08",
+   "realized": -562.89,
+   "unrealized": 20.54,
+   "open": 7
+  },
+  {
+   "date": "2026-10-09",
+   "realized": -581.12,
+   "unrealized": 113.06,
+   "open": 6
+  },
+  {
+   "date": "2026-10-12",
+   "realized": -605.47,
+   "unrealized": 98.66,
+   "open": 6
+  },
+  {
+   "date": "2026-10-13",
+   "realized": -695.23,
+   "unrealized": 85.29,
+   "open": 5
+  },
+  {
+   "date": "2026-10-14",
+   "realized": -716.22,
+   "unrealized": 58.37,
+   "open": 6
+  },
+  {
+   "date": "2026-10-15",
+   "realized": -716.22,
+   "unrealized": 85.8,
+   "open": 7
+  },
+  {
+   "date": "2026-10-16",
+   "realized": -722.62,
+   "unrealized": 53.27,
+   "open": 6
+  },
+  {
+   "date": "2026-10-19",
+   "realized": -722.62,
+   "unrealized": 61.35,
+   "open": 6
+  },
+  {
+   "date": "2026-10-20",
+   "realized": -722.62,
+   "unrealized": 93.25,
+   "open": 6
+  },
+  {
+   "date": "2026-10-21",
+   "realized": -722.62,
+   "unrealized": 71.84,
+   "open": 7
+  }
+ ]
+}

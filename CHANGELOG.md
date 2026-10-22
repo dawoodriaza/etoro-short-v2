@@ -5,6 +5,115 @@ repairs, reverted experiments). See README.md → "For AI agents".
 
 ---
 
+## v10 (2026-10-22) — four shadow strategies with their own books; a better Telegram
+
+**Nothing here changes how the live bot trades.** The ~110-trade evaluation of
+the v9 rules continues uninterrupted.
+
+### Why
+
+The performance review of 2026-10-22: 20 trades on the v9 rules, −$117.02
+(−$5.85 per trade), average win $6.91 against average loss $18.61; all time
+276 trades, −$1,023.56. The paper book answered the score-floor question —
+stocks the floor rejected lost too (226 paper trades, −$294.51), and so did
+buying without waiting for the dip (63, −$68.42). Every variant of the one idea
+the bot trades — intraday momentum — loses $1–6 per trade. So the next step is
+to test **different reasons to buy**, not more settings.
+
+### The four strategies (`src/shadow-strategies.js`)
+
+| Book | Buys when | Exits |
+|---|---|---|
+| 📈 `SWING_BREAKOUT` | close above the prior 20-day high, close above the 50-day average, 50-day average rising over 10 days | stop 2 × ATR, trailed to the 10-day low; 20 sessions max |
+| 🔁 `DIP_IN_UPTREND` | close above the 100-day average and 2-day RSI under 10 | first close above the 5-day average; safety stop 3 × ATR; 5 sessions max |
+| 📰 `EARNINGS_DRIFT` | the reaction session after an earnings report closes ≥ 3% up, in the upper half of its range, EPS ≥ estimate | stop at the reaction day's low (never tighter than 1 × ATR); 20 sessions max |
+| 🏆 `ROTATION` | top 5 of the watchlist by 3-month return skipping the last week, above the 50-day average; re-ranked once per ISO week | dropped out of the top 10 or below the 50-day average |
+
+Universe: the 54-stock watchlist. Each book is a fixed $10,000; stop-based
+trades risk 0.5% ($50) to the stop, capped at 35% of the book, at most 7 open;
+rotation holds 5 × $2,000. 10 bps round-trip costs. The 100-day average stands
+in for the usual 200-day one because only ~148 days of history exist.
+
+### Isolation
+
+- A **separate process**, chained after the nightly candle capture in cron
+  (`15 5 * * 2-6 … fetch-replay-candles.js …; node src/shadow-strategies.js`),
+  so it runs on finished data at about 08:35 Bahrain and cannot crash or slow
+  the live bot.
+- Reads only `data/replay-candles/`, `watchlist-daytrade.json` and the Finnhub
+  earnings calendar; writes only `data/shadow-strategies/<BOOK>/`
+  (`state.json`, `events-YYYY-MM.jsonl`) and `last-run.json`. A test asserts the
+  source never references the position meta, ledger, journal, trade history,
+  cooldowns or the eToro client.
+- `data/` is pushed to GitHub by the nightly server sync.
+
+### Two price traps, found and handled
+
+1. **The newest eToro daily bar is incomplete at capture time** (AAPL's showed
+   volume 30,522), because eToro's day is a UTC day that starts with overnight
+   24/5 trading. Only sessions whose UTC day has ended are processed, in both
+   modes.
+2. **eToro's daily open and close are overnight prices.** On AAPL's earnings
+   day (2026-07-30) the 16:00 ET close was $333.74 and the daily close $318.08.
+   Every fill, stop and exit uses regular-session prices (09:30–16:00 ET) built
+   from 5-minute bars (from 09-08), 15-minute or hourly bars (from 07-13; the
+   09:00 hourly bar is included, so pre-September backtests carry 30 minutes of
+   pre-market).
+
+No look-ahead: signals use data up to session E's close and fill at session
+E+1's open; stops are checked against each session's low, a gap through the
+stop fills at the open, and trailing levels use only bars before the session
+being checked.
+
+### First read on history (14 Jul → 21 Oct, 71 sessions)
+
+Rules were written before this was run. Earnings drift cannot be tested this
+way: Finnhub's free tier keeps about one month of earnings history.
+
+| Book | Trades | Win | Result |
+|---|---|---|---|
+| Swing breakout | 32 | 13% | −$722.62 (−$22.58/trade) |
+| Dip in uptrend | 52 | 60% | **+$33.44 (+$0.64/trade)** |
+| Rotation | 17 closed, 5 open | 29% | −$1,273.61 (−$1,785.46 closed, +$511.85 open) |
+
+Only the dip-in-uptrend book did not lose, which matches the repeated "spikes
+fade" finding. Rotation was hurt by earnings collapses it held through (RDDT
+−25%, AAPL −10.8%, AFRM −14.5%); swing kept breaking out and reversing. Three
+months, one market mood: a hint, not a verdict. Results in
+`data/shadow-strategies/_backtest/`; the forward books are the real test. They
+started 2026-10-22 from the 10-21 close, with rotation's first five buys (PLTR,
+SHOP, CRM, MSFT, MRVL) queued for the 10-22 open.
+
+### Telegram
+
+- The commands are registered with Telegram, so the phone's **/** menu lists
+  them with descriptions.
+- **Every reply carries tap-buttons** for the other screens; a tap runs that
+  screen. Button presses are checked against the configured chat id, like
+  typed commands.
+- Replies over Telegram's 4,096-character limit are split on line breaks
+  instead of failing.
+- New screens: **/today** (real trades, scans, plans, AI approvals, dip orders,
+  what the skipped stocks did on paper), **/perf** (last 7 days, current rules,
+  all time, average win and loss, how trades ended, drawdown and room left
+  before the 15% safety stop), **/shadow** (each book's open and closed trades,
+  next-open buys and its history check, against the live bot and the paper
+  book). **/help** rewritten. Aliases: `/held`, `/performance`, `/strategies`,
+  `/start`.
+- All amounts in your real dollars, like the rest of Telegram.
+- `node src/index.js --render /perf` prints a screen and exits without starting
+  the bot, so screens can be checked against live data before a deploy.
+
+The restart that switched the new Telegram on waited until no dip order was
+waiting (PANW and UNP had been placed minutes earlier, and a restart cancels
+waiting orders).
+
+10 new tests (426 total), covering the indicators, the New York clock,
+regular-session prices, sizing, next-open fills, gap-through-stop fills, no
+look-ahead, the weekly rotation and the isolation check.
+
+---
+
 ## v9.2 (2026-10-12) — paper-trade what the score floor turns down; Telegram commands
 
 **Logging and Telegram only — no change to how the bot trades**, so the

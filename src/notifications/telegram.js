@@ -38,29 +38,103 @@ async function sendTelegramMessage(text) {
 // v9.2 — COMMANDS FROM YOUR PHONE. Polls Telegram (no webhook: the server has
 // no public HTTPS) and answers ONLY the configured chat id, so nobody else who
 // finds the bot can read positions. Read-only: no command can trade.
-// handlers: { "/status": async () => html, ... }
-function startCommandListener(handlers) {
+//
+// v10: (1) the commands are registered with Telegram, so the "/" menu button
+// on the phone lists them with a one-line description; (2) every reply
+// carries tap-buttons for the other views, and a tap runs that view (button
+// presses are checked against the same chat id); (3) replies longer than
+// Telegram's 4,096-character limit are split on line breaks instead of
+// failing.
+//
+// commands: [{ command: "/status", description: "...", handler, button? }]
+const MAX_MESSAGE = 3900;
+
+function splitMessage(text) {
+  const parts = [];
+  let rest = String(text || "");
+  while (rest.length > MAX_MESSAGE) {
+    let cut = rest.lastIndexOf("\n", MAX_MESSAGE);
+    if (cut < MAX_MESSAGE / 2) cut = MAX_MESSAGE;
+    parts.push(rest.slice(0, cut));
+    rest = rest.slice(cut).replace(/^\n+/, "");
+  }
+  if (rest) parts.push(rest);
+  return parts;
+}
+
+function keyboardFor(commands) {
+  const buttons = commands
+    .filter((c) => c.button)
+    .map((c) => ({ text: c.button, callback_data: "cmd:" + c.command }));
+  const rows = [];
+  for (let i = 0; i < buttons.length; i += 2) rows.push(buttons.slice(i, i + 2));
+  return { inline_keyboard: rows };
+}
+
+async function sendReply(chatId, text, keyboard) {
+  const parts = splitMessage(text);
+  for (let i = 0; i < parts.length; i++) {
+    const last = i === parts.length - 1;
+    try {
+      await telegramBot.sendMessage(chatId, parts[i], {
+        parse_mode: "HTML",
+        disable_web_page_preview: true,
+        ...(last && keyboard ? { reply_markup: keyboard } : {}),
+      });
+    } catch (sendError) {
+      logger.warn("Telegram reply failed: " + sendError.message);
+    }
+  }
+}
+
+function startCommandListener(commands) {
   const chatId = String(process.env.DT_TELEGRAM_CHAT_ID || "");
   if (!telegramBot || !chatId) return;
+  const byName = {};
+  for (const c of commands) byName[c.command] = c;
+  for (const c of commands) for (const alias of c.aliases || []) byName[alias] = c;
+  const keyboard = keyboardFor(commands);
+
   try {
     telegramBot.startPolling({ restart: true });
   } catch (pollError) {
     logger.warn("Telegram command polling failed to start: " + pollError.message);
     return;
   }
+  // The phone's "/" menu. Failure is harmless — typed commands still work.
+  telegramBot
+    .setMyCommands(
+      commands
+        .filter((c) => c.description)
+        .map((c) => ({ command: c.command.replace(/^\//, ""), description: c.description.slice(0, 256) })),
+    )
+    .catch((e) => logger.warn("Telegram command menu not set: " + e.message));
+
+  const run = async (name) => {
+    const c = byName[name] || byName["/help"];
+    try {
+      await sendReply(chatId, await c.handler(), keyboard);
+    } catch (cmdError) {
+      logger.warn("Telegram command " + name + " failed: " + cmdError.message);
+      await sendReply(chatId, "⚠️ " + name + " failed: " + cmdError.message, keyboard);
+    }
+  };
+
   telegramBot.on("polling_error", (e) => logger.warn("Telegram polling: " + (e.code || e.message)));
   telegramBot.on("message", async (msg) => {
     if (!msg || !msg.text || String(msg.chat.id) !== chatId) return;
     const command = msg.text.trim().toLowerCase().replace(/^\/\s+/, "/").split(/[\s@]/)[0];
-    const handler = handlers[command] || handlers["/help"];
-    try {
-      await sendTelegramMessage(await handler());
-    } catch (cmdError) {
-      logger.warn("Telegram command " + command + " failed: " + cmdError.message);
-      await sendTelegramMessage("⚠️ " + command + " failed: " + cmdError.message);
-    }
+    await run(command);
   });
-  logger.info("Telegram commands ON: " + Object.keys(handlers).join(" "));
+  telegramBot.on("callback_query", async (query) => {
+    const fromChat = query && query.message && String(query.message.chat.id);
+    try {
+      await telegramBot.answerCallbackQuery(query.id);
+    } catch {}
+    if (fromChat !== chatId || !String(query.data || "").startsWith("cmd:")) return;
+    await run(query.data.slice(4));
+  });
+  logger.info("Telegram commands ON: " + commands.map((c) => c.command).join(" ") + " (menu + buttons)");
 }
 
 async function notifyBotStarted(dayTradeCapital) {

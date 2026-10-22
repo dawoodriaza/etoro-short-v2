@@ -3891,8 +3891,183 @@ async function commandPositions() {
   return "📊 <b>Open positions (" + symbols.length + ")</b>\n\n" + lines.join("\n\n");
 }
 
+// ── v10 Telegram screens: /today, /perf, /shadow ─────────────────────────
+const V9_START = "2026-10-12"; // the frozen evaluation started with v9
+const real = (v) => formatDualAmount(v, { signed: true });
+const pct = (v) => (v >= 0 ? "+" : "") + Number(v).toFixed(1) + "%";
+
+function readJsonLines(file, mustInclude) {
+  try {
+    return fs.readFileSync(file, "utf8").split("\n")
+      .filter((l) => l && (!mustInclude || mustInclude.some((m) => l.includes(m))))
+      .map((l) => { try { return JSON.parse(l); } catch { return null; } })
+      .filter(Boolean);
+  } catch {
+    return [];
+  }
+}
+
+function tradeStats(list) {
+  const n = list.length;
+  const sum = list.reduce((a, t) => a + t.pnlDollars, 0);
+  const wins = list.filter((t) => t.pnlDollars > 0);
+  const losses = list.filter((t) => t.pnlDollars <= 0);
+  return {
+    n, sum,
+    per: n ? sum / n : 0,
+    win: n ? Math.round((100 * wins.length) / n) : 0,
+    avgWin: wins.length ? wins.reduce((a, t) => a + t.pnlDollars, 0) / wins.length : 0,
+    avgLoss: losses.length ? losses.reduce((a, t) => a + t.pnlDollars, 0) / losses.length : 0,
+  };
+}
+
+async function commandToday() {
+  const day = new Date().toLocaleDateString("en-CA", { timeZone: TIMEZONE });
+  const ev = readJsonLines(path.join(__dirname, "../data/journal/decisions-" + day + ".jsonl"), [
+    '"TRADE_OPENED"', '"TRADE_CLOSED"', '"DIP_ENTRY"', '"AI_DECISION"', '"PLAN_BUILT"', '"SCAN_START"',
+  ]);
+  const opened = ev.filter((e) => e.event === "TRADE_OPENED");
+  const closed = ev.filter((e) => e.event === "TRADE_CLOSED");
+  const dips = ev.filter((e) => e.event === "DIP_ENTRY");
+  const ai = ev.filter((e) => e.event === "AI_DECISION");
+  const takes = ai.filter((a) => a.decision === "TAKE");
+  const closedSum = closed.reduce((a, t) => a + (t.pnlDollars || 0), 0);
+  const lines = ["📅 <b>Today</b> — " + new Date().toLocaleDateString("en-GB", { timeZone: TIMEZONE, weekday: "short", day: "numeric", month: "short" }), ""];
+  lines.push("<b>Real trades</b>");
+  if (!opened.length && !closed.length) lines.push("  none yet");
+  opened.forEach((e) => lines.push("  🟢 bought " + escapeHtml((e.plan && e.plan.symbol) || "?") + " $" + Number((e.plan && e.plan.entryPrice) || 0).toFixed(2)));
+  closed.forEach((e) => lines.push("  " + (e.pnlDollars > 0 ? "✅" : "🔻") + " sold " + escapeHtml(e.symbol) + " " + real(e.pnlDollars || 0) + " · " + describeExitReason(String(e.exitReason || "")).trigger));
+  if (closed.length) lines.push("  <i>closed today: " + real(closedSum) + "</i>");
+  lines.push("");
+  lines.push("<b>Pipeline</b>");
+  lines.push("  scans " + ev.filter((e) => e.event === "SCAN_START").length + " · plans " + ev.filter((e) => e.event === "PLAN_BUILT").length +
+    " · AI approved " + takes.length + " of " + ai.length);
+  const st = (k) => dips.filter((d) => d.status === k).length;
+  lines.push("  dip orders: " + st("ARMED") + " placed · " + st("FILLED") + " bought · " + st("EXPIRED") + " expired" +
+    (pendingDipEntries.size ? " · waiting now: " + [...pendingDipEntries.keys()].join(", ") : ""));
+  if (takes.length) lines.push("  approved: " + [...new Set(takes.map((t) => t.symbol))].join(", "));
+  const paper = paperSummaryLines();
+  if (paper.length) {
+    lines.push("");
+    lines.push("<b>If it had bought what it skipped</b> <i>(paper)</i>");
+    paper.forEach((l) => lines.push("  " + l));
+  }
+  return lines.join("\n");
+}
+
+async function commandPerf() {
+  let hist = [];
+  try {
+    hist = JSON.parse(fs.readFileSync(path.join(__dirname, "../data/trade-history.json"), "utf8"))
+      .filter((t) => typeof t.pnlDollars === "number" && t.closedAt);
+  } catch {}
+  const weekAgo = new Date(Date.now() - 7 * 86400000).toISOString();
+  const row = (label, list) => {
+    const x = tradeStats(list);
+    return "<b>" + label + "</b>: " + x.n + " trades · " + real(x.sum) + (x.n ? " · " + x.win + "% won · avg win " + real(x.avgWin) + " / loss " + real(x.avgLoss) : "");
+  };
+  const v9 = hist.filter((t) => t.closedAt >= V9_START);
+  const mix = {};
+  v9.forEach((t) => { const k = t.exitReason || "?"; const b = mix[k] || (mix[k] = { n: 0, p: 0 }); b.n++; b.p += t.pnlDollars; });
+  const cap = capitalManager.getCapitalState();
+  let peak = null;
+  try { peak = JSON.parse(fs.readFileSync(path.join(__dirname, "../data/capital-ledger.json"), "utf8")).peakEffectiveCapital; } catch {}
+  const eff = Number(cap.effectiveCapital);
+  const lines = ["📈 <b>Performance</b> <i>(your real dollars)</i>", ""];
+  lines.push(row("Last 7 days", hist.filter((t) => t.closedAt >= weekAgo)));
+  lines.push(row("Since " + V9_START + " (current rules)", v9));
+  lines.push(row("All time", hist));
+  if (Object.keys(mix).length) {
+    lines.push("");
+    lines.push("<b>How trades ended</b> (current rules)");
+    Object.entries(mix).sort((a, b) => b[1].n - a[1].n).forEach(([k, b]) => lines.push("  " + describeExitReason(k).trigger + ": " + b.n + " · " + real(b.p)));
+  }
+  if (peak) {
+    const dd = (1 - eff / peak) * 100;
+    const breaker = peak * (1 - config.maxDrawdownFromPeakPct);
+    lines.push("");
+    lines.push("<b>Risk</b>");
+    lines.push("  capital " + real(eff).replace(/^\+/, "") + " · peak " + real(peak).replace(/^\+/, "") + " · down " + dd.toFixed(1) + "% from peak");
+    lines.push("  safety stop at " + (config.maxDrawdownFromPeakPct * 100).toFixed(0) + "% down — room left " + real(Math.max(0, eff - breaker)).replace(/^\+/, ""));
+  }
+  lines.push("");
+  lines.push("<i>Evaluation target: ~110 trades on the current rules (" + v9.length + " so far).</i>");
+  return lines.join("\n");
+}
+
+function paperTotalsAllTime() {
+  const dir = path.join(__dirname, "../data/shadow-log");
+  const by = {};
+  try {
+    for (const f of fs.readdirSync(dir).filter((x) => x.startsWith("paper-"))) {
+      for (const r of readJsonLines(path.join(dir, f), ['"PAPER_CLOSE"'])) {
+        const k = r.paperReason || "DIP_WAIT";
+        const b = by[k] || (by[k] = { n: 0, wins: 0, pnl: 0 });
+        const v = r.totalPnlDollars != null ? r.totalPnlDollars : r.pnlDollars || 0;
+        b.n++; b.pnl += v; if (v > 0) b.wins++;
+      }
+    }
+  } catch {}
+  return by;
+}
+
+async function commandShadow() {
+  const dir = path.join(__dirname, "../data/shadow-strategies");
+  const readJson = (f) => { try { return JSON.parse(fs.readFileSync(f, "utf8")); } catch { return null; } };
+  const lastRun = readJson(path.join(dir, "last-run.json"));
+  const backtest = readJson(path.join(dir, "_backtest", "last-run.json"));
+  let strategies = {};
+  try { strategies = require("./shadow-strategies").STRATEGIES; } catch {}
+  const lines = ["🧪 <b>Shadow strategies</b> <i>(paper only — own books, no real money)</i>"];
+  lines.push(lastRun
+    ? "<i>updated " + marketHours.localClock(new Date(lastRun.at)) + " · up to the " + lastRun.latestCompleteSession + " close</i>"
+    : "<i>not run yet — it runs each morning after the price capture</i>");
+  for (const name of ["SWING_BREAKOUT", "DIP_IN_UPTREND", "EARNINGS_DRIFT", "ROTATION"]) {
+    const st = readJson(path.join(dir, name, "state.json"));
+    const meta = strategies[name] || { label: name, emoji: "•" };
+    lines.push("");
+    lines.push(meta.emoji + " <b>" + meta.label + "</b>" + (meta.idea ? " — <i>" + escapeHtml(meta.idea) + "</i>" : ""));
+    if (!st) { lines.push("  no data yet"); continue; }
+    const closed = st.closed || [];
+    const realized = closed.reduce((a, t) => a + t.pnl, 0);
+    const wins = closed.filter((t) => t.pnl > 0).length;
+    const mark = (st.marks || [])[(st.marks || []).length - 1];
+    lines.push("  closed " + closed.length + (closed.length ? " · " + wins + " won · " + real(realized) + " (" + real(realized / closed.length) + "/trade)" : ""));
+    const open = Object.values(st.open || {});
+    if (open.length) lines.push("  open " + open.length + ": " + open.map((o) => o.symbol).join(", ") + (mark ? " · open P&L " + real(mark.unrealized) : ""));
+    if ((st.pending || []).length) lines.push("  buying at next open: " + st.pending.map((x) => x.symbol).join(", "));
+    const bt = backtest && backtest.books && backtest.books[name];
+    if (bt && bt.closed) lines.push("  <i>history check (Jul 14–Oct 21): " + bt.closed + " trades · " + real(bt.realized + (bt.unrealized || 0)) + "</i>");
+  }
+  const paper = paperTotalsAllTime();
+  const live = tradeStats((() => {
+    try {
+      return JSON.parse(fs.readFileSync(path.join(__dirname, "../data/trade-history.json"), "utf8"))
+        .filter((t) => typeof t.pnlDollars === "number" && t.closedAt >= V9_START);
+    } catch { return []; }
+  })());
+  lines.push("");
+  lines.push("<b>Compared with</b>");
+  lines.push("  🤖 live bot (since " + V9_START + "): " + live.n + " trades · " + real(live.sum) + (live.n ? " (" + real(live.per) + "/trade)" : ""));
+  const label = { SCORE_FLOOR: "skipped by score", DIP_WAIT: "skipped waiting for dip" };
+  Object.entries(paper).forEach(([k, b]) =>
+    lines.push("  📝 paper, " + (label[k] || k) + ": " + b.n + " · " + b.wins + " won · " + real(b.pnl) + " (" + real(b.pnl / b.n) + "/trade)"));
+  return lines.join("\n");
+}
+
 function commandHelp() {
-  return "🤖 <b>Commands</b>\n/status — is the bot working, P&L, capital\n/positions — what it holds, live P&L, when it will sell\n/help — this list";
+  return [
+    "🤖 <b>Commands</b> — tap a button below, or type:",
+    "",
+    "/status — is the bot working? health, P&L, capital",
+    "/positions — what it holds now, live P&L, when it will sell",
+    "/today — today's trades, dip orders, AI calls, skipped stocks",
+    "/perf — results: last 7 days, current rules, all time, risk",
+    "/shadow — the 4 shadow strategies vs the live bot",
+    "/help — this list",
+    "",
+    "<i>Read-only: no command can buy or sell.</i>",
+  ].join("\n");
 }
 
 // v8.8 — THE DAY'S SUMMARY, SENT WHEN THE MARKET ACTUALLY CLOSES.
@@ -4268,13 +4443,14 @@ async function main() {
 
   startScheduler();
   // v9.2: answer /status and /positions from the owner's phone.
-  notifications.startCommandListener({
-    "/status": commandStatus,
-    "/positions": commandPositions,
-    "/held": commandPositions,
-    "/help": commandHelp,
-    "/start": commandHelp,
-  });
+  notifications.startCommandListener([
+    { command: "/status", description: "Is the bot working? Health, P&L, capital", handler: commandStatus, button: "🟢 Status" },
+    { command: "/positions", aliases: ["/held"], description: "What it holds now, live P&L, when it sells", handler: commandPositions, button: "📂 Positions" },
+    { command: "/today", description: "Today: trades, dip orders, AI calls, skipped stocks", handler: commandToday, button: "📅 Today" },
+    { command: "/perf", aliases: ["/performance"], description: "Results: last 7 days, current rules, all time, risk", handler: commandPerf, button: "📈 Performance" },
+    { command: "/shadow", aliases: ["/strategies"], description: "The 4 shadow strategies vs the live bot", handler: commandShadow, button: "🧪 Shadow books" },
+    { command: "/help", aliases: ["/start"], description: "List of commands", handler: commandHelp, button: "❓ Help" },
+  ]);
 
   // v6: real-time exit watchdog. A live tick crossing a held position's own
   // stop/floor triggers an IMMEDIATE off-cycle exit check instead of waiting
@@ -4324,4 +4500,15 @@ async function main() {
   logger.info("Running (" + marketHours.getCurrentBahrainTime() + " Bahrain)");
 }
 
-main();
+// v10: `node src/index.js --render /perf` prints one Telegram screen and exits
+// WITHOUT starting the bot (no schedulers, no Telegram polling, no orders), so
+// a screen can be checked against live data before a deploy.
+if (process.argv[2] === "--render") {
+  const screens = { "/status": commandStatus, "/today": commandToday, "/perf": commandPerf, "/shadow": commandShadow, "/help": commandHelp };
+  const fn = screens[process.argv[3]];
+  Promise.resolve(fn ? fn() : "unknown screen; one of " + Object.keys(screens).join(" "))
+    .then((out) => { console.log(String(out).replace(/<[^>]+>/g, "")); process.exit(0); })
+    .catch((e) => { console.error(e.stack || e); process.exit(1); });
+} else {
+  main();
+}

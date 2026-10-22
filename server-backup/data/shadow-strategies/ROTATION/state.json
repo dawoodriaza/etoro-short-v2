@@ -1,0 +1,44 @@
+{
+ "book": "ROTATION",
+ "createdAt": "2026-10-22T13:40:53.189Z",
+ "lastProcessedSession": "2026-10-21",
+ "lastRebalanceWeek": "2026-W43",
+ "open": {},
+ "pending": [
+  {
+   "symbol": "PLTR",
+   "reason": "rank 1, 3-month return +49.42%",
+   "signalDate": "2026-10-21"
+  },
+  {
+   "symbol": "SHOP",
+   "reason": "rank 2, 3-month return +37.66%",
+   "signalDate": "2026-10-21"
+  },
+  {
+   "symbol": "CRM",
+   "reason": "rank 3, 3-month return +37.43%",
+   "signalDate": "2026-10-21"
+  },
+  {
+   "symbol": "MSFT",
+   "reason": "rank 4, 3-month return +33.14%",
+   "signalDate": "2026-10-21"
+  },
+  {
+   "symbol": "MRVL",
+   "reason": "rank 5, 3-month return +30.05%",
+   "signalDate": "2026-10-21"
+  }
+ ],
+ "pendingExits": {},
+ "closed": [],
+ "marks": [
+  {
+   "date": "2026-10-21",
+   "realized": 0,
+   "unrealized": 0,
+   "open": 0
+  }
+ ]
+}

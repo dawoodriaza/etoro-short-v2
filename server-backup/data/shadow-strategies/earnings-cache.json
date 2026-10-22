@@ -1,0 +1,127 @@
+{
+ "at": "2026-10-22T13:40:53.173Z",
+ "note": "11 watchlist reports since 2026-10-01",
+ "rows": [
+  {
+   "symbol": "HON",
+   "date": "2026-10-22",
+   "hour": "bmo",
+   "quarter": 3,
+   "year": 2026,
+   "epsEstimate": 2.1885,
+   "epsActual": 2.27,
+   "revenueEstimate": 5056992502,
+   "revenueActual": 4994000000
+  },
+  {
+   "symbol": "NBIS",
+   "date": "2026-10-22",
+   "hour": "",
+   "quarter": 3,
+   "year": 2026,
+   "epsEstimate": -0.6613,
+   "epsActual": null,
+   "revenueEstimate": 924130138,
+   "revenueActual": null
+  },
+  {
+   "symbol": "UNP",
+   "date": "2026-10-22",
+   "hour": "bmo",
+   "quarter": 3,
+   "year": 2026,
+   "epsEstimate": 3.5078,
+   "epsActual": 3.53,
+   "revenueEstimate": 7196008509,
+   "revenueActual": 7197000000
+  },
+  {
+   "symbol": "META",
+   "date": "2026-10-21",
+   "hour": "amc",
+   "quarter": 3,
+   "year": 2026,
+   "epsEstimate": 5.7889,
+   "epsActual": 7.4,
+   "revenueEstimate": 64635778699,
+   "revenueActual": 63061000000
+  },
+  {
+   "symbol": "TSLA",
+   "date": "2026-10-21",
+   "hour": "amc",
+   "quarter": 3,
+   "year": 2026,
+   "epsEstimate": 0.4358,
+   "epsActual": 0.48,
+   "revenueEstimate": 28440505633,
+   "revenueActual": 28046000000
+  },
+  {
+   "symbol": "GE",
+   "date": "2026-10-20",
+   "hour": "bmo",
+   "quarter": 3,
+   "year": 2026,
+   "epsEstimate": 2.0657,
+   "epsActual": 2.25,
+   "revenueEstimate": 13260144511,
+   "revenueActual": 13285000000
+  },
+  {
+   "symbol": "GM",
+   "date": "2026-10-20",
+   "hour": "bmo",
+   "quarter": 3,
+   "year": 2026,
+   "epsEstimate": 3.7366,
+   "epsActual": 3.7,
+   "revenueEstimate": 50157475267,
+   "revenueActual": 50015000000
+  },
+  {
+   "symbol": "ISRG",
+   "date": "2026-10-20",
+   "hour": "amc",
+   "quarter": 3,
+   "year": 2026,
+   "epsEstimate": 2.6956,
+   "epsActual": 3,
+   "revenueEstimate": 2963811429,
+   "revenueActual": 3048700000
+  },
+  {
+   "symbol": "NFLX",
+   "date": "2026-10-20",
+   "hour": "amc",
+   "quarter": 3,
+   "year": 2026,
+   "epsEstimate": 0.8391,
+   "epsActual": 0.87,
+   "revenueEstimate": 13130968612,
+   "revenueActual": 12874176000
+  },
+  {
+   "symbol": "NKE",
+   "date": "2026-10-01",
+   "hour": "amc",
+   "quarter": 1,
+   "year": 2027,
+   "epsEstimate": 0.4364,
+   "epsActual": 0.48,
+   "revenueEstimate": 11428678300,
+   "revenueActual": 11213000000
+  },
+  {
+   "symbol": "NKE",
+   "date": "2026-10-01",
+   "hour": "amc",
+   "quarter": 3,
+   "year": 2026,
+   "epsEstimate": 0.4364,
+   "epsActual": 0.48,
+   "revenueEstimate": 11428678300,
+   "revenueActual": 11213000000
+  }
+ ]
+}
