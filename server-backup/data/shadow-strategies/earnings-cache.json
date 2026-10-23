@@ -1,6 +1,6 @@
 {
- "at": "2026-10-22T13:40:53.173Z",
- "note": "11 watchlist reports since 2026-10-01",
+ "at": "2026-10-23T05:31:08.585Z",
+ "note": "9 watchlist reports since 2026-10-02",
  "rows": [
   {
    "symbol": "HON",
@@ -100,28 +100,6 @@
    "epsActual": 0.87,
    "revenueEstimate": 13130968612,
    "revenueActual": 12874176000
-  },
-  {
-   "symbol": "NKE",
-   "date": "2026-10-01",
-   "hour": "amc",
-   "quarter": 1,
-   "year": 2027,
-   "epsEstimate": 0.4364,
-   "epsActual": 0.48,
-   "revenueEstimate": 11428678300,
-   "revenueActual": 11213000000
-  },
-  {
-   "symbol": "NKE",
-   "date": "2026-10-01",
-   "hour": "amc",
-   "quarter": 3,
-   "year": 2026,
-   "epsEstimate": 0.4364,
-   "epsActual": 0.48,
-   "revenueEstimate": 11428678300,
-   "revenueActual": 11213000000
   }
  ]
 }

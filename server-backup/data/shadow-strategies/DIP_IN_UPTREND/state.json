@@ -1,15 +1,30 @@
 {
  "book": "DIP_IN_UPTREND",
  "createdAt": "2026-10-22T13:40:53.187Z",
- "lastProcessedSession": "2026-10-21",
+ "lastProcessedSession": "2026-10-22",
  "lastRebalanceWeek": null,
  "open": {},
- "pending": [],
+ "pending": [
+  {
+   "symbol": "MSFT",
+   "reason": "2-day RSI 5 while above the 100-day average $458.01",
+   "atr": 13.130721428571446,
+   "stopAtr": 3,
+   "stopAbove": null,
+   "signalDate": "2026-10-22"
+  }
+ ],
  "pendingExits": {},
  "closed": [],
  "marks": [
   {
    "date": "2026-10-21",
+   "realized": 0,
+   "unrealized": 0,
+   "open": 0
+  },
+  {
+   "date": "2026-10-22",
    "realized": 0,
    "unrealized": 0,
    "open": 0

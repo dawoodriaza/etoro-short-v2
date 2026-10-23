@@ -1,15 +1,38 @@
 {
  "book": "SWING_BREAKOUT",
  "createdAt": "2026-10-22T13:40:53.180Z",
- "lastProcessedSession": "2026-10-21",
+ "lastProcessedSession": "2026-10-22",
  "lastRebalanceWeek": null,
  "open": {},
- "pending": [],
+ "pending": [
+  {
+   "symbol": "VRTX",
+   "reason": "closed $535.5 above the 20-day high $529.75; 50-day average rising",
+   "atr": 15.750000000000009,
+   "stopAtr": 2,
+   "stopAbove": null,
+   "signalDate": "2026-10-22"
+  },
+  {
+   "symbol": "LIN",
+   "reason": "closed $510.44 above the 20-day high $506.17; 50-day average rising",
+   "atr": 14.344285714285714,
+   "stopAtr": 2,
+   "stopAbove": null,
+   "signalDate": "2026-10-22"
+  }
+ ],
  "pendingExits": {},
  "closed": [],
  "marks": [
   {
    "date": "2026-10-21",
+   "realized": 0,
+   "unrealized": 0,
+   "open": 0
+  },
+  {
+   "date": "2026-10-22",
    "realized": 0,
    "unrealized": 0,
    "open": 0

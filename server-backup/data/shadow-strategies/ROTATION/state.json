@@ -1,36 +1,91 @@
 {
  "book": "ROTATION",
  "createdAt": "2026-10-22T13:40:53.189Z",
- "lastProcessedSession": "2026-10-21",
+ "lastProcessedSession": "2026-10-22",
  "lastRebalanceWeek": "2026-W43",
- "open": {},
- "pending": [
-  {
+ "open": {
+  "PLTR": {
    "symbol": "PLTR",
-   "reason": "rank 1, 3-month return +49.42%",
-   "signalDate": "2026-10-21"
+   "entryDate": "2026-10-22",
+   "entry": 200.83,
+   "stop": null,
+   "stopKind": null,
+   "size": 2000,
+   "riskDollars": null,
+   "peak": 202.42,
+   "trough": 194.52,
+   "heldSessions": 1,
+   "signal": "rank 1, 3-month return +49.42%",
+   "signalDate": "2026-10-21",
+   "lastClose": 196.18,
+   "lastDate": "2026-10-22"
   },
-  {
+  "SHOP": {
    "symbol": "SHOP",
-   "reason": "rank 2, 3-month return +37.66%",
-   "signalDate": "2026-10-21"
+   "entryDate": "2026-10-22",
+   "entry": 174,
+   "stop": null,
+   "stopKind": null,
+   "size": 2000,
+   "riskDollars": null,
+   "peak": 176.23,
+   "trough": 165.33,
+   "heldSessions": 1,
+   "signal": "rank 2, 3-month return +37.66%",
+   "signalDate": "2026-10-21",
+   "lastClose": 168.73,
+   "lastDate": "2026-10-22"
   },
-  {
+  "CRM": {
    "symbol": "CRM",
-   "reason": "rank 3, 3-month return +37.43%",
-   "signalDate": "2026-10-21"
+   "entryDate": "2026-10-22",
+   "entry": 243.79,
+   "stop": null,
+   "stopKind": null,
+   "size": 2000,
+   "riskDollars": null,
+   "peak": 252.35,
+   "trough": 243.1,
+   "heldSessions": 1,
+   "signal": "rank 3, 3-month return +37.43%",
+   "signalDate": "2026-10-21",
+   "lastClose": 249.85,
+   "lastDate": "2026-10-22"
   },
-  {
+  "MSFT": {
    "symbol": "MSFT",
-   "reason": "rank 4, 3-month return +33.14%",
-   "signalDate": "2026-10-21"
+   "entryDate": "2026-10-22",
+   "entry": 533.13,
+   "stop": null,
+   "stopKind": null,
+   "size": 2000,
+   "riskDollars": null,
+   "peak": 533.13,
+   "trough": 520.3,
+   "heldSessions": 1,
+   "signal": "rank 4, 3-month return +33.14%",
+   "signalDate": "2026-10-21",
+   "lastClose": 521.19,
+   "lastDate": "2026-10-22"
   },
-  {
+  "MRVL": {
    "symbol": "MRVL",
-   "reason": "rank 5, 3-month return +30.05%",
-   "signalDate": "2026-10-21"
+   "entryDate": "2026-10-22",
+   "entry": 230.94,
+   "stop": null,
+   "stopKind": null,
+   "size": 2000,
+   "riskDollars": null,
+   "peak": 236.13,
+   "trough": 220.22,
+   "heldSessions": 1,
+   "signal": "rank 5, 3-month return +30.05%",
+   "signalDate": "2026-10-21",
+   "lastClose": 223.47,
+   "lastDate": "2026-10-22"
   }
- ],
+ },
+ "pending": [],
  "pendingExits": {},
  "closed": [],
  "marks": [
@@ -39,6 +94,12 @@
    "realized": 0,
    "unrealized": 0,
    "open": 0
+  },
+  {
+   "date": "2026-10-22",
+   "realized": 0,
+   "unrealized": -166.65,
+   "open": 5
   }
  ]
 }

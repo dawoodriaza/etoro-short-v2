@@ -1,11 +1,11 @@
 {
- "at": "2026-10-22T13:40:53.191Z",
+ "at": "2026-10-23T05:31:08.601Z",
  "mode": "forward",
  "from": null,
  "to": null,
- "latestCompleteSession": "2026-10-21",
+ "latestCompleteSession": "2026-10-22",
  "universe": 54,
- "earnings": "11 watchlist reports since 2026-10-01",
+ "earnings": "9 watchlist reports since 2026-10-02",
  "books": {
   "SWING_BREAKOUT": {
    "closed": 0,
@@ -16,9 +16,9 @@
    "open": 0,
    "openSymbols": [],
    "unrealized": 0,
-   "lastSession": "2026-10-21",
+   "lastSession": "2026-10-22",
    "sessionsProcessed": 1,
-   "signalsToday": 0
+   "signalsToday": 2
   },
   "DIP_IN_UPTREND": {
    "closed": 0,
@@ -29,9 +29,9 @@
    "open": 0,
    "openSymbols": [],
    "unrealized": 0,
-   "lastSession": "2026-10-21",
+   "lastSession": "2026-10-22",
    "sessionsProcessed": 1,
-   "signalsToday": 0
+   "signalsToday": 1
   },
   "EARNINGS_DRIFT": {
    "closed": 0,
@@ -42,9 +42,9 @@
    "open": 0,
    "openSymbols": [],
    "unrealized": 0,
-   "lastSession": "2026-10-21",
+   "lastSession": "2026-10-22",
    "sessionsProcessed": 1,
-   "signalsToday": 0
+   "signalsToday": 1
   },
   "ROTATION": {
    "closed": 0,
@@ -52,10 +52,16 @@
    "winRate": null,
    "realized": 0,
    "perTrade": null,
-   "open": 0,
-   "openSymbols": [],
-   "unrealized": 0,
-   "lastSession": "2026-10-21",
+   "open": 5,
+   "openSymbols": [
+    "PLTR",
+    "SHOP",
+    "CRM",
+    "MSFT",
+    "MRVL"
+   ],
+   "unrealized": -166.65,
+   "lastSession": "2026-10-22",
    "sessionsProcessed": 1,
    "signalsToday": 0
   }

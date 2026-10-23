@@ -1,1 +1,6 @@
 {"ts":"2026-10-22T13:40:53.191Z","book":"ROTATION","event":"REBALANCE","date":"2026-10-21","week":"2026-W43","top10":["PLTR 49.42%","SHOP 37.66%","CRM 37.43%","MSFT 33.14%","MRVL 30.05%","SNAP 29.98%","COP 25.34%","XOM 21.14%","ISRG 15.76%","AMD 13.51%"]}
+{"ts":"2026-10-23T05:31:08.600Z","book":"ROTATION","event":"ENTRY","symbol":"PLTR","date":"2026-10-22","entry":200.83,"stop":null,"size":2000,"signal":"rank 1, 3-month return +49.42%"}
+{"ts":"2026-10-23T05:31:08.600Z","book":"ROTATION","event":"ENTRY","symbol":"SHOP","date":"2026-10-22","entry":174,"stop":null,"size":2000,"signal":"rank 2, 3-month return +37.66%"}
+{"ts":"2026-10-23T05:31:08.600Z","book":"ROTATION","event":"ENTRY","symbol":"CRM","date":"2026-10-22","entry":243.79,"stop":null,"size":2000,"signal":"rank 3, 3-month return +37.43%"}
+{"ts":"2026-10-23T05:31:08.600Z","book":"ROTATION","event":"ENTRY","symbol":"MSFT","date":"2026-10-22","entry":533.13,"stop":null,"size":2000,"signal":"rank 4, 3-month return +33.14%"}
+{"ts":"2026-10-23T05:31:08.600Z","book":"ROTATION","event":"ENTRY","symbol":"MRVL","date":"2026-10-22","entry":230.94,"stop":null,"size":2000,"signal":"rank 5, 3-month return +30.05%"}

@@ -149,9 +149,9 @@
     "scoreAtExit": 93.66526719430074
   },
   "UPST": {
-    "exitAtMs": 1792176551232,
+    "exitAtMs": 1792698305949,
     "wasLoss": true,
-    "scoreAtExit": 100
+    "scoreAtExit": 93.00995722775126
   },
   "ARM": {
     "exitAtMs": 1789155902583,
@@ -169,9 +169,9 @@
     "scoreAtExit": 94.69308504486297
   },
   "CRM": {
-    "exitAtMs": 1788454562602,
-    "wasLoss": true,
-    "scoreAtExit": 94.70855043044483
+    "exitAtMs": 1792685162662,
+    "wasLoss": false,
+    "scoreAtExit": 81.26598551317434
   },
   "LLY": {
     "exitAtMs": 1792093502289,
@@ -224,7 +224,7 @@
     "scoreAtExit": 88.34345899997794
   },
   "PANW": {
-    "exitAtMs": 1791315902317,
+    "exitAtMs": 1792698303596,
     "wasLoss": true,
     "scoreAtExit": 100
   },
