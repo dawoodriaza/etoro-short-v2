@@ -2409,3 +2409,4 @@
 [2026-10-20 14:50:23] [ERROR] ALERT [ETORO_MARKET_DATA_ENRICH]: eToro candle enrichment failed for SOFI: timeout of 15000ms exceeded. Falling back to Twelve Data for this symbol.
 [2026-10-21 12:00:13] [ERROR] ALERT [ETORO_MARKET_DATA_SPY]: eToro SPY quote failed: timeout of 12000ms exceeded. Falling back to Twelve Data.
 [2026-10-21 16:00:30] [ERROR] ALERT [ETORO_MARKET_DATA_ENRICH]: eToro candle enrichment failed for NFLX: timeout of 15000ms exceeded. Falling back to Twelve Data for this symbol.
+[2026-10-23 21:21:00] [ERROR] ALERT [ETORO_MARKET_DATA_ENRICH]: eToro candle enrichment failed for HON: timeout of 15000ms exceeded. Falling back to Twelve Data for this symbol.

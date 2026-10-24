@@ -1,25 +1,66 @@
 {
  "book": "SWING_BREAKOUT",
  "createdAt": "2026-10-22T13:40:53.180Z",
- "lastProcessedSession": "2026-10-22",
+ "lastProcessedSession": "2026-10-23",
  "lastRebalanceWeek": null,
- "open": {},
+ "open": {
+  "VRTX": {
+   "symbol": "VRTX",
+   "entryDate": "2026-10-23",
+   "entry": 530,
+   "stop": 498.5,
+   "stopKind": "initial",
+   "size": 841.27,
+   "riskDollars": 50,
+   "peak": 530.98,
+   "trough": 522.54,
+   "heldSessions": 1,
+   "signal": "closed $535.5 above the 20-day high $529.75; 50-day average rising",
+   "signalDate": "2026-10-22",
+   "lastClose": 523.91,
+   "lastDate": "2026-10-23"
+  },
+  "LIN": {
+   "symbol": "LIN",
+   "entryDate": "2026-10-23",
+   "entry": 508.45,
+   "stop": 479.7614,
+   "stopKind": "initial",
+   "size": 886.15,
+   "riskDollars": 50,
+   "peak": 511.86,
+   "trough": 505.17,
+   "heldSessions": 1,
+   "signal": "closed $510.44 above the 20-day high $506.17; 50-day average rising",
+   "signalDate": "2026-10-22",
+   "lastClose": 508.7,
+   "lastDate": "2026-10-23"
+  }
+ },
  "pending": [
   {
-   "symbol": "VRTX",
-   "reason": "closed $535.5 above the 20-day high $529.75; 50-day average rising",
-   "atr": 15.750000000000009,
+   "symbol": "COP",
+   "reason": "closed $150.97 above the 20-day high $147.66; 50-day average rising",
+   "atr": 5.470000000000001,
    "stopAtr": 2,
    "stopAbove": null,
-   "signalDate": "2026-10-22"
+   "signalDate": "2026-10-23"
   },
   {
-   "symbol": "LIN",
-   "reason": "closed $510.44 above the 20-day high $506.17; 50-day average rising",
-   "atr": 14.344285714285714,
+   "symbol": "XOM",
+   "reason": "closed $183.22 above the 20-day high $180.82; 50-day average rising",
+   "atr": 5.303571428571431,
    "stopAtr": 2,
    "stopAbove": null,
-   "signalDate": "2026-10-22"
+   "signalDate": "2026-10-23"
+  },
+  {
+   "symbol": "ISRG",
+   "reason": "closed $452.21 above the 20-day high $447.56; 50-day average rising",
+   "atr": 20.34928571428572,
+   "stopAtr": 2,
+   "stopAbove": null,
+   "signalDate": "2026-10-23"
   }
  ],
  "pendingExits": {},
@@ -36,6 +77,12 @@
    "realized": 0,
    "unrealized": 0,
    "open": 0
+  },
+  {
+   "date": "2026-10-23",
+   "realized": 0,
+   "unrealized": -9.23,
+   "open": 2
   }
  ]
 }

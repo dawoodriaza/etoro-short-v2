@@ -1,19 +1,27 @@
 {
  "book": "EARNINGS_DRIFT",
  "createdAt": "2026-10-22T13:40:53.189Z",
- "lastProcessedSession": "2026-10-22",
+ "lastProcessedSession": "2026-10-23",
  "lastRebalanceWeek": null,
- "open": {},
- "pending": [
-  {
+ "open": {
+  "UNP": {
    "symbol": "UNP",
-   "reason": "earnings 2026-10-22 (bmo): +3.65% on the reaction day, EPS 3.53 vs 3.5078",
-   "atr": 8.275000000000002,
-   "stopAtr": 1,
-   "stopAbove": 278.4,
-   "signalDate": "2026-10-22"
+   "entryDate": "2026-10-23",
+   "entry": 296.39,
+   "stop": 278.4,
+   "stopKind": "initial",
+   "size": 823.76,
+   "riskDollars": 50,
+   "peak": 297.07,
+   "trough": 288.61,
+   "heldSessions": 1,
+   "signal": "earnings 2026-10-22 (bmo): +3.65% on the reaction day, EPS 3.53 vs 3.5078",
+   "signalDate": "2026-10-22",
+   "lastClose": 292.9,
+   "lastDate": "2026-10-23"
   }
- ],
+ },
+ "pending": [],
  "pendingExits": {},
  "closed": [],
  "marks": [
@@ -28,6 +36,12 @@
    "realized": 0,
    "unrealized": 0,
    "open": 0
+  },
+  {
+   "date": "2026-10-23",
+   "realized": 0,
+   "unrealized": -9.7,
+   "open": 1
   }
  ]
 }

@@ -267,5 +267,10 @@
     "exitAtMs": 1792611901832,
     "wasLoss": true,
     "scoreAtExit": 88.63371188100216
+  },
+  "RNG": {
+    "exitAtMs": 1792764301183,
+    "wasLoss": false,
+    "scoreAtExit": 100
   }
 }

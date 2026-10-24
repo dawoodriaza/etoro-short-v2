@@ -1,11 +1,11 @@
 {
- "at": "2026-10-23T05:31:08.601Z",
+ "at": "2026-10-24T05:31:25.063Z",
  "mode": "forward",
  "from": null,
  "to": null,
- "latestCompleteSession": "2026-10-22",
+ "latestCompleteSession": "2026-10-23",
  "universe": 54,
- "earnings": "9 watchlist reports since 2026-10-02",
+ "earnings": "9 watchlist reports since 2026-10-03",
  "books": {
   "SWING_BREAKOUT": {
    "closed": 0,
@@ -13,12 +13,15 @@
    "winRate": null,
    "realized": 0,
    "perTrade": null,
-   "open": 0,
-   "openSymbols": [],
-   "unrealized": 0,
-   "lastSession": "2026-10-22",
+   "open": 2,
+   "openSymbols": [
+    "VRTX",
+    "LIN"
+   ],
+   "unrealized": -9.23,
+   "lastSession": "2026-10-23",
    "sessionsProcessed": 1,
-   "signalsToday": 2
+   "signalsToday": 3
   },
   "DIP_IN_UPTREND": {
    "closed": 0,
@@ -26,12 +29,14 @@
    "winRate": null,
    "realized": 0,
    "perTrade": null,
-   "open": 0,
-   "openSymbols": [],
-   "unrealized": 0,
-   "lastSession": "2026-10-22",
+   "open": 1,
+   "openSymbols": [
+    "MSFT"
+   ],
+   "unrealized": 8.33,
+   "lastSession": "2026-10-23",
    "sessionsProcessed": 1,
-   "signalsToday": 1
+   "signalsToday": 0
   },
   "EARNINGS_DRIFT": {
    "closed": 0,
@@ -39,12 +44,14 @@
    "winRate": null,
    "realized": 0,
    "perTrade": null,
-   "open": 0,
-   "openSymbols": [],
-   "unrealized": 0,
-   "lastSession": "2026-10-22",
+   "open": 1,
+   "openSymbols": [
+    "UNP"
+   ],
+   "unrealized": -9.7,
+   "lastSession": "2026-10-23",
    "sessionsProcessed": 1,
-   "signalsToday": 1
+   "signalsToday": 0
   },
   "ROTATION": {
    "closed": 0,
@@ -60,8 +67,8 @@
     "MSFT",
     "MRVL"
    ],
-   "unrealized": -166.65,
-   "lastSession": "2026-10-22",
+   "unrealized": -116.85,
+   "lastSession": "2026-10-23",
    "sessionsProcessed": 1,
    "signalsToday": 0
   }
