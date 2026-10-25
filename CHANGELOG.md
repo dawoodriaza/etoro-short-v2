@@ -5,6 +5,36 @@ repairs, reverted experiments). See README.md → "For AI agents".
 
 ---
 
+## v10.1 (2026-10-25) — CVX added; eToro "TICKER.US" listings resolve
+
+Owner request: add Chevron (CVX) as an energy name; the energy group had only
+XOM and COP. On Friday 10-23 both were AI-approved twice and their dip orders
+expired because neither pulled back — the sector logic (up to +8 points when
+XLE is up 0.5%+) was already working.
+
+**Why CVX was missing.** On eToro the bare symbol "CVX" is a **crypto**
+(Convex Finance, id 100512), which the v7.x guard correctly refuses so no order
+can ever buy the wrong asset. The NYSE share is listed as **CVX.US** (id 1014);
+the same search also returns CVX.PA (Euronext Paris) and CVX.RTH. An old test
+even asserted "CVX NOT added (verified unavailable as equity on eToro)".
+
+**Fix (`src/etoro-client.js`).** When a ticker has no equity match — no match
+at all, or only a crypto one — exactly one more name is tried, `TICKER.US`,
+accepted only if it is a stock/ETF (never crypto). The bot keeps calling it by
+its own name, and the reverse lookup reports `CVX.US` as `CVX`, so a held
+Chevron position always matches its meta entry (a mismatch is what makes a
+position "untracked"). Verified on the server with a fresh process: CVX → 1014,
+1014 → CVX, and **all 54 other watchlist stocks resolve to exactly the same
+instrument as before**.
+
+`watchlist-daytrade.json`: `{ "symbol": "CVX", "bucket": "energy", "night": false }`
+(55 stocks). The old CVX test now asserts it is present; 3 new tests cover the
+.US pick (not the crypto, Paris or RTH listing), refusing a crypto .US match, and
+the reverse mapping. 429 tests pass. Restarted Sunday with no open positions.
+CVX price history for the shadow strategies starts with the next nightly capture.
+
+---
+
 ## v10 (2026-10-22) — four shadow strategies with their own books; a better Telegram
 
 **Nothing here changes how the live bot trades.** The ~110-trade evaluation of

@@ -220,9 +220,12 @@ module.exports = {
       symbols.includes("MSFT"),
     );
     check("watchlist: MELI added", symbols.includes("MELI"));
+    // v10.1: CVX was kept off because the bare "CVX" on eToro is a crypto.
+    // The NYSE share is listed as "CVX.US", which the resolver now finds, so
+    // CVX is on the watchlist as an energy name (owner request, 2026-10-25).
     check(
-      "watchlist: CVX NOT added (verified unavailable as equity on eToro)",
-      !symbols.includes("CVX"),
+      "watchlist: CVX present as energy (resolves to the NYSE share CVX.US, not the crypto)",
+      symbols.includes("CVX"),
     );
 
     // Diversification is real, not cosmetic: buckets beyond tech exist.

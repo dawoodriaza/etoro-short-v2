@@ -489,6 +489,23 @@ module.exports = {
         !/position-meta|capital-ledger|decision-journal|trade-history|etoro-client|cooldown/.test(shadowSource.replace(/^\s*\/\/.*$/gm, "")));
 
     }
+    {
+      // ══ 16. v10.1 tickers eToro files as TICKER.US (CVX) ══
+      const ec = require("../src/etoro-client");
+      const items = [
+        { internalSymbolFull: "CVX", instrumentId: 100512, internalAssetClassId: 10 },
+        { internalSymbolFull: "CVX.PA", instrumentId: 13287, internalAssetClassId: 5 },
+        { internalSymbolFull: "CVX.RTH", instrumentId: 13622, internalAssetClassId: 5 },
+        { internalSymbolFull: "CVX.US", instrumentId: 1014, internalAssetClassId: 5 },
+      ];
+      const picked = ec.pickUsListing(items, "CVX");
+      check("CVX: picks the NYSE share CVX.US (1014), not the crypto, Paris or RTH listing", picked && picked.instrumentId === 1014);
+      check("CVX: a crypto-only .US match is never accepted",
+        ec.pickUsListing([{ internalSymbolFull: "ABC.US", instrumentId: 9, internalAssetClassId: 10 }], "ABC") === null);
+      check("CVX: a held CVX.US position is tracked as CVX (no false untracked alert)",
+        ec.normaliseEtoroTicker("CVX.US") === "CVX" && ec.normaliseEtoroTicker("aapl") === "AAPL");
+    }
+
     return results;
   },
 };

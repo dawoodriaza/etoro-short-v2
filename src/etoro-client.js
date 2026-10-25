@@ -308,6 +308,52 @@ const ASSET_CLASS_CRYPTO = 10;
 // Equities and ETFs are what this bot trades, so crypto matches are now
 // rejected unless a caller explicitly asks for them.
 // ══════════════════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════════════════
+// v10.1 (2026-10-25) — US LISTINGS THAT eToro FILES AS "TICKER.US".
+//
+// Chevron is the case that found it: on eToro the bare symbol "CVX" is a
+// CRYPTO (Convex Finance, id 100512), which the guard above rightly refuses,
+// and the NYSE stock is "CVX.US" (id 1014). The same search also returns
+// CVX.PA (Euronext Paris) and CVX.RTH — neither is the US share. So when a
+// ticker has NO equity match, exactly one more name is tried: TICKER.US,
+// accepted only if it is a stock/ETF (never crypto). The bot keeps calling
+// it by its own name ("CVX"), and the reverse lookup maps "CVX.US" back to
+// "CVX", so a held position always matches its watchlist/meta entry (a
+// mismatch is what makes a position "untracked").
+function pickUsListing(items, upperSymbol) {
+  const target = upperSymbol + ".US";
+  return (items || []).find(
+    (item) =>
+      item.internalSymbolFull?.toUpperCase() === target &&
+      item.internalAssetClassId !== ASSET_CLASS_CRYPTO,
+  ) || null;
+}
+
+function normaliseEtoroTicker(ticker) {
+  const upper = String(ticker || "").toUpperCase();
+  return upper.endsWith(".US") ? upper.slice(0, -3) : upper;
+}
+
+async function resolveUsListing(upperSymbol) {
+  try {
+    const response = await axios.get(
+      `${ETORO_BASE_URL}/market-data/search?internalSymbolFull=${encodeURIComponent(upperSymbol + ".US")}`,
+      { headers: buildRequestHeaders() },
+    );
+    const match = pickUsListing(response.data?.items, upperSymbol);
+    if (!match) return null;
+    instrumentIdCache[upperSymbol] = match.instrumentId;
+    instrumentNameCache[String(match.instrumentId)] = upperSymbol;
+    logger.info(
+      `Resolved ${upperSymbol} → instrumentId ${match.instrumentId} (eToro lists it as ${upperSymbol}.US)`,
+    );
+    return match.instrumentId;
+  } catch (error) {
+    logger.warn(`${upperSymbol}.US lookup failed: ${error.message}`);
+    return null;
+  }
+}
+
 async function resolveTickerToInstrumentId(tickerSymbol, options = {}) {
   const upperSymbol = tickerSymbol.toUpperCase();
   const allowCrypto = options.allowCrypto === true;
@@ -349,6 +395,8 @@ async function resolveTickerToInstrumentId(tickerSymbol, options = {}) {
           `NOT the equity/ETF this bot trades. Refusing to resolve it so no ` +
           `order or quote can ever use the wrong asset.`,
       );
+      const usListing = await resolveUsListing(upperSymbol); // v10.1
+      if (usListing) return usListing;
       instrumentIdNegativeCache[upperSymbol] = Date.now();
       return null;
     }
@@ -356,6 +404,8 @@ async function resolveTickerToInstrumentId(tickerSymbol, options = {}) {
     const exactMatch = acceptable[0];
 
     if (!exactMatch) {
+      const usListing = await resolveUsListing(upperSymbol); // v10.1
+      if (usListing) return usListing;
       logger.warn(
         `${upperSymbol} not found on eToro instrument search — ` +
           `suppressing re-lookups for ${NEGATIVE_CACHE_TTL_MS / 3600000}h`,
@@ -402,9 +452,11 @@ async function resolveInstrumentIdToTicker(instrumentId) {
     const ticker =
       match?.symbolFull || match?.internalSymbolFull || match?.ticker;
     if (ticker) {
-      instrumentNameCache[idKey] = ticker.toUpperCase();
-      logger.info(`Resolved instrumentId ${idKey} → ${ticker.toUpperCase()}`);
-      return ticker.toUpperCase();
+      // v10.1: a "TICKER.US" listing is tracked under its plain ticker
+      const name = normaliseEtoroTicker(ticker);
+      instrumentNameCache[idKey] = name;
+      logger.info(`Resolved instrumentId ${idKey} → ${name}`);
+      return name;
     }
   } catch (error) {
     logger.warn(
@@ -558,6 +610,8 @@ async function closePartialPosition(
 }
 
 module.exports = {
+  pickUsListing, // v10.1
+  normaliseEtoroTicker, // v10.1
   findDuplicatePositions,
   fetchRawPortfolio,
   parsePortfolioFromRawData,

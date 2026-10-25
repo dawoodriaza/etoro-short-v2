@@ -25610,3 +25610,28 @@
 [2026-10-24 07:53:47] [INFO ] Price stream disconnected — reconnecting in 30s (1-min exit monitor unaffected)
 [2026-10-24 07:54:18] [INFO ] 📶 Price stream connected — real-time exit watchdog live for 0 position(s)
 [2026-10-24 12:29:58] [WARN ] Telegram polling: EFATAL
+[2026-10-25 15:45:40] [INFO ] ╔════════════════════════════════════════════════╗
+[2026-10-25 15:45:40] [INFO ] ║  eToro Day + Swing Bot v5                       ║
+[2026-10-25 15:45:40] [INFO ] ║  planner · discovery · reviewer · alerts        ║
+[2026-10-25 15:45:40] [INFO ] ╚════════════════════════════════════════════════╝
+[2026-10-25 15:45:40] [INFO ] Day-trade Telegram bot initialised
+[2026-10-25 15:45:40] [INFO ] Watchlist: 55 symbols · Discovery: ON (Yahoo screeners)
+[2026-10-25 15:45:40] [WARN ] Alpaca: NOT configured (ALPACA_API_KEY_ID/ALPACA_SECRET_KEY missing). Falling back to sequential Twelve Data polling for watchlist quotes. Free key: https://app.alpaca.markets/signup
+[2026-10-25 15:45:40] [INFO ] Session clock (Bahrain operator time):
+[2026-10-25 15:45:40] [INFO ]    9:30 AM ET (4:30 PM Bahrain) — Market opens
+[2026-10-25 15:45:40] [INFO ]    3:00 PM ET (10:00 PM Bahrain) — Position review (Mon–Thu)
+[2026-10-25 15:45:40] [INFO ]    3:15 PM ET (10:15 PM Bahrain) — Bot stops opening new trades
+[2026-10-25 15:45:40] [INFO ]    3:45 PM ET (10:45 PM Bahrain) — Bot closes day trades (winners may be kept)
+[2026-10-25 15:45:40] [INFO ]    4:00 PM ET (11:00 PM Bahrain) — Market closes
+[2026-10-25 15:45:40] [INFO ]    8:00 PM ET (3:00 AM Bahrain) — eToro overnight trading ends (held winners managed until then)
+[2026-10-25 15:45:40] [INFO ] AI model: claude-haiku-5-5 · thinking off · screener/reviewer token caps 600/900 (DT_AI_MODEL, DT_AI_THINKING)
+[2026-10-25 15:45:40] [INFO ] Finnhub: CONFIGURED — earnings blackout, dynamic sector buckets, and reviewer headlines are ACTIVE
+[2026-10-25 15:45:40] [INFO ] eToro market-data: CONFIGURED (primary quote source) — batched rates + real-volume candles on your existing trading credentials. Alpaca/Twelve Data are now pure fallbacks.
+[2026-10-25 15:45:40] [WARN ] Alpaca stream: NOT configured (ALPACA_API_KEY_ID/ALPACA_SECRET_KEY missing). Falling back to sequential Twelve Data polling — free key: https://app.alpaca.markets/signup
+[2026-10-25 15:45:40] [INFO ] Capital: $9094.91 effective (peak $10032.85) · Risk/trade: 0.5% day / 1.5% swing · Slots: 7 day + 0 swing · Drawdown breaker: 15% from peak · Friday closes ALL: true
+[2026-10-25 15:45:40] [INFO ] 🎯 Dip entry ON: approved stocks are bought only on a dip of 0.25× the stop distance within 60 min, measured from the highest price seen while waiting but never above the approval price (v8.6) (DT_DIP_ENTRY_ENABLED=false buys immediately)
+[2026-10-25 15:45:40] [INFO ] Scheduler: scans every 10 min (adaptive slow-down in CHOP) · 1-min exit monitor · daily position review Mon-Thu 22:00 Bahrain · EOD close Mon-Thu (DAY) / Fri (ALL) at 22:45 Bahrain · Friday self-evaluation
+[2026-10-25 15:45:40] [INFO ] Telegram commands ON: /status /positions /today /perf /shadow /help (menu + buttons)
+[2026-10-25 15:45:40] [INFO ] Market closed — skipping scan (3:45:40 PM Bahrain)
+[2026-10-25 15:45:40] [INFO ] Running (3:45:40 PM Bahrain)
+[2026-10-25 15:45:41] [INFO ] 📶 Price stream connected — real-time exit watchdog live for 0 position(s)
