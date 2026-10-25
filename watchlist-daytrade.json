@@ -74,6 +74,7 @@
     { "symbol": "FDX", "bucket": "transport", "night": false },
 
     { "symbol": "HON", "bucket": "industrials", "night": false },
-    { "symbol": "ETN", "bucket": "industrials", "night": false }
+    { "symbol": "ETN", "bucket": "industrials", "night": false },
+    { "symbol": "CVX", "bucket": "energy", "night": false }
   ]
 }

@@ -25609,3 +25609,4 @@
 [2026-10-24 06:50:00] [INFO ] Market closed — skipping scan (6:50:00 AM Bahrain)
 [2026-10-24 07:53:47] [INFO ] Price stream disconnected — reconnecting in 30s (1-min exit monitor unaffected)
 [2026-10-24 07:54:18] [INFO ] 📶 Price stream connected — real-time exit watchdog live for 0 position(s)
+[2026-10-24 12:29:58] [WARN ] Telegram polling: EFATAL
