@@ -5,3 +5,6 @@
 {"ts":"2026-10-24T05:31:25.051Z","book":"SWING_BREAKOUT","event":"SIGNAL","date":"2026-10-23","symbol":"COP","reason":"closed $150.97 above the 20-day high $147.66; 50-day average rising","rank":0.619}
 {"ts":"2026-10-24T05:31:25.051Z","book":"SWING_BREAKOUT","event":"SIGNAL","date":"2026-10-23","symbol":"XOM","reason":"closed $183.22 above the 20-day high $180.82; 50-day average rising","rank":0.459}
 {"ts":"2026-10-24T05:31:25.051Z","book":"SWING_BREAKOUT","event":"SIGNAL","date":"2026-10-23","symbol":"ISRG","reason":"closed $452.21 above the 20-day high $447.56; 50-day average rising","rank":0.231}
+{"ts":"2026-10-27T05:31:06.108Z","book":"SWING_BREAKOUT","event":"ENTRY","symbol":"COP","date":"2026-10-26","entry":147.8,"stop":136.86,"size":675.5,"signal":"closed $150.97 above the 20-day high $147.66; 50-day average rising"}
+{"ts":"2026-10-27T05:31:06.108Z","book":"SWING_BREAKOUT","event":"ENTRY","symbol":"XOM","date":"2026-10-26","entry":181.34,"stop":170.73285714285714,"size":854.8,"signal":"closed $183.22 above the 20-day high $180.82; 50-day average rising"}
+{"ts":"2026-10-27T05:31:06.108Z","book":"SWING_BREAKOUT","event":"ENTRY","symbol":"ISRG","date":"2026-10-26","entry":451,"stop":410.3014285714286,"size":554.07,"signal":"closed $452.21 above the 20-day high $447.56; 50-day average rising"}

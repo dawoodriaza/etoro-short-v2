@@ -13,3 +13,8 @@
   DIP_IN_UPTREND  sessions 1 · closed 0 (-% win) · realized 0 · per trade - · open 1 (MSFT) unrealized 8.33
   EARNINGS_DRIFT  sessions 1 · closed 0 (-% win) · realized 0 · per trade - · open 1 (UNP) unrealized -9.7
   ROTATION        sessions 1 · closed 0 (-% win) · realized 0 · per trade - · open 5 (PLTR,SHOP,CRM,MSFT,MRVL) unrealized -116.85
+[2026-10-27T05:31:06.122Z] shadow strategies forward · latest session 2026-10-26 · earnings: 13 watchlist reports since 2026-10-06
+  SWING_BREAKOUT  sessions 1 · closed 0 (-% win) · realized 0 · per trade - · open 5 (VRTX,LIN,COP,XOM,ISRG) unrealized 11.36
+  DIP_IN_UPTREND  sessions 1 · closed 1 (100% win) · realized 18.01 · per trade 18.01 · open 0 () unrealized 0
+  EARNINGS_DRIFT  sessions 1 · closed 0 (-% win) · realized 0 · per trade - · open 1 (UNP) unrealized 1.45
+  ROTATION        sessions 1 · closed 0 (-% win) · realized 0 · per trade - · open 5 (PLTR,SHOP,CRM,MSFT,MRVL) unrealized -35.61

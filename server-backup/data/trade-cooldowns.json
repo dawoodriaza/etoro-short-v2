@@ -56,9 +56,9 @@
     "scoreAtExit": 84.74061934386447
   },
   "NVDA": {
-    "exitAtMs": 1790797501990,
-    "wasLoss": true,
-    "scoreAtExit": 85.0819349386164
+    "exitAtMs": 1793031001996,
+    "wasLoss": false,
+    "scoreAtExit": 88.22540997579135
   },
   "IONQ": {
     "exitAtMs": 1790018582701,

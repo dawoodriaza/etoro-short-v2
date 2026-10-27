@@ -1,29 +1,30 @@
 {
  "book": "DIP_IN_UPTREND",
  "createdAt": "2026-10-22T13:40:53.187Z",
- "lastProcessedSession": "2026-10-23",
+ "lastProcessedSession": "2026-10-26",
  "lastRebalanceWeek": null,
- "open": {
-  "MSFT": {
+ "open": {},
+ "pending": [],
+ "pendingExits": {},
+ "closed": [
+  {
    "symbol": "MSFT",
    "entryDate": "2026-10-23",
    "entry": 517.81,
-   "stop": 478.4178,
-   "stopKind": "initial",
+   "exitDate": "2026-10-26",
+   "exit": 532.52,
+   "reason": "CLOSE_ABOVE_5DAY_AVG",
    "size": 657.25,
+   "pnl": 18.01,
+   "pnlPct": 2.84,
+   "heldSessions": 2,
+   "peakPct": 2.97,
+   "troughPct": -0.41,
    "riskDollars": 50,
-   "peak": 525.73,
-   "trough": 515.7,
-   "heldSessions": 1,
-   "signal": "2-day RSI 5 while above the 100-day average $458.01",
-   "signalDate": "2026-10-22",
-   "lastClose": 524.37,
-   "lastDate": "2026-10-23"
+   "r": 0.36,
+   "signal": "2-day RSI 5 while above the 100-day average $458.01"
   }
- },
- "pending": [],
- "pendingExits": {},
- "closed": [],
+ ],
  "marks": [
   {
    "date": "2026-10-21",
@@ -42,6 +43,12 @@
    "realized": 0,
    "unrealized": 8.33,
    "open": 1
+  },
+  {
+   "date": "2026-10-26",
+   "realized": 18.01,
+   "unrealized": 0,
+   "open": 0
   }
  ]
 }

@@ -1,8 +1,8 @@
 {
  "book": "ROTATION",
  "createdAt": "2026-10-22T13:40:53.189Z",
- "lastProcessedSession": "2026-10-23",
- "lastRebalanceWeek": "2026-W43",
+ "lastProcessedSession": "2026-10-26",
+ "lastRebalanceWeek": "2026-W44",
  "open": {
   "PLTR": {
    "symbol": "PLTR",
@@ -14,11 +14,11 @@
    "riskDollars": null,
    "peak": 202.42,
    "trough": 190.57,
-   "heldSessions": 2,
+   "heldSessions": 3,
    "signal": "rank 1, 3-month return +49.42%",
    "signalDate": "2026-10-21",
-   "lastClose": 196.78,
-   "lastDate": "2026-10-23"
+   "lastClose": 198.8,
+   "lastDate": "2026-10-26"
   },
   "SHOP": {
    "symbol": "SHOP",
@@ -30,11 +30,11 @@
    "riskDollars": null,
    "peak": 176.23,
    "trough": 165.33,
-   "heldSessions": 2,
+   "heldSessions": 3,
    "signal": "rank 2, 3-month return +37.66%",
    "signalDate": "2026-10-21",
-   "lastClose": 168.67,
-   "lastDate": "2026-10-23"
+   "lastClose": 168.22,
+   "lastDate": "2026-10-26"
   },
   "CRM": {
    "symbol": "CRM",
@@ -46,11 +46,11 @@
    "riskDollars": null,
    "peak": 252.35,
    "trough": 242.04,
-   "heldSessions": 2,
+   "heldSessions": 3,
    "signal": "rank 3, 3-month return +37.43%",
    "signalDate": "2026-10-21",
-   "lastClose": 248.47,
-   "lastDate": "2026-10-23"
+   "lastClose": 247.44,
+   "lastDate": "2026-10-26"
   },
   "MSFT": {
    "symbol": "MSFT",
@@ -60,13 +60,13 @@
    "stopKind": null,
    "size": 2000,
    "riskDollars": null,
-   "peak": 533.13,
+   "peak": 533.19,
    "trough": 515.7,
-   "heldSessions": 2,
+   "heldSessions": 3,
    "signal": "rank 4, 3-month return +33.14%",
    "signalDate": "2026-10-21",
-   "lastClose": 524.37,
-   "lastDate": "2026-10-23"
+   "lastClose": 532.52,
+   "lastDate": "2026-10-26"
   },
   "MRVL": {
    "symbol": "MRVL",
@@ -76,17 +76,25 @@
    "stopKind": null,
    "size": 2000,
    "riskDollars": null,
-   "peak": 236.13,
+   "peak": 238.46,
    "trough": 220.22,
-   "heldSessions": 2,
+   "heldSessions": 3,
    "signal": "rank 5, 3-month return +30.05%",
    "signalDate": "2026-10-21",
-   "lastClose": 228.54,
-   "lastDate": "2026-10-23"
+   "lastClose": 233.64,
+   "lastDate": "2026-10-26"
   }
  },
- "pending": [],
- "pendingExits": {},
+ "pending": [
+  {
+   "symbol": "SNAP",
+   "reason": "rank 4, 3-month return +37.36%",
+   "signalDate": "2026-10-26"
+  }
+ ],
+ "pendingExits": {
+  "MRVL": "ROTATED_OUT (lost its trend)"
+ },
  "closed": [],
  "marks": [
   {
@@ -105,6 +113,12 @@
    "date": "2026-10-23",
    "realized": 0,
    "unrealized": -116.85,
+   "open": 5
+  },
+  {
+   "date": "2026-10-26",
+   "realized": 0,
+   "unrealized": -35.61,
    "open": 5
   }
  ]

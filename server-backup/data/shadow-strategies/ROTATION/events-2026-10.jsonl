@@ -4,3 +4,4 @@
 {"ts":"2026-10-23T05:31:08.600Z","book":"ROTATION","event":"ENTRY","symbol":"CRM","date":"2026-10-22","entry":243.79,"stop":null,"size":2000,"signal":"rank 3, 3-month return +37.43%"}
 {"ts":"2026-10-23T05:31:08.600Z","book":"ROTATION","event":"ENTRY","symbol":"MSFT","date":"2026-10-22","entry":533.13,"stop":null,"size":2000,"signal":"rank 4, 3-month return +33.14%"}
 {"ts":"2026-10-23T05:31:08.600Z","book":"ROTATION","event":"ENTRY","symbol":"MRVL","date":"2026-10-22","entry":230.94,"stop":null,"size":2000,"signal":"rank 5, 3-month return +30.05%"}
+{"ts":"2026-10-27T05:31:06.121Z","book":"ROTATION","event":"REBALANCE","date":"2026-10-26","week":"2026-W44","top10":["PLTR 46.84%","CRM 42.1%","SHOP 39.01%","SNAP 37.36%","MSFT 34.09%","COP 24.61%","ISRG 23.08%","XOM 17.77%","CVX 17.57%","ABBV 10.79%"]}

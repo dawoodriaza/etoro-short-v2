@@ -1,7 +1,51 @@
 {
- "at": "2026-10-24T05:31:25.044Z",
- "note": "9 watchlist reports since 2026-10-03",
+ "at": "2026-10-27T05:31:06.102Z",
+ "note": "13 watchlist reports since 2026-10-06",
  "rows": [
+  {
+   "symbol": "BA",
+   "date": "2026-10-27",
+   "hour": "bmo",
+   "quarter": 3,
+   "year": 2026,
+   "epsEstimate": -0.2138,
+   "epsActual": null,
+   "revenueEstimate": 24555557049,
+   "revenueActual": null
+  },
+  {
+   "symbol": "HOOD",
+   "date": "2026-10-27",
+   "hour": "amc",
+   "quarter": 3,
+   "year": 2026,
+   "epsEstimate": 0.5684,
+   "epsActual": null,
+   "revenueEstimate": 1450566571,
+   "revenueActual": null
+  },
+  {
+   "symbol": "SOFI",
+   "date": "2026-10-27",
+   "hour": "bmo",
+   "quarter": 3,
+   "year": 2026,
+   "epsEstimate": 0.1701,
+   "epsActual": null,
+   "revenueEstimate": 1280811368,
+   "revenueActual": null
+  },
+  {
+   "symbol": "UPS",
+   "date": "2026-10-27",
+   "hour": "bmo",
+   "quarter": 3,
+   "year": 2026,
+   "epsEstimate": 1.6417,
+   "epsActual": null,
+   "revenueEstimate": 22508653152,
+   "revenueActual": null
+  },
   {
    "symbol": "HON",
    "date": "2026-10-22",
@@ -44,7 +88,7 @@
    "epsEstimate": 5.7889,
    "epsActual": 7.4,
    "revenueEstimate": 64635778699,
-   "revenueActual": 63061000000
+   "revenueActual": 64601000000
   },
   {
    "symbol": "TSLA",
