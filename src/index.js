@@ -2104,11 +2104,27 @@ async function tryOpenPosition(
       }
     }
 
+    // v10.2: broker-side safety stop, well outside the bot's own stop (see
+    // config.brokerStopDistanceMultiplier). The bot still manages every exit.
+    const brokerStopRate = tradePlanner.computeBrokerStopRate(plan);
     const openResult = await etoroClient.openBuyPosition(
       instrumentId,
       plan.positionDollars,
       plan.symbol,
+      { stopLossRate: brokerStopRate },
     );
+    if (openResult && openResult.brokerStopRejected) {
+      await alerts.systemAlert(
+        "BROKER_STOP_REJECTED",
+        plan.symbol +
+          ": eToro refused the order with a safety stop at $" +
+          brokerStopRate +
+          " (" +
+          openResult.brokerStopRejected +
+          "). The order was placed WITHOUT it, so this position has only the " +
+          "bot's own stop — as every trade did before v10.2.",
+      );
+    }
     // openBuyPosition returns null when it SKIPS (size below minimum) —
     // without this check the bot used to record a position that was never
     // opened: phantom meta entry, false OPEN Telegram, exit engine managing
@@ -2121,6 +2137,9 @@ async function tryOpenPosition(
       );
       return;
     }
+
+    // v10.2: the opening order's commission leaves the cash now.
+    if (!openResult.dryRun) capitalManager.recordCommission(1);
 
     if (plan.source === "DISCOVERED") {
       marketDiscovery.recordTraded(plan.symbol);
@@ -2195,6 +2214,9 @@ async function tryOpenPosition(
       tradeType: plan.tradeType,
       entryPrice: plan.entryPrice,
       stopPrice: plan.stopPrice,
+      // v10.2: eToro-held safety stop (null if none was accepted)
+      brokerStopRate:
+        openResult.brokerStopRejected || !brokerStopRate ? null : brokerStopRate,
       targetT1: plan.targetT1,
       targetT2: plan.targetT2,
       targetT3: plan.targetT3,
@@ -2856,7 +2878,13 @@ async function reconcileGhostPositions(portfolio, meta) {
           positionMeta.entryPrice +
           ", " +
           formatDualAmount(positionMeta.dollarAmount) +
-          " invested) but eToro no longer shows this position. It closed by " +
+          " invested) but eToro no longer shows this position. " +
+          (positionMeta.brokerStopRate
+            ? "Most likely eToro's own safety stop at $" +
+              positionMeta.brokerStopRate +
+              " fired (v10.2). "
+            : "") +
+          "It closed by " +
           "some path the bot didn't record — check eToro's trade history for " +
           "the real exit price/reason and reconcile manually if needed. " +
           "Clearing it from tracking now so it stops blocking re-entry and no " +
@@ -3270,6 +3298,7 @@ async function manageOpenPositions() {
           positionMeta.originalDollarAmount = positionMeta.dollarAmount;
         }
         capitalManager.recordRealizedPnl(partialRealizedPnl); // cash is realized now
+        capitalManager.recordCommission(1); // v10.2: the partial-close order
         positionMeta.realizedPartialPnl = Number(
           ((positionMeta.realizedPartialPnl || 0) + partialRealizedPnl).toFixed(2),
         );
@@ -3396,6 +3425,7 @@ async function manageOpenPositions() {
         const pnlPercent = closedTrade.pnlPercent;
         riskManager.recordClosedTradeResult(pnlDollars); // daily loss limit
         capitalManager.recordRealizedPnl(closedTrade.finalLegPnlDollars); // compounding + de-risk
+        capitalManager.recordCommission(1); // v10.2: the closing order
         // v6: loss-aware cooldown + re-entry justification (whipsaw guard)
         cooldownTracker.startCooldown(symbol, {
           wasLoss: pnlDollars < 0,
@@ -3907,18 +3937,28 @@ function readJsonLines(file, mustInclude) {
   }
 }
 
-function tradeStats(list) {
+// v10.2: `value` picks the per-trade figure (default raw pnlDollars).
+function tradeStats(list, value = (t) => t.pnlDollars) {
   const n = list.length;
-  const sum = list.reduce((a, t) => a + t.pnlDollars, 0);
-  const wins = list.filter((t) => t.pnlDollars > 0);
-  const losses = list.filter((t) => t.pnlDollars <= 0);
+  const sum = list.reduce((a, t) => a + value(t), 0);
+  const wins = list.filter((t) => value(t) > 0);
+  const losses = list.filter((t) => value(t) <= 0);
   return {
     n, sum,
     per: n ? sum / n : 0,
     win: n ? Math.round((100 * wins.length) / n) : 0,
-    avgWin: wins.length ? wins.reduce((a, t) => a + t.pnlDollars, 0) / wins.length : 0,
-    avgLoss: losses.length ? losses.reduce((a, t) => a + t.pnlDollars, 0) / losses.length : 0,
+    avgWin: wins.length ? wins.reduce((a, t) => a + value(t), 0) / wins.length : 0,
+    avgLoss: losses.length ? losses.reduce((a, t) => a + value(t), 0) / losses.length : 0,
   };
+}
+
+// v10.2: the best figure for what one trade did to the account — eToro's own
+// netProfit when the daily sync has matched it, else the bot's best-known
+// result — minus the per-order commission.
+function tradeAccountDollars(t) {
+  const market = t.brokerNetProfit != null ? Number(t.brokerNetProfit) : performance.tradeResultDollars(t);
+  const commission = t.commissionDollars != null ? Number(t.commissionDollars) : performance.commissionForTrade(t.partialFills);
+  return market - commission;
 }
 
 async function commandToday() {
@@ -3962,21 +4002,35 @@ async function commandPerf() {
       .filter((t) => typeof t.pnlDollars === "number" && t.closedAt);
   } catch {}
   const weekAgo = new Date(Date.now() - 7 * 86400000).toISOString();
+  // v10.2: every row is after eToro's per-order commission, and uses eToro's
+  // own result per trade where the daily sync has matched it.
   const row = (label, list) => {
-    const x = tradeStats(list);
+    const x = tradeStats(list, tradeAccountDollars);
     return "<b>" + label + "</b>: " + x.n + " trades · " + real(x.sum) + (x.n ? " · " + x.win + "% won · avg win " + real(x.avgWin) + " / loss " + real(x.avgLoss) : "");
   };
   const v9 = hist.filter((t) => t.closedAt >= V9_START);
   const mix = {};
-  v9.forEach((t) => { const k = t.exitReason || "?"; const b = mix[k] || (mix[k] = { n: 0, p: 0 }); b.n++; b.p += t.pnlDollars; });
+  v9.forEach((t) => { const k = t.exitReason || "?"; const b = mix[k] || (mix[k] = { n: 0, p: 0 }); b.n++; b.p += tradeAccountDollars(t); });
   const cap = capitalManager.getCapitalState();
   let peak = null;
-  try { peak = JSON.parse(fs.readFileSync(path.join(__dirname, "../data/capital-ledger.json"), "utf8")).peakEffectiveCapital; } catch {}
+  let ledgerFile = {};
+  try { ledgerFile = JSON.parse(fs.readFileSync(path.join(__dirname, "../data/capital-ledger.json"), "utf8")); peak = ledgerFile.peakEffectiveCapital; } catch {}
   const eff = Number(cap.effectiveCapital);
-  const lines = ["📈 <b>Performance</b> <i>(your real dollars)</i>", ""];
+  const base = capitalManager.computeEffectiveBase({ baseCapital: config.dayTradeCapital, ownerAdjustments: ledgerFile.ownerAdjustments || 0 });
+  const lines = ["📈 <b>Performance</b> <i>(your real dollars, after eToro's $1-per-order commission)</i>", ""];
   lines.push(row("Last 7 days", hist.filter((t) => t.closedAt >= weekAgo)));
   lines.push(row("Since " + V9_START + " (current rules)", v9));
-  lines.push(row("All time", hist));
+  // v10.2: "All time" is the ACCOUNT, not a sum of trade records. The old
+  // line added raw pnlDollars, which for pre-v8 trades left out every
+  // partial profit, and ignored commissions entirely (≈$700 by Oct 26).
+  lines.push("<b>All time (the account)</b>: " + real(eff - base) + " (" + pct(((eff - base) / base) * 100) + ") · capital " + real(eff).replace(/^\+/, "") + " vs " + real(base).replace(/^\+/, "") + " start");
+  const broker = readBrokerHistory();
+  if (broker && broker.summary) {
+    const s = broker.summary;
+    lines.push("  eToro's own record: trades " + real(s.brokerNetProfit) + " · commissions ~" + real(-s.estimatedCommissions) + " (" + s.brokerOrders + " orders) <i>· synced " + marketHours.localClock(new Date(broker.syncedAt)) + "</i>");
+  }
+  const preV8 = hist.filter((t) => t.pnlAccountingVersion !== 2 && t.brokerNetProfit == null).length;
+  if (preV8) lines.push("  <i>" + preV8 + " early trades are the bot's own estimates (not matched to eToro)</i>");
   if (Object.keys(mix).length) {
     lines.push("");
     lines.push("<b>How trades ended</b> (current rules)");
@@ -4074,6 +4128,74 @@ function commandHelp() {
 // Set by the force-close job at 15:45 ET so this message can say what it did.
 let lastEodCloseMode = null;
 
+// v10.2: pull eToro's own closed-trade history (one read-only call), keep a
+// copy in data/broker-trade-history.json and stamp eToro's real result on
+// each matching trade-history record (see performance.attachBrokerResults).
+// Runs after the close each weekday and once at start-up if the copy is
+// missing or a day old. Never touches positions, orders or the ledger.
+const BROKER_HISTORY_FILE = path.join(__dirname, "../data/broker-trade-history.json");
+const BROKER_HISTORY_START = "2026-07-01"; // the agent portfolio's first trades
+
+async function syncBrokerTradeHistory() {
+  try {
+    // eToro accepts at most a year minus a day per request
+    const yearAgo = new Date(Date.now() - 364 * 86400000).toISOString().slice(0, 10);
+    const minDate = yearAgo > BROKER_HISTORY_START ? yearAgo : BROKER_HISTORY_START;
+    const rows = await etoroClient.fetchClosedTradeHistory(minDate);
+    let summary;
+    await withPositionLock("broker-sync", async () => {
+      const tradeHistoryFile = path.join(__dirname, "../data/trade-history.json");
+      let history = [];
+      try {
+        history = JSON.parse(fs.readFileSync(tradeHistoryFile, "utf8"));
+      } catch {}
+      const result = performance.attachBrokerResults(history, rows);
+      summary = result.summary;
+      if (history.length) {
+        fs.writeFileSync(tradeHistoryFile, JSON.stringify(result.history, null, 2));
+      }
+    });
+    const ledger = capitalManager.getCapitalState();
+    summary = {
+      ...summary,
+      minDate,
+      commissionPerOrder: config.commissionPerOrderDollars,
+      estimatedCommissions: Number(
+        (summary.brokerOrders * config.commissionPerOrderDollars).toFixed(2),
+      ),
+      ledgerEffectiveCapital: Number(ledger.effectiveCapital),
+    };
+    fs.writeFileSync(
+      BROKER_HISTORY_FILE,
+      JSON.stringify({ syncedAt: new Date().toISOString(), summary, rows }, null, 1),
+    );
+    journal.brokerSync(summary);
+    logger.info(
+      "🧾 eToro trade history synced: " +
+        summary.brokerRows +
+        " closed pieces · eToro net " +
+        summary.brokerNetProfit +
+        " · ~" +
+        summary.estimatedCommissions +
+        " commissions · " +
+        summary.matchedRecords +
+        " bot records confirmed",
+    );
+    return summary;
+  } catch (syncError) {
+    logger.warn("eToro trade-history sync failed (non-fatal): " + syncError.message);
+    return null;
+  }
+}
+
+function readBrokerHistory() {
+  try {
+    return JSON.parse(fs.readFileSync(BROKER_HISTORY_FILE, "utf8"));
+  } catch {
+    return null;
+  }
+}
+
 async function sendEndOfDaySummary() {
   try {
     const weekday = getEasternWeekday();
@@ -4155,6 +4277,13 @@ function startScheduler() {
   // 00:00 Bahrain once US daylight saving ends), not 15 minutes before it.
   new CronJob("0 16 * * 1-5", sendEndOfDaySummary, null, true, TIMEZONE);
 
+  // v10.2: eToro's own closed-trade record, 20 min after the close.
+  new CronJob("20 16 * * 1-5", syncBrokerTradeHistory, null, true, TIMEZONE);
+  const brokerCopy = readBrokerHistory();
+  if (!brokerCopy || Date.now() - Date.parse(brokerCopy.syncedAt) > 86400000) {
+    setTimeout(syncBrokerTradeHistory, 90 * 1000);
+  }
+
   // V6: daily position review — Mon-Thu ONLY (Friday closes everything
   // anyway, so extending on Friday would be meaningless).
   new CronJob(
@@ -4203,6 +4332,7 @@ function startScheduler() {
             // whole trade (partials included) for cooldown and the journal.
             onClosed: (symbol, finalLegPnl, positionMeta, exitReason, closedTrade) => {
               capitalManager.recordRealizedPnl(finalLegPnl);
+              capitalManager.recordCommission(1); // v10.2: the closing order
               const tradePnl = closedTrade ? closedTrade.pnlDollars : finalLegPnl;
               // v6: loss-aware cooldown + re-entry justification
               cooldownTracker.startCooldown(symbol, {
@@ -4509,6 +4639,9 @@ if (process.argv[2] === "--render") {
   Promise.resolve(fn ? fn() : "unknown screen; one of " + Object.keys(screens).join(" "))
     .then((out) => { console.log(String(out).replace(/<[^>]+>/g, "")); process.exit(0); })
     .catch((e) => { console.error(e.stack || e); process.exit(1); });
+} else if (process.argv[2] === "--sync-broker") {
+  // v10.2: one eToro trade-history pull and exit (read-only, no bot start)
+  syncBrokerTradeHistory().then((s) => { console.log(JSON.stringify(s, null, 1)); process.exit(s ? 0 : 1); });
 } else {
   main();
 }

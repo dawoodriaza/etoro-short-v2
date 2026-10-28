@@ -1,7 +1,62 @@
 {
- "at": "2026-10-27T05:31:06.102Z",
- "note": "13 watchlist reports since 2026-10-06",
+ "at": "2026-10-28T05:31:50.528Z",
+ "note": "17 watchlist reports since 2026-10-07",
  "rows": [
+  {
+   "symbol": "F",
+   "date": "2026-10-28",
+   "hour": "amc",
+   "quarter": 3,
+   "year": 2026,
+   "epsEstimate": 0.4129,
+   "epsActual": null,
+   "revenueEstimate": 47162532682,
+   "revenueActual": null
+  },
+  {
+   "symbol": "FDX",
+   "date": "2026-10-28",
+   "hour": "amc",
+   "quarter": 3,
+   "year": 2026,
+   "epsEstimate": 3.5173,
+   "epsActual": null,
+   "revenueEstimate": 23012042000,
+   "revenueActual": null
+  },
+  {
+   "symbol": "GOOGL",
+   "date": "2026-10-28",
+   "hour": "amc",
+   "quarter": 3,
+   "year": 2026,
+   "epsEstimate": 3.1095,
+   "epsActual": null,
+   "revenueEstimate": 132020419167,
+   "revenueActual": null
+  },
+  {
+   "symbol": "MSFT",
+   "date": "2026-10-28",
+   "hour": "amc",
+   "quarter": 1,
+   "year": 2027,
+   "epsEstimate": 4.8165,
+   "epsActual": null,
+   "revenueEstimate": 92493412748,
+   "revenueActual": null
+  },
+  {
+   "symbol": "TMUS",
+   "date": "2026-10-28",
+   "hour": "amc",
+   "quarter": 3,
+   "year": 2026,
+   "epsEstimate": 2.9699,
+   "epsActual": null,
+   "revenueEstimate": 23600426460,
+   "revenueActual": null
+  },
   {
    "symbol": "BA",
    "date": "2026-10-27",
@@ -9,9 +64,9 @@
    "quarter": 3,
    "year": 2026,
    "epsEstimate": -0.2138,
-   "epsActual": null,
+   "epsActual": -0.34,
    "revenueEstimate": 24555557049,
-   "revenueActual": null
+   "revenueActual": 24188000000
   },
   {
    "symbol": "HOOD",
@@ -20,9 +75,9 @@
    "quarter": 3,
    "year": 2026,
    "epsEstimate": 0.5684,
-   "epsActual": null,
+   "epsActual": 0.6,
    "revenueEstimate": 1450566571,
-   "revenueActual": null
+   "revenueActual": 1424000000
   },
   {
    "symbol": "SOFI",
@@ -31,9 +86,9 @@
    "quarter": 3,
    "year": 2026,
    "epsEstimate": 0.1701,
-   "epsActual": null,
+   "epsActual": 0.18,
    "revenueEstimate": 1280811368,
-   "revenueActual": null
+   "revenueActual": 1371120000
   },
   {
    "symbol": "UPS",
@@ -42,9 +97,9 @@
    "quarter": 3,
    "year": 2026,
    "epsEstimate": 1.6417,
-   "epsActual": null,
+   "epsActual": 1.69,
    "revenueEstimate": 22508653152,
-   "revenueActual": null
+   "revenueActual": 22853000000
   },
   {
    "symbol": "HON",
@@ -56,17 +111,6 @@
    "epsActual": 2.27,
    "revenueEstimate": 5056992502,
    "revenueActual": 4994000000
-  },
-  {
-   "symbol": "NBIS",
-   "date": "2026-10-22",
-   "hour": "",
-   "quarter": 3,
-   "year": 2026,
-   "epsEstimate": -0.6613,
-   "epsActual": null,
-   "revenueEstimate": 924130138,
-   "revenueActual": null
   },
   {
    "symbol": "UNP",

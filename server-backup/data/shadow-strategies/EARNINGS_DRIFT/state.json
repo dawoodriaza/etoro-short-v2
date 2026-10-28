@@ -1,7 +1,7 @@
 {
  "book": "EARNINGS_DRIFT",
  "createdAt": "2026-10-22T13:40:53.189Z",
- "lastProcessedSession": "2026-10-26",
+ "lastProcessedSession": "2026-10-27",
  "lastRebalanceWeek": null,
  "open": {
   "UNP": {
@@ -12,16 +12,33 @@
    "stopKind": "initial",
    "size": 823.76,
    "riskDollars": 50,
-   "peak": 297.17,
+   "peak": 301.13,
    "trough": 288.61,
-   "heldSessions": 2,
+   "heldSessions": 3,
    "signal": "earnings 2026-10-22 (bmo): +3.65% on the reaction day, EPS 3.53 vs 3.5078",
    "signalDate": "2026-10-22",
-   "lastClose": 296.91,
-   "lastDate": "2026-10-26"
+   "lastClose": 300.18,
+   "lastDate": "2026-10-27"
   }
  },
- "pending": [],
+ "pending": [
+  {
+   "symbol": "SOFI",
+   "reason": "earnings 2026-10-27 (bmo): +13.72% on the reaction day, EPS 0.18 vs 0.1701",
+   "atr": 0.817142857142857,
+   "stopAtr": 1,
+   "stopAbove": 15.68,
+   "signalDate": "2026-10-27"
+  },
+  {
+   "symbol": "UPS",
+   "reason": "earnings 2026-10-27 (bmo): +6.09% on the reaction day, EPS 1.69 vs 1.6417",
+   "atr": 3.6850000000000014,
+   "stopAtr": 1,
+   "stopAbove": 99.53,
+   "signalDate": "2026-10-27"
+  }
+ ],
  "pendingExits": {},
  "closed": [],
  "marks": [
@@ -47,6 +64,12 @@
    "date": "2026-10-26",
    "realized": 0,
    "unrealized": 1.45,
+   "open": 1
+  },
+  {
+   "date": "2026-10-27",
+   "realized": 0,
+   "unrealized": 10.53,
    "open": 1
   }
  ]

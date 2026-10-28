@@ -89,6 +89,27 @@ const config = {
   // extra ~1% was spread). Fail-open if the rate can't be fetched.
   maxSpreadPct: num("DT_MAX_SPREAD_PCT", 0.01),
 
+  // ── v10.2: BROKER-SIDE SAFETY STOP ────────────────────────────────
+  // Every order now carries a StopLossRate held by eToro itself, set this
+  // many times the plan's stop distance below the entry. The bot's own
+  // (tighter) stops still do the real work every minute; this one only
+  // fires if the bot is down, the server is unreachable, or a position
+  // held overnight gaps through everything. Before v10.2 every position
+  // was opened with no broker stop at all (eToro history: stopLossRate
+  // 0.0001 on all 389 closed positions).
+  brokerStopEnabled: bool("DT_BROKER_STOP_ENABLED", true),
+  brokerStopDistanceMultiplier: num("DT_BROKER_STOP_MULTIPLIER", 1.5),
+
+  // ── v10.2: PER-ORDER COMMISSION ───────────────────────────────────
+  // eToro charges a flat commission on each stock order, opening AND
+  // closing (and each partial close). It never appears in a position's
+  // P&L and the trade-history "fees" field reads 0, but it comes out of
+  // cash. Measured 2026-10-27: live equity sat $709.23 below eToro's own
+  // closed-trade netProfit total after 389 positions, and the gap grew in
+  // whole dollars, about $1 per order. Booked to the capital ledger so it
+  // matches the real account. Agent-portfolio dollars, per order.
+  commissionPerOrderDollars: num("DT_COMMISSION_PER_ORDER_DOLLARS", 1),
+
   // ── v5.1: LIQUIDITY / SPREAD FLOOR ────────────────────────────────
   // Reject entries where average daily dollar volume is below this floor —
   // thin names get wide spreads and bad fills on a small position. Only
@@ -383,7 +404,11 @@ const config = {
   // — never silent.
   capitalReconciliationTolerancePct: num(
     "DT_CAPITAL_RECONCILE_TOLERANCE_PCT",
-    0.01,
+    // v10.2: 1% → 0.3%. At 1% (~$90) the ledger drifted ~$2 a trade from
+    // unbooked commissions for weeks before correcting; with commissions
+    // now booked the remaining drift is fill slippage, so a gap past ~$27
+    // is worth correcting.
+    0.003,
   ),
 
   // REAL-TIME EXIT WATCHDOG (eToro WebSocket): the 1-minute exit-monitor

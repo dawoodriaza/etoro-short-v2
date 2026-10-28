@@ -9,6 +9,7 @@ const fs = require("fs");
 const path = require("path");
 const { logger } = require("../logger");
 const { humanize, toRealDollars } = require("../notifications/format-helpers");
+const config = require("../config");
 
 const tradeLogPath = path.join(__dirname, "../../data/trade-history.json");
 const dataDir = path.dirname(tradeLogPath);
@@ -111,7 +112,32 @@ function buildClosedTradeRecord({
       ? new Date(meta.waitingForBreakevenSince).toISOString()
       : null,
     pnlAccountingVersion: 2,
+    // v10.2: eToro's position id (to match the broker's own trade history)
+    // and the per-order commission this trade paid — one order to open,
+    // one per partial, one to close. pnlDollars stays the market result so
+    // every existing stat and threshold reads exactly as before.
+    positionId: live.positionId || meta.positionId || null,
+    commissionDollars: commissionForTrade(meta.partialFills),
+    netPnlDollars: Number(
+      (pnlDollars - commissionForTrade(meta.partialFills)).toFixed(2),
+    ),
   };
+}
+
+function commissionForTrade(partialFills) {
+  const perOrder = Number(config.commissionPerOrderDollars) || 0;
+  return Number((perOrder * (2 + ((partialFills || []).length || 0))).toFixed(2));
+}
+
+// v10.2: what a trade actually did to the account: the best-known market
+// result minus eToro's per-order commission. Records written before v10.2
+// carry no commissionDollars, so it is worked out from their partial fills.
+function tradeNetDollars(trade) {
+  const commission =
+    trade && trade.commissionDollars != null
+      ? Number(trade.commissionDollars)
+      : commissionForTrade(trade && trade.partialFills);
+  return tradeResultDollars(trade) - commission;
 }
 
 function recordTrade(trade) {
@@ -133,6 +159,103 @@ function tradeResultDollars(trade) {
   const recorded = Number(trade && trade.pnlDollars) || 0;
   if (!trade || trade.pnlAccountingVersion === 2) return recorded;
   return recorded + (Number(trade.estimatedPartialPnlDollars) || 0);
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// v10.2 — ETORO'S OWN NUMBERS ON EACH TRADE.
+//
+// The bot books a trade at eToro's unrealized P&L a moment BEFORE the close
+// order fills, so the fill itself (bid, slippage) never reached the record.
+// Measured 2026-10-26: NVDA recorded +$12.40, eToro booked +$6.23.
+//
+// eToro's trade history has one row per closed piece: a partial close is a
+// row of its own with the SAME open time and open rate. Rows are grouped
+// into positions that way, then each bot record is matched to its position
+// by positionId (records from v10.2 on) or, for older records, the nearest
+// open time within 15 minutes. Matched records get brokerNetProfit (the sum
+// over the pieces) and the real open/close rates; nothing else changes.
+// Pure — the caller reads and writes the files.
+// ══════════════════════════════════════════════════════════════════════
+function groupBrokerRows(rows) {
+  const groups = [];
+  const sorted = [...(rows || [])].sort((a, b) =>
+    String(a.openTimestamp).localeCompare(String(b.openTimestamp)),
+  );
+  for (const row of sorted) {
+    const openMs = Date.parse(row.openTimestamp);
+    const group = groups.find(
+      (g) =>
+        g.instrumentId === row.instrumentId &&
+        Math.abs(g.openMs - openMs) < 60000 &&
+        Math.abs(g.openRate - row.openRate) < 1e-9,
+    );
+    if (group) {
+      group.rows.push(row);
+      group.netProfit += Number(row.netProfit) || 0;
+    } else {
+      groups.push({
+        instrumentId: row.instrumentId,
+        openMs,
+        openRate: row.openRate,
+        rows: [row],
+        netProfit: Number(row.netProfit) || 0,
+      });
+    }
+  }
+  return groups;
+}
+
+function attachBrokerResults(history, brokerRows) {
+  const groups = groupBrokerRows(brokerRows);
+  const used = new Set();
+  const byPositionId = new Map();
+  groups.forEach((g, i) => g.rows.forEach((r) => byPositionId.set(r.positionId, i)));
+  let matched = 0;
+  const updated = (history || []).map((trade) => {
+    let index = trade.positionId != null ? byPositionId.get(trade.positionId) : undefined;
+    if (index === undefined && trade.openedAt) {
+      const openedMs = Date.parse(trade.openedAt);
+      let best = null;
+      groups.forEach((g, i) => {
+        if (used.has(i)) return;
+        if (trade.entryPrice && Math.abs(g.openRate / trade.entryPrice - 1) > 0.03) return;
+        const gap = Math.abs(g.openMs - openedMs);
+        if (gap < 15 * 60000 && (!best || gap < best.gap)) best = { i, gap };
+      });
+      if (best) index = best.i;
+    }
+    if (index === undefined || used.has(index)) return trade;
+    used.add(index);
+    matched++;
+    const g = groups[index];
+    const last = g.rows.reduce((a, b) =>
+      String(a.closeTimestamp) > String(b.closeTimestamp) ? a : b,
+    );
+    return {
+      ...trade,
+      brokerNetProfit: Number(g.netProfit.toFixed(2)),
+      brokerOpenRate: g.openRate,
+      brokerCloseRate: last.closeRate,
+      brokerPieces: g.rows.length,
+    };
+  });
+  const brokerNet = groups.reduce((s, g) => s + g.netProfit, 0);
+  const unmatched = groups.filter((g, i) => !used.has(i));
+  return {
+    history: updated,
+    summary: {
+      brokerRows: (brokerRows || []).length,
+      brokerPositions: groups.length,
+      brokerNetProfit: Number(brokerNet.toFixed(2)),
+      // one order to open each position plus one per closed piece
+      brokerOrders: groups.length + (brokerRows || []).length,
+      matchedRecords: matched,
+      unmatchedBrokerPositions: unmatched.length,
+      unmatchedBrokerNetProfit: Number(
+        unmatched.reduce((s, g) => s + g.netProfit, 0).toFixed(2),
+      ),
+    },
+  };
 }
 
 // v8.1: overall stats plus the two accounting eras side by side, so the
@@ -279,6 +402,10 @@ function formatStatsForTelegram(stats) {
 
 module.exports = {
   tradeResultDollars,
+  tradeNetDollars, // v10.2
+  commissionForTrade, // v10.2
+  attachBrokerResults, // v10.2
+  groupBrokerRows, // v10.2
   buildClosedTradeRecord,
   recordTrade,
   computeStats,

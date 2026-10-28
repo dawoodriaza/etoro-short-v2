@@ -45,7 +45,7 @@ Detailed history, evidence and the reasoning behind every change:
 
 | Item | Value |
 |---|---|
-| Version | **v10** — four shadow strategies with their own paper books (live trading unchanged); Telegram menu + buttons + `/today` `/perf` `/shadow`; v9.2 paper-trades score-floor rejects; v9 — time budget 240 min after the pre-registered checkpoint (trend score V2 rejected as overfit); v8.9 12-hour clock times; v8.8 dual-clock times in every notification; v8.7 — Claude Haiku 5.5 for the AI screener and reviewer (thinking off); v8.6 — the dip is measured from the running high and never paid up; v8.5 untracked-alert race fixed, safe server tests; v8.4 trend score V2 logged (not traded); v8.3 small dip + wait for breakeven (see CHANGELOG) |
+| Version | **v10.2** — broker-side safety stop on every order, $1-per-order eToro commission booked, eToro's own trade history synced daily, `/perf` all-time = the account; v10.1 CVX; **v10** — four shadow strategies with their own paper books (live trading unchanged); Telegram menu + buttons + `/today` `/perf` `/shadow`; v9.2 paper-trades score-floor rejects; v9 — time budget 240 min after the pre-registered checkpoint (trend score V2 rejected as overfit); v8.9 12-hour clock times; v8.8 dual-clock times in every notification; v8.7 — Claude Haiku 5.5 for the AI screener and reviewer (thinking off); v8.6 — the dip is measured from the running high and never paid up; v8.5 untracked-alert race fixed, safe server tests; v8.4 trend score V2 logged (not traded); v8.3 small dip + wait for breakeven (see CHANGELOG) |
 | Mode | `TRADING_MODE=live` |
 | Server | `ubuntu@130.110.113.198` (Oracle Cloud), directory `~/etoro-v2-short`, Node 20.20.2, ~1 GB RAM + **2 GB swap** (`/swapfile`, swappiness 10, added 2026-09-22 after a freeze during an automatic kernel update). If SSH times out "during banner exchange", the box is starved: reboot it from the Oracle console (data is kept) |
 | PM2 memory limit | `etoro-daytrade` restarts itself above 300 MB (`--max-memory-restart 300M`, saved with `pm2 save`) |
@@ -53,7 +53,7 @@ Detailed history, evidence and the reasoning behind every change:
 | Agent portfolio | `DT_CAPITAL=10000` (bot dollars) |
 | Real account copying it | `DT_REAL_ACCOUNT_CAPITAL=350` → copy ratio 0.035. Telegram shows real dollars; logs, journal and trade history are **bot dollars** |
 | Risk per trade | 0.5% of effective capital (`DT_RISK_PCT_DAY=0.005`, halved in v8.1) |
-| Capital | ≈ $9,368 effective, drawdown peak $10,032.85 (as of 2026-09-13) |
+| Capital | $9,025.38 real equity on 2026-10-26 (−$974.62 since July: eToro trade results −$265.39, commissions ≈ −$706), drawdown peak $10,032.85 |
 | Track record | 219 closed trades to 2026-09-18. Whole-trade P&L ≈ +$153 to 2026-09-11 (bot dollars, partial profits included); seven v8.3–v8.5 sessions (Sep 17–25): 20 trades, 12 winners (60%), −$38.45 |
 | Current experiment | **Live review of v8.3–v8.6** (from 2026-09-16): small dip (¼ stop, 60 min, from 2026-09-27 measured from the running high), wait-for-breakeven on dip buys, trend score V2 logged but not traded. Review `DIP_ENTRY`, `STALE_RECOVERED`, `WAITING_BREAKEVEN` and `scoreV2` records before changing entry/exit settings (see [what to review](#the-two-week-dip-entry-review)) |
 | Git | `main` on GitHub has v8–v8.2 + docs (pushed 2026-09-14); v8.3–v8.6 deployed 2026-09-16…27, not committed yet |
@@ -219,7 +219,10 @@ the next scan re-approves anything still valid.
 slots (7), gross exposure (90% of capital), ethics, earnings blackout (no DAY
 entry with earnings today/tomorrow; needs Finnhub), pre-trade safety (cash,
 sector bucket max 2, liquidity), and a live **spread guard** (≤ 1%). Then it
-places a market buy through the eToro API, reads back the **actual fill**, saves
+places a market buy through the eToro API **with a broker-side safety stop**
+(v10.2: `StopLossRate` = entry − 1.5 × the plan's stop distance, held by eToro so
+it fires even if the bot is down; if eToro refuses it the order goes through
+without one and Telegram is alerted), books the $1 order commission, reads back the **actual fill**, saves
 the position to `data/position-meta.json`, journals `TRADE_OPENED` and sends the
 Telegram OPEN message.
 
@@ -279,7 +282,8 @@ cleared them, otherwise left alone unless `DT_ADOPT_FOREIGN_POSITIONS=true`.
 | Spread guard | > 1% | Entry blocked |
 | Earnings blackout | earnings today/tomorrow (Finnhub) | Entry blocked |
 | Ethics filter | static blocklist + Finnhub industry | Never buys gambling, alcohol, adult industry |
-| Capital reconciliation | 1% tolerance | Ledger corrected to real equity; unexplained gaps alert `UNEXPLAINED_EQUITY_CHANGE`; large persistent gaps are treated as owner deposits/withdrawals |
+| Broker safety stop | 1.5 × the plan stop distance (v10.2) | eToro closes the position itself if the bot is down or a held position gaps; the bot's own stops handle every normal exit |
+| Capital reconciliation | 0.3% tolerance (v10.2, was 1%) | Ledger corrected to real equity; unexplained gaps alert `UNEXPLAINED_EQUITY_CHANGE`; large persistent gaps are treated as owner deposits/withdrawals |
 | System alerts | throttled 30 min | Telegram alert when eToro, SPY data, the AI, discovery, the scan or the exit monitor fail, plus a recovery notice |
 
 ---
@@ -296,6 +300,7 @@ time**.
 | 15:00 Mon–Thu | Daily AI position review |
 | 15:45 Mon–Fri | EOD close (Mon–Thu keep winners; Friday close all) + daily stats to Telegram |
 | 15:50 Friday | Weekly self-evaluation report to Telegram |
+| 16:20 Mon–Fri | (v10.2) Pull eToro's own closed-trade history into `data/broker-trade-history.json` and stamp eToro's real result on each trade record (also once at start-up if the copy is over a day old) |
 | 05:15 UTC Tue–Sat (server crontab) | `src/fetch-replay-candles.js` saves 1d/1h/15m/5m candles for replays, **then** `src/shadow-strategies.js` runs the four shadow books on the finished day (v10) |
 | 05:50 UTC Mon–Sat (server crontab) | `scripts/daily-github-backup.sh`: the server pushes the live code and all of `data/` to GitHub |
 
@@ -313,7 +318,7 @@ are in `src/market-hours.js`.
 | `/status` | Is the bot working (🟢/🔴), last scan, market open, positions, dip orders, today's P&L, capital, mode |
 | `/positions` (`/held`) | Each holding: buy → live price, P&L, how long, stop, what would make it sell |
 | `/today` | Today's real trades, scans, plans, AI approvals, dip orders, and what the skipped stocks did on paper |
-| `/perf` (`/performance`) | Last 7 days, current rules, all time; average win/loss; how trades ended; drawdown and room before the 15% safety stop |
+| `/perf` (`/performance`) | Last 7 days and current rules (after the $1-per-order commission, eToro's own figure per trade where matched); **all time = the account** (capital vs the start) plus eToro's trade total and commissions (v10.2); average win/loss; how trades ended; drawdown and room before the 15% safety stop |
 | `/shadow` (`/strategies`) | The four shadow books against the live bot and the paper book |
 | `/help` (`/start`) | The list |
 
@@ -390,6 +395,7 @@ Every event has `ts` (UTC ISO), `bahrainTime` and `event`.
 | `POSITION_STATUS` | (v8) Every 10 ticks per open position: HOLD / TRIM / RUNNER / WEAKENING / WAITING_BREAKEVEN (v8.3) / EXIT, P&L, peak, effective stop, next trigger |
 | `SCAN_FUNNEL` | (v8) Counts per stage: quoted → moving → eligible → scored → plans → AI take → waiting for a dip → opened, with reasons |
 | `EQUITY_DRIFT` | (v8.1) Realized equity vs ledger when the gap ≥ $25 |
+| `BROKER_SYNC` | (v10.2) Daily eToro trade-history pull: pieces, positions, eToro net profit, orders and estimated commissions, bot records matched |
 | `EXIT_SHADOW_CHECKPOINT` | Price after a time-based exit at +30/60/120 min |
 | `EOD_SUMMARY` | Daily stats and dip-order counts |
 | `ERROR` | Errors, e.g. `DIP_ENTRY_CHECK`, `SCAN`, `OPEN:SYMBOL` |
@@ -440,6 +446,8 @@ design; the running bot uses **Claude Haiku 4.5 only** (screener and reviewer).
 | Discovery | `DT_DISCOVERY_ENABLED`, `DT_DISCOVERY_MIN_PRICE`, `DT_MIN_AVG_DOLLAR_VOLUME` | true, 10, 15000000 |
 | Breakers | `DT_DAILY_LOSS_LIMIT_PCT`, `DT_MAX_DRAWDOWN_FROM_PEAK_PCT` | 0.05, 0.15 |
 | AI | `DT_REVIEWER_ENABLED`, `DT_SCREENER_MIN_CONF_TAKE`, `DT_SCREENER_DEDUPE_MINUTES` | true, 4, 30 |
+| Broker stop | `DT_BROKER_STOP_ENABLED`, `DT_BROKER_STOP_MULTIPLIER` | true, 1.5 (defaults, v10.2) |
+| Commission / reconcile | `DT_COMMISSION_PER_ORDER_DOLLARS`, `DT_CAPITAL_RECONCILE_TOLERANCE_PCT` | 1, 0.003 (defaults, v10.2) |
 | Trend score V2 | `DT_SCORE_V2_LOGGING` | true (v8.4; logged in SHADOW_SIGNAL only, not traded on) |
 
 To see the real live values: `ssh` to the server and
@@ -536,6 +544,10 @@ pm2 restart etoro-daytrade
 
 # Account and positions (read-only)
 node src/portfolio-check.js
+# eToro's own closed-trade history → data/broker-trade-history.json (v10.2;
+# ONLY while the bot is stopped — it rewrites trade-history.json; the running
+# bot does this itself at 16:20 ET)
+node src/index.js --sync-broker
 node src/close-position.js --list
 
 # Manual close (dry run unless --confirm)
@@ -680,6 +692,7 @@ Details for every line: `CHANGELOG.md`.
 | 2026-09-17 | v8.4 | Trend score V2 logged beside the live score in every scan record (not traded on); first replay failed its pre-set bar on trade count |
 | 2026-09-18 | v8.5 | First live v8.3 sessions reviewed (9 trades, −$66); false untracked-position alerts after the bot's own closes fixed; server tests moved to a scratch copy |
 | 2026-09-22 | ops | Server freeze during an automatic kernel update: 2 GB swap added, PM2 memory limits on both bots |
+| 2026-10-27 | v10.2 | **Phase 1 (safety + real P&L).** eToro's own trade history (one read-only call) showed no position ever had a broker stop and that a **$1-per-order commission** (≈$706 of the −$975 since July) was never counted. Every order now carries a broker-side safety stop (1.5× the plan stop); commissions are booked to the ledger; reconciliation 1% → 0.3%; eToro's result is stamped on each trade daily; `/perf` all-time = the account; rates timeout retried once. Which stocks are bought is unchanged |
 | 2026-10-25 | v10.1 | **CVX added** (energy). eToro lists the NYSE share as `CVX.US` while bare `CVX` is a crypto; the resolver now tries `TICKER.US` (stocks only) when a ticker has no equity match, and reports it back under its plain name |
 | 2026-10-22 | **v10** | **Four shadow strategies** (swing breakout, dip in uptrend, earnings drift, weekly rotation), each with its own $10,000 paper book, run nightly as a separate process on regular-session prices; first history check: only dip-in-uptrend did not lose. **Telegram**: command menu, tap-buttons, `/today` `/perf` `/shadow`. Live trading unchanged |
 | 2026-10-12 | v9.2 | Paper-trades every plan the score floor turns down (`paperReason: SCORE_FLOOR`) with the real planner and exit rules, plus end-of-day rules for the whole paper book; daily "if it had bought what it skipped" total in `/status` and the market-closed message; Telegram commands `/status` `/positions` `/help`; server pushes code + data to GitHub nightly. Logging only |
@@ -715,8 +728,15 @@ Findings of the 2026-09-16 review (details and tables in CHANGELOG v8.3):
 - **Discovery quality.** A "% gainers" screen surfaces low-quality spikes;
   there is no fundamentals feed.
 - **FMP catalyst feed returns 403**, so catalyst-based swing overrides are inactive.
-- **Unexplained equity change** of ~$506 after 2026-07-22 was never matched to
-  trades; it needs the owner's eToro closed-position export.
+- **Unexplained equity change — explained (v10.2).** The long-running gap
+  between the ledger and real equity was eToro's flat $1-per-order commission
+  (706 orders ≈ $709 by 2026-10-26), which no P&L figure from eToro shows. It is
+  now booked. Still open: whether the real $350 copy pays a fixed fee per copied
+  order (at ~$52 a copied position that would be ~4% a round trip). Check the
+  real account statement.
+- **Fixed costs vs trade size.** At $2–3 a round trip, a trade must make
+  ~0.15–0.2% just to break even. Any strategy change should be judged after
+  commission (`/perf` and `netPnlDollars` already are).
 - **Fill read-back** is not always possible immediately after an order.
 - **Research data**: ~4 years of daily bars for 214 symbols are on the server in
   `~/etoro-audit/daily-history/` (a daily-bar study found breakouts worse than

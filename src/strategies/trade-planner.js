@@ -743,7 +743,23 @@ function describeDipEntryOrder(order, nowMs) {
   };
 }
 
+// v10.2: the eToro-held safety stop for a plan — config multiplier × the
+// plan's own stop distance below the entry. null (no broker stop) when
+// switched off or the plan has no usable stop. Rounded DOWN so it never
+// lands closer than intended: 2 decimals at $1+, 4 below.
+function computeBrokerStopRate(plan, multiplier = config.brokerStopDistanceMultiplier) {
+  if (!config.brokerStopEnabled) return null;
+  const entry = Number(plan && plan.entryPrice);
+  const stop = Number(plan && plan.stopPrice);
+  if (!(entry > 0) || !(stop > 0) || stop >= entry) return null;
+  const raw = entry - (entry - stop) * multiplier;
+  if (!(raw > 0)) return null;
+  const factor = entry >= 1 ? 100 : 10000;
+  return Math.floor(raw * factor) / factor;
+}
+
 module.exports = {
+  computeBrokerStopRate, // v10.2
   buildTradePlan,
   buildDipEntryOrder,
   evaluateDipEntry,

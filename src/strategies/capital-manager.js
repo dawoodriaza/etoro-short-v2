@@ -161,6 +161,23 @@ function recordRealizedPnl(pnlDollars) {
   saveLedger(ledger);
 }
 
+// v10.2: eToro's flat per-order commission (see config
+// commissionPerOrderDollars). Booked as soon as an order fills — open,
+// partial close or full close — because that is when it leaves the cash.
+// Also tallied in ledger.commissionsBooked so reports can show it apart
+// from trading P&L.
+function recordCommission(orderCount = 1) {
+  const perOrder = Number(config.commissionPerOrderDollars) || 0;
+  if (perOrder <= 0 || !(orderCount > 0)) return;
+  const dollars = perOrder * orderCount;
+  recordRealizedPnl(-dollars);
+  const ledger = loadLedger();
+  ledger.commissionsBooked = Number(
+    (Number(ledger.commissionsBooked || 0) + dollars).toFixed(2),
+  );
+  saveLedger(ledger);
+}
+
 // Consecutive losing days ending at the most recent RECORDED day.
 function computeConsecutiveLosingDays(ledger) {
   const recordedDays = Object.keys(ledger.dailyPnl || {}).sort(); // ascending
@@ -668,6 +685,7 @@ module.exports = {
   validateDrawdownPeakReset,
   resetDrawdownPeak,
   recordRealizedPnl,
+  recordCommission, // v10.2
   getCapitalState,
   checkDrawdownBreaker,
   isHalted,

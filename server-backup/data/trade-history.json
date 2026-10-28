@@ -76,7 +76,11 @@
       "originalDollarAmount": 1160,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 4.89,
+    "brokerOpenRate": 68.85,
+    "brokerCloseRate": 69.14,
+    "brokerPieces": 1
   },
   {
     "symbol": "MRVL",
@@ -155,7 +159,11 @@
       "originalDollarAmount": 1160,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -9.5,
+    "brokerOpenRate": 190.45,
+    "brokerCloseRate": 188.89,
+    "brokerPieces": 1
   },
   {
     "symbol": "IONQ",
@@ -234,7 +242,11 @@
       "originalDollarAmount": 1160,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -26.45,
+    "brokerOpenRate": 35.53,
+    "brokerCloseRate": 34.72,
+    "brokerPieces": 1
   },
   {
     "symbol": "RIVN",
@@ -313,7 +325,11 @@
       "originalDollarAmount": 1160,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -10.67,
+    "brokerOpenRate": 17.4,
+    "brokerCloseRate": 17.24,
+    "brokerPieces": 1
   },
   {
     "symbol": "AMD",
@@ -392,7 +408,11 @@
       "originalDollarAmount": 1155,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -9.04,
+    "brokerOpenRate": 504.7,
+    "brokerCloseRate": 500.75,
+    "brokerPieces": 1
   },
   {
     "symbol": "AMD",
@@ -471,7 +491,11 @@
       "originalDollarAmount": 1155,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 14.34,
+    "brokerOpenRate": 504.33,
+    "brokerCloseRate": 510.59,
+    "brokerPieces": 1
   },
   {
     "symbol": "BA",
@@ -550,7 +574,11 @@
       "originalDollarAmount": 3070,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -12.6,
+    "brokerOpenRate": 216.89,
+    "brokerCloseRate": 216,
+    "brokerPieces": 1
   },
   {
     "symbol": "HOOD",
@@ -629,7 +657,11 @@
       "originalDollarAmount": 1155,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 3.99,
+    "brokerOpenRate": 101.24,
+    "brokerCloseRate": 101.59,
+    "brokerPieces": 1
   },
   {
     "symbol": "MRVL",
@@ -708,7 +740,11 @@
       "originalDollarAmount": 1155,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 12.86,
+    "brokerOpenRate": 191.23,
+    "brokerCloseRate": 193.36,
+    "brokerPieces": 1
   },
   {
     "symbol": "NVDA",
@@ -787,7 +823,11 @@
       "originalDollarAmount": 3360,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 16.82,
+    "brokerOpenRate": 205.77,
+    "brokerCloseRate": 206.8,
+    "brokerPieces": 1
   },
   {
     "symbol": "TSLA",
@@ -866,7 +906,11 @@
       "originalDollarAmount": 2355,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -53.92,
+    "brokerOpenRate": 384.8,
+    "brokerCloseRate": 375.99,
+    "brokerPieces": 1
   },
   {
     "symbol": "RIVN",
@@ -945,7 +989,11 @@
       "originalDollarAmount": 2315,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -69.96,
+    "brokerOpenRate": 17.87,
+    "brokerCloseRate": 17.33,
+    "brokerPieces": 1
   },
   {
     "symbol": "AVGO",
@@ -1024,7 +1072,11 @@
       "originalDollarAmount": 3360,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 10.6,
+    "brokerOpenRate": 380.32,
+    "brokerCloseRate": 382.82,
+    "brokerPieces": 1
   },
   {
     "symbol": "AMD",
@@ -1103,7 +1155,11 @@
       "originalDollarAmount": 2320,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -3,
+    "brokerOpenRate": 517.55,
+    "brokerCloseRate": 516.88,
+    "brokerPieces": 1
   },
   {
     "symbol": "MRVL",
@@ -1182,7 +1238,11 @@
       "originalDollarAmount": 1145,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -23.92,
+    "brokerOpenRate": 200.54,
+    "brokerCloseRate": 196.35,
+    "brokerPieces": 1
   },
   {
     "symbol": "QCOM",
@@ -1261,7 +1321,11 @@
       "originalDollarAmount": 2025,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -9.19,
+    "brokerOpenRate": 174,
+    "brokerCloseRate": 173.21,
+    "brokerPieces": 1
   },
   {
     "symbol": "HOOD",
@@ -1340,7 +1404,11 @@
       "originalDollarAmount": 1145,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 1.71,
+    "brokerOpenRate": 100.73,
+    "brokerCloseRate": 100.88,
+    "brokerPieces": 1
   },
   {
     "symbol": "ANET",
@@ -1419,7 +1487,11 @@
       "originalDollarAmount": 1145,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -0.13,
+    "brokerOpenRate": 172.5,
+    "brokerCloseRate": 172.48,
+    "brokerPieces": 1
   },
   {
     "symbol": "AMD",
@@ -1498,7 +1570,11 @@
       "originalDollarAmount": 1140,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 5.59,
+    "brokerOpenRate": 522,
+    "brokerCloseRate": 524.56,
+    "brokerPieces": 1
   },
   {
     "symbol": "MRVL",
@@ -1585,7 +1661,11 @@
       "originalDollarAmount": 1145,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 27.34,
+    "brokerOpenRate": 202.85,
+    "brokerCloseRate": 206.54,
+    "brokerPieces": 2
   },
   {
     "symbol": "HOOD",
@@ -1664,7 +1744,11 @@
       "originalDollarAmount": 1140,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 4.62,
+    "brokerOpenRate": 101.1,
+    "brokerCloseRate": 101.51,
+    "brokerPieces": 1
   },
   {
     "symbol": "SOFI",
@@ -1743,7 +1827,11 @@
       "originalDollarAmount": 1315,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -3.82,
+    "brokerOpenRate": 17.2,
+    "brokerCloseRate": 17.15,
+    "brokerPieces": 1
   },
   {
     "symbol": "AVGO",
@@ -1822,7 +1910,11 @@
       "originalDollarAmount": 2385,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 9.52,
+    "brokerOpenRate": 388.51,
+    "brokerCloseRate": 390.06,
+    "brokerPieces": 1
   },
   {
     "symbol": "QCOM",
@@ -1901,7 +1993,11 @@
       "originalDollarAmount": 3320,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -12.35,
+    "brokerOpenRate": 174.68,
+    "brokerCloseRate": 174.03,
+    "brokerPieces": 1
   },
   {
     "symbol": "AVGO",
@@ -1980,7 +2076,11 @@
       "originalDollarAmount": 3320,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -70.5,
+    "brokerOpenRate": 389.45,
+    "brokerCloseRate": 381.18,
+    "brokerPieces": 1
   },
   {
     "symbol": "ANET",
@@ -2059,7 +2159,11 @@
       "originalDollarAmount": 2285,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 7.35,
+    "brokerOpenRate": 174,
+    "brokerCloseRate": 174.56,
+    "brokerPieces": 1
   },
   {
     "symbol": "NVDA",
@@ -2138,7 +2242,11 @@
       "originalDollarAmount": 3325,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -7.91,
+    "brokerOpenRate": 205.95,
+    "brokerCloseRate": 205.46,
+    "brokerPieces": 1
   },
   {
     "symbol": "RKLB",
@@ -2217,7 +2325,11 @@
       "originalDollarAmount": 1135,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 16.29,
+    "brokerOpenRate": 67.59,
+    "brokerCloseRate": 68.56,
+    "brokerPieces": 1
   },
   {
     "symbol": "MRVL",
@@ -2296,7 +2408,11 @@
       "originalDollarAmount": 1135,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -16.7,
+    "brokerOpenRate": 210.05,
+    "brokerCloseRate": 206.96,
+    "brokerPieces": 1
   },
   {
     "symbol": "NBIS",
@@ -2383,7 +2499,11 @@
       "originalDollarAmount": 1135,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 29.84,
+    "brokerOpenRate": 218.94,
+    "brokerCloseRate": 223.21,
+    "brokerPieces": 2
   },
   {
     "symbol": "SMCI",
@@ -2470,7 +2590,11 @@
       "originalDollarAmount": 1135,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 32.12,
+    "brokerOpenRate": 30.21,
+    "brokerCloseRate": 30.99,
+    "brokerPieces": 2
   },
   {
     "symbol": "NFLX",
@@ -2549,7 +2673,11 @@
       "originalDollarAmount": 2560,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 25.1,
+    "brokerOpenRate": 69.36,
+    "brokerCloseRate": 70.04,
+    "brokerPieces": 1
   },
   {
     "symbol": "QCOM",
@@ -2628,7 +2756,11 @@
       "originalDollarAmount": 2115,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 12.35,
+    "brokerOpenRate": 175.85,
+    "brokerCloseRate": 177.3,
+    "brokerPieces": 1
   },
   {
     "symbol": "SMCI",
@@ -2707,7 +2839,11 @@
       "originalDollarAmount": 2310,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 24.8,
+    "brokerOpenRate": 31.67,
+    "brokerCloseRate": 32.01,
+    "brokerPieces": 1
   },
   {
     "symbol": "DELL",
@@ -2786,7 +2922,11 @@
       "originalDollarAmount": 1150,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -0.31,
+    "brokerOpenRate": 445.56,
+    "brokerCloseRate": 445.44,
+    "brokerPieces": 1
   },
   {
     "symbol": "CRWV",
@@ -2865,7 +3005,11 @@
       "originalDollarAmount": 1155,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -1.25,
+    "brokerOpenRate": 83.44,
+    "brokerCloseRate": 83.35,
+    "brokerPieces": 1
   },
   {
     "symbol": "RKLB",
@@ -2944,7 +3088,11 @@
       "originalDollarAmount": 2310,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -10.59,
+    "brokerOpenRate": 72.88,
+    "brokerCloseRate": 71.66,
+    "brokerPieces": 1
   },
   {
     "symbol": "MRVL",
@@ -3023,7 +3171,11 @@
       "originalDollarAmount": 2315,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -9.45,
+    "brokerOpenRate": 213.13,
+    "brokerCloseRate": 212.26,
+    "brokerPieces": 1
   },
   {
     "symbol": "AMD",
@@ -3110,7 +3262,11 @@
       "originalDollarAmount": 1145,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 4.15,
+    "brokerOpenRate": 553.39,
+    "brokerCloseRate": 553.46,
+    "brokerPieces": 2
   },
   {
     "symbol": "BA",
@@ -3189,7 +3345,11 @@
       "originalDollarAmount": 3125,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 19.49,
+    "brokerOpenRate": 206.79,
+    "brokerCloseRate": 208.08,
+    "brokerPieces": 1
   },
   {
     "symbol": "NBIS",
@@ -3268,7 +3428,11 @@
       "originalDollarAmount": 2315,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -38.24,
+    "brokerOpenRate": 225.83,
+    "brokerCloseRate": 222.1,
+    "brokerPieces": 1
   },
   {
     "symbol": "MRVL",
@@ -3347,7 +3511,11 @@
       "originalDollarAmount": 2280,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -45.43,
+    "brokerOpenRate": 217.83,
+    "brokerCloseRate": 213.49,
+    "brokerPieces": 1
   },
   {
     "symbol": "RDDT",
@@ -3426,7 +3594,11 @@
       "originalDollarAmount": 2270,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 24.86,
+    "brokerOpenRate": 173.5,
+    "brokerCloseRate": 175.4,
+    "brokerPieces": 1
   },
   {
     "symbol": "SMCI",
@@ -3513,7 +3685,11 @@
       "originalDollarAmount": 2270,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 60.66,
+    "brokerOpenRate": 31.05,
+    "brokerCloseRate": 31.73,
+    "brokerPieces": 2
   },
   {
     "symbol": "IONQ",
@@ -3592,7 +3768,11 @@
       "originalDollarAmount": 2270,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -10.86,
+    "brokerOpenRate": 35.13,
+    "brokerCloseRate": 34.08,
+    "brokerPieces": 1
   },
   {
     "symbol": "MU",
@@ -3671,7 +3851,11 @@
       "originalDollarAmount": 2270,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -15.12,
+    "brokerOpenRate": 990.6,
+    "brokerCloseRate": 984,
+    "brokerPieces": 1
   },
   {
     "symbol": "ANET",
@@ -3750,7 +3934,11 @@
       "originalDollarAmount": 2270,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -8.57,
+    "brokerOpenRate": 177.52,
+    "brokerCloseRate": 176.85,
+    "brokerPieces": 1
   },
   {
     "symbol": "TSLA",
@@ -3829,7 +4017,11 @@
       "originalDollarAmount": 3300,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 6.13,
+    "brokerOpenRate": 323,
+    "brokerCloseRate": 323.6,
+    "brokerPieces": 1
   },
   {
     "symbol": "PLTR",
@@ -3908,7 +4100,11 @@
       "originalDollarAmount": 2385,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -3.82,
+    "brokerOpenRate": 124.72,
+    "brokerCloseRate": 124.52,
+    "brokerPieces": 1
   },
   {
     "symbol": "TSLA",
@@ -3987,7 +4183,11 @@
       "originalDollarAmount": 2700,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -18.55,
+    "brokerOpenRate": 324.65,
+    "brokerCloseRate": 322.42,
+    "brokerPieces": 1
   },
   {
     "symbol": "MSFT",
@@ -4066,7 +4266,11 @@
       "originalDollarAmount": 3305,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 0.43,
+    "brokerOpenRate": 386,
+    "brokerCloseRate": 386.05,
+    "brokerPieces": 1
   },
   {
     "symbol": "AFRM",
@@ -4145,7 +4349,11 @@
       "originalDollarAmount": 2525,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -72.79,
+    "brokerOpenRate": 72.5,
+    "brokerCloseRate": 70.41,
+    "brokerPieces": 1
   },
   {
     "symbol": "MSFT",
@@ -4224,7 +4432,11 @@
       "originalDollarAmount": 3295,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 1.29,
+    "brokerOpenRate": 383.96,
+    "brokerCloseRate": 384.11,
+    "brokerPieces": 1
   },
   {
     "symbol": "GOOGL",
@@ -4303,7 +4515,11 @@
       "originalDollarAmount": 3295,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -8.12,
+    "brokerOpenRate": 320.42,
+    "brokerCloseRate": 319.63,
+    "brokerPieces": 1
   },
   {
     "symbol": "AAPL",
@@ -4382,7 +4598,11 @@
       "originalDollarAmount": 3265,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -9.78,
+    "brokerOpenRate": 333.73,
+    "brokerCloseRate": 332.73,
+    "brokerPieces": 1
   },
   {
     "symbol": "RIVN",
@@ -4461,7 +4681,11 @@
       "originalDollarAmount": 2250,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -8.26,
+    "brokerOpenRate": 16.34,
+    "brokerCloseRate": 16.28,
+    "brokerPieces": 1
   },
   {
     "symbol": "SNAP",
@@ -4540,7 +4764,11 @@
       "originalDollarAmount": 3265,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -29.41,
+    "brokerOpenRate": 4.44,
+    "brokerCloseRate": 4.4,
+    "brokerPieces": 1
   },
   {
     "symbol": "AVGO",
@@ -4619,7 +4847,11 @@
       "originalDollarAmount": 3265,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -1.06,
+    "brokerOpenRate": 390.76,
+    "brokerCloseRate": 390.5,
+    "brokerPieces": 1
   },
   {
     "symbol": "MU",
@@ -4706,7 +4938,11 @@
       "originalDollarAmount": 2250,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 10.67,
+    "brokerOpenRate": 947.84,
+    "brokerCloseRate": 948.77,
+    "brokerPieces": 2
   },
   {
     "symbol": "HOOD",
@@ -4785,7 +5021,11 @@
       "originalDollarAmount": 1125,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -46.85,
+    "brokerOpenRate": 97.98,
+    "brokerCloseRate": 93.9,
+    "brokerPieces": 1
   },
   {
     "symbol": "QCOM",
@@ -4864,7 +5104,11 @@
       "originalDollarAmount": 2000,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -47.63,
+    "brokerOpenRate": 170.9,
+    "brokerCloseRate": 166.83,
+    "brokerPieces": 1
   },
   {
     "symbol": "SOFI",
@@ -4943,7 +5187,11 @@
       "originalDollarAmount": 1345,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 10.41,
+    "brokerOpenRate": 16.8,
+    "brokerCloseRate": 16.93,
+    "brokerPieces": 1
   },
   {
     "symbol": "META",
@@ -5022,7 +5270,11 @@
       "originalDollarAmount": 2150,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -5.22,
+    "brokerOpenRate": 603.83,
+    "brokerCloseRate": 601,
+    "brokerPieces": 1
   },
   {
     "symbol": "MSFT",
@@ -5101,7 +5353,11 @@
       "originalDollarAmount": 2905,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 10.43,
+    "brokerOpenRate": 420.49,
+    "brokerCloseRate": 422,
+    "brokerPieces": 1
   },
   {
     "symbol": "MSFT",
@@ -5180,7 +5436,11 @@
       "originalDollarAmount": 3220,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 26.19,
+    "brokerOpenRate": 424.1,
+    "brokerCloseRate": 427.55,
+    "brokerPieces": 1
   },
   {
     "symbol": "MRVL",
@@ -5267,7 +5527,11 @@
       "originalDollarAmount": 2225,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 55.35,
+    "brokerOpenRate": 172.45,
+    "brokerCloseRate": 175.45,
+    "brokerPieces": 2
   },
   {
     "symbol": "TSLA",
@@ -5346,7 +5610,11 @@
       "originalDollarAmount": 2420,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 19.7,
+    "brokerOpenRate": 303.4,
+    "brokerCloseRate": 305.87,
+    "brokerPieces": 1
   },
   {
     "symbol": "SMCI",
@@ -5425,7 +5693,11 @@
       "originalDollarAmount": 2260,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 35.51,
+    "brokerOpenRate": 27.37,
+    "brokerCloseRate": 27.8,
+    "brokerPieces": 1
   },
   {
     "symbol": "SOFI",
@@ -5512,7 +5784,11 @@
       "originalDollarAmount": 1120,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 25.31,
+    "brokerOpenRate": 15.49,
+    "brokerCloseRate": 15.75,
+    "brokerPieces": 2
   },
   {
     "symbol": "AMD",
@@ -5599,7 +5875,11 @@
       "originalDollarAmount": 2265,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 3.76,
+    "brokerOpenRate": 484.7,
+    "brokerCloseRate": 483.86,
+    "brokerPieces": 2
   },
   {
     "symbol": "AVGO",
@@ -5686,7 +5966,11 @@
       "originalDollarAmount": 3269.82,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 9.2,
+    "brokerOpenRate": 383.89,
+    "brokerCloseRate": 385.25,
+    "brokerPieces": 2
   },
   {
     "symbol": "MSFT",
@@ -5765,7 +6049,11 @@
       "originalDollarAmount": 3290,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 15.63,
+    "brokerOpenRate": 454.6,
+    "brokerCloseRate": 456.76,
+    "brokerPieces": 1
   },
   {
     "symbol": "AMD",
@@ -5844,7 +6132,11 @@
       "originalDollarAmount": 2265,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 2.32,
+    "brokerOpenRate": 487.16,
+    "brokerCloseRate": 487.66,
+    "brokerPieces": 1
   },
   {
     "symbol": "MSFT",
@@ -5923,7 +6215,11 @@
       "originalDollarAmount": 3295,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -6.64,
+    "brokerOpenRate": 456.63,
+    "brokerCloseRate": 455.71,
+    "brokerPieces": 1
   },
   {
     "symbol": "MRVL",
@@ -6010,7 +6306,11 @@
       "originalDollarAmount": 2270,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 72.66,
+    "brokerOpenRate": 183.38,
+    "brokerCloseRate": 188.5,
+    "brokerPieces": 2
   },
   {
     "symbol": "MU",
@@ -6097,7 +6397,11 @@
       "originalDollarAmount": 2265,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 60.06,
+    "brokerOpenRate": 859.47,
+    "brokerCloseRate": 889.73,
+    "brokerPieces": 2
   },
   {
     "symbol": "MU",
@@ -6176,7 +6480,11 @@
       "originalDollarAmount": 2325,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -82.98,
+    "brokerOpenRate": 915.93,
+    "brokerCloseRate": 883.24,
+    "brokerPieces": 1
   },
   {
     "symbol": "ANET",
@@ -6263,7 +6571,11 @@
       "originalDollarAmount": 2270,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 28.85,
+    "brokerOpenRate": 170.3,
+    "brokerCloseRate": 173.6,
+    "brokerPieces": 2
   },
   {
     "symbol": "SOFI",
@@ -6350,7 +6662,11 @@
       "originalDollarAmount": 2290,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 2.08,
+    "brokerOpenRate": 16.46,
+    "brokerCloseRate": 16.45,
+    "brokerPieces": 2
   },
   {
     "symbol": "MRVL",
@@ -6437,7 +6753,11 @@
       "originalDollarAmount": 2325,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 6.71,
+    "brokerOpenRate": 197.63,
+    "brokerCloseRate": 197.5,
+    "brokerPieces": 2
   },
   {
     "symbol": "ANET",
@@ -6524,7 +6844,11 @@
       "originalDollarAmount": 2370,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 62.97,
+    "brokerOpenRate": 175.77,
+    "brokerCloseRate": 179.87,
+    "brokerPieces": 2
   },
   {
     "symbol": "TSLA",
@@ -6603,7 +6927,11 @@
       "originalDollarAmount": 2530,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -71.86,
+    "brokerOpenRate": 316.1499,
+    "brokerCloseRate": 307.17,
+    "brokerPieces": 1
   },
   {
     "symbol": "AMD",
@@ -6682,7 +7010,11 @@
       "originalDollarAmount": 2310,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -66,
+    "brokerOpenRate": 506.78,
+    "brokerCloseRate": 492.3,
+    "brokerPieces": 1
   },
   {
     "symbol": "ANET",
@@ -6761,7 +7093,11 @@
       "originalDollarAmount": 2315,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 6.02,
+    "brokerOpenRate": 180.62,
+    "brokerCloseRate": 181.09,
+    "brokerPieces": 1
   },
   {
     "symbol": "META",
@@ -7022,7 +7358,11 @@
       "originalDollarAmount": 3280,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 87.15,
+    "brokerOpenRate": 275.88,
+    "brokerCloseRate": 283.78,
+    "brokerPieces": 2
   },
   {
     "symbol": "META",
@@ -7109,7 +7449,11 @@
       "originalDollarAmount": 3280,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 96.84,
+    "brokerOpenRate": 565.64,
+    "brokerCloseRate": 584.35,
+    "brokerPieces": 2
   },
   {
     "symbol": "RKLB",
@@ -7196,7 +7540,11 @@
       "originalDollarAmount": 2320,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 35.33,
+    "brokerOpenRate": 68.3,
+    "brokerCloseRate": 69.52,
+    "brokerPieces": 2
   },
   {
     "symbol": "TSLA",
@@ -7275,7 +7623,11 @@
       "originalDollarAmount": 2535,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 29.23,
+    "brokerOpenRate": 317.45,
+    "brokerCloseRate": 321.11,
+    "brokerPieces": 1
   },
   {
     "symbol": "NBIS",
@@ -7354,7 +7706,11 @@
       "originalDollarAmount": 2330,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 10.09,
+    "brokerOpenRate": 217.14,
+    "brokerCloseRate": 218.08,
+    "brokerPieces": 1
   },
   {
     "symbol": "IONQ",
@@ -7441,7 +7797,11 @@
       "originalDollarAmount": 2320,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 5.27,
+    "brokerOpenRate": 39.65,
+    "brokerCloseRate": 39.65,
+    "brokerPieces": 2
   },
   {
     "symbol": "RKLB",
@@ -7520,7 +7880,11 @@
       "originalDollarAmount": 2330,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 9.07,
+    "brokerOpenRate": 69.39,
+    "brokerCloseRate": 69.66,
+    "brokerPieces": 1
   },
   {
     "symbol": "QCOM",
@@ -7607,7 +7971,11 @@
       "originalDollarAmount": 2335,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 16.23,
+    "brokerOpenRate": 151.76,
+    "brokerCloseRate": 153.12,
+    "brokerPieces": 2
   },
   {
     "symbol": "SOFI",
@@ -7694,7 +8062,11 @@
       "originalDollarAmount": 2555,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 20,
+    "brokerOpenRate": 17.88,
+    "brokerCloseRate": 18.02,
+    "brokerPieces": 2
   },
   {
     "symbol": "MU",
@@ -7781,7 +8153,11 @@
       "originalDollarAmount": 2335,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 4.73,
+    "brokerOpenRate": 864,
+    "brokerCloseRate": 864,
+    "brokerPieces": 2
   },
   {
     "symbol": "UPST",
@@ -7868,7 +8244,11 @@
       "originalDollarAmount": 2785,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 41.33,
+    "brokerOpenRate": 28.98,
+    "brokerCloseRate": 29.72,
+    "brokerPieces": 2
   },
   {
     "symbol": "RDDT",
@@ -7955,7 +8335,11 @@
       "originalDollarAmount": 2335,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 67.28,
+    "brokerOpenRate": 154.43,
+    "brokerCloseRate": 158.33,
+    "brokerPieces": 2
   },
   {
     "symbol": "PLTR",
@@ -8034,7 +8418,11 @@
       "originalDollarAmount": 2655,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 13.47,
+    "brokerOpenRate": 157.66,
+    "brokerCloseRate": 158.46,
+    "brokerPieces": 1
   },
   {
     "symbol": "MRVL",
@@ -8113,7 +8501,11 @@
       "originalDollarAmount": 2350,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 11.51,
+    "brokerOpenRate": 216.49,
+    "brokerCloseRate": 217.55,
+    "brokerPieces": 1
   },
   {
     "symbol": "NVDA",
@@ -8192,7 +8584,11 @@
       "originalDollarAmount": 3395,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 11.15,
+    "brokerOpenRate": 210.11,
+    "brokerCloseRate": 210.8,
+    "brokerPieces": 1
   },
   {
     "symbol": "MU",
@@ -8271,7 +8667,11 @@
       "originalDollarAmount": 2365,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 10.28,
+    "brokerOpenRate": 894.82,
+    "brokerCloseRate": 898.71,
+    "brokerPieces": 1
   },
   {
     "symbol": "PLTR",
@@ -8350,7 +8750,11 @@
       "originalDollarAmount": 2665,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 29.8,
+    "brokerOpenRate": 160.98,
+    "brokerCloseRate": 162.78,
+    "brokerPieces": 1
   },
   {
     "symbol": "MRVL",
@@ -8429,7 +8833,11 @@
       "originalDollarAmount": 2365,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -27.28,
+    "brokerOpenRate": 221.92,
+    "brokerCloseRate": 219.36,
+    "brokerPieces": 1
   },
   {
     "symbol": "NBIS",
@@ -8508,7 +8916,11 @@
       "originalDollarAmount": 2375,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -23.97,
+    "brokerOpenRate": 228.87,
+    "brokerCloseRate": 226.56,
+    "brokerPieces": 1
   },
   {
     "symbol": "SNAP",
@@ -8587,7 +8999,11 @@
       "originalDollarAmount": 2645,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 0,
+    "brokerOpenRate": 5.77,
+    "brokerCloseRate": 5.77,
+    "brokerPieces": 1
   },
   {
     "symbol": "ARM",
@@ -8674,7 +9090,11 @@
       "originalDollarAmount": 2365,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 42.75,
+    "brokerOpenRate": 274.68,
+    "brokerCloseRate": 277.2,
+    "brokerPieces": 2
   },
   {
     "symbol": "ANET",
@@ -8761,7 +9181,11 @@
       "originalDollarAmount": 2590,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 59.94,
+    "brokerOpenRate": 208.5,
+    "brokerCloseRate": 212,
+    "brokerPieces": 2
   },
   {
     "symbol": "NVDA",
@@ -8848,7 +9272,11 @@
       "originalDollarAmount": 3435,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 46.07,
+    "brokerOpenRate": 217.32,
+    "brokerCloseRate": 219.06,
+    "brokerPieces": 2
   },
   {
     "symbol": "QCOM",
@@ -8927,7 +9355,11 @@
       "originalDollarAmount": 2385,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -71.69,
+    "brokerOpenRate": 163.02,
+    "brokerCloseRate": 158.12,
+    "brokerPieces": 1
   },
   {
     "symbol": "TSM",
@@ -9006,7 +9438,11 @@
       "originalDollarAmount": 3440,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -86.13,
+    "brokerOpenRate": 423.75,
+    "brokerCloseRate": 413.14,
+    "brokerPieces": 1
   },
   {
     "symbol": "SOFI",
@@ -9085,7 +9521,11 @@
       "originalDollarAmount": 2675,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 0,
+    "brokerOpenRate": 18.67,
+    "brokerCloseRate": 18.67,
+    "brokerPieces": 1
   },
   {
     "symbol": "UPST",
@@ -9164,7 +9604,11 @@
       "originalDollarAmount": 2695,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -72.68,
+    "brokerOpenRate": 32.26,
+    "brokerCloseRate": 31.39,
+    "brokerPieces": 1
   },
   {
     "symbol": "MU",
@@ -9243,7 +9687,11 @@
       "originalDollarAmount": 2335,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 10.43,
+    "brokerOpenRate": 918.05,
+    "brokerCloseRate": 922.15,
+    "brokerPieces": 1
   },
   {
     "symbol": "ARM",
@@ -9322,7 +9770,11 @@
       "originalDollarAmount": 2320,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -10.08,
+    "brokerOpenRate": 289.89,
+    "brokerCloseRate": 288.63,
+    "brokerPieces": 1
   },
   {
     "symbol": "AMD",
@@ -9401,7 +9853,11 @@
       "originalDollarAmount": 1160,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -40.98,
+    "brokerOpenRate": 500.8,
+    "brokerCloseRate": 483.11,
+    "brokerPieces": 1
   },
   {
     "symbol": "MU",
@@ -9480,7 +9936,11 @@
       "originalDollarAmount": 1160,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -35.35,
+    "brokerOpenRate": 902.5,
+    "brokerCloseRate": 875,
+    "brokerPieces": 1
   },
   {
     "symbol": "ANET",
@@ -9559,7 +10019,11 @@
       "originalDollarAmount": 1160,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -34.66,
+    "brokerOpenRate": 198.48,
+    "brokerCloseRate": 192.55,
+    "brokerPieces": 1
   },
   {
     "symbol": "RKLB",
@@ -9638,7 +10102,11 @@
       "originalDollarAmount": 1155,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -34.25,
+    "brokerOpenRate": 80.59,
+    "brokerCloseRate": 78.2,
+    "brokerPieces": 1
   },
   {
     "symbol": "QCOM",
@@ -9717,7 +10185,11 @@
       "originalDollarAmount": 1215,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -1.54,
+    "brokerOpenRate": 165.68,
+    "brokerCloseRate": 165.47,
+    "brokerPieces": 1
   },
   {
     "symbol": "SOUN",
@@ -9796,7 +10268,11 @@
       "originalDollarAmount": 1140,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 16.39,
+    "brokerOpenRate": 7.65,
+    "brokerCloseRate": 7.76,
+    "brokerPieces": 1
   },
   {
     "symbol": "IONQ",
@@ -9883,7 +10359,11 @@
       "originalDollarAmount": 1155,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 30.21,
+    "brokerOpenRate": 42.26,
+    "brokerCloseRate": 43.2,
+    "brokerPieces": 2
   },
   {
     "symbol": "PLTR",
@@ -10049,7 +10529,11 @@
       "originalDollarAmount": 1165,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 3.8,
+    "brokerOpenRate": 177.72,
+    "brokerCloseRate": 177.36,
+    "brokerPieces": 2
   },
   {
     "symbol": "BA",
@@ -10128,7 +10612,11 @@
       "originalDollarAmount": 2590,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -22.49,
+    "brokerOpenRate": 236.13,
+    "brokerCloseRate": 234.08,
+    "brokerPieces": 1
   },
   {
     "symbol": "META",
@@ -10207,7 +10695,11 @@
       "originalDollarAmount": 2610,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -27.76,
+    "brokerOpenRate": 610.16,
+    "brokerCloseRate": 603.67,
+    "brokerPieces": 1
   },
   {
     "symbol": "MU",
@@ -10294,7 +10786,11 @@
       "originalDollarAmount": 1140,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 29.25,
+    "brokerOpenRate": 896.9,
+    "brokerCloseRate": 915.81,
+    "brokerPieces": 2
   },
   {
     "symbol": "MRVL",
@@ -10381,7 +10877,11 @@
       "originalDollarAmount": 1140,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 2.66,
+    "brokerOpenRate": 222.4,
+    "brokerCloseRate": 222.26,
+    "brokerPieces": 2
   },
   {
     "symbol": "ANET",
@@ -10460,7 +10960,11 @@
       "originalDollarAmount": 1140,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 3.68,
+    "brokerOpenRate": 207.48,
+    "brokerCloseRate": 208.15,
+    "brokerPieces": 1
   },
   {
     "symbol": "NVDA",
@@ -10539,7 +11043,11 @@
       "originalDollarAmount": 3310,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -5.46,
+    "brokerOpenRate": 224.4,
+    "brokerCloseRate": 224.03,
+    "brokerPieces": 1
   },
   {
     "symbol": "ANET",
@@ -10626,7 +11134,11 @@
       "originalDollarAmount": 2310,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 6.96,
+    "brokerOpenRate": 209.14,
+    "brokerCloseRate": 209.07,
+    "brokerPieces": 2
   },
   {
     "symbol": "SMCI",
@@ -10713,7 +11225,11 @@
       "originalDollarAmount": 2280,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 73.4,
+    "brokerOpenRate": 36.03,
+    "brokerCloseRate": 37.25,
+    "brokerPieces": 2
   },
   {
     "symbol": "NFLX",
@@ -10800,7 +11316,11 @@
       "originalDollarAmount": 3365,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 49.06,
+    "brokerOpenRate": 75.8,
+    "brokerCloseRate": 76.9,
+    "brokerPieces": 2
   },
   {
     "symbol": "MU",
@@ -10887,7 +11407,11 @@
       "originalDollarAmount": 2315,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 65.62,
+    "brokerOpenRate": 934.22,
+    "brokerCloseRate": 956.1,
+    "brokerPieces": 2
   },
   {
     "symbol": "TSLA",
@@ -10966,7 +11490,11 @@
       "originalDollarAmount": 3405,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 11.78,
+    "brokerOpenRate": 335.3,
+    "brokerCloseRate": 336.46,
+    "brokerPieces": 1
   },
   {
     "symbol": "ASML",
@@ -11053,7 +11581,11 @@
       "originalDollarAmount": 3365,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 53.85,
+    "brokerOpenRate": 1833.51,
+    "brokerCloseRate": 1857.04,
+    "brokerPieces": 2
   },
   {
     "symbol": "NFLX",
@@ -11132,7 +11664,11 @@
       "originalDollarAmount": 3430,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 10.55,
+    "brokerOpenRate": 78.06,
+    "brokerCloseRate": 78.3,
+    "brokerPieces": 1
   },
   {
     "symbol": "AFRM",
@@ -11211,7 +11747,11 @@
       "originalDollarAmount": 2735,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -80.9,
+    "brokerOpenRate": 78.77,
+    "brokerCloseRate": 76.44,
+    "brokerPieces": 1
   },
   {
     "symbol": "MU",
@@ -11298,7 +11838,11 @@
       "originalDollarAmount": 2345,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 8.51,
+    "brokerOpenRate": 967.74,
+    "brokerCloseRate": 966.6,
+    "brokerPieces": 2
   },
   {
     "symbol": "TSLA",
@@ -11377,7 +11921,11 @@
       "originalDollarAmount": 3370,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -57.33,
+    "brokerOpenRate": 349.78,
+    "brokerCloseRate": 343.83,
+    "brokerPieces": 1
   },
   {
     "symbol": "PLTR",
@@ -11456,7 +12004,11 @@
       "originalDollarAmount": 2390,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -42.32,
+    "brokerOpenRate": 179.61,
+    "brokerCloseRate": 176.43,
+    "brokerPieces": 1
   },
   {
     "symbol": "SMCI",
@@ -11535,7 +12087,11 @@
       "originalDollarAmount": 2320,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -62.27,
+    "brokerOpenRate": 40.24,
+    "brokerCloseRate": 39.16,
+    "brokerPieces": 1
   },
   {
     "symbol": "MRVL",
@@ -11614,7 +12170,11 @@
       "originalDollarAmount": 2280,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -29.93,
+    "brokerOpenRate": 239.18,
+    "brokerCloseRate": 236.04,
+    "brokerPieces": 1
   },
   {
     "symbol": "MU",
@@ -11693,7 +12253,11 @@
       "originalDollarAmount": 2280,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 36.91,
+    "brokerOpenRate": 1008.68,
+    "brokerCloseRate": 1025.01,
+    "brokerPieces": 1
   },
   {
     "symbol": "NFLX",
@@ -11772,7 +12336,11 @@
       "originalDollarAmount": 3315,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 19.92,
+    "brokerOpenRate": 78.23,
+    "brokerCloseRate": 78.7,
+    "brokerPieces": 1
   },
   {
     "symbol": "NFLX",
@@ -11851,7 +12419,11 @@
       "originalDollarAmount": 3320,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 18.2,
+    "brokerOpenRate": 80.26,
+    "brokerCloseRate": 80.7,
+    "brokerPieces": 1
   },
   {
     "symbol": "HOOD",
@@ -11938,7 +12510,11 @@
       "originalDollarAmount": 3330,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 67.56,
+    "brokerOpenRate": 96.36,
+    "brokerCloseRate": 98.08,
+    "brokerPieces": 2
   },
   {
     "symbol": "AFRM",
@@ -12025,7 +12601,11 @@
       "originalDollarAmount": 2475,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 6.85,
+    "brokerOpenRate": 77.62,
+    "brokerCloseRate": 77.61,
+    "brokerPieces": 2
   },
   {
     "symbol": "UPST",
@@ -12112,7 +12692,11 @@
       "originalDollarAmount": 2510,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 6.82,
+    "brokerOpenRate": 31.28,
+    "brokerCloseRate": 31.28,
+    "brokerPieces": 2
   },
   {
     "symbol": "MRVL",
@@ -12199,7 +12783,11 @@
       "originalDollarAmount": 2330,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 24.79,
+    "brokerOpenRate": 235.9,
+    "brokerCloseRate": 239.52,
+    "brokerPieces": 2
   },
   {
     "symbol": "HOOD",
@@ -12278,7 +12866,11 @@
       "originalDollarAmount": 3385,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 18.71,
+    "brokerOpenRate": 99.5,
+    "brokerCloseRate": 100.05,
+    "brokerPieces": 1
   },
   {
     "symbol": "IONQ",
@@ -12365,7 +12957,11 @@
       "originalDollarAmount": 2340,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 7.56,
+    "brokerOpenRate": 43.36,
+    "brokerCloseRate": 43.45,
+    "brokerPieces": 2
   },
   {
     "symbol": "HOOD",
@@ -12452,7 +13048,11 @@
       "originalDollarAmount": 3395,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 233.45,
+    "brokerOpenRate": 100.2,
+    "brokerCloseRate": 108.03,
+    "brokerPieces": 2
   },
   {
     "symbol": "RIVN",
@@ -12531,7 +13131,11 @@
       "originalDollarAmount": 3435,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 30.93,
+    "brokerOpenRate": 16.66,
+    "brokerCloseRate": 16.81,
+    "brokerPieces": 1
   },
   {
     "symbol": "TSLA",
@@ -12610,7 +13214,11 @@
       "originalDollarAmount": 3470,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 17.91,
+    "brokerOpenRate": 360.41,
+    "brokerCloseRate": 362.27,
+    "brokerPieces": 1
   },
   {
     "symbol": "IONQ",
@@ -12689,7 +13297,11 @@
       "originalDollarAmount": 2395,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 23.7,
+    "brokerOpenRate": 44.47,
+    "brokerCloseRate": 44.91,
+    "brokerPieces": 1
   },
   {
     "symbol": "SOFI",
@@ -12768,7 +13380,11 @@
       "originalDollarAmount": 3470,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -7.32,
+    "brokerOpenRate": 18.96,
+    "brokerCloseRate": 18.92,
+    "brokerPieces": 1
   },
   {
     "symbol": "PLTR",
@@ -12847,7 +13463,11 @@
       "originalDollarAmount": 2895,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -31.31,
+    "brokerOpenRate": 181.18,
+    "brokerCloseRate": 179.22,
+    "brokerPieces": 1
   },
   {
     "symbol": "IONQ",
@@ -12926,7 +13546,11 @@
       "originalDollarAmount": 2400,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 9.13,
+    "brokerOpenRate": 44.7,
+    "brokerCloseRate": 44.87,
+    "brokerPieces": 1
   },
   {
     "symbol": "HOOD",
@@ -13005,7 +13629,11 @@
       "originalDollarAmount": 3485,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -38.07,
+    "brokerOpenRate": 108.03,
+    "brokerCloseRate": 106.85,
+    "brokerPieces": 1
   },
   {
     "symbol": "SOUN",
@@ -13084,7 +13712,11 @@
       "originalDollarAmount": 2395,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -3.25,
+    "brokerOpenRate": 7.37,
+    "brokerCloseRate": 7.36,
+    "brokerPieces": 1
   },
   {
     "symbol": "RIVN",
@@ -13163,7 +13795,11 @@
       "originalDollarAmount": 3460,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -85.28,
+    "brokerOpenRate": 17.04,
+    "brokerCloseRate": 16.62,
+    "brokerPieces": 1
   },
   {
     "symbol": "HOOD",
@@ -13242,7 +13878,11 @@
       "originalDollarAmount": 2730,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 38.09,
+    "brokerOpenRate": 108.22,
+    "brokerCloseRate": 109.73,
+    "brokerPieces": 1
   },
   {
     "symbol": "HOOD",
@@ -13329,7 +13969,11 @@
       "originalDollarAmount": 2745,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 6.46,
+    "brokerOpenRate": 110.61,
+    "brokerCloseRate": 110.6,
+    "brokerPieces": 2
   },
   {
     "symbol": "MRVL",
@@ -13408,7 +14052,11 @@
       "originalDollarAmount": 2375,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -25.24,
+    "brokerOpenRate": 243.74,
+    "brokerCloseRate": 241.15,
+    "brokerPieces": 1
   },
   {
     "symbol": "NVDA",
@@ -13495,7 +14143,11 @@
       "originalDollarAmount": 3435,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 49.74,
+    "brokerOpenRate": 221.67,
+    "brokerCloseRate": 224.84,
+    "brokerPieces": 2
   },
   {
     "symbol": "NVDA",
@@ -13574,7 +14226,11 @@
       "originalDollarAmount": 3445,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -45.14,
+    "brokerOpenRate": 225.12,
+    "brokerCloseRate": 222.17,
+    "brokerPieces": 1
   },
   {
     "symbol": "MU",
@@ -13653,7 +14309,11 @@
       "originalDollarAmount": 2565,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -81.14,
+    "brokerOpenRate": 980,
+    "brokerCloseRate": 949,
+    "brokerPieces": 1
   },
   {
     "symbol": "SOUN",
@@ -13732,7 +14392,11 @@
       "originalDollarAmount": 2145,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 14.85,
+    "brokerOpenRate": 7.22,
+    "brokerCloseRate": 7.27,
+    "brokerPieces": 1
   },
   {
     "symbol": "ARM",
@@ -13811,7 +14475,11 @@
       "originalDollarAmount": 1170,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -35.69,
+    "brokerOpenRate": 263.54,
+    "brokerCloseRate": 255.5,
+    "brokerPieces": 1
   },
   {
     "symbol": "NVDA",
@@ -13898,7 +14566,11 @@
       "originalDollarAmount": 3225,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 26.13,
+    "brokerOpenRate": 225.93,
+    "brokerCloseRate": 228.6,
+    "brokerPieces": 2
   },
   {
     "symbol": "IONQ",
@@ -13985,7 +14657,11 @@
       "originalDollarAmount": 1170,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 1.94,
+    "brokerOpenRate": 42.22,
+    "brokerCloseRate": 42.18,
+    "brokerPieces": 2
   },
   {
     "symbol": "AFRM",
@@ -14064,7 +14740,11 @@
       "originalDollarAmount": 1335,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -37.8,
+    "brokerOpenRate": 88.3,
+    "brokerCloseRate": 85.8,
+    "brokerPieces": 1
   },
   {
     "symbol": "CRM",
@@ -14157,7 +14837,11 @@
       "originalDollarAmount": 2165,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 15.68,
+    "brokerOpenRate": 259.62,
+    "brokerCloseRate": 261.5,
+    "brokerPieces": 1
   },
   {
     "symbol": "AMZN",
@@ -14250,7 +14934,11 @@
       "originalDollarAmount": 3390,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -2.54,
+    "brokerOpenRate": 266.46,
+    "brokerCloseRate": 266.26,
+    "brokerPieces": 1
   },
   {
     "symbol": "LLY",
@@ -14345,7 +15033,11 @@
       "originalDollarAmount": 2925,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -50.64,
+    "brokerOpenRate": 1182.98,
+    "brokerCloseRate": 1162.5,
+    "brokerPieces": 1
   },
   {
     "symbol": "META",
@@ -14440,7 +15132,11 @@
       "originalDollarAmount": 3195,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -21.5,
+    "brokerOpenRate": 595.91,
+    "brokerCloseRate": 591.9,
+    "brokerPieces": 1
   },
   {
     "symbol": "SOFI",
@@ -14535,7 +15231,11 @@
       "originalDollarAmount": 1355,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -2.27,
+    "brokerOpenRate": 17.88,
+    "brokerCloseRate": 17.85,
+    "brokerPieces": 1
   },
   {
     "symbol": "RDDT",
@@ -14638,7 +15338,11 @@
       "originalDollarAmount": 1200,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 14.19,
+    "brokerOpenRate": 154.3,
+    "brokerCloseRate": 157.09,
+    "brokerPieces": 2
   },
   {
     "symbol": "HOOD",
@@ -14741,7 +15445,11 @@
       "originalDollarAmount": 1160,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 5.12,
+    "brokerOpenRate": 108.79,
+    "brokerCloseRate": 108.7,
+    "brokerPieces": 2
   },
   {
     "symbol": "HOOD",
@@ -14844,7 +15552,11 @@
       "originalDollarAmount": 1160,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 80.49,
+    "brokerOpenRate": 111.34,
+    "brokerCloseRate": 119.88,
+    "brokerPieces": 2
   },
   {
     "symbol": "TSLA",
@@ -14939,7 +15651,11 @@
       "originalDollarAmount": 2790,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 18.76,
+    "brokerOpenRate": 374.69,
+    "brokerCloseRate": 377.21,
+    "brokerPieces": 1
   },
   {
     "symbol": "UPST",
@@ -15034,7 +15750,11 @@
       "originalDollarAmount": 1290,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -26.49,
+    "brokerOpenRate": 28.73,
+    "brokerCloseRate": 28.14,
+    "brokerPieces": 1
   },
   {
     "symbol": "CRM",
@@ -15129,7 +15849,11 @@
       "originalDollarAmount": 2055,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -4.57,
+    "brokerOpenRate": 265.36,
+    "brokerCloseRate": 264.77,
+    "brokerPieces": 1
   },
   {
     "symbol": "PLTR",
@@ -15224,7 +15948,11 @@
       "originalDollarAmount": 3390,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -12.57,
+    "brokerOpenRate": 183.38,
+    "brokerCloseRate": 182.7,
+    "brokerPieces": 1
   },
   {
     "symbol": "HOOD",
@@ -15327,7 +16055,11 @@
       "originalDollarAmount": 2330,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 5.59,
+    "brokerOpenRate": 123.13,
+    "brokerCloseRate": 123.12,
+    "brokerPieces": 2
   },
   {
     "symbol": "TSLA",
@@ -15422,7 +16154,11 @@
       "originalDollarAmount": 2790,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -12.48,
+    "brokerOpenRate": 382.24,
+    "brokerCloseRate": 380.53,
+    "brokerPieces": 1
   },
   {
     "symbol": "SOFI",
@@ -15517,7 +16253,11 @@
       "originalDollarAmount": 2620,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 4.21,
+    "brokerOpenRate": 18.65,
+    "brokerCloseRate": 18.68,
+    "brokerPieces": 1
   },
   {
     "symbol": "PLTR",
@@ -15612,7 +16352,11 @@
       "originalDollarAmount": 3375,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -17.99,
+    "brokerOpenRate": 183.86,
+    "brokerCloseRate": 182.88,
+    "brokerPieces": 1
   },
   {
     "symbol": "HOOD",
@@ -15715,7 +16459,11 @@
       "originalDollarAmount": 1160,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 2.7,
+    "brokerOpenRate": 124.64,
+    "brokerCloseRate": 124.67,
+    "brokerPieces": 2
   },
   {
     "symbol": "AMD",
@@ -15810,7 +16558,11 @@
       "originalDollarAmount": 3365,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 39.96,
+    "brokerOpenRate": 464,
+    "brokerCloseRate": 469.51,
+    "brokerPieces": 1
   },
   {
     "symbol": "MU",
@@ -15905,7 +16657,11 @@
       "originalDollarAmount": 2655,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 5.28,
+    "brokerOpenRate": 994.92,
+    "brokerCloseRate": 996.9,
+    "brokerPieces": 1
   },
   {
     "symbol": "ARM",
@@ -16000,7 +16756,11 @@
       "originalDollarAmount": 2335,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -20.79,
+    "brokerOpenRate": 253.82,
+    "brokerCloseRate": 251.56,
+    "brokerPieces": 1
   },
   {
     "symbol": "NVDA",
@@ -16095,7 +16855,11 @@
       "originalDollarAmount": 3380,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -51.3,
+    "brokerOpenRate": 233.9,
+    "brokerCloseRate": 230.35,
+    "brokerPieces": 1
   },
   {
     "symbol": "MU",
@@ -16190,7 +16954,11 @@
       "originalDollarAmount": 2660,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -1.59,
+    "brokerOpenRate": 1004.48,
+    "brokerCloseRate": 1003.88,
+    "brokerPieces": 1
   },
   {
     "symbol": "AVGO",
@@ -16285,7 +17053,11 @@
       "originalDollarAmount": 2515,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 13.16,
+    "brokerOpenRate": 368.71,
+    "brokerCloseRate": 370.64,
+    "brokerPieces": 1
   },
   {
     "symbol": "RKLB",
@@ -16380,7 +17152,11 @@
       "originalDollarAmount": 2785,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -11.63,
+    "brokerOpenRate": 67.05,
+    "brokerCloseRate": 66.77,
+    "brokerPieces": 1
   },
   {
     "symbol": "ARM",
@@ -16475,7 +17251,11 @@
       "originalDollarAmount": 2555,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -13,
+    "brokerOpenRate": 265.35,
+    "brokerCloseRate": 264,
+    "brokerPieces": 1
   },
   {
     "symbol": "AMD",
@@ -16578,7 +17358,11 @@
       "originalDollarAmount": 2620,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 45.48,
+    "brokerOpenRate": 498.08,
+    "brokerCloseRate": 506.12,
+    "brokerPieces": 2
   },
   {
     "symbol": "META",
@@ -16673,7 +17457,11 @@
       "originalDollarAmount": 3360,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -26.31,
+    "brokerOpenRate": 656.42,
+    "brokerCloseRate": 651.28,
+    "brokerPieces": 1
   },
   {
     "symbol": "AMD",
@@ -16768,7 +17556,11 @@
       "originalDollarAmount": 3360,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -8.13,
+    "brokerOpenRate": 524.81,
+    "brokerCloseRate": 523.54,
+    "brokerPieces": 1
   },
   {
     "symbol": "RDDT",
@@ -16863,7 +17655,11 @@
       "originalDollarAmount": 3350,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 19.06,
+    "brokerOpenRate": 154.65,
+    "brokerCloseRate": 155.53,
+    "brokerPieces": 1
   },
   {
     "symbol": "AAPL",
@@ -16958,7 +17754,11 @@
       "originalDollarAmount": 3355,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -1.34,
+    "brokerOpenRate": 325.25,
+    "brokerCloseRate": 325.12,
+    "brokerPieces": 1
   },
   {
     "symbol": "RDDT",
@@ -17053,7 +17853,11 @@
       "originalDollarAmount": 3355,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -0.21,
+    "brokerOpenRate": 156.69,
+    "brokerCloseRate": 156.68,
+    "brokerPieces": 1
   },
   {
     "symbol": "RDDT",
@@ -17148,7 +17952,11 @@
       "originalDollarAmount": 3355,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -81.92,
+    "brokerOpenRate": 158.5,
+    "brokerCloseRate": 154.63,
+    "brokerPieces": 1
   },
   {
     "symbol": "SMCI",
@@ -17243,7 +18051,11 @@
       "originalDollarAmount": 2290,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -55.46,
+    "brokerOpenRate": 40.05,
+    "brokerCloseRate": 39.08,
+    "brokerPieces": 1
   },
   {
     "symbol": "BA",
@@ -17338,7 +18150,11 @@
       "originalDollarAmount": 3355,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 12.14,
+    "brokerOpenRate": 209.97,
+    "brokerCloseRate": 210.73,
+    "brokerPieces": 1
   },
   {
     "symbol": "ARM",
@@ -17433,7 +18249,11 @@
       "originalDollarAmount": 2520,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -35.37,
+    "brokerOpenRate": 267.15,
+    "brokerCloseRate": 263.4,
+    "brokerPieces": 1
   },
   {
     "symbol": "QCOM",
@@ -17528,7 +18348,11 @@
       "originalDollarAmount": 3310,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": -56.58,
+    "brokerOpenRate": 185.45,
+    "brokerCloseRate": 182.28,
+    "brokerPieces": 1
   },
   {
     "symbol": "AFRM",
@@ -17631,7 +18455,11 @@
       "originalDollarAmount": 2290,
       "method": "journal EXIT_DECISION PARTIAL price x share sold x original planned size (v8.1 backfill)",
       "backfilledAt": "2026-09-13T07:19:37.810Z"
-    }
+    },
+    "brokerNetProfit": 10.83,
+    "brokerOpenRate": 70.84,
+    "brokerCloseRate": 71.09,
+    "brokerPieces": 2
   },
   {
     "symbol": "ANET",
@@ -17734,7 +18562,11 @@
     "extendedByReviewer": false,
     "waitedForBreakevenSince": null,
     "pnlAccountingVersion": 2,
-    "closedAt": "2026-09-17T13:40:02.396Z"
+    "closedAt": "2026-09-17T13:40:02.396Z",
+    "brokerNetProfit": 14.24,
+    "brokerOpenRate": 199.74,
+    "brokerCloseRate": 202.15,
+    "brokerPieces": 1
   },
   {
     "symbol": "NBIS",
@@ -17837,7 +18669,11 @@
     "extendedByReviewer": false,
     "waitedForBreakevenSince": null,
     "pnlAccountingVersion": 2,
-    "closedAt": "2026-09-17T13:40:05.017Z"
+    "closedAt": "2026-09-17T13:40:05.017Z",
+    "brokerNetProfit": -33.74,
+    "brokerOpenRate": 224.88,
+    "brokerCloseRate": 213.55,
+    "brokerPieces": 1
   },
   {
     "symbol": "QCOM",
@@ -17940,7 +18776,11 @@
     "extendedByReviewer": false,
     "waitedForBreakevenSince": null,
     "pnlAccountingVersion": 2,
-    "closedAt": "2026-09-17T14:47:03.171Z"
+    "closedAt": "2026-09-17T14:47:03.171Z",
+    "brokerNetProfit": -0.94,
+    "brokerOpenRate": 189.4,
+    "brokerCloseRate": 189.23,
+    "brokerPieces": 1
   },
   {
     "symbol": "MRVL",
@@ -18043,7 +18883,11 @@
     "extendedByReviewer": false,
     "waitedForBreakevenSince": "2026-09-17T16:37:02.333Z",
     "pnlAccountingVersion": 2,
-    "closedAt": "2026-09-17T16:41:02.665Z"
+    "closedAt": "2026-09-17T16:41:02.665Z",
+    "brokerNetProfit": 0.14,
+    "brokerOpenRate": 242.44,
+    "brokerCloseRate": 242.54,
+    "brokerPieces": 1
   },
   {
     "symbol": "SNAP",
@@ -18146,7 +18990,11 @@
     "extendedByReviewer": false,
     "waitedForBreakevenSince": "2026-09-17T18:04:01.817Z",
     "pnlAccountingVersion": 2,
-    "closedAt": "2026-09-17T18:50:04.406Z"
+    "closedAt": "2026-09-17T18:50:04.406Z",
+    "brokerNetProfit": -16.89,
+    "brokerOpenRate": 5.95,
+    "brokerCloseRate": 5.65,
+    "brokerPieces": 1
   },
   {
     "symbol": "AFRM",
@@ -18249,7 +19097,11 @@
     "extendedByReviewer": false,
     "waitedForBreakevenSince": "2026-09-17T15:17:01.856Z",
     "pnlAccountingVersion": 2,
-    "closedAt": "2026-09-17T19:01:01.639Z"
+    "closedAt": "2026-09-17T19:01:01.639Z",
+    "brokerNetProfit": -26.22,
+    "brokerOpenRate": 73.33,
+    "brokerCloseRate": 70.46,
+    "brokerPieces": 1
   },
   {
     "symbol": "TSLA",
@@ -18352,7 +19204,11 @@
     "extendedByReviewer": false,
     "waitedForBreakevenSince": "2026-09-17T18:03:02.071Z",
     "pnlAccountingVersion": 2,
-    "closedAt": "2026-09-17T19:45:01.289Z"
+    "closedAt": "2026-09-17T19:45:01.289Z",
+    "brokerNetProfit": -2.03,
+    "brokerOpenRate": 369.26,
+    "brokerCloseRate": 366.76,
+    "brokerPieces": 1
   },
   {
     "symbol": "ISRG",
@@ -18455,7 +19311,11 @@
     "extendedByReviewer": false,
     "waitedForBreakevenSince": null,
     "pnlAccountingVersion": 2,
-    "closedAt": "2026-09-18T15:00:01.836Z"
+    "closedAt": "2026-09-18T15:00:01.836Z",
+    "brokerNetProfit": 7.02,
+    "brokerOpenRate": 388.25,
+    "brokerCloseRate": 392.26,
+    "brokerPieces": 1
   },
   {
     "symbol": "AVGO",
@@ -18558,7 +19418,11 @@
     "extendedByReviewer": false,
     "waitedForBreakevenSince": "2026-09-18T16:42:01.117Z",
     "pnlAccountingVersion": 2,
-    "closedAt": "2026-09-18T19:45:01.578Z"
+    "closedAt": "2026-09-18T19:45:01.578Z",
+    "brokerNetProfit": -9.18,
+    "brokerOpenRate": 361.19,
+    "brokerCloseRate": 355.84,
+    "brokerPieces": 1
   },
   {
     "symbol": "HOOD",
@@ -18661,7 +19525,11 @@
     "extendedByReviewer": false,
     "waitedForBreakevenSince": "2026-09-21T15:20:02.919Z",
     "pnlAccountingVersion": 2,
-    "closedAt": "2026-09-21T15:33:03.172Z"
+    "closedAt": "2026-09-21T15:33:03.172Z",
+    "brokerNetProfit": 0.37,
+    "brokerOpenRate": 123.58,
+    "brokerCloseRate": 123.72,
+    "brokerPieces": 1
   },
   {
     "symbol": "MU",
@@ -18772,7 +19640,11 @@
     "extendedByReviewer": false,
     "waitedForBreakevenSince": null,
     "pnlAccountingVersion": 2,
-    "closedAt": "2026-09-21T15:34:02.642Z"
+    "closedAt": "2026-09-21T15:34:02.642Z",
+    "brokerNetProfit": 3.96,
+    "brokerOpenRate": 1032.8,
+    "brokerCloseRate": 1041.41,
+    "brokerPieces": 2
   },
   {
     "symbol": "SNAP",
@@ -18875,7 +19747,11 @@
     "extendedByReviewer": false,
     "waitedForBreakevenSince": null,
     "pnlAccountingVersion": 2,
-    "closedAt": "2026-09-21T18:02:03.499Z"
+    "closedAt": "2026-09-21T18:02:03.499Z",
+    "brokerNetProfit": 2.32,
+    "brokerOpenRate": 5.74,
+    "brokerCloseRate": 5.76,
+    "brokerPieces": 1
   },
   {
     "symbol": "IONQ",
@@ -18986,7 +19862,11 @@
     "extendedByReviewer": false,
     "waitedForBreakevenSince": null,
     "pnlAccountingVersion": 2,
-    "closedAt": "2026-09-21T19:23:02.712Z"
+    "closedAt": "2026-09-21T19:23:02.712Z",
+    "brokerNetProfit": 3.71,
+    "brokerOpenRate": 40.03,
+    "brokerCloseRate": 40.55,
+    "brokerPieces": 2
   },
   {
     "symbol": "SOFI",
@@ -19089,7 +19969,11 @@
     "extendedByReviewer": false,
     "waitedForBreakevenSince": "2026-09-21T16:06:02.484Z",
     "pnlAccountingVersion": 2,
-    "closedAt": "2026-09-21T19:45:02.505Z"
+    "closedAt": "2026-09-21T19:45:02.505Z",
+    "brokerNetProfit": -9.41,
+    "brokerOpenRate": 17.22,
+    "brokerCloseRate": 16.95,
+    "brokerPieces": 1
   },
   {
     "symbol": "RDDT",
@@ -19200,7 +20084,11 @@
     "extendedByReviewer": false,
     "waitedForBreakevenSince": null,
     "pnlAccountingVersion": 2,
-    "closedAt": "2026-09-21T19:59:01.810Z"
+    "closedAt": "2026-09-21T19:59:01.810Z",
+    "brokerNetProfit": 11.57,
+    "brokerOpenRate": 155.08,
+    "brokerCloseRate": 158.1,
+    "brokerPieces": 2
   },
   {
     "symbol": "SMCI",
@@ -19303,7 +20191,11 @@
     "extendedByReviewer": false,
     "waitedForBreakevenSince": null,
     "pnlAccountingVersion": 2,
-    "closedAt": "2026-09-21T20:01:01.854Z"
+    "closedAt": "2026-09-21T20:01:01.854Z",
+    "brokerNetProfit": 1.79,
+    "brokerOpenRate": 40.92,
+    "brokerCloseRate": 41.03,
+    "brokerPieces": 1
   },
   {
     "symbol": "NKE",
@@ -19406,7 +20298,11 @@
     "extendedByReviewer": false,
     "waitedForBreakevenSince": null,
     "pnlAccountingVersion": 2,
-    "closedAt": "2026-09-22T13:48:02.410Z"
+    "closedAt": "2026-09-22T13:48:02.410Z",
+    "brokerNetProfit": 6.58,
+    "brokerOpenRate": 36.65,
+    "brokerCloseRate": 36.78,
+    "brokerPieces": 1
   },
   {
     "symbol": "HD",
@@ -19517,7 +20413,11 @@
     "extendedByReviewer": false,
     "waitedForBreakevenSince": null,
     "pnlAccountingVersion": 2,
-    "closedAt": "2026-09-22T20:08:01.376Z"
+    "closedAt": "2026-09-22T20:08:01.376Z",
+    "brokerNetProfit": 11.7,
+    "brokerOpenRate": 300.91,
+    "brokerCloseRate": 303.03,
+    "brokerPieces": 2
   },
   {
     "symbol": "MU",
@@ -19620,7 +20520,11 @@
     "extendedByReviewer": false,
     "waitedForBreakevenSince": "2026-09-25T17:01:01.241Z",
     "pnlAccountingVersion": 2,
-    "closedAt": "2026-09-25T19:45:03.128Z"
+    "closedAt": "2026-09-25T19:45:03.128Z",
+    "brokerNetProfit": -7.02,
+    "brokerOpenRate": 1089.26,
+    "brokerCloseRate": 1082.58,
+    "brokerPieces": 1
   },
   {
     "symbol": "GM",
@@ -19723,7 +20627,11 @@
     "extendedByReviewer": false,
     "waitedForBreakevenSince": null,
     "pnlAccountingVersion": 2,
-    "closedAt": "2026-09-25T19:45:05.439Z"
+    "closedAt": "2026-09-25T19:45:05.439Z",
+    "brokerNetProfit": 2.8,
+    "brokerOpenRate": 82.53,
+    "brokerCloseRate": 82.71,
+    "brokerPieces": 1
   },
   {
     "symbol": "AVGO",
@@ -19826,7 +20734,11 @@
     "extendedByReviewer": false,
     "waitedForBreakevenSince": null,
     "pnlAccountingVersion": 2,
-    "closedAt": "2026-09-29T15:23:07.040Z"
+    "closedAt": "2026-09-29T15:23:07.040Z",
+    "brokerNetProfit": 1.44,
+    "brokerOpenRate": 358.4,
+    "brokerCloseRate": 358.7,
+    "brokerPieces": 1
   },
   {
     "symbol": "BA",
@@ -19929,7 +20841,11 @@
     "extendedByReviewer": false,
     "waitedForBreakevenSince": "2026-09-29T17:41:02.049Z",
     "pnlAccountingVersion": 2,
-    "closedAt": "2026-09-29T19:01:02.204Z"
+    "closedAt": "2026-09-29T19:01:02.204Z",
+    "brokerNetProfit": -4.81,
+    "brokerOpenRate": 188.51,
+    "brokerCloseRate": 187.82,
+    "brokerPieces": 1
   },
   {
     "symbol": "SNAP",
@@ -20032,7 +20948,11 @@
     "extendedByReviewer": false,
     "waitedForBreakevenSince": "2026-09-29T15:15:01.880Z",
     "pnlAccountingVersion": 2,
-    "closedAt": "2026-09-29T19:45:01.552Z"
+    "closedAt": "2026-09-29T19:45:01.552Z",
+    "brokerNetProfit": -7.43,
+    "brokerOpenRate": 5.37,
+    "brokerCloseRate": 5.31,
+    "brokerPieces": 1
   },
   {
     "symbol": "SNAP",
@@ -20135,7 +21055,11 @@
     "extendedByReviewer": false,
     "waitedForBreakevenSince": "2026-09-30T16:12:02.372Z",
     "pnlAccountingVersion": 2,
-    "closedAt": "2026-09-30T16:29:03.263Z"
+    "closedAt": "2026-09-30T16:29:03.263Z",
+    "brokerNetProfit": 1.2,
+    "brokerOpenRate": 5.58,
+    "brokerCloseRate": 5.6,
+    "brokerPieces": 1
   },
   {
     "symbol": "QCOM",
@@ -20238,7 +21162,11 @@
     "extendedByReviewer": false,
     "waitedForBreakevenSince": "2026-09-30T16:05:02.376Z",
     "pnlAccountingVersion": 2,
-    "closedAt": "2026-09-30T19:01:02.472Z"
+    "closedAt": "2026-09-30T19:01:02.472Z",
+    "brokerNetProfit": -3.86,
+    "brokerOpenRate": 186.36,
+    "brokerCloseRate": 184.21,
+    "brokerPieces": 1
   },
   {
     "symbol": "NVDA",
@@ -20341,7 +21269,11 @@
     "extendedByReviewer": false,
     "waitedForBreakevenSince": "2026-09-30T18:02:01.890Z",
     "pnlAccountingVersion": 2,
-    "closedAt": "2026-09-30T19:45:01.978Z"
+    "closedAt": "2026-09-30T19:45:01.978Z",
+    "brokerNetProfit": -0.54,
+    "brokerOpenRate": 230.74,
+    "brokerCloseRate": 230.62,
+    "brokerPieces": 1
   },
   {
     "symbol": "AAPL",
@@ -20444,7 +21376,11 @@
     "extendedByReviewer": false,
     "waitedForBreakevenSince": "2026-09-30T19:00:02.174Z",
     "pnlAccountingVersion": 2,
-    "closedAt": "2026-09-30T19:45:04.291Z"
+    "closedAt": "2026-09-30T19:45:04.291Z",
+    "brokerNetProfit": -8.21,
+    "brokerOpenRate": 337.53,
+    "brokerCloseRate": 335.21,
+    "brokerPieces": 1
   },
   {
     "symbol": "DE",
@@ -20547,7 +21483,11 @@
     "extendedByReviewer": false,
     "waitedForBreakevenSince": null,
     "pnlAccountingVersion": 2,
-    "closedAt": "2026-10-02T17:04:03.206Z"
+    "closedAt": "2026-10-02T17:04:03.206Z",
+    "brokerNetProfit": 1.73,
+    "brokerOpenRate": 674.57,
+    "brokerCloseRate": 676.15,
+    "brokerPieces": 1
   },
   {
     "symbol": "CAT",
@@ -20650,7 +21590,11 @@
     "extendedByReviewer": false,
     "waitedForBreakevenSince": null,
     "pnlAccountingVersion": 2,
-    "closedAt": "2026-10-02T17:04:05.655Z"
+    "closedAt": "2026-10-02T17:04:05.655Z",
+    "brokerNetProfit": 0.97,
+    "brokerOpenRate": 849.16,
+    "brokerCloseRate": 850.24,
+    "brokerPieces": 1
   },
   {
     "symbol": "SMCI",
@@ -20753,7 +21697,11 @@
     "extendedByReviewer": false,
     "waitedForBreakevenSince": "2026-10-02T16:51:02.816Z",
     "pnlAccountingVersion": 2,
-    "closedAt": "2026-10-02T18:47:02.473Z"
+    "closedAt": "2026-10-02T18:47:02.473Z",
+    "brokerNetProfit": 0.15,
+    "brokerOpenRate": 43.76,
+    "brokerCloseRate": 43.78,
+    "brokerPieces": 1
   },
   {
     "symbol": "LIN",
@@ -20856,7 +21804,11 @@
     "extendedByReviewer": false,
     "waitedForBreakevenSince": "2026-10-02T18:51:01.327Z",
     "pnlAccountingVersion": 2,
-    "closedAt": "2026-10-02T19:45:01.933Z"
+    "closedAt": "2026-10-02T19:45:01.933Z",
+    "brokerNetProfit": -1.61,
+    "brokerOpenRate": 479.92,
+    "brokerCloseRate": 479.09,
+    "brokerPieces": 1
   },
   {
     "symbol": "AMD",
@@ -20959,7 +21911,11 @@
     "extendedByReviewer": false,
     "waitedForBreakevenSince": "2026-10-02T17:18:02.025Z",
     "pnlAccountingVersion": 2,
-    "closedAt": "2026-10-02T19:45:04.224Z"
+    "closedAt": "2026-10-02T19:45:04.224Z",
+    "brokerNetProfit": -3.25,
+    "brokerOpenRate": 638.32,
+    "brokerCloseRate": 634.55,
+    "brokerPieces": 1
   },
   {
     "symbol": "UPST",
@@ -21062,7 +22018,11 @@
     "extendedByReviewer": false,
     "waitedForBreakevenSince": null,
     "pnlAccountingVersion": 2,
-    "closedAt": "2026-10-05T17:15:03.808Z"
+    "closedAt": "2026-10-05T17:15:03.808Z",
+    "brokerNetProfit": 6.86,
+    "brokerOpenRate": 24.01,
+    "brokerCloseRate": 24.28,
+    "brokerPieces": 1
   },
   {
     "symbol": "PLTR",
@@ -21165,7 +22125,11 @@
     "extendedByReviewer": false,
     "waitedForBreakevenSince": "2026-10-05T16:22:03.360Z",
     "pnlAccountingVersion": 2,
-    "closedAt": "2026-10-05T19:01:03.564Z"
+    "closedAt": "2026-10-05T19:01:03.564Z",
+    "brokerNetProfit": -3.13,
+    "brokerOpenRate": 190.07,
+    "brokerCloseRate": 189.34,
+    "brokerPieces": 1
   },
   {
     "symbol": "SOFI",
@@ -21268,7 +22232,11 @@
     "extendedByReviewer": false,
     "waitedForBreakevenSince": "2026-10-05T18:00:03.177Z",
     "pnlAccountingVersion": 2,
-    "closedAt": "2026-10-05T19:13:03.550Z"
+    "closedAt": "2026-10-05T19:13:03.550Z",
+    "brokerNetProfit": 0.76,
+    "brokerOpenRate": 16.03,
+    "brokerCloseRate": 16.05,
+    "brokerPieces": 1
   },
   {
     "symbol": "SHOP",
@@ -21379,7 +22347,11 @@
     "extendedByReviewer": false,
     "waitedForBreakevenSince": null,
     "pnlAccountingVersion": 2,
-    "closedAt": "2026-10-05T20:04:02.379Z"
+    "closedAt": "2026-10-05T20:04:02.379Z",
+    "brokerNetProfit": 4.23,
+    "brokerOpenRate": 157.25,
+    "brokerCloseRate": 158.96,
+    "brokerPieces": 2
   },
   {
     "symbol": "MELI",
@@ -21490,7 +22462,11 @@
     "extendedByReviewer": false,
     "waitedForBreakevenSince": null,
     "pnlAccountingVersion": 2,
-    "closedAt": "2026-10-06T12:03:02.028Z"
+    "closedAt": "2026-10-06T12:03:02.028Z",
+    "brokerNetProfit": 10.12,
+    "brokerOpenRate": 1816.68,
+    "brokerCloseRate": 1860,
+    "brokerPieces": 2
   },
   {
     "symbol": "AFRM",
@@ -21601,7 +22577,11 @@
     "extendedByReviewer": false,
     "waitedForBreakevenSince": null,
     "pnlAccountingVersion": 2,
-    "closedAt": "2026-10-06T13:02:01.464Z"
+    "closedAt": "2026-10-06T13:02:01.464Z",
+    "brokerNetProfit": 18.66,
+    "brokerOpenRate": 72.36,
+    "brokerCloseRate": 75.39,
+    "brokerPieces": 2
   },
   {
     "symbol": "LLY",
@@ -21704,7 +22684,11 @@
     "extendedByReviewer": false,
     "waitedForBreakevenSince": null,
     "pnlAccountingVersion": 2,
-    "closedAt": "2026-10-06T15:46:03.691Z"
+    "closedAt": "2026-10-06T15:46:03.691Z",
+    "brokerNetProfit": 10.25,
+    "brokerOpenRate": 1152.96,
+    "brokerCloseRate": 1159.79,
+    "brokerPieces": 1
   },
   {
     "symbol": "CAT",
@@ -21807,7 +22791,11 @@
     "extendedByReviewer": false,
     "waitedForBreakevenSince": null,
     "pnlAccountingVersion": 2,
-    "closedAt": "2026-10-06T17:02:03.687Z"
+    "closedAt": "2026-10-06T17:02:03.687Z",
+    "brokerNetProfit": 2.73,
+    "brokerOpenRate": 863.85,
+    "brokerCloseRate": 865.49,
+    "brokerPieces": 1
   },
   {
     "symbol": "MRVL",
@@ -21910,7 +22898,11 @@
     "extendedByReviewer": false,
     "waitedForBreakevenSince": "2026-10-06T16:42:03.915Z",
     "pnlAccountingVersion": 2,
-    "closedAt": "2026-10-06T19:16:02.707Z"
+    "closedAt": "2026-10-06T19:16:02.707Z",
+    "brokerNetProfit": 1.92,
+    "brokerOpenRate": 291.26,
+    "brokerCloseRate": 291.84,
+    "brokerPieces": 1
   },
   {
     "symbol": "PANW",
@@ -22013,7 +23005,11 @@
     "extendedByReviewer": false,
     "waitedForBreakevenSince": "2026-10-06T17:20:04.697Z",
     "pnlAccountingVersion": 2,
-    "closedAt": "2026-10-06T19:45:02.303Z"
+    "closedAt": "2026-10-06T19:45:02.303Z",
+    "brokerNetProfit": -13.57,
+    "brokerOpenRate": 425,
+    "brokerCloseRate": 419.78,
+    "brokerPieces": 1
   },
   {
     "symbol": "UPST",
@@ -22116,7 +23112,11 @@
     "extendedByReviewer": false,
     "waitedForBreakevenSince": "2026-10-06T16:42:04.134Z",
     "pnlAccountingVersion": 2,
-    "closedAt": "2026-10-06T19:45:04.696Z"
+    "closedAt": "2026-10-06T19:45:04.696Z",
+    "brokerNetProfit": -35.46,
+    "brokerOpenRate": 24.53,
+    "brokerCloseRate": 23.82,
+    "brokerPieces": 1
   },
   {
     "symbol": "RKLB",
@@ -22219,7 +23219,11 @@
     "extendedByReviewer": false,
     "waitedForBreakevenSince": "2026-10-06T16:09:03.720Z",
     "pnlAccountingVersion": 2,
-    "closedAt": "2026-10-06T19:45:07.050Z"
+    "closedAt": "2026-10-06T19:45:07.050Z",
+    "brokerNetProfit": -15.17,
+    "brokerOpenRate": 76.29,
+    "brokerCloseRate": 74.55,
+    "brokerPieces": 1
   },
   {
     "symbol": "RDDT",
@@ -22330,7 +23334,11 @@
     "extendedByReviewer": false,
     "waitedForBreakevenSince": null,
     "pnlAccountingVersion": 2,
-    "closedAt": "2026-10-09T13:37:02.107Z"
+    "closedAt": "2026-10-09T13:37:02.107Z",
+    "brokerNetProfit": 19.73,
+    "brokerOpenRate": 155.67,
+    "brokerCloseRate": 160.38,
+    "brokerPieces": 2
   },
   {
     "symbol": "CCI",
@@ -22433,7 +23441,11 @@
     "extendedByReviewer": false,
     "waitedForBreakevenSince": null,
     "pnlAccountingVersion": 2,
-    "closedAt": "2026-10-09T19:13:01.166Z"
+    "closedAt": "2026-10-09T19:13:01.166Z",
+    "brokerNetProfit": 4.19,
+    "brokerOpenRate": 77.55,
+    "brokerCloseRate": 78.07,
+    "brokerPieces": 1
   },
   {
     "symbol": "META",
@@ -22536,7 +23548,11 @@
     "extendedByReviewer": false,
     "waitedForBreakevenSince": null,
     "pnlAccountingVersion": 2,
-    "closedAt": "2026-10-12T18:22:01.544Z"
+    "closedAt": "2026-10-12T18:22:01.544Z",
+    "brokerNetProfit": 5.46,
+    "brokerOpenRate": 744.44,
+    "brokerCloseRate": 747.46,
+    "brokerPieces": 1
   },
   {
     "symbol": "SQQQ",
@@ -22639,7 +23655,11 @@
     "extendedByReviewer": false,
     "waitedForBreakevenSince": "2026-10-15T18:48:02.354Z",
     "pnlAccountingVersion": 2,
-    "closedAt": "2026-10-15T19:01:02.707Z"
+    "closedAt": "2026-10-15T19:01:02.707Z",
+    "brokerNetProfit": -19.37,
+    "brokerOpenRate": 37.48,
+    "brokerCloseRate": 36.45,
+    "brokerPieces": 1
   },
   {
     "symbol": "LLY",
@@ -22742,7 +23762,11 @@
     "extendedByReviewer": false,
     "waitedForBreakevenSince": null,
     "pnlAccountingVersion": 2,
-    "closedAt": "2026-10-15T19:45:02.265Z"
+    "closedAt": "2026-10-15T19:45:02.265Z",
+    "brokerNetProfit": -11.36,
+    "brokerOpenRate": 1265.93,
+    "brokerCloseRate": 1256.56,
+    "brokerPieces": 1
   },
   {
     "symbol": "UPS",
@@ -22853,7 +23877,11 @@
     "extendedByReviewer": false,
     "waitedForBreakevenSince": null,
     "pnlAccountingVersion": 2,
-    "closedAt": "2026-10-15T20:03:01.729Z"
+    "closedAt": "2026-10-15T20:03:01.729Z",
+    "brokerNetProfit": 1.2,
+    "brokerOpenRate": 97.3,
+    "brokerCloseRate": 97.01,
+    "brokerPieces": 2
   },
   {
     "symbol": "TSLA",
@@ -22956,7 +23984,11 @@
     "extendedByReviewer": false,
     "waitedForBreakevenSince": null,
     "pnlAccountingVersion": 2,
-    "closedAt": "2026-10-16T13:31:22.233Z"
+    "closedAt": "2026-10-16T13:31:22.233Z",
+    "brokerNetProfit": -23.58,
+    "brokerOpenRate": 379.35,
+    "brokerCloseRate": 368.24,
+    "brokerPieces": 1
   },
   {
     "symbol": "ANET",
@@ -23059,7 +24091,11 @@
     "extendedByReviewer": false,
     "waitedForBreakevenSince": null,
     "pnlAccountingVersion": 2,
-    "closedAt": "2026-10-16T13:39:08.251Z"
+    "closedAt": "2026-10-16T13:39:08.251Z",
+    "brokerNetProfit": -51.23,
+    "brokerOpenRate": 190,
+    "brokerCloseRate": 180.41,
+    "brokerPieces": 1
   },
   {
     "symbol": "RDDT",
@@ -23170,7 +24206,11 @@
     "extendedByReviewer": false,
     "waitedForBreakevenSince": null,
     "pnlAccountingVersion": 2,
-    "closedAt": "2026-10-16T14:03:01.596Z"
+    "closedAt": "2026-10-16T14:03:01.596Z",
+    "brokerNetProfit": 23.77,
+    "brokerOpenRate": 155.51,
+    "brokerCloseRate": 161.57,
+    "brokerPieces": 2
   },
   {
     "symbol": "HON",
@@ -23273,7 +24313,11 @@
     "extendedByReviewer": false,
     "waitedForBreakevenSince": null,
     "pnlAccountingVersion": 2,
-    "closedAt": "2026-10-16T15:07:02.198Z"
+    "closedAt": "2026-10-16T15:07:02.198Z",
+    "brokerNetProfit": 3.78,
+    "brokerOpenRate": 211.62,
+    "brokerCloseRate": 212.56,
+    "brokerPieces": 1
   },
   {
     "symbol": "UPST",
@@ -23376,7 +24420,11 @@
     "extendedByReviewer": false,
     "waitedForBreakevenSince": "2026-10-16T18:41:03.282Z",
     "pnlAccountingVersion": 2,
-    "closedAt": "2026-10-16T18:49:11.245Z"
+    "closedAt": "2026-10-16T18:49:11.245Z",
+    "brokerNetProfit": -26.16,
+    "brokerOpenRate": 24.54,
+    "brokerCloseRate": 23.47,
+    "brokerPieces": 1
   },
   {
     "symbol": "F",
@@ -23479,7 +24527,11 @@
     "extendedByReviewer": false,
     "waitedForBreakevenSince": null,
     "pnlAccountingVersion": 2,
-    "closedAt": "2026-10-16T19:43:42.703Z"
+    "closedAt": "2026-10-16T19:43:42.703Z",
+    "brokerNetProfit": -24,
+    "brokerOpenRate": 12.69,
+    "brokerCloseRate": 12.4,
+    "brokerPieces": 1
   },
   {
     "symbol": "AA",
@@ -23582,7 +24634,11 @@
     "extendedByReviewer": false,
     "waitedForBreakevenSince": null,
     "pnlAccountingVersion": 2,
-    "closedAt": "2026-10-16T19:45:02.346Z"
+    "closedAt": "2026-10-16T19:45:02.346Z",
+    "brokerNetProfit": -5.79,
+    "brokerOpenRate": 42.28,
+    "brokerCloseRate": 41.39,
+    "brokerPieces": 1
   },
   {
     "symbol": "NKE",
@@ -23685,7 +24741,11 @@
     "extendedByReviewer": false,
     "waitedForBreakevenSince": "2026-10-16T19:27:02.370Z",
     "pnlAccountingVersion": 2,
-    "closedAt": "2026-10-16T19:45:04.758Z"
+    "closedAt": "2026-10-16T19:45:04.758Z",
+    "brokerNetProfit": -5.67,
+    "brokerOpenRate": 37.44,
+    "brokerCloseRate": 37.08,
+    "brokerPieces": 1
   },
   {
     "symbol": "PAYP",
@@ -23788,7 +24848,11 @@
     "extendedByReviewer": false,
     "waitedForBreakevenSince": null,
     "pnlAccountingVersion": 2,
-    "closedAt": "2026-10-16T19:45:07.044Z"
+    "closedAt": "2026-10-16T19:45:07.044Z",
+    "brokerNetProfit": 2.86,
+    "brokerOpenRate": 15.55,
+    "brokerCloseRate": 15.67,
+    "brokerPieces": 1
   },
   {
     "symbol": "AMD",
@@ -23891,7 +24955,11 @@
     "extendedByReviewer": false,
     "waitedForBreakevenSince": null,
     "pnlAccountingVersion": 2,
-    "closedAt": "2026-10-19T15:59:01.884Z"
+    "closedAt": "2026-10-19T15:59:01.884Z",
+    "brokerNetProfit": 2.86,
+    "brokerOpenRate": 545.54,
+    "brokerCloseRate": 550.34,
+    "brokerPieces": 1
   },
   {
     "symbol": "MU",
@@ -23994,7 +25062,11 @@
     "extendedByReviewer": false,
     "waitedForBreakevenSince": null,
     "pnlAccountingVersion": 2,
-    "closedAt": "2026-10-19T16:09:01.547Z"
+    "closedAt": "2026-10-19T16:09:01.547Z",
+    "brokerNetProfit": 3.5,
+    "brokerOpenRate": 908.67,
+    "brokerCloseRate": 918.45,
+    "brokerPieces": 1
   },
   {
     "symbol": "HD",
@@ -24097,7 +25169,11 @@
     "extendedByReviewer": false,
     "waitedForBreakevenSince": null,
     "pnlAccountingVersion": 2,
-    "closedAt": "2026-10-20T15:13:01.296Z"
+    "closedAt": "2026-10-20T15:13:01.296Z",
+    "brokerNetProfit": 6.74,
+    "brokerOpenRate": 315.08,
+    "brokerCloseRate": 316.21,
+    "brokerPieces": 1
   },
   {
     "symbol": "AMD",
@@ -24200,7 +25276,11 @@
     "extendedByReviewer": false,
     "waitedForBreakevenSince": "2026-10-20T18:54:01.070Z",
     "pnlAccountingVersion": 2,
-    "closedAt": "2026-10-20T19:45:01.624Z"
+    "closedAt": "2026-10-20T19:45:01.624Z",
+    "brokerNetProfit": -4.17,
+    "brokerOpenRate": 542.73,
+    "brokerCloseRate": 539.25,
+    "brokerPieces": 1
   },
   {
     "symbol": "HOOD",
@@ -24303,7 +25383,11 @@
     "extendedByReviewer": false,
     "waitedForBreakevenSince": null,
     "pnlAccountingVersion": 2,
-    "closedAt": "2026-10-21T15:38:02.597Z"
+    "closedAt": "2026-10-21T15:38:02.597Z",
+    "brokerNetProfit": 17.33,
+    "brokerOpenRate": 99.79,
+    "brokerCloseRate": 102.45,
+    "brokerPieces": 1
   },
   {
     "symbol": "ASML",
@@ -24406,7 +25490,11 @@
     "extendedByReviewer": false,
     "waitedForBreakevenSince": null,
     "pnlAccountingVersion": 2,
-    "closedAt": "2026-10-21T17:34:02.237Z"
+    "closedAt": "2026-10-21T17:34:02.237Z",
+    "brokerNetProfit": 8.95,
+    "brokerOpenRate": 1663.98,
+    "brokerCloseRate": 1676.24,
+    "brokerPieces": 1
   },
   {
     "symbol": "GE",
@@ -24509,7 +25597,11 @@
     "extendedByReviewer": false,
     "waitedForBreakevenSince": "2026-10-21T19:04:02.029Z",
     "pnlAccountingVersion": 2,
-    "closedAt": "2026-10-21T19:45:01.817Z"
+    "closedAt": "2026-10-21T19:45:01.817Z",
+    "brokerNetProfit": -47.89,
+    "brokerOpenRate": 303.76,
+    "brokerCloseRate": 295.05,
+    "brokerPieces": 1
   },
   {
     "symbol": "CRM",
@@ -24612,7 +25704,11 @@
     "extendedByReviewer": false,
     "waitedForBreakevenSince": null,
     "pnlAccountingVersion": 2,
-    "closedAt": "2026-10-22T16:06:02.676Z"
+    "closedAt": "2026-10-22T16:06:02.676Z",
+    "brokerNetProfit": 20.11,
+    "brokerOpenRate": 245.86,
+    "brokerCloseRate": 249.93,
+    "brokerPieces": 1
   },
   {
     "symbol": "PANW",
@@ -24715,7 +25811,11 @@
     "extendedByReviewer": false,
     "waitedForBreakevenSince": "2026-10-22T16:43:02.067Z",
     "pnlAccountingVersion": 2,
-    "closedAt": "2026-10-22T19:45:03.503Z"
+    "closedAt": "2026-10-22T19:45:03.503Z",
+    "brokerNetProfit": -4.6,
+    "brokerOpenRate": 359.18,
+    "brokerCloseRate": 356.64,
+    "brokerPieces": 1
   },
   {
     "symbol": "UPST",
@@ -24818,7 +25918,11 @@
     "extendedByReviewer": false,
     "waitedForBreakevenSince": "2026-10-22T19:08:01.449Z",
     "pnlAccountingVersion": 2,
-    "closedAt": "2026-10-22T19:45:05.938Z"
+    "closedAt": "2026-10-22T19:45:05.938Z",
+    "brokerNetProfit": -15.87,
+    "brokerOpenRate": 24.06,
+    "brokerCloseRate": 23.68,
+    "brokerPieces": 1
   },
   {
     "symbol": "RNG",
@@ -24921,7 +26025,11 @@
     "extendedByReviewer": false,
     "waitedForBreakevenSince": null,
     "pnlAccountingVersion": 2,
-    "closedAt": "2026-10-23T14:05:01.201Z"
+    "closedAt": "2026-10-23T14:05:01.201Z",
+    "brokerNetProfit": -0.43,
+    "brokerOpenRate": 85.14,
+    "brokerCloseRate": 84.91,
+    "brokerPieces": 1
   },
   {
     "symbol": "NVDA",
@@ -25024,6 +26132,10 @@
     "extendedByReviewer": false,
     "waitedForBreakevenSince": null,
     "pnlAccountingVersion": 2,
-    "closedAt": "2026-10-26T16:10:02.012Z"
+    "closedAt": "2026-10-26T16:10:02.012Z",
+    "brokerNetProfit": 6.23,
+    "brokerOpenRate": 214.55,
+    "brokerCloseRate": 215.46,
+    "brokerPieces": 1
   }
 ]

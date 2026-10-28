@@ -5,6 +5,94 @@ repairs, reverted experiments). See README.md → "For AI agents".
 
 ---
 
+## v10.2 (2026-10-27) — Phase 1: broker safety stop, real P&L, commission found
+
+Phase 1 of the 2026-10-26 audit roadmap: safety and honest numbers. **Nothing
+here changes which stocks are bought or how exits are decided.**
+
+**How it was checked (one read-only call, approved by the owner).** eToro's
+`GET /api/v1/trading/info/trade/history?minDate=2026-07-01` returned all **389
+closed pieces** (317 positions; a partial close is a row of its own with the
+same open time and rate) from 2026-07-13 to 2026-10-26. A copy is in
+`data/audit/trade-history-2026-10-27.json` on the server. No order of any kind
+was placed.
+
+**Finding 1: no position ever had a broker stop.** Every row has
+`stopLossRate: 0.0001`. All stops were the bot's own, checked each minute, so a
+crash, a server outage or an overnight gap had nothing behind it.
+
+**Finding 2: a $1-per-order commission the bot never counted.** With nothing
+open, live equity was $9,025.38 (−$974.62 on $10,000). eToro's own closed-trade
+`netProfit` total was only **−$265.39**, and its `fees` field reads 0 on every
+row. The $709.23 gap grew in whole dollars as trades happened (−$580.00 on
+09-21, −$589.00 on 09-22, −$598.00 on 09-28 …), and 317 opening orders plus
+389 closing orders = **706 orders**, within $3.23 of the gap. So roughly **$1
+per order** comes out of cash: $2 per round trip, $3 with a partial. On a
+~$1,500 position that is 0.13–0.2% per trade, about **73% of the account's loss
+since July**. The bot's own records also overstate each trade a little: they use
+eToro's P&L a moment *before* the close fills (NVDA 10-26: recorded +$12.40,
+eToro booked +$6.23). Across the 278 trades matched to eToro, the bot's
+best-known figure was −$50.06 and eToro's was −$2.16. The 39 eToro-only
+positions (−$263.23) are 13–17 July, before the bot kept trade records.
+**Open question for the owner:** whether the real $350 copy also pays a fixed
+fee per copied order. At ~$52 a copied position, $1 an order would be ~4% a
+round trip. Check the real account's statement.
+
+**Changes**
+
+- **Broker-side safety stop** (`etoro-client.js`, `trade-planner.js`,
+  `index.js`, `config.js`). Every buy now sends `StopLossRate` at
+  `entry − 1.5 × (entry − plan stop)`, rounded down, which eToro holds and fires
+  even when the bot is down. For a 2.9% plan stop it sits 4.35% below entry. The
+  bot's own stops still do all normal exits. If eToro answers 400 to the order
+  with the stop, it is **not** retried with the same body; it is placed once more
+  without the stop (exactly how every earlier trade ran) and Telegram gets a
+  `BROKER_STOP_REJECTED` alert. The stop is saved in `position-meta`
+  (`brokerStopRate`). If eToro's stop ever fires, the ghost-position alert now
+  says so. Settings: `DT_BROKER_STOP_ENABLED` (true) and
+  `DT_BROKER_STOP_MULTIPLIER` (1.5). Positions already open at deploy keep no
+  broker stop. There were none at deploy.
+- **Commission booked to the capital ledger** (`capital-manager.recordCommission`).
+  $1 is booked when the open, each partial and the final close fill
+  (`DT_COMMISSION_PER_ORDER_DOLLARS`, 1). `ledger.commissionsBooked` keeps the
+  running total. The ledger drives sizing, the drawdown breaker and the de-risk
+  day count, so these now follow the real account instead of drifting ~$2 a
+  trade until the 1% reconciliation caught up.
+- **Reconciliation tolerance 1% → 0.3%** (`DT_CAPITAL_RECONCILE_TOLERANCE_PCT`
+  default). With commissions booked, what is left is fill slippage, so a gap past
+  ~$27 is corrected. The first cycle after deploy corrects the existing
+  −$81.93 drift. That fires one `UNEXPLAINED_EQUITY_CHANGE` alert, which is
+  expected.
+- **Trade records carry eToro's numbers.** New records hold `positionId`,
+  `commissionDollars` and `netPnlDollars`. `pnlDollars` stays the market result,
+  so the score floor, cooldowns, BAD-DAY rule and every stat read exactly as
+  before. A daily job (16:20 ET, and once at start-up if the copy is over a day
+  old) pulls eToro's trade history into `data/broker-trade-history.json` and
+  stamps `brokerNetProfit`, `brokerOpenRate`, `brokerCloseRate` and
+  `brokerPieces` on each matched record. Matching uses positionId, or for older
+  records the nearest open within 15 min **and** within 3% of the entry price;
+  the price check stopped two stocks opened in the same minute from swapping.
+  Journal event `BROKER_SYNC`. Offline: `node src/index.js --sync-broker` (only
+  while the bot is stopped, because it rewrites trade-history.json).
+- **`/perf` fixed.** "All time" is now the **account** (effective capital vs
+  the start). The old line summed raw `pnlDollars`, which for pre-v8 trades left
+  out every partial profit and ignored commissions. It also shows eToro's own
+  trade total and the estimated commissions. The 7-day and current-rules lines
+  are after commission and use eToro's figure per trade where matched. Early
+  records eToro can't match are labelled as the bot's estimates.
+- **Rates timeout retry** (`etoro-market-data.fetchBatchedRates`). One quick
+  retry on a timeout only (429 and other errors are thrown as before).
+  Logs to 10-26: 25 paper-book marks and 4 dip-order checks lost a whole minute
+  each to a single 12-second timeout here.
+
+27 new tests (`test/phase1-v10-2.test.js`, eToro stubbed, no network): stop
+price and rounding, order body with and without the stop, the 400 fallback,
+commission per order, ledger booking, broker matching (partials summed,
+same-minute different stock not matched, positionId wins), and timeout-only
+retry. 458 tests pass.
+
+---
+
 ## v10.1 (2026-10-25) — CVX added; eToro "TICKER.US" listings resolve
 
 Owner request: add Chevron (CVX) as an energy name; the energy group had only

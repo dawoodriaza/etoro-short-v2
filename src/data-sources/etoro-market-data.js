@@ -88,7 +88,22 @@ async function fetchBatchedRates(instrumentIds) {
     ETORO_BASE_URL +
     "/market-data/instruments/rates?instrumentIds=" +
     instrumentIds.join(",");
-  const response = await axios.get(url, { headers: headers(), timeout: 12000 });
+  // v10.2: one quick retry on a TIMEOUT only. Measured to 2026-10-26: 25
+  // paper-book marks and 4 dip-entry checks were lost to a single 12s
+  // timeout here, each costing a whole minute of dip coverage. A timeout
+  // returned no data, so repeating the read is safe; any other error
+  // (4xx, 429) is thrown as before.
+  let response;
+  try {
+    response = await axios.get(url, { headers: headers(), timeout: 12000 });
+  } catch (error) {
+    const timedOut =
+      error.code === "ECONNABORTED" || /timeout/i.test(error.message || "");
+    if (!timedOut) throw error;
+    logger.warn("eToro rates timed out — retrying once");
+    await waitForRateLimitSlot();
+    response = await axios.get(url, { headers: headers(), timeout: 12000 });
+  }
 
   const ratesByInstrumentId = {};
   for (const rate of response.data?.rates || []) {

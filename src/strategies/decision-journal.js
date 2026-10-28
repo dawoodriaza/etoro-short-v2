@@ -224,6 +224,9 @@ const journal = {
   // v8.1: realized account equity vs the capital ledger, whenever the gap is
   // material — the trail that makes an "unexplained equity change" traceable.
   equityDrift: (drift) => appendEvent("EQUITY_DRIFT", drift),
+  // v10.2: the daily pull of eToro's own closed-trade history — totals and
+  // how many bot records it confirmed.
+  brokerSync: (summary) => appendEvent("BROKER_SYNC", summary),
   // v8.1: one record per candidate per scan — its scan-time features and what
   // the bot finally did with it (see strategies/shadow-signals.js).
   shadowSignal: (signal) => appendEvent("SHADOW_SIGNAL", signal),

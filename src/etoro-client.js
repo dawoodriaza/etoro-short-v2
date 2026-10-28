@@ -89,6 +89,7 @@ async function executeWithRetry(requestFunction, maximumRetries = 3) {
       return await requestFunction();
     } catch (error) {
       const httpStatus = error.response?.status;
+      if (error.noRetry) throw error; // v10.2: caller marked it final
       if (httpStatus === 429) {
         const waitTime = Math.min(15000 * attempt, 60000);
         logger.warn(
@@ -483,7 +484,18 @@ async function labelPositionsWithTickers(parsedPortfolio) {
 
 // ── Trade execution ────────────────────────────────────────────────────────
 
-async function openBuyPosition(instrumentId, dollarAmount, tickerSymbol) {
+// v10.2: options.stopLossRate puts a broker-side stop on the order (held by
+// eToro, fires even when the bot is down). If eToro rejects the order
+// because of the stop (a 400), it is placed once more WITHOUT it — a missed
+// entry is worse than an entry with only the bot's own stop, which is how
+// every trade ran before v10.2 — and result.brokerStopRejected is set so the
+// caller can alert.
+async function openBuyPosition(
+  instrumentId,
+  dollarAmount,
+  tickerSymbol,
+  options = {},
+) {
   const minimumPositionDollars = parseFloat(
     process.env.MINIMUM_POSITION_DOLLARS || "50",
   );
@@ -507,21 +519,68 @@ async function openBuyPosition(instrumentId, dollarAmount, tickerSymbol) {
     };
   }
 
+  const stopLossRate =
+    Number.isFinite(options.stopLossRate) && options.stopLossRate > 0
+      ? options.stopLossRate
+      : null;
+
   logger.info(
-    `Opening BUY position: ${tickerSymbol} | $${dollarAmount.toFixed(2)} | instrumentId=${instrumentId}`,
+    `Opening BUY position: ${tickerSymbol} | $${dollarAmount.toFixed(2)} | instrumentId=${instrumentId}` +
+      (stopLossRate ? ` | broker stop ${stopLossRate}` : " | no broker stop"),
   );
 
-  return executeWithRetry(async () => {
-    const response = await axios.post(
+  const postOrder = (withStop) =>
+    axios.post(
       `${ETORO_BASE_URL}/trading/execution/market-open-orders/by-amount`,
       {
         InstrumentID: instrumentId,
         IsBuy: true,
         Leverage: 1,
         Amount: dollarAmount,
+        ...(withStop ? { StopLossRate: stopLossRate, IsNoStopLoss: false } : {}),
       },
       { headers: buildRequestHeaders() },
     );
+
+  if (stopLossRate) {
+    try {
+      // A 400 is a validation refusal — no order exists — so it is not
+      // retried with the same body; 429/network errors go through the usual
+      // retry path inside executeWithRetry.
+      const response = await executeWithRetry(async () => {
+        try {
+          return await postOrder(true);
+        } catch (error) {
+          if (error.response?.status === 400) error.noRetry = true;
+          throw error;
+        }
+      });
+      logger.info(
+        `✅ Position opened: ${tickerSymbol} requested $${dollarAmount.toFixed(2)} with broker stop ${stopLossRate} — raw eToro response: ${JSON.stringify(response.data)}`,
+      );
+      return response.data;
+    } catch (error) {
+      if (!error.noRetry) throw error;
+      logger.warn(
+        `${tickerSymbol}: eToro refused the order WITH a broker stop (${stopLossRate}): ` +
+          JSON.stringify(error.response?.data || error.message).slice(0, 300) +
+          " — placing it once more without the broker stop",
+      );
+      const response = await executeWithRetry(() => postOrder(false));
+      logger.info(
+        `✅ Position opened: ${tickerSymbol} requested $${dollarAmount.toFixed(2)} WITHOUT broker stop — raw eToro response: ${JSON.stringify(response.data)}`,
+      );
+      return {
+        ...response.data,
+        brokerStopRejected: String(
+          JSON.stringify(error.response?.data || error.message),
+        ).slice(0, 300),
+      };
+    }
+  }
+
+  return executeWithRetry(async () => {
+    const response = await postOrder(false);
     // Log the FULL raw response — we've only ever logged orderId here, which
     // means a fill that lands smaller/larger than the requested dollarAmount
     // (partial fill, unit rounding, a leverage/margin quirk) has been
@@ -609,7 +668,32 @@ async function closePartialPosition(
   );
 }
 
+// v10.2: eToro's own record of every CLOSED position since minDate
+// (YYYY-MM-DD, must be under a year back): open/close rate, units,
+// investment and netProfit as eToro booked them. Read-only; one call per
+// 1000 rows, on the shared 60/min quota. Verified live 2026-10-27 (389 rows).
+async function fetchClosedTradeHistory(minDate) {
+  const rows = [];
+  for (let page = 1; page <= 10; page++) {
+    const batch = await executeWithRetry(async () => {
+      const response = await axios.get(
+        `${ETORO_BASE_URL}/trading/info/trade/history`,
+        {
+          params: { minDate, page, pageSize: 1000 },
+          headers: buildRequestHeaders(),
+          timeout: 20000,
+        },
+      );
+      return Array.isArray(response.data) ? response.data : [];
+    });
+    rows.push(...batch);
+    if (batch.length < 1000) break;
+  }
+  return rows;
+}
+
 module.exports = {
+  fetchClosedTradeHistory, // v10.2
   pickUsListing, // v10.1
   normaliseEtoroTicker, // v10.1
   findDuplicatePositions,
