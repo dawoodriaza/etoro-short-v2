@@ -1,7 +1,62 @@
 {
- "at": "2026-10-28T05:31:50.528Z",
- "note": "17 watchlist reports since 2026-10-07",
+ "at": "2026-10-29T05:32:41.696Z",
+ "note": "22 watchlist reports since 2026-10-08",
  "rows": [
+  {
+   "symbol": "AMZN",
+   "date": "2026-10-29",
+   "hour": "amc",
+   "quarter": 3,
+   "year": 2026,
+   "epsEstimate": 2.001,
+   "epsActual": null,
+   "revenueEstimate": 206288109339,
+   "revenueActual": null
+  },
+  {
+   "symbol": "CAT",
+   "date": "2026-10-29",
+   "hour": "bmo",
+   "quarter": 3,
+   "year": 2026,
+   "epsEstimate": 7.1552,
+   "epsActual": null,
+   "revenueEstimate": 20750271987,
+   "revenueActual": null
+  },
+  {
+   "symbol": "LIN",
+   "date": "2026-10-29",
+   "hour": "bmo",
+   "quarter": 3,
+   "year": 2026,
+   "epsEstimate": 4.5612,
+   "epsActual": null,
+   "revenueEstimate": 9231276204,
+   "revenueActual": null
+  },
+  {
+   "symbol": "LLY",
+   "date": "2026-10-29",
+   "hour": "bmo",
+   "quarter": 3,
+   "year": 2026,
+   "epsEstimate": 6.6112,
+   "epsActual": null,
+   "revenueEstimate": 22835267820,
+   "revenueActual": null
+  },
+  {
+   "symbol": "RDDT",
+   "date": "2026-10-29",
+   "hour": "amc",
+   "quarter": 3,
+   "year": 2026,
+   "epsEstimate": 1.3747,
+   "epsActual": null,
+   "revenueEstimate": 895533367,
+   "revenueActual": null
+  },
   {
    "symbol": "F",
    "date": "2026-10-28",
@@ -9,9 +64,9 @@
    "quarter": 3,
    "year": 2026,
    "epsEstimate": 0.4129,
-   "epsActual": null,
+   "epsActual": 0.49,
    "revenueEstimate": 47162532682,
-   "revenueActual": null
+   "revenueActual": 46082000000
   },
   {
    "symbol": "FDX",
@@ -20,9 +75,9 @@
    "quarter": 3,
    "year": 2026,
    "epsEstimate": 3.5173,
-   "epsActual": null,
+   "epsActual": 3.74,
    "revenueEstimate": 23012042000,
-   "revenueActual": null
+   "revenueActual": 22855000000
   },
   {
    "symbol": "GOOGL",
@@ -31,9 +86,9 @@
    "quarter": 3,
    "year": 2026,
    "epsEstimate": 3.1095,
-   "epsActual": null,
+   "epsActual": 2.12,
    "revenueEstimate": 132020419167,
-   "revenueActual": null
+   "revenueActual": 111211000000
   },
   {
    "symbol": "MSFT",
@@ -42,9 +97,9 @@
    "quarter": 1,
    "year": 2027,
    "epsEstimate": 4.8165,
-   "epsActual": null,
+   "epsActual": 4.89,
    "revenueEstimate": 92493412748,
-   "revenueActual": null
+   "revenueActual": 92279000000
   },
   {
    "symbol": "TMUS",
@@ -53,9 +108,9 @@
    "quarter": 3,
    "year": 2026,
    "epsEstimate": 2.9699,
-   "epsActual": null,
+   "epsActual": 3.22,
    "revenueEstimate": 23600426460,
-   "revenueActual": null
+   "revenueActual": 23584000000
   },
   {
    "symbol": "BA",

@@ -1,7 +1,7 @@
 {
  "book": "EARNINGS_DRIFT",
  "createdAt": "2026-10-22T13:40:53.189Z",
- "lastProcessedSession": "2026-10-27",
+ "lastProcessedSession": "2026-10-28",
  "lastRebalanceWeek": null,
  "open": {
   "UNP": {
@@ -12,33 +12,48 @@
    "stopKind": "initial",
    "size": 823.76,
    "riskDollars": 50,
-   "peak": 301.13,
+   "peak": 302.53,
    "trough": 288.61,
-   "heldSessions": 3,
+   "heldSessions": 4,
    "signal": "earnings 2026-10-22 (bmo): +3.65% on the reaction day, EPS 3.53 vs 3.5078",
    "signalDate": "2026-10-22",
-   "lastClose": 300.18,
-   "lastDate": "2026-10-27"
+   "lastClose": 297.12,
+   "lastDate": "2026-10-28"
+  },
+  "SOFI": {
+   "symbol": "SOFI",
+   "entryDate": "2026-10-28",
+   "entry": 16.54,
+   "stop": 15.68,
+   "stopKind": "initial",
+   "size": 961.63,
+   "riskDollars": 50,
+   "peak": 17.24,
+   "trough": 16.54,
+   "heldSessions": 1,
+   "signal": "earnings 2026-10-27 (bmo): +13.72% on the reaction day, EPS 0.18 vs 0.1701",
+   "signalDate": "2026-10-27",
+   "lastClose": 17.11,
+   "lastDate": "2026-10-28"
+  },
+  "UPS": {
+   "symbol": "UPS",
+   "entryDate": "2026-10-28",
+   "entry": 105.07,
+   "stop": 99.53,
+   "stopKind": "initial",
+   "size": 948.29,
+   "riskDollars": 50,
+   "peak": 106.25,
+   "trough": 103.9,
+   "heldSessions": 1,
+   "signal": "earnings 2026-10-27 (bmo): +6.09% on the reaction day, EPS 1.69 vs 1.6417",
+   "signalDate": "2026-10-27",
+   "lastClose": 105.48,
+   "lastDate": "2026-10-28"
   }
  },
- "pending": [
-  {
-   "symbol": "SOFI",
-   "reason": "earnings 2026-10-27 (bmo): +13.72% on the reaction day, EPS 0.18 vs 0.1701",
-   "atr": 0.817142857142857,
-   "stopAtr": 1,
-   "stopAbove": 15.68,
-   "signalDate": "2026-10-27"
-  },
-  {
-   "symbol": "UPS",
-   "reason": "earnings 2026-10-27 (bmo): +6.09% on the reaction day, EPS 1.69 vs 1.6417",
-   "atr": 3.6850000000000014,
-   "stopAtr": 1,
-   "stopAbove": 99.53,
-   "signalDate": "2026-10-27"
-  }
- ],
+ "pending": [],
  "pendingExits": {},
  "closed": [],
  "marks": [
@@ -71,6 +86,12 @@
    "realized": 0,
    "unrealized": 10.53,
    "open": 1
+  },
+  {
+   "date": "2026-10-28",
+   "realized": 0,
+   "unrealized": 38.87,
+   "open": 3
   }
  ]
 }

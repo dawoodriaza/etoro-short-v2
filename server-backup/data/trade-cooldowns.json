@@ -20,9 +20,9 @@
     "scoreAtExit": 83.40590199419468
   },
   "SOFI": {
-    "exitAtMs": 1791227583539,
+    "exitAtMs": 1793210581701,
     "wasLoss": false,
-    "scoreAtExit": 85.84053339774718
+    "scoreAtExit": 86.55980685601659
   },
   "NFLX": {
     "exitAtMs": 1787152322001,
@@ -40,9 +40,9 @@
     "scoreAtExit": 87.16774587854314
   },
   "MU": {
-    "exitAtMs": 1792426141535,
+    "exitAtMs": 1793196721818,
     "wasLoss": false,
-    "scoreAtExit": 95.61516399347177
+    "scoreAtExit": 100
   },
   "BRAI": 1784036525262,
   "AMD": {
@@ -194,9 +194,9 @@
     "scoreAtExit": 100
   },
   "GM": {
-    "exitAtMs": 1790365505450,
+    "exitAtMs": 1793200562188,
     "wasLoss": false,
-    "scoreAtExit": 94.58891790136921
+    "scoreAtExit": 80.40305411535363
   },
   "DE": {
     "exitAtMs": 1790960643191,
@@ -272,5 +272,20 @@
     "exitAtMs": 1792764301183,
     "wasLoss": false,
     "scoreAtExit": 100
+  },
+  "REPL": {
+    "exitAtMs": 1793208543081,
+    "wasLoss": false,
+    "scoreAtExit": 100
+  },
+  "BEAM": {
+    "exitAtMs": 1793213101844,
+    "wasLoss": false,
+    "scoreAtExit": 100
+  },
+  "VRTX": {
+    "exitAtMs": 1793216701334,
+    "wasLoss": true,
+    "scoreAtExit": 89.4734869012522
   }
 }

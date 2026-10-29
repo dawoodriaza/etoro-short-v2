@@ -1,7 +1,7 @@
 {
  "book": "SWING_BREAKOUT",
  "createdAt": "2026-10-22T13:40:53.180Z",
- "lastProcessedSession": "2026-10-27",
+ "lastProcessedSession": "2026-10-28",
  "lastRebalanceWeek": null,
  "open": {
   "VRTX": {
@@ -12,13 +12,13 @@
    "stopKind": "initial",
    "size": 841.27,
    "riskDollars": 50,
-   "peak": 530.98,
+   "peak": 534.67,
    "trough": 508.76,
-   "heldSessions": 3,
+   "heldSessions": 4,
    "signal": "closed $535.5 above the 20-day high $529.75; 50-day average rising",
    "signalDate": "2026-10-22",
-   "lastClose": 520.81,
-   "lastDate": "2026-10-27"
+   "lastClose": 529.46,
+   "lastDate": "2026-10-28"
   },
   "LIN": {
    "symbol": "LIN",
@@ -29,44 +29,44 @@
    "size": 886.15,
    "riskDollars": 50,
    "peak": 511.86,
-   "trough": 504,
-   "heldSessions": 3,
+   "trough": 503.51,
+   "heldSessions": 4,
    "signal": "closed $510.44 above the 20-day high $506.17; 50-day average rising",
    "signalDate": "2026-10-22",
-   "lastClose": 508.45,
-   "lastDate": "2026-10-27"
+   "lastClose": 507.83,
+   "lastDate": "2026-10-28"
   },
   "COP": {
    "symbol": "COP",
    "entryDate": "2026-10-26",
    "entry": 147.8,
-   "stop": 136.86,
-   "stopKind": "initial",
+   "stop": 138.1,
+   "stopKind": "10-day low",
    "size": 675.5,
    "riskDollars": 50,
    "peak": 151.94,
    "trough": 147.46,
-   "heldSessions": 2,
+   "heldSessions": 3,
    "signal": "closed $150.97 above the 20-day high $147.66; 50-day average rising",
    "signalDate": "2026-10-23",
-   "lastClose": 147.95,
-   "lastDate": "2026-10-27"
+   "lastClose": 149.08,
+   "lastDate": "2026-10-28"
   },
   "XOM": {
    "symbol": "XOM",
    "entryDate": "2026-10-26",
    "entry": 181.34,
-   "stop": 171.23,
+   "stop": 172.55,
    "stopKind": "10-day low",
    "size": 854.8,
    "riskDollars": 50,
    "peak": 184.7,
    "trough": 179.78,
-   "heldSessions": 2,
+   "heldSessions": 3,
    "signal": "closed $183.22 above the 20-day high $180.82; 50-day average rising",
    "signalDate": "2026-10-23",
-   "lastClose": 180.02,
-   "lastDate": "2026-10-27"
+   "lastClose": 182.06,
+   "lastDate": "2026-10-28"
   },
   "ISRG": {
    "symbol": "ISRG",
@@ -77,24 +77,31 @@
    "size": 554.07,
    "riskDollars": 50,
    "peak": 458.67,
-   "trough": 443.76,
-   "heldSessions": 2,
+   "trough": 437.5,
+   "heldSessions": 3,
    "signal": "closed $452.21 above the 20-day high $447.56; 50-day average rising",
    "signalDate": "2026-10-23",
-   "lastClose": 445.69,
-   "lastDate": "2026-10-27"
+   "lastClose": 443.7,
+   "lastDate": "2026-10-28"
+  },
+  "TSLA": {
+   "symbol": "TSLA",
+   "entryDate": "2026-10-28",
+   "entry": 410.1,
+   "stop": 376.5529,
+   "stopKind": "initial",
+   "size": 611.23,
+   "riskDollars": 50,
+   "peak": 410.4,
+   "trough": 397.17,
+   "heldSessions": 1,
+   "signal": "closed $407.03 above the 20-day high $397.22; 50-day average rising",
+   "signalDate": "2026-10-27",
+   "lastClose": 404.06,
+   "lastDate": "2026-10-28"
   }
  },
- "pending": [
-  {
-   "symbol": "TSLA",
-   "reason": "closed $407.03 above the 20-day high $397.22; 50-day average rising",
-   "atr": 16.773564285714293,
-   "stopAtr": 2,
-   "stopAbove": null,
-   "signalDate": "2026-10-27"
-  }
- ],
+ "pending": [],
  "pendingExits": {},
  "closed": [],
  "marks": [
@@ -127,6 +134,12 @@
    "realized": 0,
    "unrealized": -26.65,
    "open": 5
+  },
+  {
+   "date": "2026-10-28",
+   "realized": 0,
+   "unrealized": -10.66,
+   "open": 6
   }
  ]
 }

@@ -2,3 +2,5 @@
 {"ts":"2026-10-24T05:31:25.059Z","book":"EARNINGS_DRIFT","event":"ENTRY","symbol":"UNP","date":"2026-10-23","entry":296.39,"stop":278.4,"size":823.76,"signal":"earnings 2026-10-22 (bmo): +3.65% on the reaction day, EPS 3.53 vs 3.5078"}
 {"ts":"2026-10-28T05:31:50.547Z","book":"EARNINGS_DRIFT","event":"SIGNAL","date":"2026-10-27","symbol":"SOFI","reason":"earnings 2026-10-27 (bmo): +13.72% on the reaction day, EPS 0.18 vs 0.1701","rank":0.137}
 {"ts":"2026-10-28T05:31:50.547Z","book":"EARNINGS_DRIFT","event":"SIGNAL","date":"2026-10-27","symbol":"UPS","reason":"earnings 2026-10-27 (bmo): +6.09% on the reaction day, EPS 1.69 vs 1.6417","rank":0.061}
+{"ts":"2026-10-29T05:32:41.716Z","book":"EARNINGS_DRIFT","event":"ENTRY","symbol":"SOFI","date":"2026-10-28","entry":16.54,"stop":15.68,"size":961.63,"signal":"earnings 2026-10-27 (bmo): +13.72% on the reaction day, EPS 0.18 vs 0.1701"}
+{"ts":"2026-10-29T05:32:41.716Z","book":"EARNINGS_DRIFT","event":"ENTRY","symbol":"UPS","date":"2026-10-28","entry":105.07,"stop":99.53,"size":948.29,"signal":"earnings 2026-10-27 (bmo): +6.09% on the reaction day, EPS 1.69 vs 1.6417"}
