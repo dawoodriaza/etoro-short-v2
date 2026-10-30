@@ -1,1 +1,263 @@
-{}
+{
+  "DE": {
+    "tradeType": "DAY",
+    "entryPrice": 656.32,
+    "stopPrice": 635.2304,
+    "brokerStopRate": 624.68,
+    "targetT1": 677.4096,
+    "targetT2": 698.4992,
+    "targetT3": null,
+    "swingTrailPct": null,
+    "lockedFloor": null,
+    "peakPrice": 660.4587866192171,
+    "peakSetAt": 1793303041922,
+    "recentPrices": [
+      {
+        "price": 659.0013358007118,
+        "atMs": 1793339161315
+      },
+      {
+        "price": 659.0013358007118,
+        "atMs": 1793339221318
+      },
+      {
+        "price": 659.0013358007118,
+        "atMs": 1793339281294
+      },
+      {
+        "price": 659.0013358007118,
+        "atMs": 1793339341376
+      },
+      {
+        "price": 659.0013358007118,
+        "atMs": 1793339401302
+      }
+    ],
+    "partialDone": true,
+    "partialT1Done": false,
+    "partialT2Done": false,
+    "setup": "MOMENTUM_SURGE",
+    "source": "WATCHLIST",
+    "confidence": 6,
+    "dollarAmount": 702.5,
+    "plannedDollarAmount": 1405,
+    "originalDollarAmount": 1405,
+    "realizedPartialPnl": 2.87,
+    "partialFills": [
+      {
+        "at": "2026-10-29T20:30:02.981Z",
+        "reason": "PROFIT_STALL_LOCK",
+        "fraction": 0.5,
+        "price": 659.0013,
+        "pnlDollars": 2.87
+      }
+    ],
+    "troughPrice": 646.6410317437723,
+    "openedAt": 1793293687955,
+    "fillVerifiedAt": null,
+    "plan": {
+      "symbol": "DE",
+      "tradeType": "DAY",
+      "tradeTypeReason": "late-week entry — no room before Friday close",
+      "downgradedFromSwing": false,
+      "archetype": "MOMENTUM_BREAKOUT",
+      "catalyst": null,
+      "catalystLabel": null,
+      "source": "WATCHLIST",
+      "isFirstTimeDiscovered": false,
+      "setup": "MOMENTUM_SURGE",
+      "setupDetail": "RSI 71 with 3.2% move on 1.1x volume",
+      "score": 90.22610177292731,
+      "regime": "TRENDING",
+      "trendDirection": "BULLISH",
+      "volatilityBucket": "MEDIUM",
+      "atrPercent": 3.31,
+      "spyChangePercent": -0.3586642669394391,
+      "relativeStrength": 3.5966807184667475,
+      "rsi": 70.95969945569254,
+      "aboveVwap": true,
+      "priceChangePercent": 3.2380164515273084,
+      "moveToAtrRatio": 0.978,
+      "entryPrice": 656.32,
+      "stopPrice": 635.2304,
+      "stopDistancePct": 3.21,
+      "targetT1": 677.4096,
+      "targetT2": 698.4992,
+      "targetT3": null,
+      "swingTrailPct": null,
+      "averageDollarVolume": null,
+      "positionDollars": 1405,
+      "riskDollars": 45.15,
+      "riskPctOfCapital": 0.5,
+      "expectedReturnDollars": 90.29,
+      "riskRewardRatio": 2,
+      "sizingBreakdown": {
+        "effectiveCapital": 9039.27,
+        "baseRiskPct": 0.005,
+        "drawdownMultiplier": 1,
+        "volatilityMultiplier": 1,
+        "discoveryMultiplier": 1,
+        "symbolMultiplier": 1
+      },
+      "plannedAt": "2026-10-29T16:40:58.782Z",
+      "dipEntry": {
+        "signalPrice": 661.415,
+        "triggerPrice": 656.499,
+        "armedAt": "2026-10-29T16:41:01.394Z",
+        "minutesWaited": 27
+      }
+    },
+    "entryConditions": {
+      "tradeType": "DAY",
+      "downgradedFromSwing": false,
+      "score": 90.22610177292731,
+      "regime": "TRENDING",
+      "spyChangePercent": -0.3586642669394391,
+      "relativeStrength": 3.5966807184667475,
+      "rsi": 70.95969945569254,
+      "aboveVwap": true,
+      "atrPercent": 3.31,
+      "volatilityBucket": "MEDIUM",
+      "entryHourET": 13,
+      "priceChangePercent": 3.2380164515273084,
+      "moveToAtrRatio": 0.978,
+      "sectorBucket": "industrials",
+      "sizeMultiplier": 1,
+      "filtersActive": {
+        "minEntryScore": 80,
+        "maxEntryAtrPct": 7,
+        "prefilterMinMovePct": 1,
+        "minMoveToAtrRatio": 0,
+        "overnightDeadZone": true
+      }
+    },
+    "confirmedInPortfolioAt": "2026-10-29T17:09:02.081Z",
+    "amountCorrectedAt": "2026-10-29T20:30:06.524Z"
+  },
+  "META": {
+    "tradeType": "DAY",
+    "entryPrice": 626.65,
+    "stopPrice": 595.9128,
+    "brokerStopRate": 580.54,
+    "targetT1": 657.3872,
+    "targetT2": 688.1243,
+    "targetT3": null,
+    "swingTrailPct": null,
+    "lockedFloor": null,
+    "peakPrice": 629.0791990697674,
+    "peakSetAt": 1793302261882,
+    "recentPrices": [
+      {
+        "price": 618.0033479069767,
+        "atMs": 1793339161314
+      },
+      {
+        "price": 618.0033479069767,
+        "atMs": 1793339221318
+      },
+      {
+        "price": 618.3045333333333,
+        "atMs": 1793339281293
+      },
+      {
+        "price": 618.0033479069767,
+        "atMs": 1793339341375
+      },
+      {
+        "price": 618.0033479069767,
+        "atMs": 1793339401301
+      }
+    ],
+    "partialDone": false,
+    "partialT1Done": false,
+    "partialT2Done": false,
+    "setup": "MOMENTUM_SURGE",
+    "source": "WATCHLIST",
+    "confidence": 5,
+    "dollarAmount": 645,
+    "plannedDollarAmount": 645,
+    "originalDollarAmount": 645,
+    "realizedPartialPnl": 0,
+    "partialFills": [],
+    "troughPrice": 613.3301159689922,
+    "openedAt": 1793295611732,
+    "fillVerifiedAt": "2026-10-29T17:40:11.732Z",
+    "plan": {
+      "symbol": "META",
+      "tradeType": "DAY",
+      "tradeTypeReason": "high volatility — no overnight risk",
+      "downgradedFromSwing": false,
+      "archetype": "MOMENTUM_BREAKOUT",
+      "catalyst": null,
+      "catalystLabel": null,
+      "source": "WATCHLIST",
+      "isFirstTimeDiscovered": false,
+      "setup": "MOMENTUM_SURGE",
+      "setupDetail": "RSI 70 with 3.5% move on 1.4x volume",
+      "score": 85.76959586156804,
+      "regime": "TRENDING",
+      "trendDirection": "BULLISH",
+      "volatilityBucket": "HIGH",
+      "atrPercent": 5.64,
+      "spyChangePercent": -0.3586642669394391,
+      "relativeStrength": 3.9007629134479433,
+      "rsi": 69.87709362086804,
+      "aboveVwap": true,
+      "priceChangePercent": 3.5420986465085043,
+      "moveToAtrRatio": 0.628,
+      "entryPrice": 626.65,
+      "stopPrice": 595.9128,
+      "stopDistancePct": 4.91,
+      "targetT1": 657.3872,
+      "targetT2": 688.1243,
+      "targetT3": null,
+      "swingTrailPct": null,
+      "averageDollarVolume": null,
+      "positionDollars": 645,
+      "riskDollars": 31.64,
+      "riskPctOfCapital": 0.35,
+      "expectedReturnDollars": 63.27,
+      "riskRewardRatio": 2,
+      "sizingBreakdown": {
+        "effectiveCapital": 9039.27,
+        "baseRiskPct": 0.005,
+        "drawdownMultiplier": 1,
+        "volatilityMultiplier": 0.7,
+        "discoveryMultiplier": 1,
+        "symbolMultiplier": 1
+      },
+      "plannedAt": "2026-10-29T16:40:58.783Z",
+      "dipEntry": {
+        "signalPrice": 634.185,
+        "triggerPrice": 626.8893,
+        "armedAt": "2026-10-29T16:41:01.396Z",
+        "minutesWaited": 59
+      }
+    },
+    "entryConditions": {
+      "tradeType": "DAY",
+      "downgradedFromSwing": false,
+      "score": 85.76959586156804,
+      "regime": "TRENDING",
+      "spyChangePercent": -0.3586642669394391,
+      "relativeStrength": 3.9007629134479433,
+      "rsi": 69.87709362086804,
+      "aboveVwap": true,
+      "atrPercent": 5.64,
+      "volatilityBucket": "HIGH",
+      "entryHourET": 13,
+      "priceChangePercent": 3.5420986465085043,
+      "moveToAtrRatio": 0.628,
+      "sectorBucket": "mega_cap",
+      "sizeMultiplier": 1,
+      "filtersActive": {
+        "minEntryScore": 80,
+        "maxEntryAtrPct": 7,
+        "prefilterMinMovePct": 1,
+        "minMoveToAtrRatio": 0,
+        "overnightDeadZone": true
+      }
+    },
+    "confirmedInPortfolioAt": "2026-10-29T17:41:02.312Z"
+  }
+}

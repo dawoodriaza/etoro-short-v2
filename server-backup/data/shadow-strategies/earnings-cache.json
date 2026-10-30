@@ -1,7 +1,40 @@
 {
- "at": "2026-10-29T05:32:41.696Z",
- "note": "22 watchlist reports since 2026-10-08",
+ "at": "2026-10-30T05:33:11.989Z",
+ "note": "25 watchlist reports since 2026-10-09",
  "rows": [
+  {
+   "symbol": "ABBV",
+   "date": "2026-10-30",
+   "hour": "bmo",
+   "quarter": 3,
+   "year": 2026,
+   "epsEstimate": 3.8259,
+   "epsActual": null,
+   "revenueEstimate": 17664390304,
+   "revenueActual": null
+  },
+  {
+   "symbol": "CVX",
+   "date": "2026-10-30",
+   "hour": "bmo",
+   "quarter": 3,
+   "year": 2026,
+   "epsEstimate": 4.9317,
+   "epsActual": null,
+   "revenueEstimate": 61724979773,
+   "revenueActual": null
+  },
+  {
+   "symbol": "XOM",
+   "date": "2026-10-30",
+   "hour": "bmo",
+   "quarter": 3,
+   "year": 2026,
+   "epsEstimate": 4.1205,
+   "epsActual": null,
+   "revenueEstimate": 104506896295,
+   "revenueActual": null
+  },
   {
    "symbol": "AMZN",
    "date": "2026-10-29",
@@ -9,9 +42,9 @@
    "quarter": 3,
    "year": 2026,
    "epsEstimate": 2.001,
-   "epsActual": null,
+   "epsActual": 1.89,
    "revenueEstimate": 206288109339,
-   "revenueActual": null
+   "revenueActual": 201944000000
   },
   {
    "symbol": "CAT",
@@ -20,9 +53,9 @@
    "quarter": 3,
    "year": 2026,
    "epsEstimate": 7.1552,
-   "epsActual": null,
+   "epsActual": 7.2,
    "revenueEstimate": 20750271987,
-   "revenueActual": null
+   "revenueActual": 20682000000
   },
   {
    "symbol": "LIN",
@@ -31,9 +64,9 @@
    "quarter": 3,
    "year": 2026,
    "epsEstimate": 4.5612,
-   "epsActual": null,
+   "epsActual": 4.59,
    "revenueEstimate": 9231276204,
-   "revenueActual": null
+   "revenueActual": 9404000000
   },
   {
    "symbol": "LLY",
@@ -42,9 +75,9 @@
    "quarter": 3,
    "year": 2026,
    "epsEstimate": 6.6112,
-   "epsActual": null,
+   "epsActual": 7.48,
    "revenueEstimate": 22835267820,
-   "revenueActual": null
+   "revenueActual": 24397000000
   },
   {
    "symbol": "RDDT",
@@ -53,9 +86,9 @@
    "quarter": 3,
    "year": 2026,
    "epsEstimate": 1.3747,
-   "epsActual": null,
+   "epsActual": 1.4,
    "revenueEstimate": 895533367,
-   "revenueActual": null
+   "revenueActual": 894960000
   },
   {
    "symbol": "F",

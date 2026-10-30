@@ -1,7 +1,7 @@
 {
  "book": "DIP_IN_UPTREND",
  "createdAt": "2026-10-22T13:40:53.187Z",
- "lastProcessedSession": "2026-10-28",
+ "lastProcessedSession": "2026-10-29",
  "lastRebalanceWeek": null,
  "open": {
   "SNAP": {
@@ -13,12 +13,12 @@
    "size": 255.9,
    "riskDollars": 50,
    "peak": 6.13,
-   "trough": 5.85,
-   "heldSessions": 1,
+   "trough": 5.61,
+   "heldSessions": 2,
    "signal": "2-day RSI 7.5 while above the 100-day average $5.29",
    "signalDate": "2026-10-27",
-   "lastClose": 5.94,
-   "lastDate": "2026-10-28"
+   "lastClose": 5.66,
+   "lastDate": "2026-10-29"
   }
  },
  "pending": [],
@@ -77,6 +77,12 @@
    "date": "2026-10-28",
    "realized": 18.01,
    "unrealized": -2.98,
+   "open": 1
+  },
+  {
+   "date": "2026-10-29",
+   "realized": 18.01,
+   "unrealized": -14.9,
    "open": 1
   }
  ]

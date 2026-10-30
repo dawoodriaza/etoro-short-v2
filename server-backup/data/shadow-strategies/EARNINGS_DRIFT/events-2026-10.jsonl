@@ -4,3 +4,4 @@
 {"ts":"2026-10-28T05:31:50.547Z","book":"EARNINGS_DRIFT","event":"SIGNAL","date":"2026-10-27","symbol":"UPS","reason":"earnings 2026-10-27 (bmo): +6.09% on the reaction day, EPS 1.69 vs 1.6417","rank":0.061}
 {"ts":"2026-10-29T05:32:41.716Z","book":"EARNINGS_DRIFT","event":"ENTRY","symbol":"SOFI","date":"2026-10-28","entry":16.54,"stop":15.68,"size":961.63,"signal":"earnings 2026-10-27 (bmo): +13.72% on the reaction day, EPS 0.18 vs 0.1701"}
 {"ts":"2026-10-29T05:32:41.716Z","book":"EARNINGS_DRIFT","event":"ENTRY","symbol":"UPS","date":"2026-10-28","entry":105.07,"stop":99.53,"size":948.29,"signal":"earnings 2026-10-27 (bmo): +6.09% on the reaction day, EPS 1.69 vs 1.6417"}
+{"ts":"2026-10-30T05:33:12.002Z","book":"EARNINGS_DRIFT","event":"SIGNAL","date":"2026-10-29","symbol":"LLY","reason":"earnings 2026-10-29 (bmo): +6.36% on the reaction day, EPS 7.48 vs 6.6112","rank":0.064}

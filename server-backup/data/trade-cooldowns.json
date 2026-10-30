@@ -184,9 +184,9 @@
     "scoreAtExit": 90.46858768818103
   },
   "NKE": {
-    "exitAtMs": 1792179904776,
-    "wasLoss": true,
-    "scoreAtExit": 88.76509387015508
+    "exitAtMs": 1793299082842,
+    "wasLoss": false,
+    "scoreAtExit": 81.14535492737792
   },
   "HD": {
     "exitAtMs": 1792509181279,
@@ -249,9 +249,9 @@
     "scoreAtExit": 89.11404775291325
   },
   "F": {
-    "exitAtMs": 1792179822691,
+    "exitAtMs": 1793303102801,
     "wasLoss": true,
-    "scoreAtExit": 82.2083517088803
+    "scoreAtExit": 84.03146984871351
   },
   "AA": {
     "exitAtMs": 1792179902361,
@@ -287,5 +287,10 @@
     "exitAtMs": 1793216701334,
     "wasLoss": true,
     "scoreAtExit": 89.4734869012522
+  },
+  "ICLR": {
+    "exitAtMs": 1793292001865,
+    "wasLoss": false,
+    "scoreAtExit": 100
   }
 }
