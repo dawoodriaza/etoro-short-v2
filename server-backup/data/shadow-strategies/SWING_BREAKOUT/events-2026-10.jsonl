@@ -11,3 +11,6 @@
 {"ts":"2026-10-28T05:31:50.538Z","book":"SWING_BREAKOUT","event":"SIGNAL","date":"2026-10-27","symbol":"TSLA","reason":"closed $407.03 above the 20-day high $397.22; 50-day average rising","rank":0.599}
 {"ts":"2026-10-29T05:32:41.705Z","book":"SWING_BREAKOUT","event":"ENTRY","symbol":"TSLA","date":"2026-10-28","entry":410.1,"stop":376.55287142857145,"size":611.23,"signal":"closed $407.03 above the 20-day high $397.22; 50-day average rising"}
 {"ts":"2026-10-30T05:33:11.996Z","book":"SWING_BREAKOUT","event":"SIGNAL","date":"2026-10-29","symbol":"LLY","reason":"closed $1372.36 above the 20-day high $1320.46; 50-day average rising","rank":1.043}
+{"ts":"2026-10-31T05:32:48.809Z","book":"SWING_BREAKOUT","event":"ENTRY","symbol":"LLY","date":"2026-10-30","entry":1422.06,"stop":1318.6271428571429,"size":687.43,"signal":"closed $1372.36 above the 20-day high $1320.46; 50-day average rising"}
+{"ts":"2026-10-31T05:32:48.813Z","book":"SWING_BREAKOUT","event":"SIGNAL_NO_SLOT","date":"2026-10-30","symbol":"CVX","reason":"closed $235.57 above the 20-day high $234.06; 50-day average rising","rank":0.252}
+{"ts":"2026-10-31T05:32:48.813Z","book":"SWING_BREAKOUT","event":"SIGNAL_NO_SLOT","date":"2026-10-30","symbol":"ABBV","reason":"closed $294.17 above the 20-day high $292.6; 50-day average rising","rank":0.143}

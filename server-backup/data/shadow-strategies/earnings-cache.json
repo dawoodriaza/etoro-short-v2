@@ -1,6 +1,6 @@
 {
- "at": "2026-10-30T05:33:11.989Z",
- "note": "25 watchlist reports since 2026-10-09",
+ "at": "2026-10-31T05:32:48.805Z",
+ "note": "25 watchlist reports since 2026-10-10",
  "rows": [
   {
    "symbol": "ABBV",
@@ -9,9 +9,9 @@
    "quarter": 3,
    "year": 2026,
    "epsEstimate": 3.8259,
-   "epsActual": null,
+   "epsActual": 3.82,
    "revenueEstimate": 17664390304,
-   "revenueActual": null
+   "revenueActual": 17404000000
   },
   {
    "symbol": "CVX",
@@ -20,9 +20,9 @@
    "quarter": 3,
    "year": 2026,
    "epsEstimate": 4.9317,
-   "epsActual": null,
+   "epsActual": 5.28,
    "revenueEstimate": 61724979773,
-   "revenueActual": null
+   "revenueActual": 67798000000
   },
   {
    "symbol": "XOM",
@@ -31,9 +31,9 @@
    "quarter": 3,
    "year": 2026,
    "epsEstimate": 4.1205,
-   "epsActual": null,
+   "epsActual": 4.23,
    "revenueEstimate": 104506896295,
-   "revenueActual": null
+   "revenueActual": 113164000000
   },
   {
    "symbol": "AMZN",

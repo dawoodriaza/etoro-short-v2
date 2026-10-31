@@ -1,7 +1,7 @@
 {
  "book": "ROTATION",
  "createdAt": "2026-10-22T13:40:53.189Z",
- "lastProcessedSession": "2026-10-29",
+ "lastProcessedSession": "2026-10-30",
  "lastRebalanceWeek": "2026-W44",
  "open": {
   "PLTR": {
@@ -13,12 +13,12 @@
    "size": 2000,
    "riskDollars": null,
    "peak": 202.42,
-   "trough": 190.37,
-   "heldSessions": 6,
+   "trough": 183.7,
+   "heldSessions": 7,
    "signal": "rank 1, 3-month return +49.42%",
    "signalDate": "2026-10-21",
-   "lastClose": 196.47,
-   "lastDate": "2026-10-29"
+   "lastClose": 184.16,
+   "lastDate": "2026-10-30"
   },
   "SHOP": {
    "symbol": "SHOP",
@@ -29,12 +29,12 @@
    "size": 2000,
    "riskDollars": null,
    "peak": 176.23,
-   "trough": 162.5,
-   "heldSessions": 6,
+   "trough": 154.25,
+   "heldSessions": 7,
    "signal": "rank 2, 3-month return +37.66%",
    "signalDate": "2026-10-21",
-   "lastClose": 166.92,
-   "lastDate": "2026-10-29"
+   "lastClose": 157.41,
+   "lastDate": "2026-10-30"
   },
   "CRM": {
    "symbol": "CRM",
@@ -46,11 +46,11 @@
    "riskDollars": null,
    "peak": 252.35,
    "trough": 225.04,
-   "heldSessions": 6,
+   "heldSessions": 7,
    "signal": "rank 3, 3-month return +37.43%",
    "signalDate": "2026-10-21",
-   "lastClose": 230.79,
-   "lastDate": "2026-10-29"
+   "lastClose": 228.49,
+   "lastDate": "2026-10-30"
   },
   "MSFT": {
    "symbol": "MSFT",
@@ -61,12 +61,12 @@
    "size": 2000,
    "riskDollars": null,
    "peak": 540.3,
-   "trough": 515.7,
-   "heldSessions": 6,
+   "trough": 514.43,
+   "heldSessions": 7,
    "signal": "rank 4, 3-month return +33.14%",
    "signalDate": "2026-10-21",
-   "lastClose": 530.24,
-   "lastDate": "2026-10-29"
+   "lastClose": 521.84,
+   "lastDate": "2026-10-30"
   },
   "SNAP": {
    "symbol": "SNAP",
@@ -77,12 +77,12 @@
    "size": 2000,
    "riskDollars": null,
    "peak": 6.34,
-   "trough": 5.61,
-   "heldSessions": 3,
+   "trough": 5.21,
+   "heldSessions": 4,
    "signal": "rank 4, 3-month return +37.36%",
    "signalDate": "2026-10-26",
-   "lastClose": 5.66,
-   "lastDate": "2026-10-29"
+   "lastClose": 5.35,
+   "lastDate": "2026-10-30"
   }
  },
  "pending": [],
@@ -147,6 +147,12 @@
    "date": "2026-10-29",
    "realized": 47.62,
    "unrealized": -445.46,
+   "open": 5
+  },
+  {
+   "date": "2026-10-30",
+   "realized": 47.62,
+   "unrealized": -826.16,
    "open": 5
   }
  ]

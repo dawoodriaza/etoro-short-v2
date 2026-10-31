@@ -3,3 +3,5 @@
 {"ts":"2026-10-27T05:31:06.113Z","book":"DIP_IN_UPTREND","event":"EXIT","symbol":"MSFT","entryDate":"2026-10-23","entry":517.81,"exitDate":"2026-10-26","exit":532.52,"reason":"CLOSE_ABOVE_5DAY_AVG","size":657.25,"pnl":18.01,"pnlPct":2.84,"heldSessions":2,"peakPct":2.97,"troughPct":-0.41,"riskDollars":50,"r":0.36,"signal":"2-day RSI 5 while above the 100-day average $458.01"}
 {"ts":"2026-10-28T05:31:50.543Z","book":"DIP_IN_UPTREND","event":"SIGNAL","date":"2026-10-27","symbol":"SNAP","reason":"2-day RSI 7.5 while above the 100-day average $5.29","rank":2.536}
 {"ts":"2026-10-29T05:32:41.711Z","book":"DIP_IN_UPTREND","event":"ENTRY","symbol":"SNAP","date":"2026-10-28","entry":6.01,"stop":4.835714285714285,"size":255.9,"signal":"2-day RSI 7.5 while above the 100-day average $5.29"}
+{"ts":"2026-10-31T05:32:48.818Z","book":"DIP_IN_UPTREND","event":"SIGNAL","date":"2026-10-30","symbol":"PLTR","reason":"2-day RSI 1.8 while above the 100-day average $162.29","rank":8.217}
+{"ts":"2026-10-31T05:32:48.818Z","book":"DIP_IN_UPTREND","event":"SIGNAL","date":"2026-10-30","symbol":"SHOP","reason":"2-day RSI 6.2 while above the 100-day average $139.05","rank":3.803}
