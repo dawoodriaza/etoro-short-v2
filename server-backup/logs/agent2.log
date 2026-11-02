@@ -40456,3 +40456,18 @@
 [2026-10-31 06:50:00] [INFO ] Market closed — skipping scan (6:50:00 AM Bahrain)
 [2026-10-31 08:10:40] [INFO ] Price stream disconnected — reconnecting in 30s (1-min exit monitor unaffected)
 [2026-10-31 08:11:11] [INFO ] 📶 Price stream connected — real-time exit watchdog live for 0 position(s)
+[2026-10-31 10:06:05] [INFO ] Price stream disconnected — reconnecting in 30s (1-min exit monitor unaffected)
+[2026-10-31 10:06:36] [INFO ] 📶 Price stream connected — real-time exit watchdog live for 0 position(s)
+[2026-10-31 12:58:38] [WARN ] Telegram polling: EFATAL
+[2026-10-31 13:14:18] [INFO ] Price stream disconnected — reconnecting in 30s (1-min exit monitor unaffected)
+[2026-10-31 13:14:49] [INFO ] 📶 Price stream connected — real-time exit watchdog live for 0 position(s)
+[2026-10-31 23:24:19] [INFO ] Price stream disconnected — reconnecting in 30s (1-min exit monitor unaffected)
+[2026-10-31 23:24:50] [INFO ] 📶 Price stream connected — real-time exit watchdog live for 0 position(s)
+[2026-11-02 05:03:12] [INFO ] Price stream disconnected — reconnecting in 30s (1-min exit monitor unaffected)
+[2026-11-02 05:03:43] [INFO ] 📶 Price stream connected — real-time exit watchdog live for 0 position(s)
+[2026-11-02 08:00:00] [INFO ] 🌙 Overnight freeze active (08:00-12:00 Bahrain, tracks 00:00-04:00 ET) — skipping new-trade scan (8:00:00 AM Bahrain). Exit management is unaffected — stops/exits keep running on the 1-minute tick.
+[2026-11-02 08:10:00] [INFO ] 🌙 Overnight freeze active (08:00-12:00 Bahrain, tracks 00:00-04:00 ET) — skipping new-trade scan (8:10:00 AM Bahrain). Exit management is unaffected — stops/exits keep running on the 1-minute tick.
+[2026-11-02 08:20:00] [INFO ] 🌙 Overnight freeze active (08:00-12:00 Bahrain, tracks 00:00-04:00 ET) — skipping new-trade scan (8:20:00 AM Bahrain). Exit management is unaffected — stops/exits keep running on the 1-minute tick.
+[2026-11-02 08:30:00] [INFO ] 🌙 Overnight freeze active (08:00-12:00 Bahrain, tracks 00:00-04:00 ET) — skipping new-trade scan (8:30:00 AM Bahrain). Exit management is unaffected — stops/exits keep running on the 1-minute tick.
+[2026-11-02 08:40:00] [INFO ] 🌙 Overnight freeze active (08:00-12:00 Bahrain, tracks 00:00-04:00 ET) — skipping new-trade scan (8:40:00 AM Bahrain). Exit management is unaffected — stops/exits keep running on the 1-minute tick.
+[2026-11-02 08:50:00] [INFO ] 🌙 Overnight freeze active (08:00-12:00 Bahrain, tracks 00:00-04:00 ET) — skipping new-trade scan (8:50:00 AM Bahrain). Exit management is unaffected — stops/exits keep running on the 1-minute tick.
