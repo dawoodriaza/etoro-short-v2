@@ -5,9 +5,9 @@
     "scoreAtExit": 100
   },
   "RIVN": {
-    "exitAtMs": 1787664762415,
+    "exitAtMs": 1793652307647,
     "wasLoss": true,
-    "scoreAtExit": 85.46394677972683
+    "scoreAtExit": 100
   },
   "ASML": {
     "exitAtMs": 1792604042220,
@@ -77,9 +77,9 @@
   },
   "DKNG": 1784057159494,
   "SNAP": {
-    "exitAtMs": 1790785743240,
-    "wasLoss": false,
-    "scoreAtExit": 100
+    "exitAtMs": 1793652302517,
+    "wasLoss": true,
+    "scoreAtExit": 85.53559690707726
   },
   "MSFT": {
     "exitAtMs": 1785440704086,
@@ -97,9 +97,9 @@
     "scoreAtExit": 92.79867568149187
   },
   "AFRM": {
-    "exitAtMs": 1791291721452,
-    "wasLoss": false,
-    "scoreAtExit": 95.3808739027023
+    "exitAtMs": 1793652304875,
+    "wasLoss": true,
+    "scoreAtExit": 95.21956845463981
   },
   "GOOGL": {
     "exitAtMs": 1785744542071,
@@ -164,9 +164,9 @@
     "scoreAtExit": 75.89491011137451
   },
   "SOUN": {
-    "exitAtMs": 1787841303287,
-    "wasLoss": false,
-    "scoreAtExit": 94.69308504486297
+    "exitAtMs": 1793652122980,
+    "wasLoss": true,
+    "scoreAtExit": 96.95570124102329
   },
   "CRM": {
     "exitAtMs": 1792685162662,
@@ -184,9 +184,9 @@
     "scoreAtExit": 90.46858768818103
   },
   "NKE": {
-    "exitAtMs": 1793299082842,
+    "exitAtMs": 1793636341475,
     "wasLoss": false,
-    "scoreAtExit": 81.14535492737792
+    "scoreAtExit": 81.9159204697033
   },
   "HD": {
     "exitAtMs": 1792509181279,

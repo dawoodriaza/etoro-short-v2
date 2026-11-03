@@ -1,8 +1,140 @@
-[2026-11-02 05:03:12] [[32MINFO[39M] Price stream disconnected — reconnecting in 30s (1-min exit monitor unaffected)
-[2026-11-02 05:03:43] [[32MINFO[39M] 📶 Price stream connected — real-time exit watchdog live for 0 position(s)
-[2026-11-02 08:00:00] [[32MINFO[39M] 🌙 Overnight freeze active (08:00-12:00 Bahrain, tracks 00:00-04:00 ET) — skipping new-trade scan (8:00:00 AM Bahrain). Exit management is unaffected — stops/exits keep running on the 1-minute tick.
-[2026-11-02 08:10:00] [[32MINFO[39M] 🌙 Overnight freeze active (08:00-12:00 Bahrain, tracks 00:00-04:00 ET) — skipping new-trade scan (8:10:00 AM Bahrain). Exit management is unaffected — stops/exits keep running on the 1-minute tick.
-[2026-11-02 08:20:00] [[32MINFO[39M] 🌙 Overnight freeze active (08:00-12:00 Bahrain, tracks 00:00-04:00 ET) — skipping new-trade scan (8:20:00 AM Bahrain). Exit management is unaffected — stops/exits keep running on the 1-minute tick.
-[2026-11-02 08:30:00] [[32MINFO[39M] 🌙 Overnight freeze active (08:00-12:00 Bahrain, tracks 00:00-04:00 ET) — skipping new-trade scan (8:30:00 AM Bahrain). Exit management is unaffected — stops/exits keep running on the 1-minute tick.
-[2026-11-02 08:40:00] [[32MINFO[39M] 🌙 Overnight freeze active (08:00-12:00 Bahrain, tracks 00:00-04:00 ET) — skipping new-trade scan (8:40:00 AM Bahrain). Exit management is unaffected — stops/exits keep running on the 1-minute tick.
-[2026-11-02 08:50:00] [[32MINFO[39M] 🌙 Overnight freeze active (08:00-12:00 Bahrain, tracks 00:00-04:00 ET) — skipping new-trade scan (8:50:00 AM Bahrain). Exit management is unaffected — stops/exits keep running on the 1-minute tick.
+[2026-11-03 03:10:00] [[32MINFO[39M] ═══ Scan start (3:10:00 AM Bahrain) ═══
+[2026-11-03 03:10:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-11-03 03:10:00] [[32MINFO[39M] VIX (FRED, 2026-10-30, 3 days old): 19.42
+[2026-11-03 03:10:00] [[32MINFO[39M] Market regime: CHOP (SPY range 0.30% after 390 min → projected full-day 0.30% vs 0.50% threshold, VIX-tightened)
+[2026-11-03 03:10:00] [[32MINFO[39M] 🌙 Overnight (24/5): scanning 20 night-eligible name(s); discovery paused until the regular session
+[2026-11-03 03:10:01] [[32MINFO[39M] 📶 Quotes: 20/20 from eToro (1 batched rates call + cached closing-price)
+[2026-11-03 03:10:01] [[32MINFO[39M] [3:10:01 AM Bahrain] 📡 Pre-filter: 14 stocks moving enough to enrich
+[2026-11-03 03:10:01] [[32MINFO[39M] 🔄 Sector rotation: energy -3.96%, semi -3.86%, financials +1.81%, fintech +1.81%, industrials +1.39%, consumer +2.30%
+[2026-11-03 03:10:01] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-11-03 03:10:21] [[32MINFO[39M] No candidates passed scoring
+[2026-11-03 03:10:21] [[32MINFO[39M] 🧮 Funnel: 20 quoted → 14 moving → 11 eligible [STALE_QUOTE 3] → 0 scored [below VWAP 9, ATR ceiling 2] → 0 plans → AI 0/0 take → 0 opened
+[2026-11-03 03:20:00] [[32MINFO[39M] 😴 Adaptive skip: CHOP + flat book + calm SPY — next full scan in ~11 min (saving API credits)
+[2026-11-03 03:30:00] [[32MINFO[39M] 😴 Adaptive skip: CHOP + flat book + calm SPY — next full scan in ~1 min (saving API credits)
+[2026-11-03 03:40:00] [[32MINFO[39M] ═══ Scan start (3:40:00 AM Bahrain) ═══
+[2026-11-03 03:40:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-11-03 03:40:00] [[32MINFO[39M] VIX (FRED, 2026-10-30, 3 days old): 19.42
+[2026-11-03 03:40:00] [[32MINFO[39M] Market regime: CHOP (SPY range 0.30% after 390 min → projected full-day 0.30% vs 0.50% threshold, VIX-tightened)
+[2026-11-03 03:40:00] [[32MINFO[39M] 🌙 Overnight (24/5): scanning 20 night-eligible name(s); discovery paused until the regular session
+[2026-11-03 03:40:01] [[32MINFO[39M] 📶 Quotes: 20/20 from eToro (1 batched rates call + cached closing-price)
+[2026-11-03 03:40:01] [[32MINFO[39M] [3:40:01 AM Bahrain] 📡 Pre-filter: 14 stocks moving enough to enrich
+[2026-11-03 03:40:01] [[32MINFO[39M] 🔄 Sector rotation: energy -3.96%, semi -3.86%, financials +1.81%, fintech +1.81%, industrials +1.39%, consumer +2.37%
+[2026-11-03 03:40:01] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-11-03 03:40:20] [[32MINFO[39M] No candidates passed scoring
+[2026-11-03 03:40:20] [[32MINFO[39M] 🧮 Funnel: 20 quoted → 14 moving → 10 eligible [STALE_QUOTE 4] → 0 scored [below VWAP 8, ATR ceiling 1, weak RS 1] → 0 plans → AI 0/0 take → 0 opened
+[2026-11-03 03:50:00] [[32MINFO[39M] 😴 Adaptive skip: CHOP + flat book + calm SPY — next full scan in ~11 min (saving API credits)
+[2026-11-03 04:00:00] [[32MINFO[39M] 😴 Adaptive skip: CHOP + flat book + calm SPY — next full scan in ~1 min (saving API credits)
+[2026-11-03 04:10:00] [[32MINFO[39M] ═══ Scan start (4:10:00 AM Bahrain) ═══
+[2026-11-03 04:10:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-11-03 04:10:00] [[32MINFO[39M] VIX (FRED, 2026-10-30, 3 days old): 19.42
+[2026-11-03 04:10:00] [[32MINFO[39M] Market regime: CHOP (SPY range 0.30% after 390 min → projected full-day 0.30% vs 0.50% threshold, VIX-tightened)
+[2026-11-03 04:10:00] [[32MINFO[39M] 🌙 Overnight (24/5): scanning 20 night-eligible name(s); discovery paused until the regular session
+[2026-11-03 04:10:00] [[32MINFO[39M] 📶 Quotes: 20/20 from eToro (1 batched rates call + cached closing-price)
+[2026-11-03 04:10:00] [[32MINFO[39M] [4:10:00 AM Bahrain] 📡 Pre-filter: 15 stocks moving enough to enrich
+[2026-11-03 04:10:01] [[32MINFO[39M] 🔄 Sector rotation: energy -3.96%, semi -3.86%, financials +1.81%, fintech +1.81%, industrials +1.39%, consumer +2.37%
+[2026-11-03 04:10:01] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-11-03 04:10:17] [[32MINFO[39M] No candidates passed scoring
+[2026-11-03 04:10:17] [[32MINFO[39M] 🧮 Funnel: 20 quoted → 15 moving → 9 eligible [STALE_QUOTE 6] → 0 scored [below VWAP 6, ATR ceiling 2, weak RS 1] → 0 plans → AI 0/0 take → 0 opened
+[2026-11-03 04:20:00] [[32MINFO[39M] 😴 Adaptive skip: CHOP + flat book + calm SPY — next full scan in ~11 min (saving API credits)
+[2026-11-03 04:30:00] [[32MINFO[39M] 😴 Adaptive skip: CHOP + flat book + calm SPY — next full scan in ~1 min (saving API credits)
+[2026-11-03 04:40:00] [[32MINFO[39M] ═══ Scan start (4:40:00 AM Bahrain) ═══
+[2026-11-03 04:40:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-11-03 04:40:00] [[32MINFO[39M] VIX (FRED, 2026-10-30, 3 days old): 19.42
+[2026-11-03 04:40:00] [[32MINFO[39M] Market regime: CHOP (SPY range 0.30% after 390 min → projected full-day 0.30% vs 0.50% threshold, VIX-tightened)
+[2026-11-03 04:40:00] [[32MINFO[39M] 🌙 Overnight (24/5): scanning 20 night-eligible name(s); discovery paused until the regular session
+[2026-11-03 04:40:00] [[32MINFO[39M] 📶 Quotes: 20/20 from eToro (1 batched rates call + cached closing-price)
+[2026-11-03 04:40:00] [[32MINFO[39M] [4:40:00 AM Bahrain] 📡 Pre-filter: 12 stocks moving enough to enrich
+[2026-11-03 04:40:01] [[32MINFO[39M] 🔄 Sector rotation: energy -3.96%, semi -3.86%, financials +1.81%, fintech +1.81%, industrials +1.39%, consumer +2.37%
+[2026-11-03 04:40:01] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-11-03 04:40:21] [[32MINFO[39M] No candidates passed scoring
+[2026-11-03 04:40:21] [[32MINFO[39M] 🧮 Funnel: 20 quoted → 12 moving → 11 eligible [STALE_QUOTE 1] → 0 scored [below VWAP 6, weak RS 4, ATR ceiling 1] → 0 plans → AI 0/0 take → 0 opened
+[2026-11-03 04:50:00] [[32MINFO[39M] 😴 Adaptive skip: CHOP + flat book + calm SPY — next full scan in ~11 min (saving API credits)
+[2026-11-03 05:00:00] [[32MINFO[39M] 😴 Adaptive skip: CHOP + flat book + calm SPY — next full scan in ~1 min (saving API credits)
+[2026-11-03 05:10:00] [[32MINFO[39M] ═══ Scan start (5:10:00 AM Bahrain) ═══
+[2026-11-03 05:10:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-11-03 05:10:00] [[32MINFO[39M] VIX (FRED, 2026-10-30, 3 days old): 19.42
+[2026-11-03 05:10:00] [[32MINFO[39M] Market regime: CHOP (SPY range 0.30% after 390 min → projected full-day 0.30% vs 0.50% threshold, VIX-tightened)
+[2026-11-03 05:10:00] [[32MINFO[39M] 🌙 Overnight (24/5): scanning 20 night-eligible name(s); discovery paused until the regular session
+[2026-11-03 05:10:00] [[32MINFO[39M] 📶 Quotes: 20/20 from eToro (1 batched rates call + cached closing-price)
+[2026-11-03 05:10:00] [[32MINFO[39M] [5:10:00 AM Bahrain] 📡 Pre-filter: 13 stocks moving enough to enrich
+[2026-11-03 05:10:01] [[32MINFO[39M] 🔄 Sector rotation: energy -3.96%, semi -3.86%, financials +1.81%, fintech +1.81%, industrials +1.39%, consumer +2.37%
+[2026-11-03 05:10:01] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-11-03 05:10:22] [[32MINFO[39M] No candidates passed scoring
+[2026-11-03 05:10:22] [[32MINFO[39M] 🧮 Funnel: 20 quoted → 13 moving → 12 eligible [STALE_QUOTE 1] → 0 scored [below VWAP 6, weak RS 4, ATR ceiling 2] → 0 plans → AI 0/0 take → 0 opened
+[2026-11-03 05:20:00] [[32MINFO[39M] 😴 Adaptive skip: CHOP + flat book + calm SPY — next full scan in ~11 min (saving API credits)
+[2026-11-03 05:30:00] [[32MINFO[39M] 😴 Adaptive skip: CHOP + flat book + calm SPY — next full scan in ~1 min (saving API credits)
+[2026-11-03 05:40:00] [[32MINFO[39M] ═══ Scan start (5:40:00 AM Bahrain) ═══
+[2026-11-03 05:40:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-11-03 05:40:00] [[32MINFO[39M] VIX (FRED, 2026-10-30, 3 days old): 19.42
+[2026-11-03 05:40:00] [[32MINFO[39M] Market regime: CHOP (SPY range 0.30% after 390 min → projected full-day 0.30% vs 0.50% threshold, VIX-tightened)
+[2026-11-03 05:40:00] [[32MINFO[39M] 🌙 Overnight (24/5): scanning 20 night-eligible name(s); discovery paused until the regular session
+[2026-11-03 05:40:00] [[32MINFO[39M] 📶 Quotes: 20/20 from eToro (1 batched rates call + cached closing-price)
+[2026-11-03 05:40:00] [[32MINFO[39M] [5:40:00 AM Bahrain] 📡 Pre-filter: 14 stocks moving enough to enrich
+[2026-11-03 05:40:01] [[32MINFO[39M] 🔄 Sector rotation: energy -3.96%, semi -3.86%, financials +1.81%, fintech +1.81%, industrials +1.39%, consumer +2.37%
+[2026-11-03 05:40:01] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-11-03 05:40:20] [[32MINFO[39M] No candidates passed scoring
+[2026-11-03 05:40:20] [[32MINFO[39M] 🧮 Funnel: 20 quoted → 14 moving → 11 eligible [STALE_QUOTE 3] → 0 scored [weak RS 4, below VWAP 4, ATR ceiling 2, no setup 1] → 0 plans → AI 0/0 take → 0 opened
+[2026-11-03 05:50:00] [[32MINFO[39M] 😴 Adaptive skip: CHOP + flat book + calm SPY — next full scan in ~11 min (saving API credits)
+[2026-11-03 06:00:00] [[32MINFO[39M] 😴 Adaptive skip: CHOP + flat book + calm SPY — next full scan in ~1 min (saving API credits)
+[2026-11-03 06:10:00] [[32MINFO[39M] ═══ Scan start (6:10:00 AM Bahrain) ═══
+[2026-11-03 06:10:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-11-03 06:10:02] [[32MINFO[39M] eToro closing-price cache refreshed: 16686 instruments (next refresh in 6h)
+[2026-11-03 06:10:02] [[32MINFO[39M] VIX (FRED, 2026-10-30, 3 days old): 19.42
+[2026-11-03 06:10:02] [[32MINFO[39M] Market regime: CHOP (SPY range 0.30% after 390 min → projected full-day 0.30% vs 0.50% threshold, VIX-tightened)
+[2026-11-03 06:10:02] [[32MINFO[39M] 🌙 Overnight (24/5): scanning 20 night-eligible name(s); discovery paused until the regular session
+[2026-11-03 06:10:02] [[32MINFO[39M] 📶 Quotes: 20/20 from eToro (1 batched rates call + cached closing-price)
+[2026-11-03 06:10:02] [[32MINFO[39M] [6:10:02 AM Bahrain] 📡 Pre-filter: 8 stocks moving enough to enrich
+[2026-11-03 06:10:02] [[32MINFO[39M] 🔄 Sector rotation: energy -3.96%, semi -3.86%, financials +1.81%, fintech +1.81%, industrials +1.39%, consumer +2.37%
+[2026-11-03 06:10:02] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-11-03 06:10:11] [[32MINFO[39M] No candidates passed scoring
+[2026-11-03 06:10:11] [[32MINFO[39M] 🧮 Funnel: 20 quoted → 8 moving → 5 eligible [STALE_QUOTE 3] → 0 scored [no setup 2, below VWAP 2, ATR ceiling 1] → 0 plans → AI 0/0 take → 0 opened
+[2026-11-03 06:20:00] [[32MINFO[39M] 😴 Adaptive skip: CHOP + flat book + calm SPY — next full scan in ~11 min (saving API credits)
+[2026-11-03 06:30:00] [[32MINFO[39M] 😴 Adaptive skip: CHOP + flat book + calm SPY — next full scan in ~1 min (saving API credits)
+[2026-11-03 06:40:00] [[32MINFO[39M] ═══ Scan start (6:40:00 AM Bahrain) ═══
+[2026-11-03 06:40:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-11-03 06:40:02] [[32MINFO[39M] VIX (FRED, 2026-10-30, 3 days old): 19.42
+[2026-11-03 06:40:02] [[32MINFO[39M] Market regime: CHOP (SPY range 0.30% after 390 min → projected full-day 0.30% vs 0.50% threshold, VIX-tightened)
+[2026-11-03 06:40:02] [[32MINFO[39M] 🌙 Overnight (24/5): scanning 20 night-eligible name(s); discovery paused until the regular session
+[2026-11-03 06:40:02] [[32MINFO[39M] 📶 Quotes: 20/20 from eToro (1 batched rates call + cached closing-price)
+[2026-11-03 06:40:02] [[32MINFO[39M] [6:40:02 AM Bahrain] 📡 Pre-filter: 7 stocks moving enough to enrich
+[2026-11-03 06:40:02] [[32MINFO[39M] 🔄 Sector rotation: energy -3.96%, semi -3.86%, financials +1.81%, fintech +1.81%, industrials +1.39%, consumer +2.37%
+[2026-11-03 06:40:02] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-11-03 06:40:10] [[32MINFO[39M] No candidates passed scoring
+[2026-11-03 06:40:10] [[32MINFO[39M] 🧮 Funnel: 20 quoted → 7 moving → 4 eligible [STALE_QUOTE 3] → 0 scored [below VWAP 2, no setup 1, ATR ceiling 1] → 0 plans → AI 0/0 take → 0 opened
+[2026-11-03 06:50:00] [[32MINFO[39M] 😴 Adaptive skip: CHOP + flat book + calm SPY — next full scan in ~11 min (saving API credits)
+[2026-11-03 07:00:00] [[32MINFO[39M] 😴 Adaptive skip: CHOP + flat book + calm SPY — next full scan in ~1 min (saving API credits)
+[2026-11-03 07:10:00] [[32MINFO[39M] ═══ Scan start (7:10:00 AM Bahrain) ═══
+[2026-11-03 07:10:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-11-03 07:10:00] [[32MINFO[39M] VIX (FRED, 2026-10-30, 3 days old): 19.42
+[2026-11-03 07:10:00] [[32MINFO[39M] Market regime: CHOP (SPY range 0.32% after 390 min → projected full-day 0.32% vs 0.50% threshold, VIX-tightened)
+[2026-11-03 07:10:00] [[32MINFO[39M] 🌙 Overnight (24/5): scanning 20 night-eligible name(s); discovery paused until the regular session
+[2026-11-03 07:10:01] [[32MINFO[39M] 📶 Quotes: 20/20 from eToro (1 batched rates call + cached closing-price)
+[2026-11-03 07:10:01] [[32MINFO[39M] [7:10:01 AM Bahrain] 📡 Pre-filter: 4 stocks moving enough to enrich
+[2026-11-03 07:10:01] [[32MINFO[39M] 🔄 Sector rotation: energy -3.96%, semi -3.86%, financials +1.81%, fintech +1.81%, industrials +1.39%, consumer +2.37%
+[2026-11-03 07:10:01] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-11-03 07:10:08] [[32MINFO[39M] No candidates passed scoring
+[2026-11-03 07:10:08] [[32MINFO[39M] 🧮 Funnel: 20 quoted → 4 moving → 4 eligible → 0 scored [below VWAP 2, no setup 1, ATR ceiling 1] → 0 plans → AI 0/0 take → 0 opened
+[2026-11-03 07:20:00] [[32MINFO[39M] 😴 Adaptive skip: CHOP + flat book + calm SPY — next full scan in ~11 min (saving API credits)
+[2026-11-03 07:30:00] [[32MINFO[39M] 😴 Adaptive skip: CHOP + flat book + calm SPY — next full scan in ~1 min (saving API credits)
+[2026-11-03 07:40:00] [[32MINFO[39M] ═══ Scan start (7:40:00 AM Bahrain) ═══
+[2026-11-03 07:40:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-11-03 07:40:00] [[32MINFO[39M] VIX (FRED, 2026-10-30, 3 days old): 19.42
+[2026-11-03 07:40:00] [[32MINFO[39M] Market regime: CHOP (SPY range 0.32% after 390 min → projected full-day 0.32% vs 0.50% threshold, VIX-tightened)
+[2026-11-03 07:40:00] [[32MINFO[39M] 🌙 Overnight (24/5): scanning 20 night-eligible name(s); discovery paused until the regular session
+[2026-11-03 07:40:00] [[32MINFO[39M] 📶 Quotes: 20/20 from eToro (1 batched rates call + cached closing-price)
+[2026-11-03 07:40:00] [[32MINFO[39M] [7:40:00 AM Bahrain] 📡 Pre-filter: 4 stocks moving enough to enrich
+[2026-11-03 07:40:01] [[32MINFO[39M] 🔄 Sector rotation: energy -3.96%, semi -3.86%, financials +1.81%, fintech +1.81%, industrials +1.39%, consumer +2.37%
+[2026-11-03 07:40:01] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-11-03 07:40:08] [[32MINFO[39M] No candidates passed scoring
+[2026-11-03 07:40:08] [[32MINFO[39M] 🧮 Funnel: 20 quoted → 4 moving → 4 eligible → 0 scored [below VWAP 2, no setup 1, ATR ceiling 1] → 0 plans → AI 0/0 take → 0 opened
+[2026-11-03 07:50:00] [[32MINFO[39M] 😴 Adaptive skip: CHOP + flat book + calm SPY — next full scan in ~11 min (saving API credits)
+[2026-11-03 07:50:54] [[32MINFO[39M] Price stream disconnected — reconnecting in 30s (1-min exit monitor unaffected)
+[2026-11-03 07:51:25] [[32MINFO[39M] 📶 Price stream connected — real-time exit watchdog live for 0 position(s)
+[2026-11-03 08:00:00] [[32MINFO[39M] 😴 Adaptive skip: CHOP + flat book + calm SPY — next full scan in ~1 min (saving API credits)
+[2026-11-03 08:10:00] [[32MINFO[39M] 🌙 Overnight freeze active (08:00-12:00 Bahrain, tracks 00:00-04:00 ET) — skipping new-trade scan (8:10:00 AM Bahrain). Exit management is unaffected — stops/exits keep running on the 1-minute tick.
+[2026-11-03 08:20:00] [[32MINFO[39M] 🌙 Overnight freeze active (08:00-12:00 Bahrain, tracks 00:00-04:00 ET) — skipping new-trade scan (8:20:00 AM Bahrain). Exit management is unaffected — stops/exits keep running on the 1-minute tick.
+[2026-11-03 08:30:00] [[32MINFO[39M] 🌙 Overnight freeze active (08:00-12:00 Bahrain, tracks 00:00-04:00 ET) — skipping new-trade scan (8:30:00 AM Bahrain). Exit management is unaffected — stops/exits keep running on the 1-minute tick.
+[2026-11-03 08:40:00] [[32MINFO[39M] 🌙 Overnight freeze active (08:00-12:00 Bahrain, tracks 00:00-04:00 ET) — skipping new-trade scan (8:40:00 AM Bahrain). Exit management is unaffected — stops/exits keep running on the 1-minute tick.
+[2026-11-03 08:48:18] [[32MINFO[39M] Price stream disconnected — reconnecting in 30s (1-min exit monitor unaffected)
+[2026-11-03 08:48:49] [[32MINFO[39M] 📶 Price stream connected — real-time exit watchdog live for 0 position(s)
+[2026-11-03 08:50:00] [[32MINFO[39M] 🌙 Overnight freeze active (08:00-12:00 Bahrain, tracks 00:00-04:00 ET) — skipping new-trade scan (8:50:00 AM Bahrain). Exit management is unaffected — stops/exits keep running on the 1-minute tick.

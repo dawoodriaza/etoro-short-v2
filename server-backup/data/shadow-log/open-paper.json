@@ -1,1 +1,145 @@
-{}
+{
+ "SCORE_FLOOR:UNP": {
+  "tradeType": "DAY",
+  "entryPrice": 307.57,
+  "stopPrice": 298.7028,
+  "targetT1": 316.4372,
+  "targetT2": 325.3044,
+  "lockedFloor": null,
+  "peakPrice": 308.1,
+  "peakSetAt": 1793653260263,
+  "recentPrices": [
+   308,
+   308,
+   308,
+   308,
+   308,
+   308,
+   308,
+   308,
+   308,
+   308,
+   308,
+   308,
+   308,
+   308,
+   308,
+   308,
+   308,
+   308,
+   308,
+   308
+  ],
+  "partialDone": false,
+  "openedAt": 1793643065028,
+  "dollarAmount": 1565,
+  "troughPrice": 306.24,
+  "plan": {
+   "symbol": "UNP",
+   "stopDistancePct": 2.88,
+   "atrPercent": 2.98,
+   "score": 40.88902846294698,
+   "source": "WATCHLIST"
+  },
+  "entryConditions": {
+   "atrPercent": 2.98
+  },
+  "paperReason": "SCORE_FLOOR"
+ },
+ "SCORE_FLOOR:GM": {
+  "tradeType": "DAY",
+  "entryPrice": 89.47,
+  "stopPrice": 86.1652,
+  "targetT1": 92.7748,
+  "targetT2": 96.0797,
+  "lockedFloor": null,
+  "peakPrice": 90.29,
+  "peakSetAt": 1793679540268,
+  "recentPrices": [
+   90,
+   90,
+   90,
+   90,
+   90,
+   90,
+   90,
+   90,
+   90,
+   90,
+   90,
+   90,
+   90,
+   90,
+   90,
+   90,
+   90,
+   90,
+   90,
+   90
+  ],
+  "partialDone": true,
+  "openedAt": 1793649674687,
+  "dollarAmount": 610,
+  "troughPrice": 89.21,
+  "plan": {
+   "symbol": "GM",
+   "stopDistancePct": 3.69,
+   "atrPercent": 3.79,
+   "score": 21.31577389729693,
+   "source": "WATCHLIST"
+  },
+  "entryConditions": {
+   "atrPercent": 3.79
+  },
+  "paperReason": "SCORE_FLOOR",
+  "originalDollarAmount": 1220,
+  "realizedPartialPnl": 3.2
+ },
+ "SCORE_FLOOR:HD": {
+  "tradeType": "DAY",
+  "entryPrice": 341.005,
+  "stopPrice": 331.4811,
+  "targetT1": 350.5289,
+  "targetT2": 360.0528,
+  "lockedFloor": null,
+  "peakPrice": 342.71,
+  "peakSetAt": 1793683920274,
+  "recentPrices": [
+   342.29,
+   342.71,
+   342.71,
+   342.71,
+   342.71,
+   342.71,
+   342.71,
+   342.71,
+   342.71,
+   342.71,
+   342.71,
+   342.71,
+   342.71,
+   342.71,
+   342.71,
+   342.71,
+   342.32,
+   342.32,
+   342.32,
+   342.32
+  ],
+  "partialDone": false,
+  "openedAt": 1793652665195,
+  "dollarAmount": 800,
+  "troughPrice": 340.42,
+  "plan": {
+   "symbol": "HD",
+   "stopDistancePct": 2.79,
+   "atrPercent": 2.89,
+   "score": 56.794069864741836,
+   "source": "WATCHLIST"
+  },
+  "entryConditions": {
+   "atrPercent": 2.89
+  },
+  "paperReason": "SCORE_FLOOR"
+ }
+}

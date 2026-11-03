@@ -1,7 +1,7 @@
 {
  "book": "EARNINGS_DRIFT",
  "createdAt": "2026-10-22T13:40:53.189Z",
- "lastProcessedSession": "2026-10-30",
+ "lastProcessedSession": "2026-11-02",
  "lastRebalanceWeek": null,
  "open": {
   "UNP": {
@@ -12,13 +12,13 @@
    "stopKind": "initial",
    "size": 823.76,
    "riskDollars": 50,
-   "peak": 305.1,
+   "peak": 307.81,
    "trough": 288.61,
-   "heldSessions": 6,
+   "heldSessions": 7,
    "signal": "earnings 2026-10-22 (bmo): +3.65% on the reaction day, EPS 3.53 vs 3.5078",
    "signalDate": "2026-10-22",
-   "lastClose": 303.88,
-   "lastDate": "2026-10-30"
+   "lastClose": 306.99,
+   "lastDate": "2026-11-02"
   },
   "SOFI": {
    "symbol": "SOFI",
@@ -30,11 +30,11 @@
    "riskDollars": 50,
    "peak": 17.62,
    "trough": 16.44,
-   "heldSessions": 3,
+   "heldSessions": 4,
    "signal": "earnings 2026-10-27 (bmo): +13.72% on the reaction day, EPS 0.18 vs 0.1701",
    "signalDate": "2026-10-27",
-   "lastClose": 16.74,
-   "lastDate": "2026-10-30"
+   "lastClose": 16.59,
+   "lastDate": "2026-11-02"
   },
   "UPS": {
    "symbol": "UPS",
@@ -44,13 +44,13 @@
    "stopKind": "initial",
    "size": 948.29,
    "riskDollars": 50,
-   "peak": 108.95,
+   "peak": 110.09,
    "trough": 103.9,
-   "heldSessions": 3,
+   "heldSessions": 4,
    "signal": "earnings 2026-10-27 (bmo): +6.09% on the reaction day, EPS 1.69 vs 1.6417",
    "signalDate": "2026-10-27",
-   "lastClose": 108.3,
-   "lastDate": "2026-10-30"
+   "lastClose": 109.64,
+   "lastDate": "2026-11-02"
   },
   "LLY": {
    "symbol": "LLY",
@@ -61,12 +61,12 @@
    "size": 755.93,
    "riskDollars": 50,
    "peak": 1447.9,
-   "trough": 1408.31,
-   "heldSessions": 1,
+   "trough": 1386.93,
+   "heldSessions": 2,
    "signal": "earnings 2026-10-29 (bmo): +6.36% on the reaction day, EPS 7.48 vs 6.6112",
    "signalDate": "2026-10-29",
-   "lastClose": 1414.01,
-   "lastDate": "2026-10-30"
+   "lastClose": 1410.56,
+   "lastDate": "2026-11-02"
   }
  },
  "pending": [],
@@ -119,6 +119,12 @@
    "date": "2026-10-30",
    "realized": 0,
    "unrealized": 57.32,
+   "open": 4
+  },
+  {
+   "date": "2026-11-02",
+   "realized": 0,
+   "unrealized": 67.5,
    "open": 4
   }
  ]

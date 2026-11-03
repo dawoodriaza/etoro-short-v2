@@ -2414,3 +2414,4 @@
 [2026-10-28 20:10:35] [ERROR] ALERT [ETORO_MARKET_DATA_ENRICH]: eToro candle enrichment failed for TSLA: timeout of 15000ms exceeded. Falling back to Twelve Data for this symbol.
 [2026-10-29 01:10:38] [ERROR] ALERT [ETORO_MARKET_DATA_ENRICH]: eToro candle enrichment failed for BA: timeout of 15000ms exceeded. Falling back to Twelve Data for this symbol.
 [2026-10-29 23:30:06] [ERROR] ALERT [POSITION_AMOUNT_DRIFT]: DE: the bot was tracking $24.59 but eToro actually holds $49.18. Tracking has been corrected to the real amount. A planned 50% partial exit is NOT this — that is accounted for separately — so this indicates a genuine fill mismatch worth checking in the eToro app.
+[2026-11-02 20:21:13] [ERROR] ALERT [ETORO_MARKET_DATA_ENRICH]: eToro candle enrichment failed for HON: timeout of 15000ms exceeded. Falling back to Twelve Data for this symbol.
