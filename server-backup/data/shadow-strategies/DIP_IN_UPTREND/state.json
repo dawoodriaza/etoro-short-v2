@@ -1,25 +1,9 @@
 {
  "book": "DIP_IN_UPTREND",
  "createdAt": "2026-10-22T13:40:53.187Z",
- "lastProcessedSession": "2026-11-02",
+ "lastProcessedSession": "2026-11-03",
  "lastRebalanceWeek": null,
  "open": {
-  "SNAP": {
-   "symbol": "SNAP",
-   "entryDate": "2026-10-28",
-   "entry": 6.01,
-   "stop": 4.8357,
-   "stopKind": "initial",
-   "size": 255.9,
-   "riskDollars": 50,
-   "peak": 6.13,
-   "trough": 5.21,
-   "heldSessions": 4,
-   "signal": "2-day RSI 7.5 while above the 100-day average $5.29",
-   "signalDate": "2026-10-27",
-   "lastClose": 5.44,
-   "lastDate": "2026-11-02"
-  },
   "PLTR": {
    "symbol": "PLTR",
    "entryDate": "2026-11-02",
@@ -29,12 +13,12 @@
    "size": 343.95,
    "riskDollars": 50,
    "peak": 187.5,
-   "trough": 178.13,
-   "heldSessions": 1,
+   "trough": 165.9,
+   "heldSessions": 2,
    "signal": "2-day RSI 1.8 while above the 100-day average $162.29",
    "signalDate": "2026-10-30",
-   "lastClose": 178.32,
-   "lastDate": "2026-11-02"
+   "lastClose": 175.53,
+   "lastDate": "2026-11-03"
   },
   "SHOP": {
    "symbol": "SHOP",
@@ -45,30 +29,54 @@
    "size": 294.56,
    "riskDollars": 50,
    "peak": 160.84,
-   "trough": 153.34,
-   "heldSessions": 1,
+   "trough": 135.81,
+   "heldSessions": 2,
    "signal": "2-day RSI 6.2 while above the 100-day average $139.05",
    "signalDate": "2026-10-30",
-   "lastClose": 156.03,
-   "lastDate": "2026-11-02"
+   "lastClose": 142.67,
+   "lastDate": "2026-11-03"
+  },
+  "MSFT": {
+   "symbol": "MSFT",
+   "entryDate": "2026-11-03",
+   "entry": 508.35,
+   "stop": 454.4957,
+   "stopKind": "initial",
+   "size": 471.97,
+   "riskDollars": 50,
+   "peak": 523.4,
+   "trough": 507.82,
+   "heldSessions": 1,
+   "signal": "2-day RSI 7.9 while above the 100-day average $466.53",
+   "signalDate": "2026-11-02",
+   "lastClose": 521.06,
+   "lastDate": "2026-11-03"
+  },
+  "CRM": {
+   "symbol": "CRM",
+   "entryDate": "2026-11-03",
+   "entry": 222.13,
+   "stop": 190.5486,
+   "stopKind": "initial",
+   "size": 351.68,
+   "riskDollars": 50,
+   "peak": 223.41,
+   "trough": 214.61,
+   "heldSessions": 1,
+   "signal": "2-day RSI 8.1 while above the 100-day average $206.41",
+   "signalDate": "2026-11-02",
+   "lastClose": 221.96,
+   "lastDate": "2026-11-03"
   }
  },
  "pending": [
   {
-   "symbol": "MSFT",
-   "reason": "2-day RSI 7.9 while above the 100-day average $466.53",
-   "atr": 17.95142142857145,
+   "symbol": "AAPL",
+   "reason": "2-day RSI 6.4 while above the 100-day average $322.2",
+   "atr": 8.751428571428571,
    "stopAtr": 3,
    "stopAbove": null,
-   "signalDate": "2026-11-02"
-  },
-  {
-   "symbol": "CRM",
-   "reason": "2-day RSI 8.1 while above the 100-day average $206.41",
-   "atr": 10.527142857142865,
-   "stopAtr": 3,
-   "stopAbove": null,
-   "signalDate": "2026-11-02"
+   "signalDate": "2026-11-03"
   }
  ],
  "pendingExits": {},
@@ -89,6 +97,23 @@
    "riskDollars": 50,
    "r": 0.36,
    "signal": "2-day RSI 5 while above the 100-day average $458.01"
+  },
+  {
+   "symbol": "SNAP",
+   "entryDate": "2026-10-28",
+   "entry": 6.01,
+   "exitDate": "2026-11-03",
+   "exit": 5.59,
+   "reason": "CLOSE_ABOVE_5DAY_AVG",
+   "size": 255.9,
+   "pnl": -18.14,
+   "pnlPct": -6.99,
+   "heldSessions": 5,
+   "peakPct": 2,
+   "troughPct": -13.31,
+   "riskDollars": 50,
+   "r": -0.36,
+   "signal": "2-day RSI 7.5 while above the 100-day average $5.29"
   }
  ],
  "marks": [
@@ -145,6 +170,12 @@
    "realized": 18.01,
    "unrealized": -43.34,
    "open": 3
+  },
+  {
+   "date": "2026-11-03",
+   "realized": -0.13,
+   "unrealized": -37.54,
+   "open": 4
   }
  ]
 }

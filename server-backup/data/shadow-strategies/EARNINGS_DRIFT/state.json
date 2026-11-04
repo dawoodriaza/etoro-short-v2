@@ -1,7 +1,7 @@
 {
  "book": "EARNINGS_DRIFT",
  "createdAt": "2026-10-22T13:40:53.189Z",
- "lastProcessedSession": "2026-11-02",
+ "lastProcessedSession": "2026-11-03",
  "lastRebalanceWeek": null,
  "open": {
   "UNP": {
@@ -14,11 +14,11 @@
    "riskDollars": 50,
    "peak": 307.81,
    "trough": 288.61,
-   "heldSessions": 7,
+   "heldSessions": 8,
    "signal": "earnings 2026-10-22 (bmo): +3.65% on the reaction day, EPS 3.53 vs 3.5078",
    "signalDate": "2026-10-22",
-   "lastClose": 306.99,
-   "lastDate": "2026-11-02"
+   "lastClose": 303.61,
+   "lastDate": "2026-11-03"
   },
   "SOFI": {
    "symbol": "SOFI",
@@ -30,11 +30,11 @@
    "riskDollars": 50,
    "peak": 17.62,
    "trough": 16.44,
-   "heldSessions": 4,
+   "heldSessions": 5,
    "signal": "earnings 2026-10-27 (bmo): +13.72% on the reaction day, EPS 0.18 vs 0.1701",
    "signalDate": "2026-10-27",
-   "lastClose": 16.59,
-   "lastDate": "2026-11-02"
+   "lastClose": 16.78,
+   "lastDate": "2026-11-03"
   },
   "UPS": {
    "symbol": "UPS",
@@ -46,11 +46,11 @@
    "riskDollars": 50,
    "peak": 110.09,
    "trough": 103.9,
-   "heldSessions": 4,
+   "heldSessions": 5,
    "signal": "earnings 2026-10-27 (bmo): +6.09% on the reaction day, EPS 1.69 vs 1.6417",
    "signalDate": "2026-10-27",
-   "lastClose": 109.64,
-   "lastDate": "2026-11-02"
+   "lastClose": 109.1,
+   "lastDate": "2026-11-03"
   },
   "LLY": {
    "symbol": "LLY",
@@ -62,14 +62,23 @@
    "riskDollars": 50,
    "peak": 1447.9,
    "trough": 1386.93,
-   "heldSessions": 2,
+   "heldSessions": 3,
    "signal": "earnings 2026-10-29 (bmo): +6.36% on the reaction day, EPS 7.48 vs 6.6112",
    "signalDate": "2026-10-29",
-   "lastClose": 1410.56,
-   "lastDate": "2026-11-02"
+   "lastClose": 1408.08,
+   "lastDate": "2026-11-03"
   }
  },
- "pending": [],
+ "pending": [
+  {
+   "symbol": "ETN",
+   "reason": "earnings 2026-11-03 (bmo): +6.95% on the reaction day, EPS 3.68 vs 3.5787",
+   "atr": 21.260714285714272,
+   "stopAtr": 1,
+   "stopAbove": 375.51,
+   "signalDate": "2026-11-03"
+  }
+ ],
  "pendingExits": {},
  "closed": [],
  "marks": [
@@ -125,6 +134,12 @@
    "date": "2026-11-02",
    "realized": 0,
    "unrealized": 67.5,
+   "open": 4
+  },
+  {
+   "date": "2026-11-03",
+   "realized": 0,
+   "unrealized": 62.96,
    "open": 4
   }
  ]

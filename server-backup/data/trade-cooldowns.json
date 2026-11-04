@@ -35,9 +35,9 @@
     "scoreAtExit": 86.84354324631798
   },
   "AVGO": {
-    "exitAtMs": 1790695387025,
+    "exitAtMs": 1793717702214,
     "wasLoss": false,
-    "scoreAtExit": 87.16774587854314
+    "scoreAtExit": 87.13783868820022
   },
   "MU": {
     "exitAtMs": 1793196721818,
@@ -66,9 +66,9 @@
     "scoreAtExit": 82.26287506284447
   },
   "HOOD": {
-    "exitAtMs": 1792597082581,
+    "exitAtMs": 1793728082090,
     "wasLoss": false,
-    "scoreAtExit": 80.81451558129126
+    "scoreAtExit": 90.48860088564443
   },
   "RKLB": {
     "exitAtMs": 1791315907062,
@@ -109,9 +109,9 @@
   "CDNA": 1784226723347,
   "RHI": 1784226726013,
   "AMZN": {
-    "exitAtMs": 1787946301488,
-    "wasLoss": true,
-    "scoreAtExit": 82.80888872173111
+    "exitAtMs": 1793753041284,
+    "wasLoss": false,
+    "scoreAtExit": 88.13046324576982
   },
   "TSLA": {
     "exitAtMs": 1792157482217,
