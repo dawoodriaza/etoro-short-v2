@@ -2417,3 +2417,4 @@
 [2026-11-02 20:21:13] [ERROR] ALERT [ETORO_MARKET_DATA_ENRICH]: eToro candle enrichment failed for HON: timeout of 15000ms exceeded. Falling back to Twelve Data for this symbol.
 [2026-11-03 20:21:13] [ERROR] ALERT [ETORO_MARKET_DATA_ENRICH]: eToro candle enrichment failed for SHAZ: timeout of 15000ms exceeded. Falling back to Twelve Data for this symbol.
 [2026-11-03 23:50:22] [ERROR] ALERT [ETORO_MARKET_DATA_ENRICH]: eToro candle enrichment failed for TSLA: timeout of 15000ms exceeded. Falling back to Twelve Data for this symbol.
+[2026-11-04 19:10:34] [ERROR] ALERT [ETORO_MARKET_DATA_ENRICH]: eToro candle enrichment failed for ASML: timeout of 15000ms exceeded. Falling back to Twelve Data for this symbol.

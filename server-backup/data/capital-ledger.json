@@ -1,6 +1,6 @@
 {
   "baseCapital": 10000,
-  "cumulativeRealizedPnl": -1039.9999999999995,
+  "cumulativeRealizedPnl": -1006.1199999999994,
   "peakEffectiveCapital": 10032.85,
   "dailyPnl": {
     "2026-07-13": -0.020000000000000018,
@@ -65,7 +65,8 @@
     "2026-10-29": 8.309999999999999,
     "2026-10-30": -13.93,
     "2026-11-02": -68.18,
-    "2026-11-03": 5.98
+    "2026-11-03": 5.98,
+    "2026-11-04": 33.88
   },
   "ownerAdjustments": 0,
   "transferHistory": [],
@@ -86,5 +87,5 @@
       "reason": "peak 10098.27 was inflated on 2026-08-21 by pre-v8 reconciliation double-counting open P&L; last genuine recorded peak 10032.85"
     }
   ],
-  "commissionsBooked": 42
+  "commissionsBooked": 70
 }

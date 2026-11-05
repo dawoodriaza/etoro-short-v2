@@ -15,14 +15,14 @@
     "scoreAtExit": 83.18529580461262
   },
   "META": {
-    "exitAtMs": 1793389502361,
-    "wasLoss": true,
-    "scoreAtExit": 85.76959586156804
+    "exitAtMs": 1793808363772,
+    "wasLoss": false,
+    "scoreAtExit": 93.9827080730514
   },
   "SOFI": {
-    "exitAtMs": 1793210581701,
+    "exitAtMs": 1793804283185,
     "wasLoss": false,
-    "scoreAtExit": 86.55980685601659
+    "scoreAtExit": 86.51394914157845
   },
   "NFLX": {
     "exitAtMs": 1787152322001,
@@ -46,9 +46,9 @@
   },
   "BRAI": 1784036525262,
   "AMD": {
-    "exitAtMs": 1792525501637,
+    "exitAtMs": 1793822462677,
     "wasLoss": true,
-    "scoreAtExit": 90.80625387791214
+    "scoreAtExit": 91.62585477804903
   },
   "QCOM": {
     "exitAtMs": 1790794862443,
@@ -82,19 +82,19 @@
     "scoreAtExit": 85.53559690707726
   },
   "MSFT": {
-    "exitAtMs": 1785440704086,
-    "wasLoss": true,
-    "scoreAtExit": 100
+    "exitAtMs": 1793840761312,
+    "wasLoss": false,
+    "scoreAtExit": 83.94244545348138
   },
   "AAPL": {
-    "exitAtMs": 1790797504301,
-    "wasLoss": true,
-    "scoreAtExit": 97.23779576403327
+    "exitAtMs": 1793814004128,
+    "wasLoss": false,
+    "scoreAtExit": 100
   },
   "BA": {
-    "exitAtMs": 1790708462193,
-    "wasLoss": true,
-    "scoreAtExit": 92.79867568149187
+    "exitAtMs": 1793821743152,
+    "wasLoss": false,
+    "scoreAtExit": 89.21587599903086
   },
   "AFRM": {
     "exitAtMs": 1793652304875,
@@ -149,9 +149,9 @@
     "scoreAtExit": 93.66526719430074
   },
   "UPST": {
-    "exitAtMs": 1792698305949,
-    "wasLoss": true,
-    "scoreAtExit": 93.00995722775126
+    "exitAtMs": 1793824742518,
+    "wasLoss": false,
+    "scoreAtExit": 100
   },
   "ARM": {
     "exitAtMs": 1789155902583,
@@ -184,9 +184,9 @@
     "scoreAtExit": 90.46858768818103
   },
   "NKE": {
-    "exitAtMs": 1793636341475,
-    "wasLoss": false,
-    "scoreAtExit": 81.9159204697033
+    "exitAtMs": 1793825101845,
+    "wasLoss": true,
+    "scoreAtExit": 100
   },
   "HD": {
     "exitAtMs": 1792509181279,
@@ -249,9 +249,9 @@
     "scoreAtExit": 89.11404775291325
   },
   "F": {
-    "exitAtMs": 1793303102801,
-    "wasLoss": true,
-    "scoreAtExit": 84.03146984871351
+    "exitAtMs": 1793819763857,
+    "wasLoss": false,
+    "scoreAtExit": 85.53466770154385
   },
   "AA": {
     "exitAtMs": 1792179902361,
