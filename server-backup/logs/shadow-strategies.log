@@ -53,3 +53,8 @@
   DIP_IN_UPTREND  sessions 1 · closed 5 (80% win) · realized 65.84 · per trade 13.17 · open 2 (PLTR,SHOP) unrealized -36.59
   EARNINGS_DRIFT  sessions 1 · closed 1 (0% win) · realized -50.88 · per trade -50.88 · open 4 (UNP,SOFI,UPS,LLY) unrealized 162.37
   ROTATION        sessions 1 · closed 5 (20% win) · realized -841.51 · per trade -168.3 · open 5 (SHOP,COP,TSLA,CVX,ISRG) unrealized -308.36
+[2026-11-06T05:32:03.008Z] shadow strategies forward · latest session 2026-11-05 · earnings: 15 watchlist reports since 2026-10-16
+  SWING_BREAKOUT  sessions 1 · closed 3 (0% win) · realized -115.95 · per trade -38.65 · open 5 (VRTX,LIN,ISRG,LLY,UPS) unrealized 24.27
+  DIP_IN_UPTREND  sessions 1 · closed 6 (67% win) · realized 15.5 · per trade 2.58 · open 5 (SHOP,XOM,CVX,COP,TSLA) unrealized -91.81
+  EARNINGS_DRIFT  sessions 1 · closed 2 (0% win) · realized -101.84 · per trade -50.92 · open 3 (UNP,UPS,LLY) unrealized 28.59
+  ROTATION        sessions 1 · closed 5 (20% win) · realized -841.51 · per trade -168.3 · open 5 (SHOP,COP,TSLA,CVX,ISRG) unrealized -737.14

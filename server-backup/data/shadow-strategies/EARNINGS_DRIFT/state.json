@@ -1,7 +1,7 @@
 {
  "book": "EARNINGS_DRIFT",
  "createdAt": "2026-10-22T13:40:53.189Z",
- "lastProcessedSession": "2026-11-04",
+ "lastProcessedSession": "2026-11-05",
  "lastRebalanceWeek": null,
  "open": {
   "UNP": {
@@ -14,27 +14,11 @@
    "riskDollars": 50,
    "peak": 309.8,
    "trough": 288.61,
-   "heldSessions": 9,
+   "heldSessions": 10,
    "signal": "earnings 2026-10-22 (bmo): +3.65% on the reaction day, EPS 3.53 vs 3.5078",
    "signalDate": "2026-10-22",
-   "lastClose": 308.64,
-   "lastDate": "2026-11-04"
-  },
-  "SOFI": {
-   "symbol": "SOFI",
-   "entryDate": "2026-10-28",
-   "entry": 16.54,
-   "stop": 15.68,
-   "stopKind": "initial",
-   "size": 961.63,
-   "riskDollars": 50,
-   "peak": 17.73,
-   "trough": 16.44,
-   "heldSessions": 6,
-   "signal": "earnings 2026-10-27 (bmo): +13.72% on the reaction day, EPS 0.18 vs 0.1701",
-   "signalDate": "2026-10-27",
-   "lastClose": 17.37,
-   "lastDate": "2026-11-04"
+   "lastClose": 297.86,
+   "lastDate": "2026-11-05"
   },
   "UPS": {
    "symbol": "UPS",
@@ -44,13 +28,13 @@
    "stopKind": "initial",
    "size": 948.29,
    "riskDollars": 50,
-   "peak": 114.41,
+   "peak": 114.84,
    "trough": 103.9,
-   "heldSessions": 6,
+   "heldSessions": 7,
    "signal": "earnings 2026-10-27 (bmo): +6.09% on the reaction day, EPS 1.69 vs 1.6417",
    "signalDate": "2026-10-27",
-   "lastClose": 114.24,
-   "lastDate": "2026-11-04"
+   "lastClose": 111.04,
+   "lastDate": "2026-11-05"
   },
   "LLY": {
    "symbol": "LLY",
@@ -60,13 +44,13 @@
    "stopKind": "initial",
    "size": 755.93,
    "riskDollars": 50,
-   "peak": 1447.9,
-   "trough": 1386.93,
-   "heldSessions": 4,
+   "peak": 1452.38,
+   "trough": 1365,
+   "heldSessions": 5,
    "signal": "earnings 2026-10-29 (bmo): +6.36% on the reaction day, EPS 7.48 vs 6.6112",
    "signalDate": "2026-10-29",
-   "lastClose": 1417,
-   "lastDate": "2026-11-04"
+   "lastClose": 1366.79,
+   "lastDate": "2026-11-05"
   }
  },
  "pending": [],
@@ -88,6 +72,23 @@
    "riskDollars": 50,
    "r": -1.02,
    "signal": "earnings 2026-11-03 (bmo): +6.95% on the reaction day, EPS 3.68 vs 3.5787"
+  },
+  {
+   "symbol": "SOFI",
+   "entryDate": "2026-10-28",
+   "entry": 16.54,
+   "exitDate": "2026-11-05",
+   "exit": 15.68,
+   "reason": "STOP",
+   "size": 961.63,
+   "pnl": -50.96,
+   "pnlPct": -5.2,
+   "heldSessions": 7,
+   "peakPct": 7.19,
+   "troughPct": -6.71,
+   "riskDollars": 50,
+   "r": -1.02,
+   "signal": "earnings 2026-10-27 (bmo): +13.72% on the reaction day, EPS 0.18 vs 0.1701"
   }
  ],
  "marks": [
@@ -156,6 +157,12 @@
    "realized": -50.88,
    "unrealized": 162.37,
    "open": 4
+  },
+  {
+   "date": "2026-11-05",
+   "realized": -101.84,
+   "unrealized": 28.59,
+   "open": 3
   }
  ]
 }

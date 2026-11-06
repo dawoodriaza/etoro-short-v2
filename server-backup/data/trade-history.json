@@ -29708,6 +29708,10 @@
     "positionId": 3625647103,
     "commissionDollars": 3,
     "netPnlDollars": 48.64,
-    "closedAt": "2026-11-05T01:06:01.498Z"
+    "closedAt": "2026-11-05T01:06:01.498Z",
+    "brokerNetProfit": 51.84,
+    "brokerOpenRate": 529.9,
+    "brokerCloseRate": 553,
+    "brokerPieces": 2
   }
 ]

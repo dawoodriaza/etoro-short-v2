@@ -1,6 +1,6 @@
 {
- "at": "2026-11-05T05:32:55.097Z",
- "note": "16 watchlist reports since 2026-10-15",
+ "at": "2026-11-06T05:32:02.967Z",
+ "note": "15 watchlist reports since 2026-10-16",
  "rows": [
   {
    "symbol": "AFRM",
@@ -9,9 +9,9 @@
    "quarter": 1,
    "year": 2027,
    "epsEstimate": 0.3856,
-   "epsActual": null,
+   "epsActual": 0.47,
    "revenueEstimate": 1234920936,
-   "revenueActual": null
+   "revenueActual": 1262220000
   },
   {
    "symbol": "ARM",
@@ -31,9 +31,9 @@
    "quarter": 3,
    "year": 2026,
    "epsEstimate": 2.9914,
-   "epsActual": null,
+   "epsActual": 3.27,
    "revenueEstimate": 18357035365,
-   "revenueActual": null
+   "revenueActual": 20057000000
   },
   {
    "symbol": "IONQ",
@@ -42,9 +42,9 @@
    "quarter": 3,
    "year": 2026,
    "epsEstimate": -0.3835,
-   "epsActual": null,
+   "epsActual": -0.29,
    "revenueEstimate": 144457602,
-   "revenueActual": null
+   "revenueActual": 173830000
   },
   {
    "symbol": "SOUN",
@@ -53,9 +53,9 @@
    "quarter": 3,
    "year": 2026,
    "epsEstimate": -0.0638,
-   "epsActual": null,
+   "epsActual": -0.05,
    "revenueEstimate": 62946852,
-   "revenueActual": null
+   "revenueActual": 62430000
   },
   {
    "symbol": "MELI",
@@ -166,17 +166,6 @@
    "epsActual": 2.05,
    "revenueEstimate": 115660327009,
    "revenueActual": 114477000000
-  },
-  {
-   "symbol": "PLTR",
-   "date": "2026-11-02",
-   "hour": "amc",
-   "quarter": 3,
-   "year": 2026,
-   "epsEstimate": 0.4182,
-   "epsActual": 0.44,
-   "revenueEstimate": 2226152254,
-   "revenueActual": 2313410000
   }
  ]
 }

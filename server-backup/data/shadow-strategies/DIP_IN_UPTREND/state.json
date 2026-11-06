@@ -1,25 +1,9 @@
 {
  "book": "DIP_IN_UPTREND",
  "createdAt": "2026-10-22T13:40:53.187Z",
- "lastProcessedSession": "2026-11-04",
+ "lastProcessedSession": "2026-11-05",
  "lastRebalanceWeek": null,
  "open": {
-  "PLTR": {
-   "symbol": "PLTR",
-   "entryDate": "2026-11-02",
-   "entry": 186.28,
-   "stop": 159.2007,
-   "stopKind": "initial",
-   "size": 343.95,
-   "riskDollars": 50,
-   "peak": 187.5,
-   "trough": 164.62,
-   "heldSessions": 3,
-   "signal": "2-day RSI 1.8 while above the 100-day average $162.29",
-   "signalDate": "2026-10-30",
-   "lastClose": 171.92,
-   "lastDate": "2026-11-04"
-  },
   "SHOP": {
    "symbol": "SHOP",
    "entryDate": "2026-11-02",
@@ -30,47 +14,78 @@
    "riskDollars": 50,
    "peak": 160.84,
    "trough": 135.81,
-   "heldSessions": 3,
+   "heldSessions": 4,
    "signal": "2-day RSI 6.2 while above the 100-day average $139.05",
    "signalDate": "2026-10-30",
-   "lastClose": 152.96,
-   "lastDate": "2026-11-04"
+   "lastClose": 143.77,
+   "lastDate": "2026-11-05"
+  },
+  "XOM": {
+   "symbol": "XOM",
+   "entryDate": "2026-11-05",
+   "entry": 170.56,
+   "stop": 152.7464,
+   "stopKind": "initial",
+   "size": 478.74,
+   "riskDollars": 50,
+   "peak": 173.63,
+   "trough": 165.22,
+   "heldSessions": 1,
+   "signal": "2-day RSI 5.2 while above the 100-day average $158.77",
+   "signalDate": "2026-11-04",
+   "lastClose": 165.34,
+   "lastDate": "2026-11-05"
+  },
+  "CVX": {
+   "symbol": "CVX",
+   "entryDate": "2026-11-05",
+   "entry": 218.4,
+   "stop": 198.6857,
+   "stopKind": "initial",
+   "size": 553.91,
+   "riskDollars": 50,
+   "peak": 222.41,
+   "trough": 212.61,
+   "heldSessions": 1,
+   "signal": "2-day RSI 5.4 while above the 100-day average $199.89",
+   "signalDate": "2026-11-04",
+   "lastClose": 212.88,
+   "lastDate": "2026-11-05"
+  },
+  "COP": {
+   "symbol": "COP",
+   "entryDate": "2026-11-05",
+   "entry": 138.87,
+   "stop": 119.7514,
+   "stopKind": "initial",
+   "size": 363.18,
+   "riskDollars": 50,
+   "peak": 140.73,
+   "trough": 135.37,
+   "heldSessions": 1,
+   "signal": "2-day RSI 6.3 while above the 100-day average $125.85",
+   "signalDate": "2026-11-04",
+   "lastClose": 135.45,
+   "lastDate": "2026-11-05"
+  },
+  "TSLA": {
+   "symbol": "TSLA",
+   "entryDate": "2026-11-05",
+   "entry": 373.88,
+   "stop": 317.2121,
+   "stopKind": "initial",
+   "size": 329.89,
+   "riskDollars": 50,
+   "peak": 373.94,
+   "trough": 338.15,
+   "heldSessions": 1,
+   "signal": "2-day RSI 9.6 while above the 100-day average $367.41",
+   "signalDate": "2026-11-04",
+   "lastClose": 343.23,
+   "lastDate": "2026-11-05"
   }
  },
- "pending": [
-  {
-   "symbol": "XOM",
-   "reason": "2-day RSI 5.2 while above the 100-day average $158.77",
-   "atr": 5.9378571428571405,
-   "stopAtr": 3,
-   "stopAbove": null,
-   "signalDate": "2026-11-04"
-  },
-  {
-   "symbol": "CVX",
-   "reason": "2-day RSI 5.4 while above the 100-day average $199.89",
-   "atr": 6.571428571428571,
-   "stopAtr": 3,
-   "stopAbove": null,
-   "signalDate": "2026-11-04"
-  },
-  {
-   "symbol": "COP",
-   "reason": "2-day RSI 6.3 while above the 100-day average $125.85",
-   "atr": 6.372857142857138,
-   "stopAtr": 3,
-   "stopAbove": null,
-   "signalDate": "2026-11-04"
-  },
-  {
-   "symbol": "TSLA",
-   "reason": "2-day RSI 9.6 while above the 100-day average $367.41",
-   "atr": 18.889285714285716,
-   "stopAtr": 3,
-   "stopAbove": null,
-   "signalDate": "2026-11-04"
-  }
- ],
+ "pending": [],
  "pendingExits": {},
  "closed": [
   {
@@ -157,6 +172,23 @@
    "riskDollars": 50,
    "r": 0.29,
    "signal": "2-day RSI 6.4 while above the 100-day average $322.2"
+  },
+  {
+   "symbol": "PLTR",
+   "entryDate": "2026-11-02",
+   "entry": 186.28,
+   "exitDate": "2026-11-05",
+   "exit": 159.2007,
+   "reason": "STOP",
+   "size": 343.95,
+   "pnl": -50.34,
+   "pnlPct": -14.54,
+   "heldSessions": 4,
+   "peakPct": 0.65,
+   "troughPct": -18.08,
+   "riskDollars": 50,
+   "r": -1.01,
+   "signal": "2-day RSI 1.8 while above the 100-day average $162.29"
   }
  ],
  "marks": [
@@ -225,6 +257,12 @@
    "realized": 65.84,
    "unrealized": -36.59,
    "open": 2
+  },
+  {
+   "date": "2026-11-05",
+   "realized": 15.5,
+   "unrealized": -91.81,
+   "open": 5
   }
  ]
 }
