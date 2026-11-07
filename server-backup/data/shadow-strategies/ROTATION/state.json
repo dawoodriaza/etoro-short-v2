@@ -1,7 +1,7 @@
 {
  "book": "ROTATION",
  "createdAt": "2026-10-22T13:40:53.189Z",
- "lastProcessedSession": "2026-11-05",
+ "lastProcessedSession": "2026-11-06",
  "lastRebalanceWeek": "2026-W45",
  "open": {
   "SHOP": {
@@ -14,11 +14,11 @@
    "riskDollars": null,
    "peak": 176.23,
    "trough": 135.81,
-   "heldSessions": 11,
+   "heldSessions": 12,
    "signal": "rank 2, 3-month return +37.66%",
    "signalDate": "2026-10-21",
-   "lastClose": 143.77,
-   "lastDate": "2026-11-05"
+   "lastClose": 149,
+   "lastDate": "2026-11-06"
   },
   "COP": {
    "symbol": "COP",
@@ -29,12 +29,12 @@
    "size": 2000,
    "riskDollars": null,
    "peak": 146.82,
-   "trough": 134.69,
-   "heldSessions": 3,
+   "trough": 133.6,
+   "heldSessions": 4,
    "signal": "rank 1, 3-month return +32.52%",
    "signalDate": "2026-11-02",
-   "lastClose": 135.45,
-   "lastDate": "2026-11-05"
+   "lastClose": 136.32,
+   "lastDate": "2026-11-06"
   },
   "TSLA": {
    "symbol": "TSLA",
@@ -46,11 +46,11 @@
    "riskDollars": null,
    "peak": 406.3,
    "trough": 338.15,
-   "heldSessions": 3,
+   "heldSessions": 4,
    "signal": "rank 3, 3-month return +27.9%",
    "signalDate": "2026-11-02",
-   "lastClose": 343.23,
-   "lastDate": "2026-11-05"
+   "lastClose": 358.17,
+   "lastDate": "2026-11-06"
   },
   "CVX": {
    "symbol": "CVX",
@@ -61,12 +61,12 @@
    "size": 2000,
    "riskDollars": null,
    "peak": 227.49,
-   "trough": 212.61,
-   "heldSessions": 3,
+   "trough": 210,
+   "heldSessions": 4,
    "signal": "rank 4, 3-month return +23.44%",
    "signalDate": "2026-11-02",
-   "lastClose": 212.88,
-   "lastDate": "2026-11-05"
+   "lastClose": 212.7,
+   "lastDate": "2026-11-06"
   },
   "ISRG": {
    "symbol": "ISRG",
@@ -78,11 +78,11 @@
    "riskDollars": null,
    "peak": 485.82,
    "trough": 434,
-   "heldSessions": 3,
+   "heldSessions": 4,
    "signal": "rank 5, 3-month return +23.4%",
    "signalDate": "2026-11-02",
-   "lastClose": 468.53,
-   "lastDate": "2026-11-05"
+   "lastClose": 452.8,
+   "lastDate": "2026-11-06"
   }
  },
  "pending": [],
@@ -245,6 +245,12 @@
    "date": "2026-11-05",
    "realized": -841.51,
    "unrealized": -737.14,
+   "open": 5
+  },
+  {
+   "date": "2026-11-06",
+   "realized": -841.51,
+   "unrealized": -665.23,
    "open": 5
   }
  ]

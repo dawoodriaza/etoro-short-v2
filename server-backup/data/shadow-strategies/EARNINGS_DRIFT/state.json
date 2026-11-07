@@ -1,7 +1,7 @@
 {
  "book": "EARNINGS_DRIFT",
  "createdAt": "2026-10-22T13:40:53.189Z",
- "lastProcessedSession": "2026-11-05",
+ "lastProcessedSession": "2026-11-06",
  "lastRebalanceWeek": null,
  "open": {
   "UNP": {
@@ -14,11 +14,11 @@
    "riskDollars": 50,
    "peak": 309.8,
    "trough": 288.61,
-   "heldSessions": 10,
+   "heldSessions": 11,
    "signal": "earnings 2026-10-22 (bmo): +3.65% on the reaction day, EPS 3.53 vs 3.5078",
    "signalDate": "2026-10-22",
-   "lastClose": 297.86,
-   "lastDate": "2026-11-05"
+   "lastClose": 290.15,
+   "lastDate": "2026-11-06"
   },
   "UPS": {
    "symbol": "UPS",
@@ -30,11 +30,11 @@
    "riskDollars": 50,
    "peak": 114.84,
    "trough": 103.9,
-   "heldSessions": 7,
+   "heldSessions": 8,
    "signal": "earnings 2026-10-27 (bmo): +6.09% on the reaction day, EPS 1.69 vs 1.6417",
    "signalDate": "2026-10-27",
-   "lastClose": 111.04,
-   "lastDate": "2026-11-05"
+   "lastClose": 108.25,
+   "lastDate": "2026-11-06"
   },
   "LLY": {
    "symbol": "LLY",
@@ -45,15 +45,32 @@
    "size": 755.93,
    "riskDollars": 50,
    "peak": 1452.38,
-   "trough": 1365,
-   "heldSessions": 5,
+   "trough": 1332,
+   "heldSessions": 6,
    "signal": "earnings 2026-10-29 (bmo): +6.36% on the reaction day, EPS 7.48 vs 6.6112",
    "signalDate": "2026-10-29",
-   "lastClose": 1366.79,
-   "lastDate": "2026-11-05"
+   "lastClose": 1363.05,
+   "lastDate": "2026-11-06"
   }
  },
- "pending": [],
+ "pending": [
+  {
+   "symbol": "IONQ",
+   "reason": "earnings 2026-11-05 (amc): +21.95% on the reaction day, EPS -0.29 vs -0.3835",
+   "atr": 2.5792857142857133,
+   "stopAtr": 1,
+   "stopAbove": 27.6,
+   "signalDate": "2026-11-06"
+  },
+  {
+   "symbol": "ARM",
+   "reason": "earnings 2026-11-05 (time n/a): +4.82% on the reaction day",
+   "atr": 17.241428571428564,
+   "stopAtr": 1,
+   "stopAbove": 169.57,
+   "signalDate": "2026-11-06"
+  }
+ ],
  "pendingExits": {},
  "closed": [
   {
@@ -162,6 +179,12 @@
    "date": "2026-11-05",
    "realized": -101.84,
    "unrealized": 28.59,
+   "open": 3
+  },
+  {
+   "date": "2026-11-06",
+   "realized": -101.84,
+   "unrealized": -20.01,
    "open": 3
   }
  ]

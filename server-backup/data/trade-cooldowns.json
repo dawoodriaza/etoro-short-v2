@@ -15,9 +15,9 @@
     "scoreAtExit": 83.18529580461262
   },
   "META": {
-    "exitAtMs": 1793808363772,
+    "exitAtMs": 1793992141646,
     "wasLoss": false,
-    "scoreAtExit": 93.9827080730514
+    "scoreAtExit": 92.22905479725748
   },
   "SOFI": {
     "exitAtMs": 1793804283185,
@@ -35,9 +35,9 @@
     "scoreAtExit": 86.84354324631798
   },
   "AVGO": {
-    "exitAtMs": 1793717702214,
-    "wasLoss": false,
-    "scoreAtExit": 87.13783868820022
+    "exitAtMs": 1793997901979,
+    "wasLoss": true,
+    "scoreAtExit": 100
   },
   "MU": {
     "exitAtMs": 1793196721818,
@@ -56,9 +56,9 @@
     "scoreAtExit": 84.74061934386447
   },
   "NVDA": {
-    "exitAtMs": 1793031001996,
+    "exitAtMs": 1793978281754,
     "wasLoss": false,
-    "scoreAtExit": 88.22540997579135
+    "scoreAtExit": 91.07534225560073
   },
   "IONQ": {
     "exitAtMs": 1790018582701,

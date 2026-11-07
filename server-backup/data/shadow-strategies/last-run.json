@@ -1,11 +1,11 @@
 {
- "at": "2026-11-06T05:32:03.008Z",
+ "at": "2026-11-07T05:32:47.371Z",
  "mode": "forward",
  "from": null,
  "to": null,
- "latestCompleteSession": "2026-11-05",
+ "latestCompleteSession": "2026-11-06",
  "universe": 55,
- "earnings": "15 watchlist reports since 2026-10-16",
+ "earnings": "15 watchlist reports since 2026-10-17",
  "books": {
   "SWING_BREAKOUT": {
    "closed": 3,
@@ -21,29 +21,28 @@
     "LLY",
     "UPS"
    ],
-   "unrealized": 24.27,
-   "lastSession": "2026-11-05",
+   "unrealized": -16.64,
+   "lastSession": "2026-11-06",
    "sessionsProcessed": 1,
    "signalsToday": 0
   },
   "DIP_IN_UPTREND": {
-   "closed": 6,
+   "closed": 7,
    "wins": 4,
-   "winRate": 67,
-   "realized": 15.5,
-   "perTrade": 2.58,
-   "open": 5,
+   "winRate": 57,
+   "realized": -2.24,
+   "perTrade": -0.32,
+   "open": 4,
    "openSymbols": [
-    "SHOP",
     "XOM",
     "CVX",
     "COP",
     "TSLA"
    ],
-   "unrealized": -91.81,
-   "lastSession": "2026-11-05",
+   "unrealized": -48.24,
+   "lastSession": "2026-11-06",
    "sessionsProcessed": 1,
-   "signalsToday": 0
+   "signalsToday": 1
   },
   "EARNINGS_DRIFT": {
    "closed": 2,
@@ -57,10 +56,10 @@
     "UPS",
     "LLY"
    ],
-   "unrealized": 28.59,
-   "lastSession": "2026-11-05",
+   "unrealized": -20.01,
+   "lastSession": "2026-11-06",
    "sessionsProcessed": 1,
-   "signalsToday": 0
+   "signalsToday": 2
   },
   "ROTATION": {
    "closed": 5,
@@ -76,8 +75,8 @@
     "CVX",
     "ISRG"
    ],
-   "unrealized": -737.14,
-   "lastSession": "2026-11-05",
+   "unrealized": -665.23,
+   "lastSession": "2026-11-06",
    "sessionsProcessed": 1,
    "signalsToday": 0
   }
