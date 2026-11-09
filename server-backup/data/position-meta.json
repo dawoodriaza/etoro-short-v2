@@ -1,1 +1,136 @@
-{}
+{
+  "GE": {
+    "tradeType": "DAY",
+    "entryPrice": 328.83,
+    "stopPrice": 315.2354,
+    "brokerStopRate": 308.43,
+    "targetT1": 342.4246,
+    "targetT2": 356.0192,
+    "targetT3": null,
+    "swingTrailPct": null,
+    "lockedFloor": null,
+    "peakPrice": 332.86081935483867,
+    "peakSetAt": 1794243120871,
+    "recentPrices": [
+      {
+        "price": 332.24861972350226,
+        "atMs": 1794242940873
+      },
+      {
+        "price": 332.4607681105991,
+        "atMs": 1794243000909
+      },
+      {
+        "price": 332.4607681105991,
+        "atMs": 1794243001566
+      },
+      {
+        "price": 332.63048682027653,
+        "atMs": 1794243060829
+      },
+      {
+        "price": 332.86081935483867,
+        "atMs": 1794243120871
+      }
+    ],
+    "partialDone": true,
+    "partialT1Done": false,
+    "partialT2Done": false,
+    "setup": "MOMENTUM_SURGE",
+    "source": "WATCHLIST",
+    "confidence": 5,
+    "dollarAmount": 542.5,
+    "plannedDollarAmount": 1085,
+    "originalDollarAmount": 1085,
+    "realizedPartialPnl": 3.86,
+    "partialFills": [
+      {
+        "at": "2026-11-09T16:15:01.388Z",
+        "reason": "PROFIT_STALL_LOCK",
+        "fraction": 0.5,
+        "price": 331.1697,
+        "pnlDollars": 3.86
+      }
+    ],
+    "troughPrice": 328.82090792626724,
+    "openedAt": 1794236407932,
+    "fillVerifiedAt": null,
+    "plan": {
+      "symbol": "GE",
+      "tradeType": "DAY",
+      "tradeTypeReason": "regime not TRENDING",
+      "downgradedFromSwing": false,
+      "archetype": "MOMENTUM_BREAKOUT",
+      "catalyst": null,
+      "catalystLabel": null,
+      "source": "WATCHLIST",
+      "isFirstTimeDiscovered": false,
+      "setup": "MOMENTUM_SURGE",
+      "setupDetail": "RSI 71 with 3.0% move on 1.4x volume",
+      "score": 80.1739731705314,
+      "regime": "UNKNOWN",
+      "trendDirection": "BULLISH",
+      "volatilityBucket": "MEDIUM",
+      "atrPercent": 4.23,
+      "spyChangePercent": 1.3124073494811694,
+      "relativeStrength": 1.6668031442696025,
+      "rsi": 71.00222764399534,
+      "aboveVwap": true,
+      "priceChangePercent": 2.979210493750772,
+      "moveToAtrRatio": 0.704,
+      "entryPrice": 328.83,
+      "stopPrice": 315.2354,
+      "stopDistancePct": 4.13,
+      "targetT1": 342.4246,
+      "targetT2": 356.0192,
+      "targetT3": null,
+      "swingTrailPct": null,
+      "averageDollarVolume": null,
+      "positionDollars": 1085,
+      "riskDollars": 44.86,
+      "riskPctOfCapital": 0.5,
+      "expectedReturnDollars": 89.71,
+      "riskRewardRatio": 2,
+      "sizingBreakdown": {
+        "effectiveCapital": 8956.44,
+        "baseRiskPct": 0.005,
+        "drawdownMultiplier": 1,
+        "volatilityMultiplier": 1,
+        "discoveryMultiplier": 1,
+        "symbolMultiplier": 1
+      },
+      "plannedAt": "2026-11-09T14:41:13.793Z",
+      "dipEntry": {
+        "signalPrice": 332.87,
+        "triggerPrice": 329.8191,
+        "armedAt": "2026-11-09T14:41:17.069Z",
+        "minutesWaited": 19
+      }
+    },
+    "entryConditions": {
+      "tradeType": "DAY",
+      "downgradedFromSwing": false,
+      "score": 80.1739731705314,
+      "regime": "UNKNOWN",
+      "spyChangePercent": 1.3124073494811694,
+      "relativeStrength": 1.6668031442696025,
+      "rsi": 71.00222764399534,
+      "aboveVwap": true,
+      "atrPercent": 4.23,
+      "volatilityBucket": "MEDIUM",
+      "entryHourET": 10,
+      "priceChangePercent": 2.979210493750772,
+      "moveToAtrRatio": 0.704,
+      "sectorBucket": "industrials",
+      "sizeMultiplier": 1,
+      "filtersActive": {
+        "minEntryScore": 80,
+        "maxEntryAtrPct": 7,
+        "prefilterMinMovePct": 1,
+        "minMoveToAtrRatio": 0,
+        "overnightDeadZone": true
+      }
+    },
+    "confirmedInPortfolioAt": "2026-11-09T15:01:00.884Z"
+  }
+}
