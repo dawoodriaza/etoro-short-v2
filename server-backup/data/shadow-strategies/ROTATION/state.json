@@ -1,8 +1,8 @@
 {
  "book": "ROTATION",
  "createdAt": "2026-10-22T13:40:53.189Z",
- "lastProcessedSession": "2026-11-06",
- "lastRebalanceWeek": "2026-W45",
+ "lastProcessedSession": "2026-11-09",
+ "lastRebalanceWeek": "2026-W46",
  "open": {
   "SHOP": {
    "symbol": "SHOP",
@@ -14,11 +14,11 @@
    "riskDollars": null,
    "peak": 176.23,
    "trough": 135.81,
-   "heldSessions": 12,
+   "heldSessions": 13,
    "signal": "rank 2, 3-month return +37.66%",
    "signalDate": "2026-10-21",
-   "lastClose": 149,
-   "lastDate": "2026-11-06"
+   "lastClose": 152.19,
+   "lastDate": "2026-11-09"
   },
   "COP": {
    "symbol": "COP",
@@ -29,12 +29,12 @@
    "size": 2000,
    "riskDollars": null,
    "peak": 146.82,
-   "trough": 133.6,
-   "heldSessions": 4,
+   "trough": 133.3,
+   "heldSessions": 5,
    "signal": "rank 1, 3-month return +32.52%",
    "signalDate": "2026-11-02",
-   "lastClose": 136.32,
-   "lastDate": "2026-11-06"
+   "lastClose": 134.63,
+   "lastDate": "2026-11-09"
   },
   "TSLA": {
    "symbol": "TSLA",
@@ -46,11 +46,11 @@
    "riskDollars": null,
    "peak": 406.3,
    "trough": 338.15,
-   "heldSessions": 4,
+   "heldSessions": 5,
    "signal": "rank 3, 3-month return +27.9%",
    "signalDate": "2026-11-02",
-   "lastClose": 358.17,
-   "lastDate": "2026-11-06"
+   "lastClose": 378.03,
+   "lastDate": "2026-11-09"
   },
   "CVX": {
    "symbol": "CVX",
@@ -61,12 +61,12 @@
    "size": 2000,
    "riskDollars": null,
    "peak": 227.49,
-   "trough": 210,
-   "heldSessions": 4,
+   "trough": 208.67,
+   "heldSessions": 5,
    "signal": "rank 4, 3-month return +23.44%",
    "signalDate": "2026-11-02",
-   "lastClose": 212.7,
-   "lastDate": "2026-11-06"
+   "lastClose": 210.87,
+   "lastDate": "2026-11-09"
   },
   "ISRG": {
    "symbol": "ISRG",
@@ -78,15 +78,35 @@
    "riskDollars": null,
    "peak": 485.82,
    "trough": 434,
-   "heldSessions": 4,
+   "heldSessions": 5,
    "signal": "rank 5, 3-month return +23.4%",
    "signalDate": "2026-11-02",
-   "lastClose": 452.8,
-   "lastDate": "2026-11-06"
+   "lastClose": 460.64,
+   "lastDate": "2026-11-09"
   }
  },
- "pending": [],
- "pendingExits": {},
+ "pending": [
+  {
+   "symbol": "LLY",
+   "reason": "rank 1, 3-month return +25.67%",
+   "signalDate": "2026-11-09"
+  },
+  {
+   "symbol": "ABBV",
+   "reason": "rank 3, 3-month return +18.51%",
+   "signalDate": "2026-11-09"
+  },
+  {
+   "symbol": "VRTX",
+   "reason": "rank 5, 3-month return +15.65%",
+   "signalDate": "2026-11-09"
+  }
+ ],
+ "pendingExits": {
+  "SHOP": "ROTATED_OUT (lost its trend)",
+  "COP": "ROTATED_OUT (lost its trend)",
+  "CVX": "ROTATED_OUT (lost its trend)"
+ },
  "closed": [
   {
    "symbol": "MRVL",
@@ -251,6 +271,12 @@
    "date": "2026-11-06",
    "realized": -841.51,
    "unrealized": -665.23,
+   "open": 5
+  },
+  {
+   "date": "2026-11-09",
+   "realized": -841.51,
+   "unrealized": -534.52,
    "open": 5
   }
  ]

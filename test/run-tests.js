@@ -21,6 +21,7 @@ const testFiles = [
   "./audit-fixes-v8.test.js",
   "./audit-followups-v8-1.test.js",
   "./phase1-v10-2.test.js",
+  "./phase2-v11.test.js",
 ];
 
 (async () => {

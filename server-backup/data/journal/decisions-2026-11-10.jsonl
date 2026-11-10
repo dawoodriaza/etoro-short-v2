@@ -1,0 +1,6 @@
+{"ts":"2026-11-10T05:00:00.010Z","bahrainTime":"11/10/2026, 8:00:00 AM","event":"SCAN_SKIPPED","reason":"ADAPTIVE_CHOP","minutesSinceLastScan":20,"lastKnownRegime":"CHOP","lastKnownSpyChangePercent":0.09699212159054749}
+{"ts":"2026-11-10T05:10:00.025Z","bahrainTime":"11/10/2026, 8:10:00 AM","event":"SCAN_SKIPPED","reason":"OVERNIGHT_FREEZE","local":"8:10:00 AM"}
+{"ts":"2026-11-10T05:20:00.008Z","bahrainTime":"11/10/2026, 8:20:00 AM","event":"SCAN_SKIPPED","reason":"OVERNIGHT_FREEZE","local":"8:20:00 AM"}
+{"ts":"2026-11-10T05:30:00.014Z","bahrainTime":"11/10/2026, 8:30:00 AM","event":"SCAN_SKIPPED","reason":"OVERNIGHT_FREEZE","local":"8:30:00 AM"}
+{"ts":"2026-11-10T05:40:00.026Z","bahrainTime":"11/10/2026, 8:40:00 AM","event":"SCAN_SKIPPED","reason":"OVERNIGHT_FREEZE","local":"8:40:00 AM"}
+{"ts":"2026-11-10T05:50:00.022Z","bahrainTime":"11/10/2026, 8:50:00 AM","event":"SCAN_SKIPPED","reason":"OVERNIGHT_FREEZE","local":"8:50:00 AM"}

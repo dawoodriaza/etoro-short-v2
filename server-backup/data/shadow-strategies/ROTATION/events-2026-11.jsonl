@@ -7,3 +7,4 @@
 {"ts":"2026-11-04T05:33:00.358Z","book":"ROTATION","event":"ENTRY","symbol":"TSLA","date":"2026-11-03","entry":406.3,"stop":null,"size":2000,"signal":"rank 3, 3-month return +27.9%"}
 {"ts":"2026-11-04T05:33:00.358Z","book":"ROTATION","event":"ENTRY","symbol":"CVX","date":"2026-11-03","entry":224,"stop":null,"size":2000,"signal":"rank 4, 3-month return +23.44%"}
 {"ts":"2026-11-04T05:33:00.358Z","book":"ROTATION","event":"ENTRY","symbol":"ISRG","date":"2026-11-03","entry":436,"stop":null,"size":2000,"signal":"rank 5, 3-month return +23.4%"}
+{"ts":"2026-11-10T05:32:48.690Z","book":"ROTATION","event":"REBALANCE","date":"2026-11-09","week":"2026-W46","top10":["LLY 25.67%","TSLA 24%","ABBV 18.51%","ISRG 17.53%","VRTX 15.65%","AAPL 8.78%","DE 7.88%","LIN 5.36%","UNP 3.17%","FDX 2.72%"]}

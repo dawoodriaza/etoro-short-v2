@@ -63,6 +63,110 @@ function easternDateOf(timestamp) {
   return Number.isFinite(when.getTime()) ? EASTERN_DATE_FORMATTER.format(when) : null;
 }
 
+// ══════════════════════════════════════════════════════════════════════
+// v11 (Phase 2) — FIXED READINGS, LOGGED BESIDE THE LIVE ONES.
+//
+// The 2026-10-26 audit found the live readings measure the wrong thing:
+//   · VWAP, day high/low and "today's volume" run from ET MIDNIGHT, so
+//     overnight and pre-market trading is mixed in (VWAP 99% of the time;
+//     the day high came from outside the session 31% of the time).
+//   · BREAKOUT compares the price with a high that INCLUDES the current
+//     bar, so it can almost never fire (1.49% of checks).
+//   · GAP_AND_GO never fires: dayOpen is never filled, gap reads 0.
+//   · Relative volume assumes volume arrives in a straight line through
+//     the day; real volume is front-loaded, so it reads ~2.7x at the open
+//     and ~0.9x by the afternoon on ordinary days.
+//   · The previous close can shift during the day when eToro's closing
+//     price cache refreshes (8% of stock-days).
+// computeSessionReadings() measures each of these from the SAME 5-minute
+// bars the bot already downloads (no extra API calls). The readings are
+// only logged in SHADOW_SIGNAL (shadow-signals.js) — nothing trades on them.
+// ══════════════════════════════════════════════════════════════════════
+const EASTERN_MINUTE_FORMATTER = new Intl.DateTimeFormat("en-US", {
+  timeZone: "America/New_York",
+  hourCycle: "h23",
+  hour: "2-digit",
+  minute: "2-digit",
+});
+function easternMinuteOf(timestamp) {
+  const parts = EASTERN_MINUTE_FORMATTER.formatToParts(new Date(timestamp));
+  const hour = Number(parts.find((p) => p.type === "hour").value) % 24;
+  return hour * 60 + Number(parts.find((p) => p.type === "minute").value);
+}
+
+const SESSION_OPEN_MINUTE = 570; // 09:30 ET
+const SESSION_CLOSE_MINUTE = 960; // 16:00 ET
+const BAR_MS = 5 * 60 * 1000;
+
+// Share of a day's eToro OneDay-candle volume that has normally traded in
+// the regular session by the end of each 5-minute bar (index 0 = the
+// 09:30-09:35 bar, 77 = 15:55-16:00). Median of 1,795 watchlist stock-days
+// (2026-07 → 2026-11) from data/replay-candles. Built 2026-11-09.
+const SESSION_VOLUME_PROFILE = [
+  0.0349, 0.0559, 0.0742, 0.0915, 0.1079, 0.122, 0.1373, 0.1511, 0.1648, 0.178,
+  0.1896, 0.2007, 0.2129, 0.2237, 0.2342, 0.2452, 0.2568, 0.2668, 0.2778, 0.2895,
+  0.2998, 0.3092, 0.3202, 0.3304, 0.3401, 0.3503, 0.3587, 0.3661, 0.3742, 0.3825,
+  0.391, 0.3985, 0.4072, 0.4154, 0.4234, 0.4313, 0.44, 0.4468, 0.4549, 0.4646,
+  0.4723, 0.4795, 0.4896, 0.4969, 0.5043, 0.5126, 0.5205, 0.5286, 0.5377, 0.5446,
+  0.5526, 0.5602, 0.5686, 0.5758, 0.585, 0.5919, 0.6001, 0.6074, 0.6153, 0.6236,
+  0.6316, 0.6417, 0.6499, 0.6581, 0.6647, 0.6726, 0.6836, 0.6942, 0.7037, 0.7147,
+  0.7257, 0.7359, 0.7493, 0.7614, 0.7749, 0.7902, 0.8131, 0.86,
+];
+
+// bars: compact bars {t,o,h,l,c,v} (any order). Returns null outside the
+// regular session or before its first bar has finished.
+function computeSessionReadings(bars, nowMs, averageDailyVolume) {
+  const today = easternDateOf(nowMs);
+  const session = (bars || [])
+    .filter((bar) => {
+      if (bar.t > nowMs || easternDateOf(bar.t) !== today) return false;
+      const minute = easternMinuteOf(bar.t);
+      return minute >= SESSION_OPEN_MINUTE && minute < SESSION_CLOSE_MINUTE;
+    })
+    .sort((a, b) => a.t - b.t);
+  if (!session.length) return null;
+  const completed = session.filter((bar) => bar.t + BAR_MS <= nowMs);
+
+  let priceVolume = 0;
+  let volume = 0;
+  for (const bar of session) {
+    priceVolume += ((bar.h + bar.l + bar.c) / 3) * (bar.v || 0);
+    volume += bar.v || 0;
+  }
+  const completedVolume = completed.reduce((sum, bar) => sum + (bar.v || 0), 0);
+  const slotIndex = Math.min(completed.length, SESSION_VOLUME_PROFILE.length) - 1;
+  const expectedVolume =
+    slotIndex >= 0 && averageDailyVolume > 0
+      ? averageDailyVolume * SESSION_VOLUME_PROFILE[slotIndex]
+      : null;
+
+  return {
+    sessionVwap: volume > 0 ? priceVolume / volume : null,
+    sessionHigh: Math.max(...session.map((bar) => bar.h)),
+    sessionLow: Math.min(...session.map((bar) => bar.l)),
+    // the high BEFORE the bar now forming: what a breakout has to clear
+    priorSessionHigh: completed.length ? Math.max(...completed.map((bar) => bar.h)) : null,
+    dayOpen: session[0].o,
+    sessionVolume: volume,
+    completedBars: completed.length,
+    volumeRatio: expectedVolume > 0 ? completedVolume / expectedVolume : null,
+  };
+}
+
+// The previous close, frozen at the first value seen each ET day, so a
+// mid-day refresh of eToro's closing-price cache cannot move "% up today".
+const stablePreviousCloseBySymbol = {}; // { SYMBOL: { date, close } }
+function stablePreviousClose(symbol, previousClose) {
+  if (!(previousClose > 0)) return null;
+  const today = getTodayEasternDateString();
+  const known = stablePreviousCloseBySymbol[symbol];
+  if (!known || known.date !== today) {
+    stablePreviousCloseBySymbol[symbol] = { date: today, close: previousClose };
+    return previousClose;
+  }
+  return known.close;
+}
+
 // ── Single-symbol quote ─────────────────────────────────────────────────────
 async function fetchSingleQuote(symbol) {
   trackApiCall("quote:" + symbol);
@@ -169,6 +273,8 @@ async function fetchIntradayQuotesFromEtoro(symbolList) {
       // v8: when eToro last updated this price. Read by the stale-quote gate
       // in index.js — a frozen after-hours rate otherwise looks live.
       quoteTimestamp: rate.date || null,
+      // v11: logged beside the live figure only (shadow-signals.js)
+      stablePreviousClose: stablePreviousClose(symbol, previousClose),
     };
   }
   return quotesBySymbol;
@@ -447,6 +553,12 @@ async function enrichCandidateFromEtoro(symbol, instrumentId) {
    averageVolume,
    // v8.4: the same 5-minute pull, chronological, for the logged trend score V2.
    intradayBars: toCompactBars(todaysFiveMinuteBars),
+   // v11: regular-session readings, logged beside the live ones only
+   sessionReadings: computeSessionReadings(
+     toCompactBars(todaysFiveMinuteBars),
+     Date.now(),
+     averageVolume,
+   ),
  };
 }
 
@@ -895,6 +1007,9 @@ module.exports = {
   fetchSpyQuote,
   fetchSpyIntradayBars, // v8.4
   toCompactBars, // v8.4
+  computeSessionReadings, // v11
+  SESSION_VOLUME_PROFILE, // v11
+  stablePreviousClose, // v11
   fetchCurrentPrice,
   sleep,
 };

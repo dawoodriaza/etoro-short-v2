@@ -969,10 +969,17 @@ async function runScanCycle() {
       if (enrichment) {
         // v8.4: the raw bars ride along NON-enumerable, so they never end up
         // in a plan, the journal or Telegram — only the trend score reads them.
-        const { intradayBars, ...enrichmentFields } = enrichment;
+        const { intradayBars, sessionReadings, ...enrichmentFields } = enrichment;
         Object.assign(candidate, enrichmentFields);
         Object.defineProperty(candidate, "intradayBars", {
           value: intradayBars || null,
+          enumerable: false,
+          configurable: true,
+          writable: true,
+        });
+        // v11: the fixed readings ride along the same way — shadow log only
+        Object.defineProperty(candidate, "sessionReadings", {
+          value: sessionReadings || null,
           enumerable: false,
           configurable: true,
           writable: true,
@@ -1006,6 +1013,9 @@ async function runScanCycle() {
         spyBars: spyIntradayBars,
         spyPrice: spyQuote.currentPrice,
         nowMs: Date.now(),
+        // v11: to score the fixed readings exactly as the live ones were
+        regimeObject: regime,
+        sectorProxyChanges,
       });
       if (!scored.rejected) {
         scored.atrPercent = candidate.atrPercent;
@@ -3885,10 +3895,12 @@ async function commandStatus() {
     "Open positions: " + Object.keys(meta).length + " / " + config.maxDayPositions + "\n" +
     "Waiting to buy on a dip: " + (pendingDipEntries.size ? [...pendingDipEntries.keys()].join(", ") : "none") + "\n" +
     "Paper positions (log only): " + paperPositions.size + "\n" +
-    (paperSummaryLines().length ? "<i>If it had bought what it skipped today:</i>\n" + paperSummaryLines().map((l) => "  " + l).join("\n") + "\n" : "") +
+    (paperSummaryLines().length ? "<i>If it had bought what it skipped today (closed so far — slow losers close later):</i>\n" + paperSummaryLines().map((l) => "  " + l).join("\n") + "\n" : "") +
     "\n" +
     "Today P&L: " + formatDualAmount(todayPnl) + "\n" +
-    "Capital: $" + Number(cap.effectiveCapital).toFixed(2) + (ledger.peakEffectiveCapital ? " · peak $" + Number(ledger.peakEffectiveCapital).toFixed(2) : "") + "\n" +
+    // v11: real dollars first, like every other line; bot dollars in brackets
+    "Capital: " + formatDualAmount(Number(cap.effectiveCapital), { includeBotAmount: true }) +
+    (ledger.peakEffectiveCapital ? " · peak " + formatDualAmount(Number(ledger.peakEffectiveCapital), { includeBotAmount: true }) : "") + "\n" +
     "Mode: " + (process.env.TRADING_MODE || "?") + " · AI " + config.aiModel + "\n\n" +
     "<i>/positions for what it holds · /help</i>"
   );
@@ -3952,13 +3964,12 @@ function tradeStats(list, value = (t) => t.pnlDollars) {
   };
 }
 
-// v10.2: the best figure for what one trade did to the account — eToro's own
-// netProfit when the daily sync has matched it, else the bot's best-known
-// result — minus the per-order commission.
-function tradeAccountDollars(t) {
-  const market = t.brokerNetProfit != null ? Number(t.brokerNetProfit) : performance.tradeResultDollars(t);
-  const commission = t.commissionDollars != null ? Number(t.commissionDollars) : performance.commissionForTrade(t.partialFills);
-  return market - commission;
+// v11: what one trade did for the COPY account — eToro's own netProfit when
+// the daily sync has matched it, else the bot's best-known result. No
+// commission: eToro does not charge it on copied trades (only the bot's own
+// agent portfolio pays $1 per order).
+function tradeCopyDollars(t) {
+  return t.brokerNetProfit != null ? Number(t.brokerNetProfit) : performance.tradeResultDollars(t);
 }
 
 async function commandToday() {
@@ -4002,33 +4013,34 @@ async function commandPerf() {
       .filter((t) => typeof t.pnlDollars === "number" && t.closedAt);
   } catch {}
   const weekAgo = new Date(Date.now() - 7 * 86400000).toISOString();
-  // v10.2: every row is after eToro's per-order commission, and uses eToro's
-  // own result per trade where the daily sync has matched it.
+  // v11: rows are the copy account's view (no commission), using eToro's own
+  // result per trade where the daily sync has matched it.
   const row = (label, list) => {
-    const x = tradeStats(list, tradeAccountDollars);
+    const x = tradeStats(list, tradeCopyDollars);
     return "<b>" + label + "</b>: " + x.n + " trades · " + real(x.sum) + (x.n ? " · " + x.win + "% won · avg win " + real(x.avgWin) + " / loss " + real(x.avgLoss) : "");
   };
   const v9 = hist.filter((t) => t.closedAt >= V9_START);
   const mix = {};
-  v9.forEach((t) => { const k = t.exitReason || "?"; const b = mix[k] || (mix[k] = { n: 0, p: 0 }); b.n++; b.p += tradeAccountDollars(t); });
+  v9.forEach((t) => { const k = t.exitReason || "?"; const b = mix[k] || (mix[k] = { n: 0, p: 0 }); b.n++; b.p += tradeCopyDollars(t); });
   const cap = capitalManager.getCapitalState();
   let peak = null;
   let ledgerFile = {};
   try { ledgerFile = JSON.parse(fs.readFileSync(path.join(__dirname, "../data/capital-ledger.json"), "utf8")); peak = ledgerFile.peakEffectiveCapital; } catch {}
   const eff = Number(cap.effectiveCapital);
   const base = capitalManager.computeEffectiveBase({ baseCapital: config.dayTradeCapital, ownerAdjustments: ledgerFile.ownerAdjustments || 0 });
-  const lines = ["📈 <b>Performance</b> <i>(your real dollars, after eToro's $1-per-order commission)</i>", ""];
+  const lines = ["📈 <b>Performance</b> <i>(your real copy, in real dollars — copied trades pay no commission)</i>", ""];
   lines.push(row("Last 7 days", hist.filter((t) => t.closedAt >= weekAgo)));
   lines.push(row("Since " + V9_START + " (current rules)", v9));
-  // v10.2: "All time" is the ACCOUNT, not a sum of trade records. The old
-  // line added raw pnlDollars, which for pre-v8 trades left out every
-  // partial profit, and ignored commissions entirely (≈$700 by Oct 26).
-  lines.push("<b>All time (the account)</b>: " + real(eff - base) + " (" + pct(((eff - base) / base) * 100) + ") · capital " + real(eff).replace(/^\+/, "") + " vs " + real(base).replace(/^\+/, "") + " start");
+  // v11: "All time" for the copy is eToro's own closed-trade total (no
+  // commission on copies). The bot's agent portfolio, which DOES pay $1 per
+  // order, is shown on its own line so the two are never mixed.
   const broker = readBrokerHistory();
   if (broker && broker.summary) {
     const s = broker.summary;
-    lines.push("  eToro's own record: trades " + real(s.brokerNetProfit) + " · commissions ~" + real(-s.estimatedCommissions) + " (" + s.brokerOrders + " orders) <i>· synced " + marketHours.localClock(new Date(broker.syncedAt)) + "</i>");
+    lines.push("<b>All time (your copy)</b>: " + real(s.brokerNetProfit) + " (" + pct((s.brokerNetProfit / base) * 100) + ") <i>· eToro's own record, synced " + marketHours.localClock(new Date(broker.syncedAt)) + "</i>");
   }
+  lines.push("<b>Bot portfolio</b> <i>(pays $1/order)</i>: " + real(eff - base) + " (" + pct(((eff - base) / base) * 100) + ")" +
+    (broker && broker.summary ? " · of which commissions ~" + real(-broker.summary.estimatedCommissions) : ""));
   const preV8 = hist.filter((t) => t.pnlAccountingVersion !== 2 && t.brokerNetProfit == null).length;
   if (preV8) lines.push("  <i>" + preV8 + " early trades are the bot's own estimates (not matched to eToro)</i>");
   if (Object.keys(mix).length) {
@@ -4040,7 +4052,7 @@ async function commandPerf() {
     const dd = (1 - eff / peak) * 100;
     const breaker = peak * (1 - config.maxDrawdownFromPeakPct);
     lines.push("");
-    lines.push("<b>Risk</b>");
+    lines.push("<b>Risk</b> <i>(bot portfolio — what the safety stop watches)</i>");
     lines.push("  capital " + real(eff).replace(/^\+/, "") + " · peak " + real(peak).replace(/^\+/, "") + " · down " + dd.toFixed(1) + "% from peak");
     lines.push("  safety stop at " + (config.maxDrawdownFromPeakPct * 100).toFixed(0) + "% down — room left " + real(Math.max(0, eff - breaker)).replace(/^\+/, ""));
   }

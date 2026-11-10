@@ -1,7 +1,7 @@
 {
  "book": "EARNINGS_DRIFT",
  "createdAt": "2026-10-22T13:40:53.189Z",
- "lastProcessedSession": "2026-11-06",
+ "lastProcessedSession": "2026-11-09",
  "lastRebalanceWeek": null,
  "open": {
   "UNP": {
@@ -14,11 +14,11 @@
    "riskDollars": 50,
    "peak": 309.8,
    "trough": 288.61,
-   "heldSessions": 11,
+   "heldSessions": 12,
    "signal": "earnings 2026-10-22 (bmo): +3.65% on the reaction day, EPS 3.53 vs 3.5078",
    "signalDate": "2026-10-22",
-   "lastClose": 290.15,
-   "lastDate": "2026-11-06"
+   "lastClose": 296.99,
+   "lastDate": "2026-11-09"
   },
   "UPS": {
    "symbol": "UPS",
@@ -30,11 +30,11 @@
    "riskDollars": 50,
    "peak": 114.84,
    "trough": 103.9,
-   "heldSessions": 8,
+   "heldSessions": 9,
    "signal": "earnings 2026-10-27 (bmo): +6.09% on the reaction day, EPS 1.69 vs 1.6417",
    "signalDate": "2026-10-27",
-   "lastClose": 108.25,
-   "lastDate": "2026-11-06"
+   "lastClose": 110.96,
+   "lastDate": "2026-11-09"
   },
   "LLY": {
    "symbol": "LLY",
@@ -46,31 +46,46 @@
    "riskDollars": 50,
    "peak": 1452.38,
    "trough": 1332,
-   "heldSessions": 6,
+   "heldSessions": 7,
    "signal": "earnings 2026-10-29 (bmo): +6.36% on the reaction day, EPS 7.48 vs 6.6112",
    "signalDate": "2026-10-29",
-   "lastClose": 1363.05,
-   "lastDate": "2026-11-06"
+   "lastClose": 1413.02,
+   "lastDate": "2026-11-09"
+  },
+  "IONQ": {
+   "symbol": "IONQ",
+   "entryDate": "2026-11-09",
+   "entry": 32.3,
+   "stop": 27.6,
+   "stopKind": "initial",
+   "size": 343.62,
+   "riskDollars": 50,
+   "peak": 36.33,
+   "trough": 32.04,
+   "heldSessions": 1,
+   "signal": "earnings 2026-11-05 (amc): +21.95% on the reaction day, EPS -0.29 vs -0.3835",
+   "signalDate": "2026-11-06",
+   "lastClose": 35.34,
+   "lastDate": "2026-11-09"
+  },
+  "ARM": {
+   "symbol": "ARM",
+   "entryDate": "2026-11-09",
+   "entry": 176.77,
+   "stop": 159.5286,
+   "stopKind": "initial",
+   "size": 512.63,
+   "riskDollars": 50,
+   "peak": 189.9,
+   "trough": 174.7,
+   "heldSessions": 1,
+   "signal": "earnings 2026-11-05 (time n/a): +4.82% on the reaction day",
+   "signalDate": "2026-11-06",
+   "lastClose": 186.22,
+   "lastDate": "2026-11-09"
   }
  },
- "pending": [
-  {
-   "symbol": "IONQ",
-   "reason": "earnings 2026-11-05 (amc): +21.95% on the reaction day, EPS -0.29 vs -0.3835",
-   "atr": 2.5792857142857133,
-   "stopAtr": 1,
-   "stopAbove": 27.6,
-   "signalDate": "2026-11-06"
-  },
-  {
-   "symbol": "ARM",
-   "reason": "earnings 2026-11-05 (time n/a): +4.82% on the reaction day",
-   "atr": 17.241428571428564,
-   "stopAtr": 1,
-   "stopAbove": 169.57,
-   "signalDate": "2026-11-06"
-  }
- ],
+ "pending": [],
  "pendingExits": {},
  "closed": [
   {
@@ -186,6 +201,12 @@
    "realized": -101.84,
    "unrealized": -20.01,
    "open": 3
+  },
+  {
+   "date": "2026-11-09",
+   "realized": -101.84,
+   "unrealized": 109.77,
+   "open": 5
   }
  ]
 }

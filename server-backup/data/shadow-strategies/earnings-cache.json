@@ -1,7 +1,18 @@
 {
- "at": "2026-11-07T05:32:47.298Z",
- "note": "15 watchlist reports since 2026-10-17",
+ "at": "2026-11-10T05:32:48.650Z",
+ "note": "6 watchlist reports since 2026-10-20",
  "rows": [
+  {
+   "symbol": "RKLB",
+   "date": "2026-11-09",
+   "hour": "amc",
+   "quarter": 3,
+   "year": 2026,
+   "epsEstimate": -0.0714,
+   "epsActual": -0.07,
+   "revenueEstimate": 260822761,
+   "revenueActual": 267829999
+  },
   {
    "symbol": "AFRM",
    "date": "2026-11-05",
@@ -10,19 +21,8 @@
    "year": 2027,
    "epsEstimate": 0.3856,
    "epsActual": 0.47,
-   "revenueEstimate": 1234920936,
-   "revenueActual": 1262220000
-  },
-  {
-   "symbol": "ARM",
-   "date": "2026-11-05",
-   "hour": "",
-   "quarter": 2,
-   "year": 2027,
-   "epsEstimate": 0.4795,
-   "epsActual": null,
-   "revenueEstimate": 1389460423,
-   "revenueActual": null
+   "revenueEstimate": 1238616732,
+   "revenueActual": 1262216000
   },
   {
    "symbol": "COP",
@@ -30,9 +30,9 @@
    "hour": "bmo",
    "quarter": 3,
    "year": 2026,
-   "epsEstimate": 2.9914,
+   "epsEstimate": 3.003,
    "epsActual": 3.27,
-   "revenueEstimate": 18357035365,
+   "revenueEstimate": 18388283836,
    "revenueActual": 20057000000
   },
   {
@@ -41,10 +41,10 @@
    "hour": "amc",
    "quarter": 3,
    "year": 2026,
-   "epsEstimate": -0.3835,
+   "epsEstimate": -0.3882,
    "epsActual": -0.29,
-   "revenueEstimate": 144457602,
-   "revenueActual": 173830000
+   "revenueEstimate": 144763194,
+   "revenueActual": 173831000
   },
   {
    "symbol": "SOUN",
@@ -55,117 +55,18 @@
    "epsEstimate": -0.0638,
    "epsActual": -0.05,
    "revenueEstimate": 62946852,
-   "revenueActual": 62430000
+   "revenueActual": 62425000
   },
   {
-   "symbol": "MELI",
+   "symbol": "ARM",
    "date": "2026-11-04",
    "hour": "amc",
-   "quarter": 3,
-   "year": 2026,
-   "epsEstimate": 9.5488,
-   "epsActual": 8.83,
-   "revenueEstimate": 10876335306,
-   "revenueActual": 10750000000
-  },
-  {
-   "symbol": "QCOM",
-   "date": "2026-11-04",
-   "hour": "amc",
-   "quarter": 4,
-   "year": 2026,
-   "epsEstimate": 2.202,
-   "epsActual": 2.17,
-   "revenueEstimate": 10318265215,
-   "revenueActual": 10442000000
-  },
-  {
-   "symbol": "SNAP",
-   "date": "2026-11-04",
-   "hour": "amc",
-   "quarter": 3,
-   "year": 2026,
-   "epsEstimate": 0.1639,
-   "epsActual": 0.15,
-   "revenueEstimate": 1765307002,
-   "revenueActual": 1722470000
-  },
-  {
-   "symbol": "AMD",
-   "date": "2026-11-03",
-   "hour": "amc",
-   "quarter": 3,
-   "year": 2026,
-   "epsEstimate": 1.969,
-   "epsActual": 2.09,
-   "revenueEstimate": 13222748108,
-   "revenueActual": 13377000000
-  },
-  {
-   "symbol": "ANET",
-   "date": "2026-11-03",
-   "hour": "amc",
-   "quarter": 3,
-   "year": 2026,
-   "epsEstimate": 1.0979,
-   "epsActual": 1.2,
-   "revenueEstimate": 3397052074,
-   "revenueActual": 3657600000
-  },
-  {
-   "symbol": "ETN",
-   "date": "2026-11-03",
-   "hour": "bmo",
-   "quarter": 3,
-   "year": 2026,
-   "epsEstimate": 3.5787,
-   "epsActual": 3.68,
-   "revenueEstimate": 8591447840,
-   "revenueActual": 8947000000
-  },
-  {
-   "symbol": "SHOP",
-   "date": "2026-11-03",
-   "hour": "bmo",
-   "quarter": 3,
-   "year": 2026,
-   "epsEstimate": 0.4684,
-   "epsActual": 0.49,
-   "revenueEstimate": 3821663845,
-   "revenueActual": 3742000000
-  },
-  {
-   "symbol": "SMCI",
-   "date": "2026-11-03",
-   "hour": "amc",
-   "quarter": 1,
+   "quarter": 2,
    "year": 2027,
-   "epsEstimate": 1.2587,
-   "epsActual": 1.81,
-   "revenueEstimate": 16716871942,
-   "revenueActual": 19945830000
-  },
-  {
-   "symbol": "UPST",
-   "date": "2026-11-03",
-   "hour": "bmo",
-   "quarter": 3,
-   "year": 2026,
-   "epsEstimate": 0.6448,
-   "epsActual": 0.66,
-   "revenueEstimate": 368295796,
-   "revenueActual": 370520000
-  },
-  {
-   "symbol": "AAPL",
-   "date": "2026-11-02",
-   "hour": "amc",
-   "quarter": 4,
-   "year": 2026,
-   "epsEstimate": 2.0267,
-   "epsActual": 2.05,
-   "revenueEstimate": 115660327009,
-   "revenueActual": 114477000000
+   "epsEstimate": 0.4795,
+   "epsActual": 0.52,
+   "revenueEstimate": 1389460423,
+   "revenueActual": 1443000000
   }
  ]
 }

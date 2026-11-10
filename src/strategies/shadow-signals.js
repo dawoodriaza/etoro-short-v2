@@ -68,7 +68,53 @@ function buildShadowSignal(candidate, scored, context) {
     outcome: scored && scored.rejected ? "SCORING_REJECTED" : "SCORED",
     outcomeDetail: scored && scored.rejected ? scored.rejectReason || null : null,
     ...trendScoreFields(candidate, context, price, changePercent, atrPercent),
+    fixed: fixedReadingFields(candidate, scored, context),
   };
+}
+
+// v11 (Phase 2): the same candidate scored again with the FIXED readings
+// (regular-session VWAP/high/low, real day open and gap, a breakout high
+// that excludes the bar now forming, time-of-day relative volume, and a
+// previous close frozen for the day). Observation only — nothing trades on
+// it. null outside the regular session.
+function fixedReadingFields(candidate, scored, context) {
+  try {
+    const fixedCandidate = momentumScanner.applyFixedReadings(candidate);
+    if (!fixedCandidate) return null;
+    const result = momentumScanner.scoreEnrichedCandidate(
+      fixedCandidate,
+      context ? context.spyChangePercent : null,
+      context ? context.regimeObject : null,
+      context ? context.sectorProxyChanges : null,
+    );
+    const readings = candidate.sessionReadings;
+    const price = Number(fixedCandidate.currentPrice) || null;
+    const high = readings.sessionHigh;
+    const low = readings.sessionLow;
+    const liveRejected = !scored || scored.rejected;
+    return {
+      previousClose: round(fixedCandidate.previousClose, 4),
+      priceChangePercent: round(fixedCandidate.priceChangePercent, 3),
+      dayOpen: round(readings.dayOpen, 4),
+      gapPercent: round(fixedCandidate.gapPercent, 3),
+      vwap: round(readings.sessionVwap, 4),
+      vwapDistancePct:
+        readings.sessionVwap && price ? round((price / readings.sessionVwap - 1) * 100, 3) : null,
+      sessionHigh: round(high, 4),
+      priorSessionHigh: round(readings.priorSessionHigh, 4),
+      sessionLow: round(low, 4),
+      rangePosition: high > low && price != null ? round((price - low) / (high - low), 3) : null,
+      volumeRatio: round(readings.volumeRatio, 3),
+      completedBars: readings.completedBars,
+      score: result.rejected ? null : round(result.score, 2),
+      setup: result.rejected ? null : result.setup,
+      rejectReason: result.rejected ? result.rejectReason || null : null,
+      // would the fixed readings have let it through where live did not, or the reverse
+      verdictChanged: liveRejected !== !!result.rejected,
+    };
+  } catch (error) {
+    return { error: error.message };
+  }
 }
 
 // v8.4: trend score V2 logged beside the live score (momentum-scanner.js).

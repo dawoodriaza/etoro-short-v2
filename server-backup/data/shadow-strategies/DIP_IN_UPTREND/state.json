@@ -1,7 +1,7 @@
 {
  "book": "DIP_IN_UPTREND",
  "createdAt": "2026-10-22T13:40:53.187Z",
- "lastProcessedSession": "2026-11-06",
+ "lastProcessedSession": "2026-11-09",
  "lastRebalanceWeek": null,
  "open": {
   "XOM": {
@@ -13,12 +13,12 @@
    "size": 478.74,
    "riskDollars": 50,
    "peak": 173.63,
-   "trough": 163.5,
-   "heldSessions": 2,
+   "trough": 162.62,
+   "heldSessions": 3,
    "signal": "2-day RSI 5.2 while above the 100-day average $158.77",
    "signalDate": "2026-11-04",
-   "lastClose": 165.84,
-   "lastDate": "2026-11-06"
+   "lastClose": 164.83,
+   "lastDate": "2026-11-09"
   },
   "CVX": {
    "symbol": "CVX",
@@ -29,12 +29,12 @@
    "size": 553.91,
    "riskDollars": 50,
    "peak": 222.41,
-   "trough": 210,
-   "heldSessions": 2,
+   "trough": 208.67,
+   "heldSessions": 3,
    "signal": "2-day RSI 5.4 while above the 100-day average $199.89",
    "signalDate": "2026-11-04",
-   "lastClose": 212.7,
-   "lastDate": "2026-11-06"
+   "lastClose": 210.87,
+   "lastDate": "2026-11-09"
   },
   "COP": {
    "symbol": "COP",
@@ -45,40 +45,31 @@
    "size": 363.18,
    "riskDollars": 50,
    "peak": 140.73,
-   "trough": 133.6,
-   "heldSessions": 2,
+   "trough": 133.3,
+   "heldSessions": 3,
    "signal": "2-day RSI 6.3 while above the 100-day average $125.85",
    "signalDate": "2026-11-04",
-   "lastClose": 136.32,
-   "lastDate": "2026-11-06"
+   "lastClose": 134.63,
+   "lastDate": "2026-11-09"
   },
-  "TSLA": {
-   "symbol": "TSLA",
-   "entryDate": "2026-11-05",
-   "entry": 373.88,
-   "stop": 317.2121,
+  "UNP": {
+   "symbol": "UNP",
+   "entryDate": "2026-11-09",
+   "entry": 291.28,
+   "stop": 261.3057,
    "stopKind": "initial",
-   "size": 329.89,
+   "size": 485.88,
    "riskDollars": 50,
-   "peak": 373.94,
-   "trough": 338.15,
-   "heldSessions": 2,
-   "signal": "2-day RSI 9.6 while above the 100-day average $367.41",
-   "signalDate": "2026-11-04",
-   "lastClose": 358.17,
-   "lastDate": "2026-11-06"
+   "peak": 297.4,
+   "trough": 290.36,
+   "heldSessions": 1,
+   "signal": "2-day RSI 8.3 while above the 100-day average $286.64",
+   "signalDate": "2026-11-06",
+   "lastClose": 296.99,
+   "lastDate": "2026-11-09"
   }
  },
- "pending": [
-  {
-   "symbol": "UNP",
-   "reason": "2-day RSI 8.3 while above the 100-day average $286.64",
-   "atr": 9.991428571428571,
-   "stopAtr": 3,
-   "stopAbove": null,
-   "signalDate": "2026-11-06"
-  }
- ],
+ "pending": [],
  "pendingExits": {},
  "closed": [
   {
@@ -199,6 +190,23 @@
    "riskDollars": 50,
    "r": -0.35,
    "signal": "2-day RSI 6.2 while above the 100-day average $139.05"
+  },
+  {
+   "symbol": "TSLA",
+   "entryDate": "2026-11-05",
+   "entry": 373.88,
+   "exitDate": "2026-11-09",
+   "exit": 378.03,
+   "reason": "CLOSE_ABOVE_5DAY_AVG",
+   "size": 329.89,
+   "pnl": 3.33,
+   "pnlPct": 1.11,
+   "heldSessions": 3,
+   "peakPct": 2.2,
+   "troughPct": -9.56,
+   "riskDollars": 50,
+   "r": 0.07,
+   "signal": "2-day RSI 9.6 while above the 100-day average $367.41"
   }
  ],
  "marks": [
@@ -278,6 +286,12 @@
    "date": "2026-11-06",
    "realized": -2.24,
    "unrealized": -48.24,
+   "open": 4
+  },
+  {
+   "date": "2026-11-09",
+   "realized": 1.09,
+   "unrealized": -36.74,
    "open": 4
   }
  ]

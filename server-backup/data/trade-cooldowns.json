@@ -264,9 +264,9 @@
     "scoreAtExit": 100
   },
   "GE": {
-    "exitAtMs": 1792611901832,
-    "wasLoss": true,
-    "scoreAtExit": 88.63371188100216
+    "exitAtMs": 1794269461102,
+    "wasLoss": false,
+    "scoreAtExit": 80.1739731705314
   },
   "RNG": {
     "exitAtMs": 1792764301183,

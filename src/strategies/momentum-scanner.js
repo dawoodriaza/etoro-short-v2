@@ -537,4 +537,39 @@ function scoreTrendV2(features) {
   return { score: roundTo(Math.max(0, Math.min(100, total)), 1), reason: null, components: rounded };
 }
 
-module.exports = { prefilterCandidates, scoreEnrichedCandidate, extractTrendFeatures, scoreTrendV2 };
+// v11 (Phase 2): the candidate as the FIXED readings see it (see
+// computeSessionReadings in market-data.js). Every other field is kept, so
+// scoring this copy with scoreEnrichedCandidate() differs from the live
+// score ONLY in the readings. null outside the regular session.
+function applyFixedReadings(candidate) {
+  const readings = candidate && candidate.sessionReadings;
+  if (!readings) return null;
+  const price = Number(candidate.currentPrice);
+  const liveChange = candidate.priceChangePercent;
+  const previousClose =
+    candidate.stablePreviousClose > 0
+      ? candidate.stablePreviousClose
+      : price > 0 && typeof liveChange === "number"
+        ? price / (1 + liveChange / 100)
+        : null;
+  return {
+    ...candidate,
+    previousClose,
+    priceChangePercent: previousClose ? (price / previousClose - 1) * 100 : liveChange,
+    vwap: readings.sessionVwap,
+    recentIntradayHigh: readings.priorSessionHigh,
+    recentIntradayLow: readings.sessionLow,
+    dayOpen: readings.dayOpen,
+    gapPercent:
+      previousClose && readings.dayOpen ? (readings.dayOpen / previousClose - 1) * 100 : 0,
+    volumeRatio: readings.volumeRatio,
+  };
+}
+
+module.exports = {
+  prefilterCandidates,
+  scoreEnrichedCandidate,
+  extractTrendFeatures,
+  scoreTrendV2,
+  applyFixedReadings, // v11
+};
