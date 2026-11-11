@@ -10,8 +10,10 @@ require("dotenv").config();
 
 const ET_TIME_ZONE = "America/New_York";
 
-// US market holidays
-const US_MARKET_HOLIDAYS_2026 = new Set([
+// US market holidays (NYSE). v11.1: the ONE list — risk-manager.js reads it
+// too (it used to keep its own copy) — and extended to 2027. Extend each
+// year from the NYSE calendar.
+const US_MARKET_HOLIDAYS = new Set([
   "2026-01-01",
   "2026-01-19",
   "2026-02-16",
@@ -22,7 +24,51 @@ const US_MARKET_HOLIDAYS_2026 = new Set([
   "2026-09-07",
   "2026-11-26",
   "2026-12-25",
+  "2027-01-01",
+  "2027-01-18",
+  "2027-02-15",
+  "2027-03-26",
+  "2027-05-31",
+  "2027-06-18",
+  "2027-07-05",
+  "2027-09-06",
+  "2027-11-25",
+  "2027-12-24",
 ]);
+
+// v11.1: NYSE early-close days (13:00 ET). Before this the bot assumed 16:00
+// every day, so on these days it kept opening trades until 15:15 and ran the
+// force-close at 15:45 — hours after the regular session had ended.
+const EARLY_CLOSE_MINUTE = 13 * 60;
+const US_MARKET_EARLY_CLOSES = new Set(["2026-11-27", "2026-12-24", "2027-11-26"]);
+const REGULAR_CLOSE_MINUTE = 16 * 60;
+
+function easternDateString(atDate) {
+  return (atDate || new Date()).toLocaleDateString("en-CA", { timeZone: ET_TIME_ZONE });
+}
+
+// Minute of day (ET) the regular session closes on that date.
+function getSessionCloseMinute(atDate) {
+  return US_MARKET_EARLY_CLOSES.has(easternDateString(atDate))
+    ? EARLY_CLOSE_MINUTE
+    : REGULAR_CLOSE_MINUTE;
+}
+
+function isEarlyCloseDay(atDate) {
+  return US_MARKET_EARLY_CLOSES.has(easternDateString(atDate));
+}
+
+// True when the next weekday after this date is a market holiday — a
+// position held overnight would then sit through a day with no exit monitor.
+function isNextWeekdayHoliday(atDate) {
+  const when = atDate || new Date();
+  const [y, m, d] = easternDateString(when).split("-").map(Number);
+  const next = new Date(Date.UTC(y, m - 1, d, 12));
+  do {
+    next.setUTCDate(next.getUTCDate() + 1);
+  } while (next.getUTCDay() === 0 || next.getUTCDay() === 6);
+  return US_MARKET_HOLIDAYS.has(next.toISOString().slice(0, 10));
+}
 
 // -------------------------
 // SINGLE ET SNAPSHOT (CORE FIX)
@@ -124,7 +170,7 @@ function isWeekendET() {
 
 function isUSMarketHoliday() {
   const { date } = getMarketTime();
-  return US_MARKET_HOLIDAYS_2026.has(date);
+  return US_MARKET_HOLIDAYS.has(date);
 }
 
 function minutesSinceMidnight(hour, minute) {
@@ -141,7 +187,7 @@ function isRegularMarketHours() {
   const t = minutesSinceMidnight(hour, minute);
 
   const OPEN = 9 * 60 + 30;
-  const CLOSE = 16 * 60;
+  const CLOSE = getSessionCloseMinute(); // v11.1: 13:00 on early-close days
 
   return t >= OPEN && t < CLOSE;
 }
@@ -415,6 +461,10 @@ module.exports = {
   getMarketTime,
   isWeekendET,
   isUSMarketHoliday,
+  US_MARKET_HOLIDAYS, // v11.1: the one holiday list
+  getSessionCloseMinute, // v11.1
+  isEarlyCloseDay, // v11.1
+  isNextWeekdayHoliday, // v11.1
   isRegularMarketHours,
   isExtendedHours,
   shouldRunAnalysisCycle,

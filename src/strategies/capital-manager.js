@@ -166,15 +166,23 @@ function recordRealizedPnl(pnlDollars) {
 // partial close or full close — because that is when it leaves the cash.
 // Also tallied in ledger.commissionsBooked so reports can show it apart
 // from trading P&L.
+// v11.1: kept OUT of dailyPnl. dailyPnl drives the losing-day streak
+// (de-risk) and /status "Today P&L"; booking $1 there made the first BUY
+// after a red day look like a second losing day and halved every size
+// (2026-11-09: GE bought 18:00:04, de-risk ×0.5 at 18:01:01 Bahrain). The
+// copy account pays no commission, so its "today" should not show it either.
 function recordCommission(orderCount = 1) {
   const perOrder = Number(config.commissionPerOrderDollars) || 0;
   if (perOrder <= 0 || !(orderCount > 0)) return;
   const dollars = perOrder * orderCount;
-  recordRealizedPnl(-dollars);
   const ledger = loadLedger();
+  ledger.cumulativeRealizedPnl = Number(ledger.cumulativeRealizedPnl || 0) - dollars;
   ledger.commissionsBooked = Number(
     (Number(ledger.commissionsBooked || 0) + dollars).toFixed(2),
   );
+  const dayKey = todayKeyEastern();
+  if (!ledger.dailyCommissions) ledger.dailyCommissions = {};
+  ledger.dailyCommissions[dayKey] = Number(ledger.dailyCommissions[dayKey] || 0) + dollars;
   saveLedger(ledger);
 }
 

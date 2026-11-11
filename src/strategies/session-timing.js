@@ -190,26 +190,33 @@ function getEntryCutoffStatus(atDate) {
   const weekday = WEEKDAY_INDEX[ET_WEEKDAY_FORMATTER.format(when)];
   const { hour, minute } = marketHours.getEasternHourMinute(when);
   const nowMinute = hour * 60 + minute;
-  const forceCloseMinute = 16 * 60 - config.forceCloseMinutesBeforeClose;
+  // v11.1: 13:00 ET on NYSE early-close days, not always 16:00
+  const forceCloseMinute =
+    marketHours.getSessionCloseMinute(when) - config.forceCloseMinutesBeforeClose;
   // v8.9: 12-hour for the reader — this label reaches Telegram in the
   // "dip order cancelled" message.
   const forceCloseLabel =
     marketHours.to12h(Math.floor(forceCloseMinute / 60), forceCloseMinute % 60) + " ET";
+  // v11.1: the day before a market holiday closes everything like a Friday
+  const beforeHoliday = weekday >= 1 && weekday <= 4 && marketHours.isNextWeekdayHoliday(when);
+  const closesAll = (weekday === 5 || beforeHoliday) && config.fridayCloseAll;
 
-  if (weekday === 5 && config.fridayCloseAll && nowMinute >= forceCloseMinute) {
+  if (closesAll && nowMinute >= forceCloseMinute) {
     return {
       blocked: true,
       gate: "FRIDAY_AFTER_CLOSE",
       reason:
-        "the Friday " +
+        "the " +
+        (weekday === 5 ? "Friday " : "pre-holiday ") +
         forceCloseLabel +
-        " force-close has run — a position opened now would be held all " +
-        "weekend with no exit monitor",
+        " force-close has run — a position opened now would be held " +
+        (weekday === 5 ? "all weekend" : "through the holiday") +
+        " with no exit monitor",
     };
   }
 
   const windowMinutes =
-    weekday === 5
+    weekday === 5 || beforeHoliday
       ? config.fridayNoEntryMinutesBeforeClose
       : config.eodNoEntryMinutesBeforeClose;
   if (

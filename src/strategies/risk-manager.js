@@ -50,6 +50,7 @@ const { logger } = require("../logger");
 const config = require("../config");
 const sectorMap = require("./sector-map");
 const tradePlanner = require("./trade-planner"); // v6: reuse classifyVolatility (no cycle — trade-planner has no risk-manager require)
+const marketHours = require("../market-hours"); // v11.1: shared holiday + early-close calendar
 
 // ── v6: short-term trend read (recovery check + profit-stall check) ───────
 // recentPrices: [{price, atMs}, ...] oldest-first, small rolling window
@@ -151,14 +152,16 @@ function easternInfo(ms) {
     minuteOfDay: (Number(part("hour")) % 24) * 60 + Number(part("minute")),
     isTradingDay:
       weekday !== "Sat" && weekday !== "Sun" && !isUSMarketHoliday(dateString),
+    // v11.1: 13:00 on NYSE early-close days
+    closeMinute: marketHours.getSessionCloseMinute(new Date(ms)),
   };
 }
 
-// Minutes of [fromMinute, toMinute) that fall inside the 09:30-16:00 window.
-function sessionOverlap(fromMinute, toMinute) {
+// Minutes of [fromMinute, toMinute) that fall inside the 09:30-close window.
+function sessionOverlap(fromMinute, toMinute, closeMinute = SESSION_CLOSE_MINUTE_OF_DAY) {
   return Math.max(
     0,
-    Math.min(toMinute, SESSION_CLOSE_MINUTE_OF_DAY) -
+    Math.min(toMinute, closeMinute) -
       Math.max(fromMinute, SESSION_OPEN_MINUTE_OF_DAY),
   );
 }
@@ -184,43 +187,37 @@ function computeRegularSessionMinutesBetween(startMs, endMs) {
   // Same ET calendar day — one intersection settles it.
   if (start.dateString === end.dateString) {
     return start.isTradingDay
-      ? sessionOverlap(start.minuteOfDay, end.minuteOfDay)
+      ? sessionOverlap(start.minuteOfDay, end.minuteOfDay, start.closeMinute)
       : 0;
   }
 
   // First (partial) day, from entry to midnight.
   let total = start.isTradingDay
-    ? sessionOverlap(start.minuteOfDay, MINUTES_PER_DAY)
+    ? sessionOverlap(start.minuteOfDay, MINUTES_PER_DAY, start.closeMinute)
     : 0;
 
   // Whole days in between contribute a full session each, or nothing.
   // Stepping 24h from a midday anchor always lands on the next calendar
   // day, including across DST transitions (which shift by one hour).
-  const FULL_SESSION_MINUTES =
-    SESSION_CLOSE_MINUTE_OF_DAY - SESSION_OPEN_MINUTE_OF_DAY; // 390
   let cursorMs = startMs + (12 * 60 - start.minuteOfDay) * 60000; // ~noon ET
   for (let dayIndex = 0; dayIndex < 31; dayIndex += 1) {
     cursorMs += MINUTES_PER_DAY * 60000;
     const day = easternInfo(cursorMs);
     if (day.dateString === end.dateString) break;
     if (cursorMs > endMs) break;
-    if (day.isTradingDay) total += FULL_SESSION_MINUTES;
+    if (day.isTradingDay) total += day.closeMinute - SESSION_OPEN_MINUTE_OF_DAY;
   }
 
   // Last (partial) day, from midnight to now.
-  if (end.isTradingDay) total += sessionOverlap(0, end.minuteOfDay);
+  if (end.isTradingDay) total += sessionOverlap(0, end.minuteOfDay, end.closeMinute);
 
   return total;
 }
 
-// Minimal holiday check kept local so risk-manager stays free of a require
-// on market-hours (which loads dotenv and reads 24/5 env at module load).
-const US_MARKET_HOLIDAYS = new Set([
-  "2026-01-01", "2026-01-19", "2026-02-16", "2026-04-03", "2026-05-25",
-  "2026-06-19", "2026-07-03", "2026-09-07", "2026-11-26", "2026-12-25",
-]);
+// v11.1: the shared NYSE holiday list in market-hours.js (this file used to
+// keep its own copy, which stopped at 2026).
 function isUSMarketHoliday(etDateString) {
-  return US_MARKET_HOLIDAYS.has(etDateString);
+  return marketHours.US_MARKET_HOLIDAYS.has(etDateString);
 }
 
 // The elapsed figure the DAY stale-exit should judge against, plus the

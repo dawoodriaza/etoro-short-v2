@@ -1667,10 +1667,27 @@ async function markPaperPositions(eodMode = null) {
     const symbol = meta.plan.symbol;
     const paperReason = meta.paperReason || "DIP_WAIT";
     const rate = rates[idBySymbol[symbol]];
-    const price = rate && rate.ask > 0 ? rate.ask : null;
+    // v11.1: value the paper position at the BID, as a real sale fills — it
+    // was valued at the ask, which flattered every paper trade by the spread.
+    const price = rate && rate.bid > 0 && rate.ask > 0 ? rate.bid : null;
     if (!price) continue;
 
-    meta.recentPrices = [...(meta.recentPrices || []), price].slice(-20);
+    // v11.1: a real buy fills at the ASK, but paper opened at the mid price.
+    // On the first mark, move the entry (and stop/targets with it, as a real
+    // fill rebases them) up by half the spread seen now.
+    if (!meta.spreadApplied) {
+      const ratio = 1 + (rate.ask - rate.bid) / (rate.ask + rate.bid);
+      for (const field of ["entryPrice", "stopPrice", "targetT1", "targetT2", "peakPrice", "troughPrice"]) {
+        if (typeof meta[field] === "number") meta[field] = Number((meta[field] * ratio).toFixed(4));
+      }
+      meta.spreadApplied = Number(((ratio - 1) * 100).toFixed(4)); // % added to the entry
+    }
+
+    // v11.1: same shape and window as a real position — the exit engine reads
+    // {price}; plain numbers made its "is it rising?" check always UNKNOWN,
+    // so paper never got the recovery grace or the profit-stall extension.
+    meta.recentPrices = [...(meta.recentPrices || []).filter((p) => p && typeof p.price === "number"), { price, atMs: nowMs }]
+      .slice(-(config.recoveryCheckMinSamples + 2));
     if (price > (meta.peakPrice || meta.entryPrice)) {
       meta.peakPrice = price;
       meta.peakSetAt = nowMs;
@@ -1736,6 +1753,7 @@ async function markPaperPositions(eodMode = null) {
         pnlPct: Number(pnlPct.toFixed(2)),
         pnlDollars: Number(pnlDollars.toFixed(2)),
         realizedPartialPnl: meta.realizedPartialPnl || 0,
+        spreadAppliedPct: meta.spreadApplied || 0, // v11.1: bought at ask, sold at bid
         // the whole paper trade: the final leg plus anything banked at T1
         totalPnlDollars: Number((pnlDollars + (meta.realizedPartialPnl || 0)).toFixed(2)),
         peakPrice: meta.peakPrice,
@@ -4313,15 +4331,34 @@ function startScheduler() {
   const forceCloseMinute =
     closeMinuteRaw >= 60 ? closeMinuteRaw - 60 : closeMinuteRaw;
 
+  // v11.1: on NYSE early-close days (13:00 ET) the same routine runs
+  // forceCloseMinutesBeforeClose before 13:00, and the normal-time run skips.
+  const earlyCloseRaw = 13 * 60 - config.forceCloseMinutesBeforeClose;
+  new CronJob(
+    (earlyCloseRaw % 60) + " " + Math.floor(earlyCloseRaw / 60) + " * * 1-5",
+    () => (marketHours.isEarlyCloseDay() ? runEodForceClose() : null),
+    null,
+    true,
+    TIMEZONE,
+  );
+
   new CronJob(
     forceCloseMinute + " " + forceCloseHour + " * * 1-5",
-    async () => {
+    () => (marketHours.isEarlyCloseDay() ? null : runEodForceClose()),
+    null,
+    true,
+    TIMEZONE,
+  );
+
+  async function runEodForceClose() {
       const weekday = getEasternWeekday();
       // Friday → close ALL (weekend safety). Mon–Thu in 24/5 overnight-hold
       // mode → keep winning DAY positions overnight. Otherwise → close all
       // DAY positions (swings hold).
+      // v11.1: the day before a market holiday closes ALL too — a winner kept
+      // overnight would sit through a day with no exit monitor.
       let mode;
-      if (weekday === 5 && config.fridayCloseAll) {
+      if ((weekday === 5 || marketHours.isNextWeekdayHoliday()) && config.fridayCloseAll) {
         mode = "ALL";
       } else if (config.trade24_5 && config.hold24_5Overnight) {
         mode = "DAY_KEEP_WINNERS";
@@ -4381,11 +4418,7 @@ function startScheduler() {
       } catch (paperError) {
         logger.warn("Paper end-of-day close failed: " + paperError.message);
       }
-    },
-    null,
-    true,
-    TIMEZONE,
-  );
+  }
 
   // Friday weekly self-evaluation, 5 minutes after the close routine.
   const selfEvalMinuteRaw = forceCloseMinute + 5;
