@@ -10,9 +10,9 @@
     "scoreAtExit": 100
   },
   "ASML": {
-    "exitAtMs": 1792604042220,
-    "wasLoss": false,
-    "scoreAtExit": 83.18529580461262
+    "exitAtMs": 1794355419165,
+    "wasLoss": true,
+    "scoreAtExit": 92.84754573061025
   },
   "META": {
     "exitAtMs": 1793992141646,

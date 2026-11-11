@@ -6,3 +6,4 @@
 {"ts":"2026-11-07T05:32:47.368Z","book":"EARNINGS_DRIFT","event":"SIGNAL","date":"2026-11-06","symbol":"ARM","reason":"earnings 2026-11-05 (time n/a): +4.82% on the reaction day","rank":0.048}
 {"ts":"2026-11-10T05:32:48.685Z","book":"EARNINGS_DRIFT","event":"ENTRY","symbol":"IONQ","date":"2026-11-09","entry":32.3,"stop":27.6,"size":343.62,"signal":"earnings 2026-11-05 (amc): +21.95% on the reaction day, EPS -0.29 vs -0.3835"}
 {"ts":"2026-11-10T05:32:48.686Z","book":"EARNINGS_DRIFT","event":"ENTRY","symbol":"ARM","date":"2026-11-09","entry":176.77,"stop":159.52857142857144,"size":512.63,"signal":"earnings 2026-11-05 (time n/a): +4.82% on the reaction day"}
+{"ts":"2026-11-11T05:33:45.676Z","book":"EARNINGS_DRIFT","event":"SIGNAL","date":"2026-11-10","symbol":"RKLB","reason":"earnings 2026-11-09 (amc): +6.31% on the reaction day, EPS -0.07 vs -0.0714","rank":0.063}

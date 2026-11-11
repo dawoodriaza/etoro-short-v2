@@ -5,3 +5,4 @@
 {"ts":"2026-11-05T05:32:55.104Z","book":"SWING_BREAKOUT","event":"SIGNAL","date":"2026-11-04","symbol":"UPS","reason":"closed $114.24 above the 20-day high $110.09; 50-day average rising","rank":1.033}
 {"ts":"2026-11-06T05:32:02.987Z","book":"SWING_BREAKOUT","event":"ENTRY","symbol":"UPS","date":"2026-11-05","entry":113.11,"stop":104.77,"size":678.12,"signal":"closed $114.24 above the 20-day high $110.09; 50-day average rising"}
 {"ts":"2026-11-10T05:32:48.668Z","book":"SWING_BREAKOUT","event":"SIGNAL","date":"2026-11-09","symbol":"DE","reason":"closed $690.83 above the 20-day high $686.28; 50-day average rising","rank":0.195}
+{"ts":"2026-11-11T05:33:45.598Z","book":"SWING_BREAKOUT","event":"ENTRY","symbol":"DE","date":"2026-11-10","entry":686,"stop":639.0328571428571,"size":730.3,"signal":"closed $690.83 above the 20-day high $686.28; 50-day average rising"}

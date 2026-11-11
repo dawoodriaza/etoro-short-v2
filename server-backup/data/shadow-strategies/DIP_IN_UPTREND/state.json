@@ -1,7 +1,7 @@
 {
  "book": "DIP_IN_UPTREND",
  "createdAt": "2026-10-22T13:40:53.187Z",
- "lastProcessedSession": "2026-11-09",
+ "lastProcessedSession": "2026-11-10",
  "lastRebalanceWeek": null,
  "open": {
   "XOM": {
@@ -13,12 +13,12 @@
    "size": 478.74,
    "riskDollars": 50,
    "peak": 173.63,
-   "trough": 162.62,
-   "heldSessions": 3,
+   "trough": 160.09,
+   "heldSessions": 4,
    "signal": "2-day RSI 5.2 while above the 100-day average $158.77",
    "signalDate": "2026-11-04",
-   "lastClose": 164.83,
-   "lastDate": "2026-11-09"
+   "lastClose": 164.48,
+   "lastDate": "2026-11-10"
   },
   "CVX": {
    "symbol": "CVX",
@@ -29,44 +29,12 @@
    "size": 553.91,
    "riskDollars": 50,
    "peak": 222.41,
-   "trough": 208.67,
-   "heldSessions": 3,
+   "trough": 206,
+   "heldSessions": 4,
    "signal": "2-day RSI 5.4 while above the 100-day average $199.89",
    "signalDate": "2026-11-04",
-   "lastClose": 210.87,
-   "lastDate": "2026-11-09"
-  },
-  "COP": {
-   "symbol": "COP",
-   "entryDate": "2026-11-05",
-   "entry": 138.87,
-   "stop": 119.7514,
-   "stopKind": "initial",
-   "size": 363.18,
-   "riskDollars": 50,
-   "peak": 140.73,
-   "trough": 133.3,
-   "heldSessions": 3,
-   "signal": "2-day RSI 6.3 while above the 100-day average $125.85",
-   "signalDate": "2026-11-04",
-   "lastClose": 134.63,
-   "lastDate": "2026-11-09"
-  },
-  "UNP": {
-   "symbol": "UNP",
-   "entryDate": "2026-11-09",
-   "entry": 291.28,
-   "stop": 261.3057,
-   "stopKind": "initial",
-   "size": 485.88,
-   "riskDollars": 50,
-   "peak": 297.4,
-   "trough": 290.36,
-   "heldSessions": 1,
-   "signal": "2-day RSI 8.3 while above the 100-day average $286.64",
-   "signalDate": "2026-11-06",
-   "lastClose": 296.99,
-   "lastDate": "2026-11-09"
+   "lastClose": 211.27,
+   "lastDate": "2026-11-10"
   }
  },
  "pending": [],
@@ -207,6 +175,40 @@
    "riskDollars": 50,
    "r": 0.07,
    "signal": "2-day RSI 9.6 while above the 100-day average $367.41"
+  },
+  {
+   "symbol": "COP",
+   "entryDate": "2026-11-05",
+   "entry": 138.87,
+   "exitDate": "2026-11-10",
+   "exit": 135.71,
+   "reason": "CLOSE_ABOVE_5DAY_AVG",
+   "size": 363.18,
+   "pnl": -8.63,
+   "pnlPct": -2.28,
+   "heldSessions": 4,
+   "peakPct": 1.34,
+   "troughPct": -5.63,
+   "riskDollars": 50,
+   "r": -0.17,
+   "signal": "2-day RSI 6.3 while above the 100-day average $125.85"
+  },
+  {
+   "symbol": "UNP",
+   "entryDate": "2026-11-09",
+   "entry": 291.28,
+   "exitDate": "2026-11-10",
+   "exit": 300.72,
+   "reason": "CLOSE_ABOVE_5DAY_AVG",
+   "size": 485.88,
+   "pnl": 15.26,
+   "pnlPct": 3.24,
+   "heldSessions": 2,
+   "peakPct": 3.43,
+   "troughPct": -0.32,
+   "riskDollars": 50,
+   "r": 0.31,
+   "signal": "2-day RSI 8.3 while above the 100-day average $286.64"
   }
  ],
  "marks": [
@@ -293,6 +295,12 @@
    "realized": 1.09,
    "unrealized": -36.74,
    "open": 4
+  },
+  {
+   "date": "2026-11-10",
+   "realized": 7.72,
+   "unrealized": -35.15,
+   "open": 2
   }
  ]
 }

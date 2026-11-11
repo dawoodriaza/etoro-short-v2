@@ -2420,3 +2420,5 @@
 [2026-11-04 19:10:34] [ERROR] ALERT [ETORO_MARKET_DATA_ENRICH]: eToro candle enrichment failed for ASML: timeout of 15000ms exceeded. Falling back to Twelve Data for this symbol.
 [2026-11-06 17:50:38] [ERROR] ALERT [ETORO_MARKET_DATA_ENRICH]: eToro candle enrichment failed for MRVL: timeout of 15000ms exceeded. Falling back to Twelve Data for this symbol.
 [2026-11-06 17:51:30] [ERROR] ALERT [ETORO_MARKET_DATA_ENRICH]: eToro candle enrichment failed for HD: timeout of 15000ms exceeded. Falling back to Twelve Data for this symbol.
+[2026-11-11 03:03:36] [ERROR] Could not fetch portfolio while positions are OPEN: Request failed with status code 502
+[2026-11-11 03:03:36] [ERROR] ALERT [ETORO_PORTFOLIO]: eToro portfolio fetch is FAILING while 1 position(s) are OPEN (Request failed with status code 502). Stops CANNOT be enforced until this recovers — consider checking the positions manually in the eToro app.
