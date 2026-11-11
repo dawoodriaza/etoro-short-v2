@@ -542,3 +542,21 @@
 [2026-11-11 14:00:24] [[32MINFO[39M] No plans survived geometry/slots/RRR checks
 [2026-11-11 14:00:24] [[32MINFO[39M] 🧮 Funnel: 20 quoted → 14 moving → 13 eligible [STALE_QUOTE 1] → 4 scored [ATR ceiling 5, no setup 2, weak RS 1] (1 re-entry blocked) → 0 plans [score floor 4] → AI 0/0 take → 0 opened
 [2026-11-11 14:03:00] [[32MINFO[39M] ⏳ Waiting to buy NVDA: now $177.09, buy at $176.07, lowest so far $176.22, 7 min left
+[2026-11-11 14:08:00] [[32MINFO[39M] ⏳ Waiting to buy NVDA: now $176.73, buy at $176.07, lowest so far $176.22, 2 min left
+[2026-11-11 14:10:00] [[32MINFO[39M] ═══ Scan start (2:10:00 PM Bahrain) ═══
+[2026-11-11 14:10:00] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-11-11 14:10:00] [[32MINFO[39M] VIX (FRED, 2026-11-09, 2 days old): 19.92
+[2026-11-11 14:10:00] [[32MINFO[39M] Market regime: UNKNOWN — opens in 3h 20m (need 45+ min since open to judge). Range so far 0.78%
+[2026-11-11 14:10:00] [[32MINFO[39M] 🌙 Overnight (24/5): scanning 20 night-eligible name(s); discovery paused until the regular session
+[2026-11-11 14:10:01] [[32MINFO[39M] 📶 Quotes: 20/20 from eToro (1 batched rates call + cached closing-price)
+[2026-11-11 14:10:01] [[32MINFO[39M] [2:10:01 PM Bahrain] 📡 Pre-filter: 14 stocks moving enough to enrich
+[2026-11-11 14:10:01] [[32MINFO[39M] Fetching portfolio state from eToro...
+[2026-11-11 14:10:08] [[32MINFO[39M] AVGO re-entry bar clamped: 100 + 15 = 115 exceeds the reachable maximum, so the bar is 90 (scores are capped at 100 — without this the symbol could never re-enter)
+[2026-11-11 14:10:08] [[32MINFO[39M] AVGO re-entry blocked: score 42 is below the required 90 (clamped) — prior losing setup scored 100
+[2026-11-11 14:10:24] [[32MINFO[39M] 💰 Capital: effective $8958.86 (base $10000 $-1041.14 realized, peak $10032.85) · risk ×1
+[2026-11-11 14:10:24] [[32MINFO[39M] NVDA plan rejected: score 48.4 below the entry floor of 80 (desk-score floor; the 2026-09-16 recheck found no score band that wins consistently — CHANGELOG v8.3)
+[2026-11-11 14:10:24] [[32MINFO[39M] QCOM plan rejected: score 34.5 below the entry floor of 80 (desk-score floor; the 2026-09-16 recheck found no score band that wins consistently — CHANGELOG v8.3)
+[2026-11-11 14:10:24] [[32MINFO[39M] HOOD plan rejected: score 33.2 below the entry floor of 80 (desk-score floor; the 2026-09-16 recheck found no score band that wins consistently — CHANGELOG v8.3)
+[2026-11-11 14:10:24] [[32MINFO[39M] No plans survived geometry/slots/RRR checks
+[2026-11-11 14:10:24] [[32MINFO[39M] 🧮 Funnel: 20 quoted → 14 moving → 13 eligible [STALE_QUOTE 1] → 3 scored [ATR ceiling 5, weak RS 2, below VWAP 1, no setup 1] (1 re-entry blocked) → 0 plans [score floor 3] → AI 0/0 take → 0 opened
+[2026-11-11 14:11:00] [[32MINFO[39M] ⌛ NVDA not bought — no dip to $176.07 within 60 min (approved $176.27, lowest $176.22, now $176.70 = +0.24% vs approval)
