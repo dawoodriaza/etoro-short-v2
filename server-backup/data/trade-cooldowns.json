@@ -35,8 +35,8 @@
     "scoreAtExit": 86.84354324631798
   },
   "AVGO": {
-    "exitAtMs": 1793997901979,
-    "wasLoss": true,
+    "exitAtMs": 1794413161447,
+    "wasLoss": false,
     "scoreAtExit": 100
   },
   "MU": {
@@ -51,14 +51,14 @@
     "scoreAtExit": 91.62585477804903
   },
   "QCOM": {
-    "exitAtMs": 1790794862443,
+    "exitAtMs": 1794429904257,
     "wasLoss": true,
-    "scoreAtExit": 84.74061934386447
+    "scoreAtExit": 84.0740885518544
   },
   "NVDA": {
-    "exitAtMs": 1793978281754,
-    "wasLoss": false,
-    "scoreAtExit": 91.07534225560073
+    "exitAtMs": 1794429901899,
+    "wasLoss": true,
+    "scoreAtExit": 80.0174185582728
   },
   "IONQ": {
     "exitAtMs": 1790018582701,

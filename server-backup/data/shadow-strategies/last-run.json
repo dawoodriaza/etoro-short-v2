@@ -1,11 +1,11 @@
 {
- "at": "2026-11-11T05:33:45.683Z",
+ "at": "2026-11-12T05:32:37.192Z",
  "mode": "forward",
  "from": null,
  "to": null,
- "latestCompleteSession": "2026-11-10",
+ "latestCompleteSession": "2026-11-11",
  "universe": 55,
- "earnings": "5 watchlist reports since 2026-10-21",
+ "earnings": "3 watchlist reports since 2026-10-22",
  "books": {
   "SWING_BREAKOUT": {
    "closed": 3,
@@ -22,24 +22,21 @@
     "UPS",
     "DE"
    ],
-   "unrealized": 44.77,
-   "lastSession": "2026-11-10",
+   "unrealized": 65.76,
+   "lastSession": "2026-11-11",
    "sessionsProcessed": 1,
-   "signalsToday": 0
+   "signalsToday": 1
   },
   "DIP_IN_UPTREND": {
-   "closed": 10,
+   "closed": 12,
    "wins": 6,
-   "winRate": 60,
-   "realized": 7.72,
-   "perTrade": 0.77,
-   "open": 2,
-   "openSymbols": [
-    "XOM",
-    "CVX"
-   ],
-   "unrealized": -35.15,
-   "lastSession": "2026-11-10",
+   "winRate": 50,
+   "realized": -17.14,
+   "perTrade": -1.43,
+   "open": 0,
+   "openSymbols": [],
+   "unrealized": 0,
+   "lastSession": "2026-11-11",
    "sessionsProcessed": 1,
    "signalsToday": 0
   },
@@ -49,18 +46,19 @@
    "winRate": 0,
    "realized": -101.84,
    "perTrade": -50.92,
-   "open": 5,
+   "open": 6,
    "openSymbols": [
     "UNP",
     "UPS",
     "LLY",
     "IONQ",
-    "ARM"
+    "ARM",
+    "RKLB"
    ],
-   "unrealized": 113.68,
-   "lastSession": "2026-11-10",
+   "unrealized": 197.41,
+   "lastSession": "2026-11-11",
    "sessionsProcessed": 1,
-   "signalsToday": 1
+   "signalsToday": 0
   },
   "ROTATION": {
    "closed": 8,
@@ -76,8 +74,8 @@
     "ABBV",
     "VRTX"
    ],
-   "unrealized": 7.2,
-   "lastSession": "2026-11-10",
+   "unrealized": 70.38,
+   "lastSession": "2026-11-11",
    "sessionsProcessed": 1,
    "signalsToday": 0
   }

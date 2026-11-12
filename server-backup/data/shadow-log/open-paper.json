@@ -1,296 +1,194 @@
 {
- "SCORE_FLOOR:QCOM": {
+ "SCORE_FLOOR:CRM": {
   "tradeType": "DAY",
-  "entryPrice": 176.4174,
-  "stopPrice": 167.7641,
-  "targetT1": 185.0706,
-  "targetT2": 193.724,
+  "entryPrice": 217.845,
+  "stopPrice": 208.2936,
+  "targetT1": 227.3964,
+  "targetT2": 236.9478,
   "lockedFloor": null,
-  "peakPrice": 179.2854,
-  "peakSetAt": 1794387960292,
+  "peakPrice": 218,
+  "peakSetAt": 1794436140274,
   "recentPrices": [
    {
-    "price": 178.59,
-    "atMs": 1794396240644
-   }
-  ],
-  "partialDone": true,
-  "openedAt": 1794360614286,
-  "dollarAmount": 320,
-  "troughPrice": 176.4174,
-  "plan": {
-   "symbol": "QCOM",
-   "stopDistancePct": 4.91,
-   "atrPercent": 5.91,
-   "score": 0,
-   "source": "WATCHLIST"
-  },
-  "entryConditions": {
-   "atrPercent": 5.91
-  },
-  "paperReason": "SCORE_FLOOR",
-  "originalDollarAmount": 640,
-  "realizedPartialPnl": 2.15,
-  "spreadApplied": 0.1035
- },
- "SCORE_FLOOR:META": {
-  "tradeType": "DAY",
-  "entryPrice": 648.1907,
-  "stopPrice": 623.4692,
-  "targetT1": 672.9121,
-  "targetT2": 697.6335,
-  "lockedFloor": null,
-  "peakPrice": 650.1163,
-  "peakSetAt": 1794393300276,
-  "recentPrices": [
+    "price": 216.45,
+    "atMs": 1794462360271
+   },
    {
-    "price": 645.76,
-    "atMs": 1794396240644
+    "price": 216.45,
+    "atMs": 1794462420274
+   },
+   {
+    "price": 216.45,
+    "atMs": 1794462480241
+   },
+   {
+    "price": 216.69,
+    "atMs": 1794462540275
+   },
+   {
+    "price": 216.53,
+    "atMs": 1794462600343
    }
   ],
   "partialDone": false,
-  "openedAt": 1794364219474,
-  "dollarAmount": 1175,
-  "troughPrice": 645.1146,
+  "openedAt": 1794430278713,
+  "dollarAmount": 510,
+  "troughPrice": 215.94,
   "plan": {
-   "symbol": "META",
-   "stopDistancePct": 3.81,
-   "atrPercent": 3.91,
-   "score": 4.479014415010525,
+   "symbol": "CRM",
+   "stopDistancePct": 4.38,
+   "atrPercent": 4.48,
+   "score": 21.98550429846577,
    "source": "WATCHLIST"
   },
   "entryConditions": {
-   "atrPercent": 3.91
+   "atrPercent": 4.48
   },
   "paperReason": "SCORE_FLOOR",
-  "spreadApplied": 0.0333
+  "spreadApplied": 0.0092
  },
- "SCORE_FLOOR:TSLA": {
+ "SCORE_FLOOR:NFLX": {
   "tradeType": "DAY",
-  "entryPrice": 383.6841,
-  "stopPrice": 364.8644,
-  "targetT1": 402.5038,
-  "targetT2": 421.3235,
+  "entryPrice": 64.6301,
+  "stopPrice": 62.7862,
+  "targetT1": 66.474,
+  "targetT2": 68.3178,
   "lockedFloor": null,
-  "peakPrice": 389.0605,
-  "peakSetAt": 1794389880399,
+  "peakPrice": 64.6301,
+  "peakSetAt": 1794430830173,
   "recentPrices": [
    {
-    "price": 387,
-    "atMs": 1794396240644
-   }
-  ],
-  "partialDone": true,
-  "openedAt": 1794366019775,
-  "dollarAmount": 160,
-  "troughPrice": 383.6841,
-  "plan": {
-   "symbol": "TSLA",
-   "stopDistancePct": 4.91,
-   "atrPercent": 5.1,
-   "score": 0,
-   "source": "WATCHLIST"
-  },
-  "entryConditions": {
-   "atrPercent": 5.1
-  },
-  "paperReason": "SCORE_FLOOR",
-  "originalDollarAmount": 320,
-  "realizedPartialPnl": 0.65,
-  "spreadApplied": 0.0258
- },
- "SCORE_FLOOR:HOOD": {
-  "tradeType": "DAY",
-  "entryPrice": 82.4728,
-  "stopPrice": 78.4275,
-  "targetT1": 86.5181,
-  "targetT2": 90.5633,
-  "lockedFloor": null,
-  "peakPrice": 83.6354,
-  "peakSetAt": 1794394320269,
-  "recentPrices": [
+    "price": 64.28,
+    "atMs": 1794462360271
+   },
    {
-    "price": 83.1,
-    "atMs": 1794396240644
-   }
-  ],
-  "partialDone": true,
-  "openedAt": 1794367822434,
-  "dollarAmount": 320,
-  "troughPrice": 82.4427,
-  "plan": {
-   "symbol": "HOOD",
-   "stopDistancePct": 4.91,
-   "atrPercent": 6.63,
-   "score": 20.198969960056388,
-   "source": "WATCHLIST"
-  },
-  "entryConditions": {
-   "atrPercent": 6.63
-  },
-  "paperReason": "SCORE_FLOOR",
-  "originalDollarAmount": 640,
-  "realizedPartialPnl": 1.52,
-  "spreadApplied": 0.2221
- },
- "SCORE_FLOOR:NVDA": {
-  "tradeType": "DAY",
-  "entryPrice": 174.1746,
-  "stopPrice": 165.6314,
-  "targetT1": 182.7179,
-  "targetT2": 191.2612,
-  "lockedFloor": null,
-  "peakPrice": 178.2801,
-  "peakSetAt": 1794393660272,
-  "recentPrices": [
+    "price": 64.28,
+    "atMs": 1794462420274
+   },
    {
-    "price": 177.34,
-    "atMs": 1794396240644
+    "price": 64.28,
+    "atMs": 1794462480241
+   },
+   {
+    "price": 64.25,
+    "atMs": 1794462540275
+   },
+   {
+    "price": 64.31,
+    "atMs": 1794462600343
    }
   ],
   "partialDone": false,
-  "openedAt": 1794387631558,
-  "dollarAmount": 640,
-  "troughPrice": 174.0196,
+  "openedAt": 1794430830173,
+  "dollarAmount": 785,
+  "troughPrice": 63.8,
   "plan": {
-   "symbol": "NVDA",
-   "stopDistancePct": 4.91,
-   "atrPercent": 5.88,
-   "score": 66.06593240814783,
+   "symbol": "NFLX",
+   "stopDistancePct": 2.85,
+   "atrPercent": 2.95,
+   "score": 55.36742204827165,
    "source": "WATCHLIST"
   },
   "entryConditions": {
-   "atrPercent": 5.88
+   "atrPercent": 2.95
   },
   "paperReason": "SCORE_FLOOR",
-  "spreadApplied": 0.0113
- },
- "SCORE_FLOOR:SOFI": {
-  "tradeType": "DAY",
-  "entryPrice": 16.6,
-  "stopPrice": 15.7857,
-  "targetT1": 17.4142,
-  "targetT2": 18.2285,
-  "lockedFloor": null,
-  "peakPrice": 16.655,
-  "peakSetAt": 1794394260341,
-  "recentPrices": [
-   {
-    "price": 16.61,
-    "atMs": 1794396240644
-   }
-  ],
-  "partialDone": false,
-  "openedAt": 1794388224211,
-  "dollarAmount": 640,
-  "troughPrice": 16.5251,
-  "plan": {
-   "symbol": "SOFI",
-   "stopDistancePct": 4.91,
-   "atrPercent": 6.21,
-   "score": 34.09289277327478,
-   "source": "WATCHLIST"
-  },
-  "entryConditions": {
-   "atrPercent": 6.21
-  },
-  "paperReason": "SCORE_FLOOR",
-  "spreadApplied": 0.0301
- },
- "DIP_WAIT:NVDA": {
-  "tradeType": "DAY",
-  "entryPrice": 176.2899,
-  "stopPrice": 167.6429,
-  "targetT1": 184.9369,
-  "targetT2": 193.5839,
-  "lockedFloor": null,
-  "peakPrice": 178.2801,
-  "peakSetAt": 1794393660272,
-  "recentPrices": [
-   {
-    "price": 177.34,
-    "atMs": 1794396240644
-   }
-  ],
-  "partialDone": false,
-  "openedAt": 1794391828409,
-  "dollarAmount": 640,
-  "troughPrice": 176.2399,
-  "plan": {
-   "symbol": "NVDA",
-   "stopDistancePct": 4.91,
-   "atrPercent": 5.88,
-   "score": 91.32135306865547,
-   "source": "WATCHLIST"
-  },
-  "entryConditions": {
-   "atrPercent": 5.88
-  },
-  "paperReason": "DIP_WAIT",
-  "spreadApplied": 0.0113
+  "spreadApplied": 0.1474
  },
  "SCORE_FLOOR:GOOGL": {
   "tradeType": "DAY",
-  "entryPrice": 291.4402,
-  "stopPrice": 279.5664,
-  "targetT1": 303.314,
-  "targetT2": 315.1877,
+  "entryPrice": 295.965,
+  "stopPrice": 283.8476,
+  "targetT1": 308.0823,
+  "targetT2": 320.1997,
   "lockedFloor": null,
-  "peakPrice": 291.7753,
-  "peakSetAt": 1794393120268,
+  "peakPrice": 296.9,
+  "peakSetAt": 1794439800366,
   "recentPrices": [
    {
-    "price": 290.71,
-    "atMs": 1794396240644
+    "price": 293.82,
+    "atMs": 1794462360271
+   },
+   {
+    "price": 293.88,
+    "atMs": 1794462420274
+   },
+   {
+    "price": 293.82,
+    "atMs": 1794462480241
+   },
+   {
+    "price": 293.73,
+    "atMs": 1794462540275
+   },
+   {
+    "price": 294,
+    "atMs": 1794462600343
    }
   ],
   "partialDone": false,
-  "openedAt": 1794393026592,
-  "dollarAmount": 1100,
-  "troughPrice": 290.4248,
+  "openedAt": 1794438629372,
+  "dollarAmount": 545,
+  "troughPrice": 293,
   "plan": {
    "symbol": "GOOGL",
-   "stopDistancePct": 4.07,
-   "atrPercent": 4.17,
-   "score": 26.10988398807427,
+   "stopDistancePct": 4.09,
+   "atrPercent": 4.19,
+   "score": 43.39117698794537,
    "source": "WATCHLIST"
   },
   "entryConditions": {
-   "atrPercent": 4.17
+   "atrPercent": 4.19
   },
   "paperReason": "SCORE_FLOOR",
-  "spreadApplied": 0.0327
+  "spreadApplied": 0.0135
  },
- "SCORE_FLOOR:PLTR": {
+ "SCORE_FLOOR:AVGO": {
   "tradeType": "DAY",
-  "entryPrice": 173.0048,
-  "stopPrice": 164.5189,
-  "targetT1": 181.4908,
-  "targetT2": 189.9767,
+  "entryPrice": 356.4138,
+  "stopPrice": 338.9318,
+  "targetT1": 373.8959,
+  "targetT2": 391.378,
   "lockedFloor": null,
-  "peakPrice": 173.39,
-  "peakSetAt": 1794395700265,
+  "peakPrice": 357,
+  "peakSetAt": 1794441240256,
   "recentPrices": [
    {
-    "price": 173.12,
-    "atMs": 1794396240644
+    "price": 349.5,
+    "atMs": 1794462360271
+   },
+   {
+    "price": 349.5,
+    "atMs": 1794462420274
+   },
+   {
+    "price": 349.5,
+    "atMs": 1794462480241
+   },
+   {
+    "price": 348.53,
+    "atMs": 1794462540275
+   },
+   {
+    "price": 348.7,
+    "atMs": 1794462600343
    }
   ],
   "partialDone": false,
-  "openedAt": 1794394225812,
-  "dollarAmount": 640,
-  "troughPrice": 172.8398,
+  "openedAt": 1794439820292,
+  "dollarAmount": 320,
+  "troughPrice": 348.25,
   "plan": {
-   "symbol": "PLTR",
+   "symbol": "AVGO",
    "stopDistancePct": 4.91,
-   "atrPercent": 6.13,
-   "score": 22.660906523760424,
+   "atrPercent": 5.31,
+   "score": 68.17779073401934,
    "source": "WATCHLIST"
   },
   "entryConditions": {
-   "atrPercent": 6.13
+   "atrPercent": 5.31
   },
   "paperReason": "SCORE_FLOOR",
-  "spreadApplied": 0.052
+  "spreadApplied": 0.1303
  }
 }

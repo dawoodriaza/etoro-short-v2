@@ -1,7 +1,18 @@
 {
- "at": "2026-11-11T05:33:45.593Z",
- "note": "5 watchlist reports since 2026-10-21",
+ "at": "2026-11-12T05:32:37.163Z",
+ "note": "3 watchlist reports since 2026-10-22",
  "rows": [
+  {
+   "symbol": "NBIS",
+   "date": "2026-11-12",
+   "hour": "bmo",
+   "quarter": 3,
+   "year": 2026,
+   "epsEstimate": -0.7021,
+   "epsActual": null,
+   "revenueEstimate": 925684170,
+   "revenueActual": null
+  },
   {
    "symbol": "RKLB",
    "date": "2026-11-09",
@@ -23,39 +34,6 @@
    "epsActual": 0.47,
    "revenueEstimate": 1238616732,
    "revenueActual": 1262216000
-  },
-  {
-   "symbol": "COP",
-   "date": "2026-11-05",
-   "hour": "bmo",
-   "quarter": 3,
-   "year": 2026,
-   "epsEstimate": 3.003,
-   "epsActual": 3.27,
-   "revenueEstimate": 18388283836,
-   "revenueActual": 20057000000
-  },
-  {
-   "symbol": "IONQ",
-   "date": "2026-11-05",
-   "hour": "amc",
-   "quarter": 3,
-   "year": 2026,
-   "epsEstimate": -0.3882,
-   "epsActual": -0.29,
-   "revenueEstimate": 144763194,
-   "revenueActual": 173831000
-  },
-  {
-   "symbol": "SOUN",
-   "date": "2026-11-05",
-   "hour": "amc",
-   "quarter": 3,
-   "year": 2026,
-   "epsEstimate": -0.0638,
-   "epsActual": -0.05,
-   "revenueEstimate": 62946852,
-   "revenueActual": 62425000
   }
  ]
 }
