@@ -24,6 +24,7 @@ const testFiles = [
   "./phase2-v11.test.js",
   "./fixes-v11-1.test.js",
   "./shadow-books-v11-2.test.js",
+  "./copy-view-v11-4.test.js",
 ];
 
 (async () => {

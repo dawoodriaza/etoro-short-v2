@@ -94,5 +94,7 @@
   "commissionsBooked": 88,
   "dailyCommissions": {
     "2026-11-11": 6
-  }
+  },
+  "commissionsUntracked": 707,
+  "peakTradingEquity": 10032.85
 }

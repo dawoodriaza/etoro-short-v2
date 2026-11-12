@@ -98,7 +98,11 @@ const {
   formatSessionSchedule,
   formatMinutesUntil,
   scheduleMoment,
+  setCopyRatioProvider,
 } = require("./notifications/format-helpers");
+// v11.4: Telegram's "real dollars" follow the copy account's true size
+// (resolved lazily — capitalManager is required further down this file)
+setCopyRatioProvider(() => capitalManager.getCopyView().ratio);
 
 // v8.8: minutes since ET midnight, for "what is left of the session" lines.
 function easternMinuteOfDay() {
@@ -231,13 +235,13 @@ async function isTradingHaltedForNewEntries() {
     // First trip — make it loud
     recordGateBlock(
       "DRAWDOWN_BREAKER",
-      "effective capital " +
+      "trading equity " +
         (breakerCheck.drawdownPct * 100).toFixed(1) +
         "% below peak",
     );
     await notifications.sendTelegramMessage(
       "🛑 <b>DRAWDOWN CIRCUIT BREAKER TRIPPED</b>\n" +
-        "Effective capital $" +
+        "Trading equity (commissions added back) $" +
         breakerCheck.effective.toFixed(2) +
         " is " +
         (breakerCheck.drawdownPct * 100).toFixed(1) +
@@ -3927,6 +3931,7 @@ function paperSummaryLines() {
 
 async function commandStatus() {
   const cap = capitalManager.getCapitalState();
+  const copyView = capitalManager.getCopyView(); // v11.4
   const meta = loadPositionMeta() || {};
   const ledger = (() => { try { return JSON.parse(fs.readFileSync(path.join(__dirname, "../data/capital-ledger.json"), "utf8")); } catch { return {}; } })();
   const todayNy = new Date().toLocaleDateString("en-CA", { timeZone: TIMEZONE });
@@ -3944,9 +3949,9 @@ async function commandStatus() {
     (paperSummaryLines().length ? "<i>If it had bought what it skipped today (closed so far — slow losers close later):</i>\n" + paperSummaryLines().map((l) => "  " + l).join("\n") + "\n" : "") +
     "\n" +
     "Today P&L: " + formatDualAmount(todayPnl) + "\n" +
-    // v11: real dollars first, like every other line; bot dollars in brackets
-    "Capital: " + formatDualAmount(Number(cap.effectiveCapital), { includeBotAmount: true }) +
-    (ledger.peakEffectiveCapital ? " · peak " + formatDualAmount(Number(ledger.peakEffectiveCapital), { includeBotAmount: true }) : "") + "\n" +
+    // v11.4: the copy account's own value (it pays no commission), then the bot's
+    "Your copy: $" + copyView.copyEquity.toFixed(2) + " (started $" + copyView.copyStart.toFixed(2) + " · peak $" + copyView.copyPeak.toFixed(2) + ")\n" +
+    "Bot portfolio: $" + Number(cap.effectiveCapital).toFixed(2) + " <i>(pays $1/order — $" + copyView.commissions.toFixed(0) + " so far)</i>\n" +
     "Mode: " + (process.env.TRADING_MODE || "?") + " · AI " + config.aiModel + "\n\n" +
     "<i>/positions for what it holds · /help</i>"
   );
@@ -4077,16 +4082,19 @@ async function commandPerf() {
   const lines = ["📈 <b>Performance</b> <i>(your real copy, in real dollars — copied trades pay no commission)</i>", ""];
   lines.push(row("Last 7 days", hist.filter((t) => t.closedAt >= weekAgo)));
   lines.push(row("Since " + V9_START + " (current rules)", v9));
-  // v11: "All time" for the copy is eToro's own closed-trade total (no
-  // commission on copies). The bot's agent portfolio, which DOES pay $1 per
-  // order, is shown on its own line so the two are never mixed.
+  // v11.4: "All time" for the copy is its own value — the bot's portfolio
+  // with every commission added back, scaled to the copy's start (the owner
+  // reported $341.68 on 2026-11-12; this gave within $1). The bot's own
+  // portfolio, which DOES pay $1 per order, stays on its own line.
+  const copyView = capitalManager.getCopyView();
+  const copyChange = copyView.copyEquity - copyView.copyStart;
+  lines.push("<b>All time (your copy)</b>: " + (copyChange >= 0 ? "+$" : "-$") + Math.abs(copyChange).toFixed(2) +
+    " (" + pct((copyChange / copyView.copyStart) * 100) + ") · now $" + copyView.copyEquity.toFixed(2) + " of $" + copyView.copyStart.toFixed(2));
   const broker = readBrokerHistory();
-  if (broker && broker.summary) {
-    const s = broker.summary;
-    lines.push("<b>All time (your copy)</b>: " + real(s.brokerNetProfit) + " (" + pct((s.brokerNetProfit / base) * 100) + ") <i>· eToro's own record, synced " + marketHours.localClock(new Date(broker.syncedAt)) + "</i>");
-  }
-  lines.push("<b>Bot portfolio</b> <i>(pays $1/order)</i>: " + real(eff - base) + " (" + pct(((eff - base) / base) * 100) + ")" +
-    (broker && broker.summary ? " · of which commissions ~" + real(-broker.summary.estimatedCommissions) : ""));
+  // v11.4: in the bot's own dollars — converting its commission-heavy loss
+  // into copy dollars would suggest the copy lost it too
+  lines.push("<b>Bot portfolio</b> <i>(its own $" + base.toFixed(0) + ", pays $1/order)</i>: -$" + Math.abs(eff - base).toFixed(0).replace(/^-/, "") +
+    " (" + pct(((eff - base) / base) * 100) + ") · of which commissions $" + copyView.commissions.toFixed(0) + " <i>— your copy does not pay these</i>");
   const preV8 = hist.filter((t) => t.pnlAccountingVersion !== 2 && t.brokerNetProfit == null).length;
   if (preV8) lines.push("  <i>" + preV8 + " early trades are the bot's own estimates (not matched to eToro)</i>");
   if (Object.keys(mix).length) {
@@ -4095,12 +4103,13 @@ async function commandPerf() {
     Object.entries(mix).sort((a, b) => b[1].n - a[1].n).forEach(([k, b]) => lines.push("  " + describeExitReason(k).trigger + ": " + b.n + " · " + real(b.p)));
   }
   if (peak) {
-    const dd = (1 - eff / peak) * 100;
-    const breaker = peak * (1 - config.maxDrawdownFromPeakPct);
+    // v11.4: the safety stop measures trading results (commissions added back)
+    const dd = (1 - copyView.tradingEquity / copyView.peakTradingEquity) * 100;
+    const stopAt = copyView.copyPeak * (1 - config.maxDrawdownFromPeakPct);
     lines.push("");
-    lines.push("<b>Risk</b> <i>(bot portfolio — what the safety stop watches)</i>");
-    lines.push("  capital " + real(eff).replace(/^\+/, "") + " · peak " + real(peak).replace(/^\+/, "") + " · down " + dd.toFixed(1) + "% from peak");
-    lines.push("  safety stop at " + (config.maxDrawdownFromPeakPct * 100).toFixed(0) + "% down — room left " + real(Math.max(0, eff - breaker)).replace(/^\+/, ""));
+    lines.push("<b>Risk</b> <i>(your copy — trading results, commissions not counted)</i>");
+    lines.push("  now $" + copyView.copyEquity.toFixed(2) + " · peak $" + copyView.copyPeak.toFixed(2) + " · down " + dd.toFixed(1) + "% from peak");
+    lines.push("  safety stop at " + (config.maxDrawdownFromPeakPct * 100).toFixed(0) + "% down ($" + stopAt.toFixed(2) + ") — room left $" + Math.max(0, copyView.copyEquity - stopAt).toFixed(2));
   }
   lines.push("");
   lines.push("<i>Evaluation target: ~110 trades on the current rules (" + v9.length + " so far).</i>");

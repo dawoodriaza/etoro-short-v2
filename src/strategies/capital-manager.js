@@ -275,10 +275,79 @@ function tripHalt(reason) {
 // Returns { tripped, alreadyHalted, drawdownPct, peak, effective }.
 // Trips (writes halt.flag) at most once — if halt.flag already exists,
 // reports alreadyHalted so the caller doesn't re-alert every scan.
+// ══════════════════════════════════════════════════════════════════════
+// v11.4 — THE COPY ACCOUNT'S VIEW, AND A BREAKER THAT MEASURES TRADING.
+//
+// The owner's real money is a COPY of this portfolio. eToro charges this
+// portfolio $1 per order and the copy nothing, so the two drift apart: on
+// 2026-11-12 this portfolio was down 10.6% while the copy was down 2.4%
+// (owner's figure $341.68 of $350; this model gives within $1 of it).
+//
+//   tradingEquity = effective capital + every commission paid
+//                 = this portfolio as if it paid no commission
+//   copyEquity    = the copy's start × tradingEquity / this portfolio's start
+//   ratio         = copyEquity / effective capital  (what $1 here is there)
+//
+// The drawdown breaker now compares tradingEquity with its peak. Its job is
+// to stop a strategy that is losing; a fixed, known fee the owner's money
+// never pays was eating ~$50 a month of its room and would have halted
+// trading on its own.
+// ══════════════════════════════════════════════════════════════════════
+const brokerHistoryPath = path.join(path.dirname(capitalLedgerPath), "broker-trade-history.json");
+
+// Commissions paid before v10.2 began booking them: eToro's own order count
+// (from the daily trade-history sync) minus what the ledger has booked.
+// Worked out once and stored, so the total stays current without the file.
+function totalCommissionsPaid(ledger) {
+  if (typeof ledger.commissionsUntracked !== "number") {
+    let untracked = 0;
+    try {
+      const summary = JSON.parse(fs.readFileSync(brokerHistoryPath, "utf8")).summary || {};
+      untracked = Math.max(0, Number(summary.estimatedCommissions || 0) - Number(ledger.commissionsBooked || 0));
+      ledger.commissionsUntracked = Number(untracked.toFixed(2));
+      saveLedger(ledger);
+    } catch {
+      return Number(ledger.commissionsBooked || 0); // no sync yet: count what is booked
+    }
+  }
+  return Number(ledger.commissionsUntracked || 0) + Number(ledger.commissionsBooked || 0);
+}
+
+function getCopyView() {
+  const ledger = loadLedger();
+  const effective = computeEffectiveCapital(ledger);
+  const base = computeEffectiveBase(ledger);
+  const commissions = totalCommissionsPaid(ledger);
+  const tradingEquity = effective + commissions;
+  const copyStart = Number(config.realAccountCapital) || 0;
+  const copyEquity = base > 0 ? copyStart * (tradingEquity / base) : copyStart;
+  const peakTradingEquity = Math.max(
+    Number(ledger.peakTradingEquity || 0),
+    Number(ledger.peakEffectiveCapital || 0),
+    tradingEquity,
+  );
+  return {
+    effective,
+    commissions,
+    tradingEquity,
+    peakTradingEquity,
+    copyStart,
+    copyEquity,
+    copyPeak: base > 0 ? copyStart * (peakTradingEquity / base) : copyStart,
+    ratio: effective > 0 && copyEquity > 0 ? copyEquity / effective : copyStart / (base || 1),
+  };
+}
+
 function checkDrawdownBreaker() {
-  const capitalState = getCapitalState();
-  const peak = capitalState.peakEffectiveCapital;
-  const effective = capitalState.effectiveCapital;
+  // v11.4: measured on trading results (commissions added back) — see above
+  const view = getCopyView();
+  const peak = view.peakTradingEquity;
+  const effective = view.tradingEquity;
+  const ledgerForPeak = loadLedger();
+  if (peak > Number(ledgerForPeak.peakTradingEquity || 0)) {
+    ledgerForPeak.peakTradingEquity = Number(peak.toFixed(2));
+    saveLedger(ledgerForPeak);
+  }
 
   if (!peak || peak <= 0) {
     return { tripped: false, alreadyHalted: isHalted(), drawdownPct: 0 };
@@ -289,7 +358,7 @@ function checkDrawdownBreaker() {
 
   if (breached && !isHalted()) {
     tripHalt(
-      "Rolling drawdown breaker: effective capital $" +
+      "Rolling drawdown breaker: trading equity (commissions added back) $" +
         effective.toFixed(2) +
         " is " +
         (drawdownPct * 100).toFixed(1) +
@@ -694,6 +763,7 @@ module.exports = {
   resetDrawdownPeak,
   recordRealizedPnl,
   recordCommission, // v10.2
+  getCopyView, // v11.4
   getCapitalState,
   checkDrawdownBreaker,
   isHalted,

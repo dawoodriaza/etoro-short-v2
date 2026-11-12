@@ -18,8 +18,7 @@ const config = require("../config");
 // dollars; this only touches what Telegram messages show you.
 function toRealDollars(agentDollars) {
   if (typeof agentDollars !== "number" || isNaN(agentDollars)) return agentDollars;
-  const ratio = config.realAccountCapital / config.dayTradeCapital;
-  return agentDollars * ratio;
+  return agentDollars * currentCopyRatio(); // v11.4: live copy ratio
 }
 
 // v7.3 — THE ONE WAY TO PRINT MONEY IN A TELEGRAM MESSAGE.
@@ -50,11 +49,35 @@ function toRealDollars(agentDollars) {
 // will therefore show real-account dollars too, while the rest of the log
 // file (position sizing, plan lines, scan output — none of which call this
 // helper) continues to show bot-account dollars as before.
+// v11.4: what $1 of the bot's portfolio is in the owner's copy account. The
+// fixed start ratio (350 / 10000) drifts, because the bot's portfolio pays
+// commission and the copy does not; index.js supplies the live ratio from
+// capital-manager.getCopyView(). Without a provider (tests, tools) the start
+// ratio is used.
+let copyRatioProvider = null;
+let copyRatioCache = { atMs: 0, value: null };
+function setCopyRatioProvider(provider) {
+  copyRatioProvider = provider;
+  copyRatioCache = { atMs: 0, value: null };
+}
+function currentCopyRatio() {
+  const startRatio = config.realAccountCapital / config.dayTradeCapital;
+  if (!copyRatioProvider) return startRatio;
+  if (Date.now() - copyRatioCache.atMs < 30000 && copyRatioCache.value) return copyRatioCache.value;
+  let value = startRatio;
+  try {
+    const live = Number(copyRatioProvider());
+    if (Number.isFinite(live) && live > 0) value = live;
+  } catch {}
+  copyRatioCache = { atMs: Date.now(), value };
+  return value;
+}
+
 function formatDualAmount(agentDollars, options = {}) {
   if (typeof agentDollars !== "number" || isNaN(agentDollars)) {
     return String(agentDollars);
   }
-  const ratio = config.realAccountCapital / config.dayTradeCapital;
+  const ratio = currentCopyRatio();
   const signed = options.signed === true;
   const includeBotAmount = options.includeBotAmount === true;
   const render = (value) =>
@@ -260,6 +283,8 @@ module.exports = {
   describeExitReason,
   toRealDollars,
   formatDualAmount,
+  setCopyRatioProvider, // v11.4
+  currentCopyRatio, // v11.4
   // v8.8 session clock
   sessionSchedule,
   formatSessionSchedule,
