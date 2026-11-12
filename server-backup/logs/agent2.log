@@ -62965,3 +62965,56 @@
 [2026-11-12 15:53:58] [INFO ] 🧮 Funnel: 20 quoted → 10 moving → 10 eligible → 0 scored [ATR ceiling 5, below VWAP 3, weak RS 2] → 0 plans → AI 0/0 take → 0 opened
 [2026-11-12 15:54:00] [INFO ] Resolving eToro instrument ID for CRM...
 [2026-11-12 15:54:00] [INFO ] Resolved CRM → instrumentId 1839
+[2026-11-12 16:00:00] [INFO ] ═══ Scan start (4:00:00 PM Bahrain) ═══
+[2026-11-12 16:00:00] [INFO ] Fetching portfolio state from eToro...
+[2026-11-12 16:00:00] [INFO ] VIX (FRED, 2026-11-10, 2 days old): 19.46
+[2026-11-12 16:00:00] [INFO ] Market regime: UNKNOWN — opens in 1h 30m (need 45+ min since open to judge). Range so far 0.61%
+[2026-11-12 16:00:00] [INFO ] 🌙 Overnight (24/5): scanning 20 night-eligible name(s); discovery paused until the regular session
+[2026-11-12 16:00:01] [INFO ] 📶 Quotes: 20/20 from eToro (1 batched rates call + cached closing-price)
+[2026-11-12 16:00:01] [INFO ] [4:00:01 PM Bahrain] 📡 Pre-filter: 11 stocks moving enough to enrich
+[2026-11-12 16:00:01] [INFO ] Fetching portfolio state from eToro...
+[2026-11-12 16:00:21] [INFO ] No candidates passed scoring
+[2026-11-12 16:00:21] [INFO ] 🧮 Funnel: 20 quoted → 11 moving → 11 eligible → 0 scored [ATR ceiling 5, below VWAP 4, weak RS 2] → 0 plans → AI 0/0 take → 0 opened
+[2026-11-12 16:10:00] [INFO ] ═══ Scan start (4:10:00 PM Bahrain) ═══
+[2026-11-12 16:10:00] [INFO ] Fetching portfolio state from eToro...
+[2026-11-12 16:10:12] [WARN ] eToro rates timed out — retrying once
+[2026-11-12 16:10:12] [INFO ] VIX (FRED, 2026-11-10, 2 days old): 19.46
+[2026-11-12 16:10:12] [INFO ] Market regime: UNKNOWN — opens in 1h 20m (need 45+ min since open to judge). Range so far 0.73%
+[2026-11-12 16:10:12] [INFO ] 🌙 Overnight (24/5): scanning 20 night-eligible name(s); discovery paused until the regular session
+[2026-11-12 16:10:13] [INFO ] 📶 Quotes: 20/20 from eToro (1 batched rates call + cached closing-price)
+[2026-11-12 16:10:13] [INFO ] [4:10:13 PM Bahrain] 📡 Pre-filter: 10 stocks moving enough to enrich
+[2026-11-12 16:10:13] [INFO ] 🔄 Sector rotation: energy +1.86%, semi +5.97%, financials +0.54%, fintech +0.54%, industrials +1.31%
+[2026-11-12 16:10:13] [INFO ] Fetching portfolio state from eToro...
+[2026-11-12 16:10:18] [WARN ] Telegram polling: EFATAL
+[2026-11-12 16:10:31] [INFO ] No candidates passed scoring
+[2026-11-12 16:10:31] [INFO ] 🧮 Funnel: 20 quoted → 10 moving → 10 eligible → 0 scored [below VWAP 6, ATR ceiling 3, weak RS 1] → 0 plans → AI 0/0 take → 0 opened
+[2026-11-12 16:14:11] [WARN ] Telegram polling: EFATAL
+[2026-11-12 16:15:12] [WARN ] eToro rates timed out — retrying once
+[2026-11-12 16:20:00] [INFO ] ═══ Scan start (4:20:00 PM Bahrain) ═══
+[2026-11-12 16:20:00] [INFO ] Fetching portfolio state from eToro...
+[2026-11-12 16:20:00] [INFO ] VIX (FRED, 2026-11-10, 2 days old): 19.46
+[2026-11-12 16:20:00] [INFO ] Market regime: UNKNOWN — opens in 1h 10m (need 45+ min since open to judge). Range so far 0.91%
+[2026-11-12 16:20:00] [INFO ] 🌙 Overnight (24/5): scanning 20 night-eligible name(s); discovery paused until the regular session
+[2026-11-12 16:20:01] [INFO ] 📶 Quotes: 20/20 from eToro (1 batched rates call + cached closing-price)
+[2026-11-12 16:20:01] [INFO ] [4:20:01 PM Bahrain] 📡 Pre-filter: 12 stocks moving enough to enrich
+[2026-11-12 16:20:01] [INFO ] Fetching portfolio state from eToro...
+[2026-11-12 16:20:36] [INFO ] No candidates passed scoring
+[2026-11-12 16:20:36] [INFO ] 🧮 Funnel: 20 quoted → 12 moving → 12 eligible → 0 scored [below VWAP 5, ATR ceiling 5, weak RS 2] → 0 plans → AI 0/0 take → 0 opened
+[2026-11-12 16:21:12] [WARN ] eToro rates timed out — retrying once
+[2026-11-12 16:25:12] [WARN ] eToro rates timed out — retrying once
+[2026-11-12 16:27:12] [WARN ] eToro rates timed out — retrying once
+[2026-11-12 16:30:00] [INFO ] ═══ Scan start (4:30:00 PM Bahrain) ═══
+[2026-11-12 16:30:00] [INFO ] Fetching portfolio state from eToro...
+[2026-11-12 16:30:00] [INFO ] VIX (FRED, 2026-11-10, 2 days old): 19.46
+[2026-11-12 16:30:00] [INFO ] Market regime: UNKNOWN — opens in 1h 0m (need 45+ min since open to judge). Range so far 0.91%
+[2026-11-12 16:30:00] [INFO ] 🌙 Overnight (24/5): scanning 20 night-eligible name(s); discovery paused until the regular session
+[2026-11-12 16:30:01] [INFO ] 📶 Quotes: 20/20 from eToro (1 batched rates call + cached closing-price)
+[2026-11-12 16:30:01] [INFO ] [4:30:01 PM Bahrain] 📡 Pre-filter: 13 stocks moving enough to enrich
+[2026-11-12 16:30:01] [INFO ] 🔄 Sector rotation: energy +1.86%, semi +5.97%, financials +0.54%, fintech +0.54%, industrials +1.31%
+[2026-11-12 16:30:01] [INFO ] Fetching portfolio state from eToro...
+[2026-11-12 16:30:25] [WARN ] MRVL: eToro enrichment failed (timeout of 15000ms exceeded), falling back to Twelve Data
+[2026-11-12 16:30:25] [ERROR] ALERT [ETORO_MARKET_DATA_ENRICH]: eToro candle enrichment failed for MRVL: timeout of 15000ms exceeded. Falling back to Twelve Data for this symbol.
+[2026-11-12 16:30:26] [INFO ] MRVL: only 0 bar(s) from today's session yet — VWAP/high skipped this scan
+[2026-11-12 16:30:36] [INFO ] ALERT CLEARED [ETORO_MARKET_DATA_ENRICH]
+[2026-11-12 16:30:49] [INFO ] No candidates passed scoring
+[2026-11-12 16:30:49] [INFO ] 🧮 Funnel: 20 quoted → 13 moving → 13 eligible → 0 scored [ATR ceiling 6, below VWAP 5, weak RS 2] → 0 plans → AI 0/0 take → 0 opened
