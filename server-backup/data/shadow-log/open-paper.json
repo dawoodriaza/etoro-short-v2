@@ -10,24 +10,24 @@
   "peakSetAt": 1794436140274,
   "recentPrices": [
    {
-    "price": 216.45,
-    "atMs": 1794462360271
+    "price": 216,
+    "atMs": 1794483900382
    },
    {
-    "price": 216.45,
-    "atMs": 1794462420274
+    "price": 216,
+    "atMs": 1794483960380
    },
    {
-    "price": 216.45,
-    "atMs": 1794462480241
+    "price": 216,
+    "atMs": 1794484020430
    },
    {
-    "price": 216.69,
-    "atMs": 1794462540275
+    "price": 216,
+    "atMs": 1794484080270
    },
    {
-    "price": 216.53,
-    "atMs": 1794462600343
+    "price": 216,
+    "atMs": 1794484140304
    }
   ],
   "partialDone": false,
@@ -58,24 +58,24 @@
   "peakSetAt": 1794430830173,
   "recentPrices": [
    {
-    "price": 64.28,
-    "atMs": 1794462360271
+    "price": 64.18,
+    "atMs": 1794483900382
    },
    {
-    "price": 64.28,
-    "atMs": 1794462420274
+    "price": 64.18,
+    "atMs": 1794483960380
    },
    {
-    "price": 64.28,
-    "atMs": 1794462480241
+    "price": 64.21,
+    "atMs": 1794484020430
    },
    {
-    "price": 64.25,
-    "atMs": 1794462540275
+    "price": 64.21,
+    "atMs": 1794484080270
    },
    {
-    "price": 64.31,
-    "atMs": 1794462600343
+    "price": 64.21,
+    "atMs": 1794484140304
    }
   ],
   "partialDone": false,
@@ -106,30 +106,30 @@
   "peakSetAt": 1794439800366,
   "recentPrices": [
    {
-    "price": 293.82,
-    "atMs": 1794462360271
+    "price": 292.5,
+    "atMs": 1794483900382
    },
    {
-    "price": 293.88,
-    "atMs": 1794462420274
+    "price": 292.5,
+    "atMs": 1794483960380
    },
    {
-    "price": 293.82,
-    "atMs": 1794462480241
+    "price": 292.34,
+    "atMs": 1794484020430
    },
    {
-    "price": 293.73,
-    "atMs": 1794462540275
+    "price": 292.34,
+    "atMs": 1794484080270
    },
    {
-    "price": 294,
-    "atMs": 1794462600343
+    "price": 292.52,
+    "atMs": 1794484140304
    }
   ],
   "partialDone": false,
   "openedAt": 1794438629372,
   "dollarAmount": 545,
-  "troughPrice": 293,
+  "troughPrice": 292.22,
   "plan": {
    "symbol": "GOOGL",
    "stopDistancePct": 4.09,
@@ -150,34 +150,34 @@
   "targetT1": 373.8959,
   "targetT2": 391.378,
   "lockedFloor": null,
-  "peakPrice": 357,
-  "peakSetAt": 1794441240256,
+  "peakPrice": 358.22,
+  "peakSetAt": 1794475980267,
   "recentPrices": [
    {
-    "price": 349.5,
-    "atMs": 1794462360271
+    "price": 352,
+    "atMs": 1794483900382
    },
    {
-    "price": 349.5,
-    "atMs": 1794462420274
+    "price": 352,
+    "atMs": 1794483960380
    },
    {
-    "price": 349.5,
-    "atMs": 1794462480241
+    "price": 351.25,
+    "atMs": 1794484020430
    },
    {
-    "price": 348.53,
-    "atMs": 1794462540275
+    "price": 351.64,
+    "atMs": 1794484080270
    },
    {
-    "price": 348.7,
-    "atMs": 1794462600343
+    "price": 351.25,
+    "atMs": 1794484140304
    }
   ],
   "partialDone": false,
   "openedAt": 1794439820292,
   "dollarAmount": 320,
-  "troughPrice": 348.25,
+  "troughPrice": 347.31,
   "plan": {
    "symbol": "AVGO",
    "stopDistancePct": 4.91,
@@ -190,5 +190,53 @@
   },
   "paperReason": "SCORE_FLOOR",
   "spreadApplied": 0.1303
+ },
+ "DIP_WAIT:AVGO": {
+  "tradeType": "DAY",
+  "entryPrice": 356.3408,
+  "stopPrice": 338.8622,
+  "targetT1": 373.8193,
+  "targetT2": 391.2978,
+  "lockedFloor": null,
+  "peakPrice": 358.22,
+  "peakSetAt": 1794475980267,
+  "recentPrices": [
+   {
+    "price": 352,
+    "atMs": 1794483900382
+   },
+   {
+    "price": 352,
+    "atMs": 1794483960380
+   },
+   {
+    "price": 351.25,
+    "atMs": 1794484020430
+   },
+   {
+    "price": 351.64,
+    "atMs": 1794484080270
+   },
+   {
+    "price": 351.25,
+    "atMs": 1794484140304
+   }
+  ],
+  "partialDone": false,
+  "openedAt": 1794475221745,
+  "dollarAmount": 320,
+  "troughPrice": 349.56,
+  "plan": {
+   "symbol": "AVGO",
+   "stopDistancePct": 4.91,
+   "atrPercent": 5.51,
+   "score": 99.52581876704613,
+   "source": "WATCHLIST"
+  },
+  "entryConditions": {
+   "atrPercent": 5.51
+  },
+  "paperReason": "DIP_WAIT",
+  "spreadApplied": 0.1393
  }
 }

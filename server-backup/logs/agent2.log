@@ -62562,3 +62562,237 @@
 [2026-11-12 08:30:00] [INFO ] 🌙 Overnight freeze active (08:00-12:00 Bahrain, tracks 00:00-04:00 ET) — skipping new-trade scan (8:30:00 AM Bahrain). Exit management is unaffected — stops/exits keep running on the 1-minute tick.
 [2026-11-12 08:40:00] [INFO ] 🌙 Overnight freeze active (08:00-12:00 Bahrain, tracks 00:00-04:00 ET) — skipping new-trade scan (8:40:00 AM Bahrain). Exit management is unaffected — stops/exits keep running on the 1-minute tick.
 [2026-11-12 08:50:00] [INFO ] 🌙 Overnight freeze active (08:00-12:00 Bahrain, tracks 00:00-04:00 ET) — skipping new-trade scan (8:50:00 AM Bahrain). Exit management is unaffected — stops/exits keep running on the 1-minute tick.
+[2026-11-12 09:00:00] [INFO ] 🌙 Overnight freeze active (08:00-12:00 Bahrain, tracks 00:00-04:00 ET) — skipping new-trade scan (9:00:00 AM Bahrain). Exit management is unaffected — stops/exits keep running on the 1-minute tick.
+[2026-11-12 09:10:00] [INFO ] 🌙 Overnight freeze active (08:00-12:00 Bahrain, tracks 00:00-04:00 ET) — skipping new-trade scan (9:10:00 AM Bahrain). Exit management is unaffected — stops/exits keep running on the 1-minute tick.
+[2026-11-12 09:20:00] [INFO ] 🌙 Overnight freeze active (08:00-12:00 Bahrain, tracks 00:00-04:00 ET) — skipping new-trade scan (9:20:00 AM Bahrain). Exit management is unaffected — stops/exits keep running on the 1-minute tick.
+[2026-11-12 09:30:00] [INFO ] 🌙 Overnight freeze active (08:00-12:00 Bahrain, tracks 00:00-04:00 ET) — skipping new-trade scan (9:30:00 AM Bahrain). Exit management is unaffected — stops/exits keep running on the 1-minute tick.
+[2026-11-12 09:40:00] [INFO ] 🌙 Overnight freeze active (08:00-12:00 Bahrain, tracks 00:00-04:00 ET) — skipping new-trade scan (9:40:00 AM Bahrain). Exit management is unaffected — stops/exits keep running on the 1-minute tick.
+[2026-11-12 09:50:00] [INFO ] 🌙 Overnight freeze active (08:00-12:00 Bahrain, tracks 00:00-04:00 ET) — skipping new-trade scan (9:50:00 AM Bahrain). Exit management is unaffected — stops/exits keep running on the 1-minute tick.
+[2026-11-12 10:00:00] [INFO ] 🌙 Overnight freeze active (08:00-12:00 Bahrain, tracks 00:00-04:00 ET) — skipping new-trade scan (10:00:00 AM Bahrain). Exit management is unaffected — stops/exits keep running on the 1-minute tick.
+[2026-11-12 10:10:00] [INFO ] 🌙 Overnight freeze active (08:00-12:00 Bahrain, tracks 00:00-04:00 ET) — skipping new-trade scan (10:10:00 AM Bahrain). Exit management is unaffected — stops/exits keep running on the 1-minute tick.
+[2026-11-12 10:20:00] [INFO ] 🌙 Overnight freeze active (08:00-12:00 Bahrain, tracks 00:00-04:00 ET) — skipping new-trade scan (10:20:00 AM Bahrain). Exit management is unaffected — stops/exits keep running on the 1-minute tick.
+[2026-11-12 10:30:00] [INFO ] 🌙 Overnight freeze active (08:00-12:00 Bahrain, tracks 00:00-04:00 ET) — skipping new-trade scan (10:30:00 AM Bahrain). Exit management is unaffected — stops/exits keep running on the 1-minute tick.
+[2026-11-12 10:31:23] [INFO ] Price stream disconnected — reconnecting in 30s (1-min exit monitor unaffected)
+[2026-11-12 10:31:54] [INFO ] 📶 Price stream connected — real-time exit watchdog live for 0 position(s)
+[2026-11-12 10:40:00] [INFO ] 🌙 Overnight freeze active (08:00-12:00 Bahrain, tracks 00:00-04:00 ET) — skipping new-trade scan (10:40:00 AM Bahrain). Exit management is unaffected — stops/exits keep running on the 1-minute tick.
+[2026-11-12 10:50:00] [INFO ] 🌙 Overnight freeze active (08:00-12:00 Bahrain, tracks 00:00-04:00 ET) — skipping new-trade scan (10:50:00 AM Bahrain). Exit management is unaffected — stops/exits keep running on the 1-minute tick.
+[2026-11-12 11:00:00] [INFO ] 🌙 Overnight freeze active (08:00-12:00 Bahrain, tracks 00:00-04:00 ET) — skipping new-trade scan (11:00:00 AM Bahrain). Exit management is unaffected — stops/exits keep running on the 1-minute tick.
+[2026-11-12 11:10:00] [INFO ] 🌙 Overnight freeze active (08:00-12:00 Bahrain, tracks 00:00-04:00 ET) — skipping new-trade scan (11:10:00 AM Bahrain). Exit management is unaffected — stops/exits keep running on the 1-minute tick.
+[2026-11-12 11:20:00] [INFO ] 🌙 Overnight freeze active (08:00-12:00 Bahrain, tracks 00:00-04:00 ET) — skipping new-trade scan (11:20:00 AM Bahrain). Exit management is unaffected — stops/exits keep running on the 1-minute tick.
+[2026-11-12 11:30:00] [INFO ] 🌙 Overnight freeze active (08:00-12:00 Bahrain, tracks 00:00-04:00 ET) — skipping new-trade scan (11:30:00 AM Bahrain). Exit management is unaffected — stops/exits keep running on the 1-minute tick.
+[2026-11-12 11:40:00] [INFO ] 🌙 Overnight freeze active (08:00-12:00 Bahrain, tracks 00:00-04:00 ET) — skipping new-trade scan (11:40:00 AM Bahrain). Exit management is unaffected — stops/exits keep running on the 1-minute tick.
+[2026-11-12 11:50:00] [INFO ] 🌙 Overnight freeze active (08:00-12:00 Bahrain, tracks 00:00-04:00 ET) — skipping new-trade scan (11:50:00 AM Bahrain). Exit management is unaffected — stops/exits keep running on the 1-minute tick.
+[2026-11-12 12:00:00] [INFO ] ═══ Scan start (12:00:00 PM Bahrain) ═══
+[2026-11-12 12:00:00] [INFO ] Fetching portfolio state from eToro...
+[2026-11-12 12:00:03] [INFO ] eToro closing-price cache refreshed: 18769 instruments (next refresh in 6h)
+[2026-11-12 12:00:07] [INFO ] VIX (FRED, 2026-11-10, 2 days old): 19.46
+[2026-11-12 12:00:07] [INFO ] Market regime: UNKNOWN — opens in 5h 30m (need 45+ min since open to judge). Range so far 0.61%
+[2026-11-12 12:00:07] [INFO ] 🌙 Overnight (24/5): scanning 20 night-eligible name(s); discovery paused until the regular session
+[2026-11-12 12:00:08] [INFO ] 📶 Quotes: 20/20 from eToro (1 batched rates call + cached closing-price)
+[2026-11-12 12:00:08] [INFO ] [12:00:08 PM Bahrain] 📡 Pre-filter: 10 stocks moving enough to enrich
+[2026-11-12 12:00:08] [INFO ] 🔄 Sector rotation: energy +1.86%, semi +5.97%, financials +0.54%, fintech +0.54%, industrials +1.31%
+[2026-11-12 12:00:08] [INFO ] Fetching portfolio state from eToro...
+[2026-11-12 12:00:28] [INFO ] 💰 Capital: effective $8944.31 (base $10000 $-1055.69 realized, peak $10032.85) · risk ×0.5
+[2026-11-12 12:00:28] [INFO ] AVGO plan rejected: score 70.6 below the entry floor of 80 (desk-score floor; the 2026-09-16 recheck found no score band that wins consistently — CHANGELOG v8.3)
+[2026-11-12 12:00:28] [INFO ] No plans survived geometry/slots/RRR checks
+[2026-11-12 12:00:28] [INFO ] 🧮 Funnel: 20 quoted → 10 moving → 10 eligible → 1 scored [ATR ceiling 5, weak RS 4] → 0 plans [score floor 1] → AI 0/0 take → 0 opened
+[2026-11-12 12:10:00] [INFO ] ═══ Scan start (12:10:00 PM Bahrain) ═══
+[2026-11-12 12:10:00] [INFO ] Fetching portfolio state from eToro...
+[2026-11-12 12:10:00] [INFO ] VIX (FRED, 2026-11-10, 2 days old): 19.46
+[2026-11-12 12:10:00] [INFO ] Market regime: UNKNOWN — opens in 5h 20m (need 45+ min since open to judge). Range so far 0.61%
+[2026-11-12 12:10:00] [INFO ] 🌙 Overnight (24/5): scanning 20 night-eligible name(s); discovery paused until the regular session
+[2026-11-12 12:10:01] [INFO ] 📶 Quotes: 20/20 from eToro (1 batched rates call + cached closing-price)
+[2026-11-12 12:10:01] [INFO ] [12:10:01 PM Bahrain] 📡 Pre-filter: 10 stocks moving enough to enrich
+[2026-11-12 12:10:01] [INFO ] Fetching portfolio state from eToro...
+[2026-11-12 12:10:17] [INFO ] 💰 Capital: effective $8944.31 (base $10000 $-1055.69 realized, peak $10032.85) · risk ×0.5
+[2026-11-12 12:10:17] [INFO ] AVGO plan rejected: score 79.2 below the entry floor of 80 (desk-score floor; the 2026-09-16 recheck found no score band that wins consistently — CHANGELOG v8.3)
+[2026-11-12 12:10:17] [INFO ] No plans survived geometry/slots/RRR checks
+[2026-11-12 12:10:17] [INFO ] 🧮 Funnel: 20 quoted → 10 moving → 9 eligible [STALE_QUOTE 1] → 1 scored [weak RS 4, ATR ceiling 4] → 0 plans [score floor 1] → AI 0/0 take → 0 opened
+[2026-11-12 12:20:00] [INFO ] ═══ Scan start (12:20:00 PM Bahrain) ═══
+[2026-11-12 12:20:00] [INFO ] Fetching portfolio state from eToro...
+[2026-11-12 12:20:00] [INFO ] VIX (FRED, 2026-11-10, 2 days old): 19.46
+[2026-11-12 12:20:00] [INFO ] Market regime: UNKNOWN — opens in 5h 10m (need 45+ min since open to judge). Range so far 0.61%
+[2026-11-12 12:20:00] [INFO ] 🌙 Overnight (24/5): scanning 20 night-eligible name(s); discovery paused until the regular session
+[2026-11-12 12:20:01] [INFO ] 📶 Quotes: 20/20 from eToro (1 batched rates call + cached closing-price)
+[2026-11-12 12:20:01] [INFO ] [12:20:01 PM Bahrain] 📡 Pre-filter: 10 stocks moving enough to enrich
+[2026-11-12 12:20:01] [INFO ] 🔄 Sector rotation: energy +1.86%, semi +5.97%, financials +0.54%, fintech +0.54%, industrials +1.31%
+[2026-11-12 12:20:01] [INFO ] Fetching portfolio state from eToro...
+[2026-11-12 12:20:17] [INFO ] 💰 Capital: effective $8944.31 (base $10000 $-1055.69 realized, peak $10032.85) · risk ×0.5
+[2026-11-12 12:20:17] [INFO ] 📋 Plan AVGO [DAY/WATCHLIST/MOMENTUM_BREAKOUT] $320 | risk $15.7 (0.18%) | stop -4.91% | T1 $373.2992 T2 $390.7534 | RRR 2 | vol HIGH
+[2026-11-12 12:20:19] [INFO ] 🧭 Market brief: MIXED tone
+[2026-11-12 12:20:21] [INFO ] 🤖 AI screener: 1/1 plans approved
+[2026-11-12 12:20:21] [INFO ] ⏳ AVGO approved at $355.85 — not buying the spike: will buy only on a dip to $351.48 (-1.23%) within 60 min — buy level follows the high, never above $355.85
+[2026-11-12 12:20:22] [INFO ] ═══ Scan done in 22.1s ═══
+[2026-11-12 12:20:22] [INFO ] 🧮 Funnel: 20 quoted → 10 moving → 9 eligible [STALE_QUOTE 1] → 1 scored [weak RS 4, ATR ceiling 4] → 1 plans → AI 1/1 take → 1 waiting for a dip, 0 opened
+[2026-11-12 12:23:00] [INFO ] ⏳ Waiting to buy AVGO: now $356.28, buy at $351.91, lowest so far $355.60, 57 min left
+[2026-11-12 12:28:00] [INFO ] ⏳ Waiting to buy AVGO: now $357.73, buy at $353.59, lowest so far $355.60, 52 min left
+[2026-11-12 12:30:00] [INFO ] ═══ Scan start (12:30:00 PM Bahrain) ═══
+[2026-11-12 12:30:00] [INFO ] Fetching portfolio state from eToro...
+[2026-11-12 12:30:00] [INFO ] VIX (FRED, 2026-11-10, 2 days old): 19.46
+[2026-11-12 12:30:00] [INFO ] Market regime: UNKNOWN — opens in 5h 0m (need 45+ min since open to judge). Range so far 0.61%
+[2026-11-12 12:30:00] [INFO ] 🌙 Overnight (24/5): scanning 20 night-eligible name(s); discovery paused until the regular session
+[2026-11-12 12:30:00] [INFO ] 📶 Quotes: 20/20 from eToro (1 batched rates call + cached closing-price)
+[2026-11-12 12:30:00] [INFO ] [12:30:00 PM Bahrain] 📡 Pre-filter: 8 stocks moving enough to enrich
+[2026-11-12 12:30:00] [INFO ] Fetching portfolio state from eToro...
+[2026-11-12 12:30:15] [INFO ] 💰 Capital: effective $8944.31 (base $10000 $-1055.69 realized, peak $10032.85) · risk ×0.5
+[2026-11-12 12:30:15] [INFO ] AVGO plan rejected: score 32.7 below the entry floor of 80 (desk-score floor; the 2026-09-16 recheck found no score band that wins consistently — CHANGELOG v8.3)
+[2026-11-12 12:30:15] [INFO ] No plans survived geometry/slots/RRR checks
+[2026-11-12 12:30:15] [INFO ] 🧮 Funnel: 20 quoted → 8 moving → 8 eligible → 1 scored [weak RS 4, ATR ceiling 3] → 0 plans [score floor 1] → AI 0/0 take → 0 opened
+[2026-11-12 12:33:00] [INFO ] ⏳ Waiting to buy AVGO: now $359.00, buy at $354.59, lowest so far $355.60, 47 min left
+[2026-11-12 12:38:00] [INFO ] ⏳ Waiting to buy AVGO: now $358.88, buy at $354.59, lowest so far $355.60, 42 min left
+[2026-11-12 12:40:00] [INFO ] ═══ Scan start (12:40:00 PM Bahrain) ═══
+[2026-11-12 12:40:00] [INFO ] Fetching portfolio state from eToro...
+[2026-11-12 12:40:00] [INFO ] VIX (FRED, 2026-11-10, 2 days old): 19.46
+[2026-11-12 12:40:00] [INFO ] Market regime: UNKNOWN — opens in 4h 50m (need 45+ min since open to judge). Range so far 0.61%
+[2026-11-12 12:40:00] [INFO ] 🌙 Overnight (24/5): scanning 20 night-eligible name(s); discovery paused until the regular session
+[2026-11-12 12:40:01] [INFO ] 📶 Quotes: 20/20 from eToro (1 batched rates call + cached closing-price)
+[2026-11-12 12:40:01] [INFO ] [12:40:01 PM Bahrain] 📡 Pre-filter: 8 stocks moving enough to enrich
+[2026-11-12 12:40:01] [INFO ] 🔄 Sector rotation: energy +1.86%, semi +5.97%, financials +0.54%, fintech +0.54%, industrials +1.31%
+[2026-11-12 12:40:01] [INFO ] Fetching portfolio state from eToro...
+[2026-11-12 12:40:15] [INFO ] 💰 Capital: effective $8944.31 (base $10000 $-1055.69 realized, peak $10032.85) · risk ×0.5
+[2026-11-12 12:40:15] [INFO ] 📋 Plan AVGO [DAY/WATCHLIST/MOMENTUM_BREAKOUT] $320 | risk $15.7 (0.18%) | stop -4.91% | T1 $374.8151 T2 $392.3401 | RRR 2 | vol HIGH
+[2026-11-12 12:40:15] [INFO ] No plans survived geometry/slots/RRR checks
+[2026-11-12 12:40:15] [INFO ] 🧮 Funnel: 20 quoted → 8 moving → 8 eligible → 1 scored [weak RS 4, ATR ceiling 3] → 0 plans [waiting for dip 1] → AI 0/0 take → 0 opened
+[2026-11-12 12:43:00] [INFO ] ⏳ Waiting to buy AVGO: now $357.46, buy at $354.59, lowest so far $355.60, 37 min left
+[2026-11-12 12:48:00] [INFO ] ⏳ Waiting to buy AVGO: now $356.60, buy at $354.59, lowest so far $355.60, 32 min left
+[2026-11-12 12:50:00] [INFO ] ═══ Scan start (12:50:00 PM Bahrain) ═══
+[2026-11-12 12:50:00] [INFO ] Fetching portfolio state from eToro...
+[2026-11-12 12:50:00] [INFO ] VIX (FRED, 2026-11-10, 2 days old): 19.46
+[2026-11-12 12:50:00] [INFO ] Market regime: UNKNOWN — opens in 4h 40m (need 45+ min since open to judge). Range so far 0.61%
+[2026-11-12 12:50:00] [INFO ] 🌙 Overnight (24/5): scanning 20 night-eligible name(s); discovery paused until the regular session
+[2026-11-12 12:50:01] [INFO ] 📶 Quotes: 20/20 from eToro (1 batched rates call + cached closing-price)
+[2026-11-12 12:50:01] [INFO ] [12:50:01 PM Bahrain] 📡 Pre-filter: 8 stocks moving enough to enrich
+[2026-11-12 12:50:01] [INFO ] 🔄 Sector rotation: energy +1.86%, semi +5.97%, financials +0.54%, fintech +0.54%, industrials +1.31%
+[2026-11-12 12:50:01] [INFO ] Fetching portfolio state from eToro...
+[2026-11-12 12:50:16] [INFO ] 💰 Capital: effective $8944.31 (base $10000 $-1055.69 realized, peak $10032.85) · risk ×0.5
+[2026-11-12 12:50:16] [INFO ] AVGO plan rejected: score 67.8 below the entry floor of 80 (desk-score floor; the 2026-09-16 recheck found no score band that wins consistently — CHANGELOG v8.3)
+[2026-11-12 12:50:16] [INFO ] No plans survived geometry/slots/RRR checks
+[2026-11-12 12:50:16] [INFO ] 🧮 Funnel: 20 quoted → 8 moving → 8 eligible → 1 scored [weak RS 4, ATR ceiling 3] → 0 plans [score floor 1] → AI 0/0 take → 0 opened
+[2026-11-12 12:53:00] [INFO ] ⏳ Waiting to buy AVGO: now $355.98, buy at $354.59, lowest so far $355.60, 27 min left
+[2026-11-12 12:58:00] [INFO ] ⏳ Waiting to buy AVGO: now $356.75, buy at $354.59, lowest so far $355.60, 22 min left
+[2026-11-12 13:00:00] [INFO ] ═══ Scan start (1:00:00 PM Bahrain) ═══
+[2026-11-12 13:00:00] [INFO ] Fetching portfolio state from eToro...
+[2026-11-12 13:00:01] [INFO ] VIX (FRED, 2026-11-10, 2 days old): 19.46
+[2026-11-12 13:00:01] [INFO ] Market regime: UNKNOWN — opens in 4h 30m (need 45+ min since open to judge). Range so far 0.61%
+[2026-11-12 13:00:01] [INFO ] 🌙 Overnight (24/5): scanning 20 night-eligible name(s); discovery paused until the regular session
+[2026-11-12 13:00:01] [INFO ] 📶 Quotes: 20/20 from eToro (1 batched rates call + cached closing-price)
+[2026-11-12 13:00:01] [INFO ] [1:00:01 PM Bahrain] 📡 Pre-filter: 8 stocks moving enough to enrich
+[2026-11-12 13:00:01] [INFO ] 🔄 Sector rotation: energy +1.86%, semi +5.97%, financials +0.54%, fintech +0.54%, industrials +1.31%
+[2026-11-12 13:00:01] [INFO ] Fetching portfolio state from eToro...
+[2026-11-12 13:00:16] [INFO ] 💰 Capital: effective $8944.31 (base $10000 $-1055.69 realized, peak $10032.85) · risk ×0.5
+[2026-11-12 13:00:16] [INFO ] AVGO plan rejected: score 65.9 below the entry floor of 80 (desk-score floor; the 2026-09-16 recheck found no score band that wins consistently — CHANGELOG v8.3)
+[2026-11-12 13:00:16] [INFO ] No plans survived geometry/slots/RRR checks
+[2026-11-12 13:00:16] [INFO ] 🧮 Funnel: 20 quoted → 8 moving → 8 eligible → 1 scored [weak RS 4, ATR ceiling 3] → 0 plans [score floor 1] → AI 0/0 take → 0 opened
+[2026-11-12 13:03:00] [INFO ] ⏳ Waiting to buy AVGO: now $356.58, buy at $354.59, lowest so far $355.60, 17 min left
+[2026-11-12 13:08:00] [INFO ] ⏳ Waiting to buy AVGO: now $356.00, buy at $354.59, lowest so far $355.60, 12 min left
+[2026-11-12 13:10:00] [INFO ] ═══ Scan start (1:10:00 PM Bahrain) ═══
+[2026-11-12 13:10:00] [INFO ] Fetching portfolio state from eToro...
+[2026-11-12 13:10:01] [INFO ] VIX (FRED, 2026-11-10, 2 days old): 19.46
+[2026-11-12 13:10:01] [INFO ] Market regime: UNKNOWN — opens in 4h 20m (need 45+ min since open to judge). Range so far 0.61%
+[2026-11-12 13:10:01] [INFO ] 🌙 Overnight (24/5): scanning 20 night-eligible name(s); discovery paused until the regular session
+[2026-11-12 13:10:01] [INFO ] 📶 Quotes: 20/20 from eToro (1 batched rates call + cached closing-price)
+[2026-11-12 13:10:01] [INFO ] [1:10:01 PM Bahrain] 📡 Pre-filter: 8 stocks moving enough to enrich
+[2026-11-12 13:10:01] [INFO ] 🔄 Sector rotation: energy +1.86%, semi +5.97%, financials +0.54%, fintech +0.54%, industrials +1.31%
+[2026-11-12 13:10:01] [INFO ] Fetching portfolio state from eToro...
+[2026-11-12 13:10:16] [INFO ] No candidates passed scoring
+[2026-11-12 13:10:16] [INFO ] 🧮 Funnel: 20 quoted → 8 moving → 8 eligible → 0 scored [weak RS 4, ATR ceiling 3, no setup 1] → 0 plans → AI 0/0 take → 0 opened
+[2026-11-12 13:13:00] [INFO ] ⏳ Waiting to buy AVGO: now $355.11, buy at $354.59, lowest so far $355.11, 7 min left
+[2026-11-12 13:18:00] [INFO ] ⏳ Waiting to buy AVGO: now $356.00, buy at $354.59, lowest so far $355.09, 2 min left
+[2026-11-12 13:20:00] [INFO ] ═══ Scan start (1:20:00 PM Bahrain) ═══
+[2026-11-12 13:20:00] [INFO ] Fetching portfolio state from eToro...
+[2026-11-12 13:20:00] [INFO ] VIX (FRED, 2026-11-10, 2 days old): 19.46
+[2026-11-12 13:20:00] [INFO ] Market regime: UNKNOWN — opens in 4h 10m (need 45+ min since open to judge). Range so far 0.61%
+[2026-11-12 13:20:00] [INFO ] 🌙 Overnight (24/5): scanning 20 night-eligible name(s); discovery paused until the regular session
+[2026-11-12 13:20:01] [INFO ] 📶 Quotes: 20/20 from eToro (1 batched rates call + cached closing-price)
+[2026-11-12 13:20:01] [INFO ] [1:20:01 PM Bahrain] 📡 Pre-filter: 8 stocks moving enough to enrich
+[2026-11-12 13:20:01] [INFO ] Fetching portfolio state from eToro...
+[2026-11-12 13:20:15] [INFO ] No candidates passed scoring
+[2026-11-12 13:20:15] [INFO ] 🧮 Funnel: 20 quoted → 8 moving → 8 eligible → 0 scored [weak RS 4, ATR ceiling 3, no setup 1] → 0 plans → AI 0/0 take → 0 opened
+[2026-11-12 13:21:00] [INFO ] ⌛ AVGO not bought — no dip to $354.59 within 60 min (approved $355.85, lowest $355.09, now $355.33 = -0.14% vs approval)
+[2026-11-12 13:30:00] [INFO ] ═══ Scan start (1:30:00 PM Bahrain) ═══
+[2026-11-12 13:30:00] [INFO ] Fetching portfolio state from eToro...
+[2026-11-12 13:30:00] [INFO ] VIX (FRED, 2026-11-10, 2 days old): 19.46
+[2026-11-12 13:30:00] [INFO ] Market regime: UNKNOWN — opens in 4h 0m (need 45+ min since open to judge). Range so far 0.61%
+[2026-11-12 13:30:00] [INFO ] 🌙 Overnight (24/5): scanning 20 night-eligible name(s); discovery paused until the regular session
+[2026-11-12 13:30:01] [INFO ] 📶 Quotes: 20/20 from eToro (1 batched rates call + cached closing-price)
+[2026-11-12 13:30:01] [INFO ] [1:30:01 PM Bahrain] 📡 Pre-filter: 8 stocks moving enough to enrich
+[2026-11-12 13:30:01] [INFO ] 🔄 Sector rotation: energy +1.86%, semi +5.97%, financials +0.54%, fintech +0.54%, industrials +1.31%
+[2026-11-12 13:30:01] [INFO ] Fetching portfolio state from eToro...
+[2026-11-12 13:30:15] [INFO ] 💰 Capital: effective $8944.31 (base $10000 $-1055.69 realized, peak $10032.85) · risk ×0.5
+[2026-11-12 13:30:15] [INFO ] AVGO plan rejected: score 50.5 below the entry floor of 80 (desk-score floor; the 2026-09-16 recheck found no score band that wins consistently — CHANGELOG v8.3)
+[2026-11-12 13:30:15] [INFO ] No plans survived geometry/slots/RRR checks
+[2026-11-12 13:30:15] [INFO ] 🧮 Funnel: 20 quoted → 8 moving → 8 eligible → 1 scored [weak RS 4, ATR ceiling 3] → 0 plans [score floor 1] → AI 0/0 take → 0 opened
+[2026-11-12 13:40:00] [INFO ] ═══ Scan start (1:40:00 PM Bahrain) ═══
+[2026-11-12 13:40:00] [INFO ] Fetching portfolio state from eToro...
+[2026-11-12 13:40:00] [INFO ] VIX (FRED, 2026-11-10, 2 days old): 19.46
+[2026-11-12 13:40:00] [INFO ] Market regime: UNKNOWN — opens in 3h 50m (need 45+ min since open to judge). Range so far 0.61%
+[2026-11-12 13:40:00] [INFO ] 🌙 Overnight (24/5): scanning 20 night-eligible name(s); discovery paused until the regular session
+[2026-11-12 13:40:01] [INFO ] 📶 Quotes: 20/20 from eToro (1 batched rates call + cached closing-price)
+[2026-11-12 13:40:01] [INFO ] [1:40:01 PM Bahrain] 📡 Pre-filter: 8 stocks moving enough to enrich
+[2026-11-12 13:40:01] [INFO ] 🔄 Sector rotation: energy +1.86%, semi +5.97%, financials +0.54%, fintech +0.54%, industrials +1.31%
+[2026-11-12 13:40:01] [INFO ] Fetching portfolio state from eToro...
+[2026-11-12 13:40:15] [INFO ] No candidates passed scoring
+[2026-11-12 13:40:15] [INFO ] 🧮 Funnel: 20 quoted → 8 moving → 8 eligible → 0 scored [weak RS 4, ATR ceiling 3, no setup 1] → 0 plans → AI 0/0 take → 0 opened
+[2026-11-12 13:50:00] [INFO ] ═══ Scan start (1:50:00 PM Bahrain) ═══
+[2026-11-12 13:50:00] [INFO ] Fetching portfolio state from eToro...
+[2026-11-12 13:50:00] [INFO ] VIX (FRED, 2026-11-10, 2 days old): 19.46
+[2026-11-12 13:50:00] [INFO ] Market regime: UNKNOWN — opens in 3h 40m (need 45+ min since open to judge). Range so far 0.61%
+[2026-11-12 13:50:00] [INFO ] 🌙 Overnight (24/5): scanning 20 night-eligible name(s); discovery paused until the regular session
+[2026-11-12 13:50:01] [INFO ] 📶 Quotes: 20/20 from eToro (1 batched rates call + cached closing-price)
+[2026-11-12 13:50:01] [INFO ] [1:50:01 PM Bahrain] 📡 Pre-filter: 8 stocks moving enough to enrich
+[2026-11-12 13:50:01] [INFO ] Fetching portfolio state from eToro...
+[2026-11-12 13:50:15] [INFO ] No candidates passed scoring
+[2026-11-12 13:50:15] [INFO ] 🧮 Funnel: 20 quoted → 8 moving → 8 eligible → 0 scored [weak RS 4, ATR ceiling 3, no setup 1] → 0 plans → AI 0/0 take → 0 opened
+[2026-11-12 14:00:00] [INFO ] ═══ Scan start (2:00:00 PM Bahrain) ═══
+[2026-11-12 14:00:00] [INFO ] Fetching portfolio state from eToro...
+[2026-11-12 14:00:00] [INFO ] VIX (FRED, 2026-11-10, 2 days old): 19.46
+[2026-11-12 14:00:00] [INFO ] Market regime: UNKNOWN — opens in 3h 30m (need 45+ min since open to judge). Range so far 0.61%
+[2026-11-12 14:00:00] [INFO ] 🌙 Overnight (24/5): scanning 20 night-eligible name(s); discovery paused until the regular session
+[2026-11-12 14:00:01] [INFO ] 📶 Quotes: 20/20 from eToro (1 batched rates call + cached closing-price)
+[2026-11-12 14:00:01] [INFO ] [2:00:01 PM Bahrain] 📡 Pre-filter: 8 stocks moving enough to enrich
+[2026-11-12 14:00:01] [INFO ] 🔄 Sector rotation: energy +1.86%, semi +5.97%, financials +0.54%, fintech +0.54%, industrials +1.31%
+[2026-11-12 14:00:01] [INFO ] Fetching portfolio state from eToro...
+[2026-11-12 14:00:15] [INFO ] No candidates passed scoring
+[2026-11-12 14:00:15] [INFO ] 🧮 Funnel: 20 quoted → 8 moving → 8 eligible → 0 scored [weak RS 4, ATR ceiling 3, below VWAP 1] → 0 plans → AI 0/0 take → 0 opened
+[2026-11-12 14:10:00] [INFO ] ═══ Scan start (2:10:00 PM Bahrain) ═══
+[2026-11-12 14:10:00] [INFO ] Fetching portfolio state from eToro...
+[2026-11-12 14:10:00] [INFO ] VIX (FRED, 2026-11-10, 2 days old): 19.46
+[2026-11-12 14:10:00] [INFO ] Market regime: UNKNOWN — opens in 3h 20m (need 45+ min since open to judge). Range so far 0.61%
+[2026-11-12 14:10:00] [INFO ] 🌙 Overnight (24/5): scanning 20 night-eligible name(s); discovery paused until the regular session
+[2026-11-12 14:10:01] [INFO ] 📶 Quotes: 20/20 from eToro (1 batched rates call + cached closing-price)
+[2026-11-12 14:10:01] [INFO ] [2:10:01 PM Bahrain] 📡 Pre-filter: 8 stocks moving enough to enrich
+[2026-11-12 14:10:01] [INFO ] Fetching portfolio state from eToro...
+[2026-11-12 14:10:15] [INFO ] No candidates passed scoring
+[2026-11-12 14:10:15] [INFO ] 🧮 Funnel: 20 quoted → 8 moving → 8 eligible → 0 scored [ATR ceiling 3, weak RS 3, below VWAP 2] → 0 plans → AI 0/0 take → 0 opened
+[2026-11-12 14:20:00] [INFO ] ═══ Scan start (2:20:00 PM Bahrain) ═══
+[2026-11-12 14:20:00] [INFO ] Fetching portfolio state from eToro...
+[2026-11-12 14:20:00] [INFO ] VIX (FRED, 2026-11-10, 2 days old): 19.46
+[2026-11-12 14:20:00] [INFO ] Market regime: UNKNOWN — opens in 3h 10m (need 45+ min since open to judge). Range so far 0.61%
+[2026-11-12 14:20:00] [INFO ] 🌙 Overnight (24/5): scanning 20 night-eligible name(s); discovery paused until the regular session
+[2026-11-12 14:20:01] [INFO ] 📶 Quotes: 20/20 from eToro (1 batched rates call + cached closing-price)
+[2026-11-12 14:20:01] [INFO ] [2:20:01 PM Bahrain] 📡 Pre-filter: 8 stocks moving enough to enrich
+[2026-11-12 14:20:01] [INFO ] 🔄 Sector rotation: energy +1.86%, semi +5.97%, financials +0.54%, fintech +0.54%, industrials +1.31%
+[2026-11-12 14:20:01] [INFO ] Fetching portfolio state from eToro...
+[2026-11-12 14:20:15] [INFO ] No candidates passed scoring
+[2026-11-12 14:20:15] [INFO ] 🧮 Funnel: 20 quoted → 8 moving → 8 eligible → 0 scored [ATR ceiling 3, weak RS 3, below VWAP 2] → 0 plans → AI 0/0 take → 0 opened
+[2026-11-12 14:30:00] [INFO ] ═══ Scan start (2:30:00 PM Bahrain) ═══
+[2026-11-12 14:30:00] [INFO ] Fetching portfolio state from eToro...
+[2026-11-12 14:30:01] [INFO ] VIX (FRED, 2026-11-10, 2 days old): 19.46
+[2026-11-12 14:30:01] [INFO ] Market regime: UNKNOWN — opens in 3h 0m (need 45+ min since open to judge). Range so far 0.61%
+[2026-11-12 14:30:01] [INFO ] 🌙 Overnight (24/5): scanning 20 night-eligible name(s); discovery paused until the regular session
+[2026-11-12 14:30:01] [INFO ] 📶 Quotes: 20/20 from eToro (1 batched rates call + cached closing-price)
+[2026-11-12 14:30:01] [INFO ] [2:30:01 PM Bahrain] 📡 Pre-filter: 8 stocks moving enough to enrich
+[2026-11-12 14:30:01] [INFO ] 🔄 Sector rotation: energy +1.86%, semi +5.97%, financials +0.54%, fintech +0.54%, industrials +1.31%
+[2026-11-12 14:30:01] [INFO ] Fetching portfolio state from eToro...
+[2026-11-12 14:30:15] [INFO ] No candidates passed scoring
+[2026-11-12 14:30:15] [INFO ] 🧮 Funnel: 20 quoted → 8 moving → 8 eligible → 0 scored [below VWAP 3, ATR ceiling 3, weak RS 2] → 0 plans → AI 0/0 take → 0 opened
+[2026-11-12 14:40:00] [INFO ] ═══ Scan start (2:40:00 PM Bahrain) ═══
+[2026-11-12 14:40:00] [INFO ] Fetching portfolio state from eToro...
+[2026-11-12 14:40:00] [INFO ] VIX (FRED, 2026-11-10, 2 days old): 19.46
+[2026-11-12 14:40:00] [INFO ] Market regime: UNKNOWN — opens in 2h 50m (need 45+ min since open to judge). Range so far 0.61%
+[2026-11-12 14:40:00] [INFO ] 🌙 Overnight (24/5): scanning 20 night-eligible name(s); discovery paused until the regular session
+[2026-11-12 14:40:00] [INFO ] 📶 Quotes: 20/20 from eToro (1 batched rates call + cached closing-price)
+[2026-11-12 14:40:00] [INFO ] [2:40:00 PM Bahrain] 📡 Pre-filter: 8 stocks moving enough to enrich
+[2026-11-12 14:40:00] [INFO ] Fetching portfolio state from eToro...
+[2026-11-12 14:40:15] [INFO ] No candidates passed scoring
+[2026-11-12 14:40:15] [INFO ] 🧮 Funnel: 20 quoted → 8 moving → 8 eligible → 0 scored [below VWAP 3, ATR ceiling 3, weak RS 2] → 0 plans → AI 0/0 take → 0 opened
