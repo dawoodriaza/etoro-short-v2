@@ -10,24 +10,24 @@
   "peakSetAt": 1794436140274,
   "recentPrices": [
    {
-    "price": 216,
-    "atMs": 1794483900382
+    "price": 216.56,
+    "atMs": 1794485220264
    },
    {
-    "price": 216,
-    "atMs": 1794483960380
+    "price": 216.56,
+    "atMs": 1794485280372
    },
    {
-    "price": 216,
-    "atMs": 1794484020430
+    "price": 216.56,
+    "atMs": 1794485340292
    },
    {
-    "price": 216,
-    "atMs": 1794484080270
+    "price": 216.56,
+    "atMs": 1794485400383
    },
    {
-    "price": 216,
-    "atMs": 1794484140304
+    "price": 216.56,
+    "atMs": 1794485460319
    }
   ],
   "partialDone": false,
@@ -58,24 +58,24 @@
   "peakSetAt": 1794430830173,
   "recentPrices": [
    {
-    "price": 64.18,
-    "atMs": 1794483900382
+    "price": 64.29,
+    "atMs": 1794485220264
    },
    {
-    "price": 64.18,
-    "atMs": 1794483960380
+    "price": 64.24,
+    "atMs": 1794485280372
    },
    {
-    "price": 64.21,
-    "atMs": 1794484020430
+    "price": 64.32,
+    "atMs": 1794485340292
    },
    {
-    "price": 64.21,
-    "atMs": 1794484080270
+    "price": 64.29,
+    "atMs": 1794485400383
    },
    {
-    "price": 64.21,
-    "atMs": 1794484140304
+    "price": 64.24,
+    "atMs": 1794485460319
    }
   ],
   "partialDone": false,
@@ -106,30 +106,30 @@
   "peakSetAt": 1794439800366,
   "recentPrices": [
    {
-    "price": 292.5,
-    "atMs": 1794483900382
+    "price": 293.27,
+    "atMs": 1794485220264
    },
    {
-    "price": 292.5,
-    "atMs": 1794483960380
+    "price": 293.32,
+    "atMs": 1794485280372
    },
    {
-    "price": 292.34,
-    "atMs": 1794484020430
+    "price": 293.2,
+    "atMs": 1794485340292
    },
    {
-    "price": 292.34,
-    "atMs": 1794484080270
+    "price": 293.22,
+    "atMs": 1794485400383
    },
    {
-    "price": 292.52,
-    "atMs": 1794484140304
+    "price": 293.11,
+    "atMs": 1794485460319
    }
   ],
   "partialDone": false,
   "openedAt": 1794438629372,
   "dollarAmount": 545,
-  "troughPrice": 292.22,
+  "troughPrice": 291.57,
   "plan": {
    "symbol": "GOOGL",
    "stopDistancePct": 4.09,
@@ -154,24 +154,24 @@
   "peakSetAt": 1794475980267,
   "recentPrices": [
    {
-    "price": 352,
-    "atMs": 1794483900382
+    "price": 349.5,
+    "atMs": 1794485220264
    },
    {
-    "price": 352,
-    "atMs": 1794483960380
+    "price": 349.5,
+    "atMs": 1794485280372
    },
    {
-    "price": 351.25,
-    "atMs": 1794484020430
+    "price": 348.8,
+    "atMs": 1794485340292
    },
    {
-    "price": 351.64,
-    "atMs": 1794484080270
+    "price": 348.6,
+    "atMs": 1794485400383
    },
    {
-    "price": 351.25,
-    "atMs": 1794484140304
+    "price": 348.7,
+    "atMs": 1794485460319
    }
   ],
   "partialDone": false,
@@ -202,30 +202,30 @@
   "peakSetAt": 1794475980267,
   "recentPrices": [
    {
-    "price": 352,
-    "atMs": 1794483900382
+    "price": 349.5,
+    "atMs": 1794485220264
    },
    {
-    "price": 352,
-    "atMs": 1794483960380
+    "price": 349.5,
+    "atMs": 1794485280372
    },
    {
-    "price": 351.25,
-    "atMs": 1794484020430
+    "price": 348.8,
+    "atMs": 1794485340292
    },
    {
-    "price": 351.64,
-    "atMs": 1794484080270
+    "price": 348.6,
+    "atMs": 1794485400383
    },
    {
-    "price": 351.25,
-    "atMs": 1794484140304
+    "price": 348.7,
+    "atMs": 1794485460319
    }
   ],
   "partialDone": false,
   "openedAt": 1794475221745,
   "dollarAmount": 320,
-  "troughPrice": 349.56,
+  "troughPrice": 348.6,
   "plan": {
    "symbol": "AVGO",
    "stopDistancePct": 4.91,
