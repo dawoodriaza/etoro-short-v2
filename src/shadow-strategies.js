@@ -306,6 +306,46 @@ const STRATEGIES = {
     },
   },
 
+  // v11.2 (2026-11-12): the opposite of what the live bot buys. On 4 years
+  // of daily bars for the 55 watchlist stocks, a stock in an uptrend that
+  // fell 5%+ over 3 days returned more over the next 5 days than just
+  // holding it (200-day trend: +1.26% / +0.53% extra in the two halves;
+  // 100-day trend, used here because only ~160 daily bars are kept:
+  // +0.83% / +0.07%). About 8 signals per stock per year. Only ~51% win and
+  // the worst 5% of trades lost 14%+, so this is a test, not a finding.
+  PULLBACK_5D: {
+    label: "Pullback, hold 5 days",
+    emoji: "🪂",
+    idea: "above a rising 100-day average and down 5%+ over 3 days; hold 5 sessions",
+    maxPositions: MAX_POSITIONS,
+    maxHoldSessions: 5,
+    scan(date, ctx) {
+      const out = [];
+      for (const symbol of ctx.symbols) {
+        const v = view(ctx.universe, symbol, date);
+        if (!v || !v.session || !v.dayIsComplete || v.bars.length < 121) continue;
+        const n = v.closes.length;
+        const c = v.closes[n - 1];
+        const sma100 = sma(v.closes, 100);
+        const sma100Before = sma(v.closes.slice(0, -20), 100);
+        const drop3 = c / v.closes[n - 4] - 1;
+        const a = atr(v.bars, 14);
+        if (!(c > sma100 && sma100 > sma100Before && drop3 <= -0.05 && a > 0)) continue;
+        out.push({
+          symbol,
+          rank: -drop3,
+          reason:
+            "down " + round(-drop3 * 100, 1) + "% over 3 days while above the rising 100-day average $" + round(sma100),
+          atr: a,
+          // a wide safety stop; the normal exit is the 5-session limit
+          stopAtr: 3,
+        });
+      }
+      return out;
+    },
+    manage() { return null; },
+  },
+
   EARNINGS_DRIFT: {
     label: "Earnings drift",
     emoji: "📰",

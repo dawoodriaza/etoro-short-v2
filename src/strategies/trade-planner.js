@@ -758,7 +758,23 @@ function computeBrokerStopRate(plan, multiplier = config.brokerStopDistanceMulti
   return Math.floor(raw * factor) / factor;
 }
 
+// v11.2: why a buy counts as "stretched" under the shadow no-chase rule
+// (config.noChase*). [] = not stretched. Takes a plan or a trade record's
+// entryConditions — both carry these three fields. Observation only.
+function stretchedEntryReasons(entry) {
+  const reasons = [];
+  if (!entry) return reasons;
+  const move = Number(entry.priceChangePercent);
+  const moveToAtr = Number(entry.moveToAtrRatio);
+  const rs = Number(entry.relativeStrength);
+  if (Number.isFinite(move) && move >= config.noChaseMaxDayMovePct) reasons.push("up " + move.toFixed(1) + "% today");
+  if (Number.isFinite(moveToAtr) && moveToAtr >= config.noChaseMaxMoveToAtr) reasons.push("moved " + moveToAtr.toFixed(2) + "x its daily range");
+  if (Number.isFinite(rs) && rs >= config.noChaseMaxRelativeStrength) reasons.push("beating SPY by " + rs.toFixed(1) + " pts");
+  return reasons;
+}
+
 module.exports = {
+  stretchedEntryReasons, // v11.2
   computeBrokerStopRate, // v10.2
   buildTradePlan,
   buildDipEntryOrder,

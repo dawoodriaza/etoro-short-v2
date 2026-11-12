@@ -1613,6 +1613,8 @@ function openPaperPosition(plan, nowMs, paperReason = "DIP_WAIT") {
     },
     entryConditions: { atrPercent: plan.atrPercent },
     paperReason,
+    // v11.2: shadow no-chase tag ([] = not stretched), carried to the close
+    stretched: tradePlanner.stretchedEntryReasons(plan),
   };
   paperPositions.set(key, meta);
   journal.writePaperState(Object.fromEntries(paperPositions));
@@ -1627,6 +1629,7 @@ function openPaperPosition(plan, nowMs, paperReason = "DIP_WAIT") {
     score: plan.score,
     source: plan.source,
     paperReason,
+    stretched: meta.stretched,
     note:
       paperReason === "SCORE_FLOOR"
         ? "bought when the score floor turned it down (score " + plan.score + ")"
@@ -1754,6 +1757,7 @@ async function markPaperPositions(eodMode = null) {
         pnlDollars: Number(pnlDollars.toFixed(2)),
         realizedPartialPnl: meta.realizedPartialPnl || 0,
         spreadAppliedPct: meta.spreadApplied || 0, // v11.1: bought at ask, sold at bid
+        stretched: meta.stretched || null, // v11.2: null = opened before the tag existed
         // the whole paper trade: the final leg plus anything banked at T1
         totalPnlDollars: Number((pnlDollars + (meta.realizedPartialPnl || 0)).toFixed(2)),
         peakPrice: meta.peakPrice,
@@ -4106,7 +4110,7 @@ async function commandShadow() {
   lines.push(lastRun
     ? "<i>updated " + marketHours.localClock(new Date(lastRun.at)) + " · up to the " + lastRun.latestCompleteSession + " close</i>"
     : "<i>not run yet — it runs each morning after the price capture</i>");
-  for (const name of ["SWING_BREAKOUT", "DIP_IN_UPTREND", "EARNINGS_DRIFT", "ROTATION"]) {
+  for (const name of ["SWING_BREAKOUT", "DIP_IN_UPTREND", "PULLBACK_5D", "EARNINGS_DRIFT", "ROTATION"]) {
     const st = readJson(path.join(dir, name, "state.json"));
     const meta = strategies[name] || { label: name, emoji: "•" };
     lines.push("");
@@ -4130,6 +4134,33 @@ async function commandShadow() {
         .filter((t) => typeof t.pnlDollars === "number" && t.closedAt >= V9_START);
     } catch { return []; }
   })());
+  // v11.2: the shadow no-chase rule — how "stretched" buys did against the rest
+  try {
+    const liveTrades = JSON.parse(fs.readFileSync(path.join(__dirname, "../data/trade-history.json"), "utf8"))
+      .filter((t) => typeof t.pnlDollars === "number" && t.closedAt >= V9_START && t.entryConditions);
+    const isStretched = (t) => tradePlanner.stretchedEntryReasons(t.entryConditions).length > 0;
+    const group = (label, list, value) => {
+      const x = tradeStats(list, value);
+      return "  " + label + ": " + x.n + (x.n ? " · " + x.win + "% won · " + real(x.sum) + " (" + real(x.per) + "/trade)" : "");
+    };
+    const paperTagged = [];
+    const paperDir = path.join(__dirname, "../data/shadow-log");
+    for (const f of fs.readdirSync(paperDir).filter((x) => x.startsWith("paper-"))) {
+      for (const r of readJsonLines(path.join(paperDir, f), ['"PAPER_CLOSE"'])) {
+        if (Array.isArray(r.stretched)) paperTagged.push(r);
+      }
+    }
+    const paperValue = (r) => (r.totalPnlDollars != null ? r.totalPnlDollars : r.pnlDollars || 0);
+    lines.push("");
+    lines.push("🚫 <b>No-chase rule</b> — <i>would skip stocks already up " + config.noChaseMaxDayMovePct + "%+, past " +
+      config.noChaseMaxMoveToAtr + "× their daily range, or " + config.noChaseMaxRelativeStrength + "+ pts ahead of SPY</i>");
+    lines.push(group("real trades it would KEEP", liveTrades.filter((t) => !isStretched(t)), tradeCopyDollars));
+    lines.push(group("real trades it would SKIP", liveTrades.filter(isStretched), tradeCopyDollars));
+    lines.push(group("paper trades it would keep", paperTagged.filter((r) => !r.stretched.length), paperValue));
+    lines.push(group("paper trades it would skip", paperTagged.filter((r) => r.stretched.length), paperValue));
+  } catch (noChaseError) {
+    lines.push("  no-chase comparison unavailable: " + escapeHtml(noChaseError.message));
+  }
   lines.push("");
   lines.push("<b>Compared with</b>");
   lines.push("  🤖 live bot (since " + V9_START + "): " + live.n + " trades · " + real(live.sum) + (live.n ? " (" + real(live.per) + "/trade)" : ""));

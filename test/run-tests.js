@@ -23,6 +23,7 @@ const testFiles = [
   "./phase1-v10-2.test.js",
   "./phase2-v11.test.js",
   "./fixes-v11-1.test.js",
+  "./shadow-books-v11-2.test.js",
 ];
 
 (async () => {
