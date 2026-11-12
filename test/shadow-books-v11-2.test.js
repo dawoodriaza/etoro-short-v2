@@ -20,6 +20,12 @@ module.exports = {
       planner.stretchedEntryReasons({ priceChangePercent: 3, moveToAtrRatio: 1.2, relativeStrength: 2 }).length === 1);
     check("all three reasons are listed",
       planner.stretchedEntryReasons({ priceChangePercent: 8, moveToAtrRatio: 1.5, relativeStrength: 6 }).length === 3);
+    check("v11.3: the rule is switched on by default", config.noChaseEnabled === true);
+    check("v11.3: the scan drops a stretched plan before the AI and paper-trades it",
+      require("fs").readFileSync(require("path").join(__dirname, "../src/index.js"), "utf8")
+        .includes("config.noChaseEnabled && stretchedReasons.length") &&
+      require("fs").readFileSync(require("path").join(__dirname, "../src/index.js"), "utf8")
+        .includes('openPaperPosition(planResult.plan, Date.now(), "NO_CHASE")'));
     check("missing figures never tag a trade",
       planner.stretchedEntryReasons({}).length === 0 && planner.stretchedEntryReasons(null).length === 0);
 

@@ -1141,7 +1141,29 @@ async function runScanCycle() {
         isFirstTimeDiscovered,
       );
 
-      if (planResult.accepted) {
+      // v11.3: NO-CHASE — a stretched buy is dropped here, before the AI is
+      // asked, and paper-traded so the rule's cost/benefit stays measured.
+      const stretchedReasons = planResult.accepted
+        ? tradePlanner.stretchedEntryReasons(planResult.plan)
+        : [];
+      if (planResult.accepted && config.noChaseEnabled && stretchedReasons.length) {
+        const reason = "no-chase: " + stretchedReasons.join(", ");
+        bumpReason(funnel.planRejects, "no-chase");
+        shadowSignals.markShadowOutcome(currentShadowBook, candidate.symbol, "PLAN_REJECTED", reason);
+        journal.planRejected(candidate.symbol, reason, {
+          score: planResult.plan.score,
+          price: planResult.plan.entryPrice,
+          priceChangePercent: planResult.plan.priceChangePercent,
+          moveToAtrRatio: planResult.plan.moveToAtrRatio,
+          relativeStrength: planResult.plan.relativeStrength,
+        });
+        logger.info(candidate.symbol + " plan rejected: " + reason);
+        try {
+          openPaperPosition(planResult.plan, Date.now(), "NO_CHASE");
+        } catch (paperError) {
+          logger.warn("Paper copy failed for " + candidate.symbol + ": " + paperError.message);
+        }
+      } else if (planResult.accepted) {
         plans.push(planResult.plan);
         journal.planBuilt(planResult.plan);
         shadowSignals.markShadowOutcome(
@@ -1633,6 +1655,8 @@ function openPaperPosition(plan, nowMs, paperReason = "DIP_WAIT") {
     note:
       paperReason === "SCORE_FLOOR"
         ? "bought when the score floor turned it down (score " + plan.score + ")"
+        : paperReason === "NO_CHASE"
+          ? "bought when the no-chase rule turned it down (" + (meta.stretched || []).join(", ") + ")"
         : "bought at the approval price — the trade the live bot skipped while waiting for a dip",
   });
 }
@@ -3892,7 +3916,7 @@ function paperSummaryLines() {
         b.n++; b.pnl += pnl; if (pnl > 0) b.wins++;
       } catch {}
     });
-    const label = { SCORE_FLOOR: "Skipped by score", DIP_WAIT: "Skipped waiting for dip" };
+    const label = { SCORE_FLOOR: "Skipped by score", DIP_WAIT: "Skipped waiting for dip", NO_CHASE: "Skipped by no-chase (already stretched)" };
     return Object.entries(by).map(([k, b]) =>
       (label[k] || k) + ": " + b.n + " closed, " + b.wins + " won, " + formatDualAmount(b.pnl),
     );
@@ -4152,10 +4176,10 @@ async function commandShadow() {
     }
     const paperValue = (r) => (r.totalPnlDollars != null ? r.totalPnlDollars : r.pnlDollars || 0);
     lines.push("");
-    lines.push("🚫 <b>No-chase rule</b> — <i>would skip stocks already up " + config.noChaseMaxDayMovePct + "%+, past " +
+    lines.push("🚫 <b>No-chase rule</b> " + (config.noChaseEnabled ? "(LIVE since 12 Nov)" : "(shadow)") + " — <i>skips stocks already up " + config.noChaseMaxDayMovePct + "%+, past " +
       config.noChaseMaxMoveToAtr + "× their daily range, or " + config.noChaseMaxRelativeStrength + "+ pts ahead of SPY</i>");
     lines.push(group("real trades it would KEEP", liveTrades.filter((t) => !isStretched(t)), tradeCopyDollars));
-    lines.push(group("real trades it would SKIP", liveTrades.filter(isStretched), tradeCopyDollars));
+    lines.push(group("real trades it would have SKIPPED", liveTrades.filter(isStretched), tradeCopyDollars));
     lines.push(group("paper trades it would keep", paperTagged.filter((r) => !r.stretched.length), paperValue));
     lines.push(group("paper trades it would skip", paperTagged.filter((r) => r.stretched.length), paperValue));
   } catch (noChaseError) {
@@ -4164,7 +4188,7 @@ async function commandShadow() {
   lines.push("");
   lines.push("<b>Compared with</b>");
   lines.push("  🤖 live bot (since " + V9_START + "): " + live.n + " trades · " + real(live.sum) + (live.n ? " (" + real(live.per) + "/trade)" : ""));
-  const label = { SCORE_FLOOR: "skipped by score", DIP_WAIT: "skipped waiting for dip" };
+  const label = { SCORE_FLOOR: "skipped by score", DIP_WAIT: "skipped waiting for dip", NO_CHASE: "skipped by no-chase" };
   Object.entries(paper).forEach(([k, b]) =>
     lines.push("  📝 paper, " + (label[k] || k) + ": " + b.n + " · " + b.wins + " won · " + real(b.pnl) + " (" + real(b.pnl / b.n) + "/trade)"));
   return lines.join("\n");

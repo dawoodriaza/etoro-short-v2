@@ -97,13 +97,21 @@ const config = {
   // held overnight gaps through everything. Before v10.2 every position
   // was opened with no broker stop at all (eToro history: stopLossRate
   // 0.0001 on all 389 closed positions).
-  // ── v11.2: "NO-CHASE" RULE — SHADOW ONLY, NOTHING TRADES ON IT ──────
+  // ── v11.2: "NO-CHASE" RULE (shadow in v11.2; LIVE from v11.3) ───────
   // A buy is "stretched" when the stock is already up this much today, has
   // already moved more than its normal daily range, or is beating SPY by
   // this many points. Over 895 paper trades (Oct 12 → Nov 12) the stretched
   // ones lost 0.39% each, in both halves of the period; the rest were about
   // flat. Every real and paper trade is tagged, and /shadow compares the two
-  // groups, so the rule can be judged before it is ever switched on.
+  // groups.
+  // v11.3 (2026-11-12): switched ON at the owner's request. On all 148 REAL
+  // trades with entry data (eToro's figures, 28 Aug → 11 Nov) the stretched
+  // ones lost in each of three periods (79 trades, 47% won, -$473 bot) and
+  // the rest were positive in each (69 trades, 59% won, +$82). A stretched
+  // plan is now dropped before the AI is asked, and paper-traded under
+  // NO_CHASE so what the rule skips keeps being measured. Set
+  // DT_NO_CHASE_ENABLED=false to go back to shadow-only.
+  noChaseEnabled: bool("DT_NO_CHASE_ENABLED", true),
   noChaseMaxDayMovePct: num("DT_NO_CHASE_MAX_DAY_MOVE_PCT", 5),
   noChaseMaxMoveToAtr: num("DT_NO_CHASE_MAX_MOVE_TO_ATR", 1.0),
   noChaseMaxRelativeStrength: num("DT_NO_CHASE_MAX_RS", 4),
