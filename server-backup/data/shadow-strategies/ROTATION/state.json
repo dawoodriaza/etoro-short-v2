@@ -1,7 +1,7 @@
 {
  "book": "ROTATION",
  "createdAt": "2026-10-22T13:40:53.189Z",
- "lastProcessedSession": "2026-11-11",
+ "lastProcessedSession": "2026-11-12",
  "lastRebalanceWeek": "2026-W46",
  "open": {
   "TSLA": {
@@ -14,11 +14,11 @@
    "riskDollars": null,
    "peak": 406.3,
    "trough": 338.15,
-   "heldSessions": 7,
+   "heldSessions": 8,
    "signal": "rank 3, 3-month return +27.9%",
    "signalDate": "2026-11-02",
-   "lastClose": 390.63,
-   "lastDate": "2026-11-11"
+   "lastClose": 396.93,
+   "lastDate": "2026-11-12"
   },
   "ISRG": {
    "symbol": "ISRG",
@@ -30,11 +30,11 @@
    "riskDollars": null,
    "peak": 485.82,
    "trough": 434,
-   "heldSessions": 7,
+   "heldSessions": 8,
    "signal": "rank 5, 3-month return +23.4%",
    "signalDate": "2026-11-02",
-   "lastClose": 449.33,
-   "lastDate": "2026-11-11"
+   "lastClose": 439.89,
+   "lastDate": "2026-11-12"
   },
   "LLY": {
    "symbol": "LLY",
@@ -44,13 +44,13 @@
    "stopKind": null,
    "size": 2000,
    "riskDollars": null,
-   "peak": 1440.12,
+   "peak": 1459.72,
    "trough": 1400,
-   "heldSessions": 2,
+   "heldSessions": 3,
    "signal": "rank 1, 3-month return +25.67%",
    "signalDate": "2026-11-09",
-   "lastClose": 1437.97,
-   "lastDate": "2026-11-11"
+   "lastClose": 1428.69,
+   "lastDate": "2026-11-12"
   },
   "ABBV": {
    "symbol": "ABBV",
@@ -60,13 +60,13 @@
    "stopKind": null,
    "size": 2000,
    "riskDollars": null,
-   "peak": 295.43,
+   "peak": 299.5,
    "trough": 289.49,
-   "heldSessions": 2,
+   "heldSessions": 3,
    "signal": "rank 3, 3-month return +18.51%",
    "signalDate": "2026-11-09",
-   "lastClose": 295.05,
-   "lastDate": "2026-11-11"
+   "lastClose": 294.42,
+   "lastDate": "2026-11-12"
   },
   "VRTX": {
    "symbol": "VRTX",
@@ -76,13 +76,13 @@
    "stopKind": null,
    "size": 2000,
    "riskDollars": null,
-   "peak": 550.13,
+   "peak": 550.47,
    "trough": 535.42,
-   "heldSessions": 2,
+   "heldSessions": 3,
    "signal": "rank 5, 3-month return +15.65%",
    "signalDate": "2026-11-09",
-   "lastClose": 546.94,
-   "lastDate": "2026-11-11"
+   "lastClose": 542.61,
+   "lastDate": "2026-11-12"
   }
  },
  "pending": [],
@@ -320,6 +320,12 @@
    "date": "2026-11-11",
    "realized": -1447.39,
    "unrealized": 70.38,
+   "open": 5
+  },
+  {
+   "date": "2026-11-12",
+   "realized": -1447.39,
+   "unrealized": 24.64,
    "open": 5
   }
  ]

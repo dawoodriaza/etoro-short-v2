@@ -1,242 +1,157 @@
 {
- "SCORE_FLOOR:CRM": {
+ "SCORE_FLOOR:AVGO": {
   "tradeType": "DAY",
-  "entryPrice": 217.845,
-  "stopPrice": 208.2936,
-  "targetT1": 227.3964,
-  "targetT2": 236.9478,
+  "entryPrice": 365.3651,
+  "stopPrice": 347.444,
+  "targetT1": 383.2863,
+  "targetT2": 401.2074,
   "lockedFloor": null,
-  "peakPrice": 218,
-  "peakSetAt": 1794436140274,
+  "peakPrice": 368.14,
+  "peakSetAt": 1794535500262,
   "recentPrices": [
    {
-    "price": 216.64,
-    "atMs": 1794491340295
+    "price": 360.8,
+    "atMs": 1794548760304
    },
    {
-    "price": 216.68,
-    "atMs": 1794491400453
+    "price": 361.01,
+    "atMs": 1794548820290
    },
    {
-    "price": 216.88,
-    "atMs": 1794491460274
+    "price": 360.8,
+    "atMs": 1794548880241
    },
    {
-    "price": 216.88,
-    "atMs": 1794491520405
+    "price": 360.48,
+    "atMs": 1794548940259
    },
    {
-    "price": 217.48,
-    "atMs": 1794491580428
+    "price": 360.48,
+    "atMs": 1794549000358
    }
   ],
   "partialDone": false,
-  "openedAt": 1794430278713,
-  "dollarAmount": 510,
-  "troughPrice": 215.94,
+  "openedAt": 1794517820622,
+  "dollarAmount": 640,
+  "troughPrice": 360.48,
   "plan": {
-   "symbol": "CRM",
-   "stopDistancePct": 4.38,
-   "atrPercent": 4.48,
-   "score": 21.98550429846577,
+   "symbol": "AVGO",
+   "stopDistancePct": 4.91,
+   "atrPercent": 5.53,
+   "score": 71.73060626209389,
    "source": "WATCHLIST"
   },
   "entryConditions": {
-   "atrPercent": 4.48
+   "atrPercent": 5.53
   },
   "paperReason": "SCORE_FLOOR",
-  "spreadApplied": 0.0092
+  "stretched": [
+   "up 5.8% today",
+   "moved 1.05x its daily range",
+   "beating SPY by 6.1 pts"
+  ],
+  "spreadApplied": 0.0315
  },
- "SCORE_FLOOR:NFLX": {
+ "NO_CHASE:AVGO": {
   "tradeType": "DAY",
-  "entryPrice": 64.6301,
-  "stopPrice": 62.7862,
-  "targetT1": 66.474,
-  "targetT2": 68.3178,
+  "entryPrice": 365.85,
+  "stopPrice": 347.9051,
+  "targetT1": 383.7949,
+  "targetT2": 401.7399,
   "lockedFloor": null,
-  "peakPrice": 64.6301,
-  "peakSetAt": 1794430830173,
+  "peakPrice": 368.14,
+  "peakSetAt": 1794535500262,
   "recentPrices": [
    {
-    "price": 64.1,
-    "atMs": 1794491340295
+    "price": 360.8,
+    "atMs": 1794548760304
    },
    {
-    "price": 64.1,
-    "atMs": 1794491400453
+    "price": 361.01,
+    "atMs": 1794548820290
    },
    {
-    "price": 64.1,
-    "atMs": 1794491460274
+    "price": 360.8,
+    "atMs": 1794548880241
    },
    {
-    "price": 64.12,
-    "atMs": 1794491520405
+    "price": 360.48,
+    "atMs": 1794548940259
    },
    {
-    "price": 64.3,
-    "atMs": 1794491580428
+    "price": 360.48,
+    "atMs": 1794549000358
    }
   ],
   "partialDone": false,
-  "openedAt": 1794430830173,
-  "dollarAmount": 785,
-  "troughPrice": 63.8,
+  "openedAt": 1794519018898,
+  "dollarAmount": 640,
+  "troughPrice": 360.48,
   "plan": {
-   "symbol": "NFLX",
-   "stopDistancePct": 2.85,
-   "atrPercent": 2.95,
-   "score": 55.36742204827165,
+   "symbol": "AVGO",
+   "stopDistancePct": 4.91,
+   "atrPercent": 5.53,
+   "score": 83.99084173872961,
    "source": "WATCHLIST"
   },
   "entryConditions": {
-   "atrPercent": 2.95
+   "atrPercent": 5.53
   },
-  "paperReason": "SCORE_FLOOR",
-  "spreadApplied": 0.1474
+  "paperReason": "NO_CHASE",
+  "stretched": [
+   "up 6.0% today",
+   "moved 1.08x its daily range",
+   "beating SPY by 6.2 pts"
+  ],
+  "spreadApplied": 0.015
  },
  "SCORE_FLOOR:GOOGL": {
   "tradeType": "DAY",
-  "entryPrice": 295.965,
-  "stopPrice": 283.8476,
-  "targetT1": 308.0823,
-  "targetT2": 320.1997,
+  "entryPrice": 300.235,
+  "stopPrice": 287.7926,
+  "targetT1": 312.6774,
+  "targetT2": 325.1199,
   "lockedFloor": null,
-  "peakPrice": 296.9,
-  "peakSetAt": 1794439800366,
+  "peakPrice": 302.36,
+  "peakSetAt": 1794534960247,
   "recentPrices": [
    {
-    "price": 291.81,
-    "atMs": 1794491340295
+    "price": 300.33,
+    "atMs": 1794548760304
    },
    {
-    "price": 291.77,
-    "atMs": 1794491400453
+    "price": 300.24,
+    "atMs": 1794548820290
    },
    {
-    "price": 292.65,
-    "atMs": 1794491460274
+    "price": 300,
+    "atMs": 1794548880241
    },
    {
-    "price": 292.24,
-    "atMs": 1794491520405
+    "price": 300.05,
+    "atMs": 1794548940259
    },
    {
-    "price": 293.44,
-    "atMs": 1794491580428
+    "price": 299.88,
+    "atMs": 1794549000358
    }
   ],
   "partialDone": false,
-  "openedAt": 1794438629372,
-  "dollarAmount": 545,
-  "troughPrice": 290.09,
+  "openedAt": 1794526217191,
+  "dollarAmount": 1080,
+  "troughPrice": 299.42,
   "plan": {
    "symbol": "GOOGL",
-   "stopDistancePct": 4.09,
-   "atrPercent": 4.19,
-   "score": 43.39117698794537,
+   "stopDistancePct": 4.14,
+   "atrPercent": 4.24,
+   "score": 8.991842693032918,
    "source": "WATCHLIST"
   },
   "entryConditions": {
-   "atrPercent": 4.19
+   "atrPercent": 4.24
   },
   "paperReason": "SCORE_FLOOR",
-  "spreadApplied": 0.0135
- },
- "SCORE_FLOOR:AVGO": {
-  "tradeType": "DAY",
-  "entryPrice": 356.4138,
-  "stopPrice": 338.9318,
-  "targetT1": 373.8959,
-  "targetT2": 391.378,
-  "lockedFloor": null,
-  "peakPrice": 358.22,
-  "peakSetAt": 1794475980267,
-  "recentPrices": [
-   {
-    "price": 350.82,
-    "atMs": 1794491340295
-   },
-   {
-    "price": 350.96,
-    "atMs": 1794491400453
-   },
-   {
-    "price": 350.82,
-    "atMs": 1794491460274
-   },
-   {
-    "price": 354.78,
-    "atMs": 1794491520405
-   },
-   {
-    "price": 354.5,
-    "atMs": 1794491580428
-   }
-  ],
-  "partialDone": false,
-  "openedAt": 1794439820292,
-  "dollarAmount": 320,
-  "troughPrice": 345.05,
-  "plan": {
-   "symbol": "AVGO",
-   "stopDistancePct": 4.91,
-   "atrPercent": 5.31,
-   "score": 68.17779073401934,
-   "source": "WATCHLIST"
-  },
-  "entryConditions": {
-   "atrPercent": 5.31
-  },
-  "paperReason": "SCORE_FLOOR",
-  "spreadApplied": 0.1303
- },
- "DIP_WAIT:AVGO": {
-  "tradeType": "DAY",
-  "entryPrice": 356.3408,
-  "stopPrice": 338.8622,
-  "targetT1": 373.8193,
-  "targetT2": 391.2978,
-  "lockedFloor": null,
-  "peakPrice": 358.22,
-  "peakSetAt": 1794475980267,
-  "recentPrices": [
-   {
-    "price": 350.82,
-    "atMs": 1794491340295
-   },
-   {
-    "price": 350.96,
-    "atMs": 1794491400453
-   },
-   {
-    "price": 350.82,
-    "atMs": 1794491460274
-   },
-   {
-    "price": 354.78,
-    "atMs": 1794491520405
-   },
-   {
-    "price": 354.5,
-    "atMs": 1794491580428
-   }
-  ],
-  "partialDone": false,
-  "openedAt": 1794475221745,
-  "dollarAmount": 320,
-  "troughPrice": 345.05,
-  "plan": {
-   "symbol": "AVGO",
-   "stopDistancePct": 4.91,
-   "atrPercent": 5.51,
-   "score": 99.52581876704613,
-   "source": "WATCHLIST"
-  },
-  "entryConditions": {
-   "atrPercent": 5.51
-  },
-  "paperReason": "DIP_WAIT",
-  "spreadApplied": 0.1393
+  "stretched": [],
+  "spreadApplied": 0.0317
  }
 }

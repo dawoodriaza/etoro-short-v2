@@ -1,6 +1,6 @@
 {
- "at": "2026-11-12T05:32:37.163Z",
- "note": "3 watchlist reports since 2026-10-22",
+ "at": "2026-11-13T05:32:44.433Z",
+ "note": "2 watchlist reports since 2026-10-23",
  "rows": [
   {
    "symbol": "NBIS",
@@ -9,9 +9,9 @@
    "quarter": 3,
    "year": 2026,
    "epsEstimate": -0.7021,
-   "epsActual": null,
+   "epsActual": 0.305,
    "revenueEstimate": 925684170,
-   "revenueActual": null
+   "revenueActual": 980800000
   },
   {
    "symbol": "RKLB",
@@ -20,20 +20,9 @@
    "quarter": 3,
    "year": 2026,
    "epsEstimate": -0.0714,
-   "epsActual": -0.07,
+   "epsActual": -0.08,
    "revenueEstimate": 260822761,
-   "revenueActual": 267829999
-  },
-  {
-   "symbol": "AFRM",
-   "date": "2026-11-05",
-   "hour": "amc",
-   "quarter": 1,
-   "year": 2027,
-   "epsEstimate": 0.3856,
-   "epsActual": 0.47,
-   "revenueEstimate": 1238616732,
-   "revenueActual": 1262216000
+   "revenueActual": 267834000
   }
  ]
 }

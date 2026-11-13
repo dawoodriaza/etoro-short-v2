@@ -35,9 +35,9 @@
     "scoreAtExit": 86.84354324631798
   },
   "AVGO": {
-    "exitAtMs": 1794413161447,
+    "exitAtMs": 1794494941231,
     "wasLoss": false,
-    "scoreAtExit": 100
+    "scoreAtExit": 97.62036728740554
   },
   "MU": {
     "exitAtMs": 1793196721818,
@@ -204,9 +204,9 @@
     "scoreAtExit": 90.22610177292731
   },
   "CAT": {
-    "exitAtMs": 1791306123676,
+    "exitAtMs": 1794511741145,
     "wasLoss": false,
-    "scoreAtExit": 86.55632228790573
+    "scoreAtExit": 88.56249329717554
   },
   "LIN": {
     "exitAtMs": 1790970301947,

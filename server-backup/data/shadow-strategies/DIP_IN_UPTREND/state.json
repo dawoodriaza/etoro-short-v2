@@ -1,7 +1,7 @@
 {
  "book": "DIP_IN_UPTREND",
  "createdAt": "2026-10-22T13:40:53.187Z",
- "lastProcessedSession": "2026-11-11",
+ "lastProcessedSession": "2026-11-12",
  "lastRebalanceWeek": null,
  "open": {},
  "pending": [],
@@ -305,6 +305,12 @@
   },
   {
    "date": "2026-11-11",
+   "realized": -17.14,
+   "unrealized": 0,
+   "open": 0
+  },
+  {
+   "date": "2026-11-12",
    "realized": -17.14,
    "unrealized": 0,
    "open": 0
