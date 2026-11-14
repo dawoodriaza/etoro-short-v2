@@ -1,7 +1,7 @@
 {
  "book": "PULLBACK_5D",
  "createdAt": "2026-11-13T05:32:44.457Z",
- "lastProcessedSession": "2026-11-12",
+ "lastProcessedSession": "2026-11-13",
  "lastRebalanceWeek": null,
  "open": {},
  "pending": [],
@@ -10,6 +10,12 @@
  "marks": [
   {
    "date": "2026-11-12",
+   "realized": 0,
+   "unrealized": 0,
+   "open": 0
+  },
+  {
+   "date": "2026-11-13",
    "realized": 0,
    "unrealized": 0,
    "open": 0

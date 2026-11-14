@@ -84,3 +84,9 @@
   PULLBACK_5D     sessions 1 · closed 0 (-% win) · realized 0 · per trade - · open 0 () unrealized 0
   EARNINGS_DRIFT  sessions 1 · closed 2 (0% win) · realized -101.84 · per trade -50.92 · open 6 (UNP,UPS,LLY,IONQ,ARM,RKLB) unrealized 124.07
   ROTATION        sessions 1 · closed 8 (13% win) · realized -1447.39 · per trade -180.92 · open 5 (TSLA,ISRG,LLY,ABBV,VRTX) unrealized 24.64
+[2026-11-14T05:32:40.265Z] shadow strategies forward · latest session 2026-11-13 · earnings: 2 watchlist reports since 2026-10-24
+  SWING_BREAKOUT  sessions 1 · closed 3 (0% win) · realized -115.95 · per trade -38.65 · open 7 (VRTX,LIN,ISRG,LLY,UPS,DE,AAPL) unrealized 22.95
+  DIP_IN_UPTREND  sessions 1 · closed 12 (50% win) · realized -17.14 · per trade -1.43 · open 0 () unrealized 0
+  PULLBACK_5D     sessions 1 · closed 0 (-% win) · realized 0 · per trade - · open 0 () unrealized 0
+  EARNINGS_DRIFT  sessions 1 · closed 2 (0% win) · realized -101.84 · per trade -50.92 · open 6 (UNP,UPS,LLY,IONQ,ARM,RKLB) unrealized 83.08
+  ROTATION        sessions 1 · closed 8 (13% win) · realized -1447.39 · per trade -180.92 · open 5 (TSLA,ISRG,LLY,ABBV,VRTX) unrealized 16.86

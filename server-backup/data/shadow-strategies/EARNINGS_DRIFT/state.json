@@ -1,7 +1,7 @@
 {
  "book": "EARNINGS_DRIFT",
  "createdAt": "2026-10-22T13:40:53.189Z",
- "lastProcessedSession": "2026-11-12",
+ "lastProcessedSession": "2026-11-13",
  "lastRebalanceWeek": null,
  "open": {
   "UNP": {
@@ -14,11 +14,11 @@
    "riskDollars": 50,
    "peak": 309.8,
    "trough": 288.61,
-   "heldSessions": 15,
+   "heldSessions": 16,
    "signal": "earnings 2026-10-22 (bmo): +3.65% on the reaction day, EPS 3.53 vs 3.5078",
    "signalDate": "2026-10-22",
-   "lastClose": 304.17,
-   "lastDate": "2026-11-12"
+   "lastClose": 302.55,
+   "lastDate": "2026-11-13"
   },
   "UPS": {
    "symbol": "UPS",
@@ -30,11 +30,11 @@
    "riskDollars": 50,
    "peak": 114.84,
    "trough": 103.9,
-   "heldSessions": 12,
+   "heldSessions": 13,
    "signal": "earnings 2026-10-27 (bmo): +6.09% on the reaction day, EPS 1.69 vs 1.6417",
    "signalDate": "2026-10-27",
-   "lastClose": 110.38,
-   "lastDate": "2026-11-12"
+   "lastClose": 112.37,
+   "lastDate": "2026-11-13"
   },
   "LLY": {
    "symbol": "LLY",
@@ -46,11 +46,11 @@
    "riskDollars": 50,
    "peak": 1459.72,
    "trough": 1332,
-   "heldSessions": 10,
+   "heldSessions": 11,
    "signal": "earnings 2026-10-29 (bmo): +6.36% on the reaction day, EPS 7.48 vs 6.6112",
    "signalDate": "2026-10-29",
-   "lastClose": 1428.69,
-   "lastDate": "2026-11-12"
+   "lastClose": 1443.02,
+   "lastDate": "2026-11-13"
   },
   "IONQ": {
    "symbol": "IONQ",
@@ -61,12 +61,12 @@
    "size": 343.62,
    "riskDollars": 50,
    "peak": 36.33,
-   "trough": 30.67,
-   "heldSessions": 4,
+   "trough": 28.24,
+   "heldSessions": 5,
    "signal": "earnings 2026-11-05 (amc): +21.95% on the reaction day, EPS -0.29 vs -0.3835",
    "signalDate": "2026-11-06",
-   "lastClose": 30.84,
-   "lastDate": "2026-11-12"
+   "lastClose": 28.88,
+   "lastDate": "2026-11-13"
   },
   "ARM": {
    "symbol": "ARM",
@@ -78,11 +78,11 @@
    "riskDollars": 50,
    "peak": 207.39,
    "trough": 174.7,
-   "heldSessions": 4,
+   "heldSessions": 5,
    "signal": "earnings 2026-11-05 (time n/a): +4.82% on the reaction day",
    "signalDate": "2026-11-06",
-   "lastClose": 199.75,
-   "lastDate": "2026-11-12"
+   "lastClose": 190.47,
+   "lastDate": "2026-11-13"
   },
   "RKLB": {
    "symbol": "RKLB",
@@ -93,12 +93,12 @@
    "size": 352.53,
    "riskDollars": 50,
    "peak": 68.23,
-   "trough": 63.52,
-   "heldSessions": 2,
+   "trough": 59.76,
+   "heldSessions": 3,
    "signal": "earnings 2026-11-09 (amc): +6.31% on the reaction day, EPS -0.07 vs -0.0714",
    "signalDate": "2026-11-10",
-   "lastClose": 64.07,
-   "lastDate": "2026-11-12"
+   "lastClose": 61.47,
+   "lastDate": "2026-11-13"
   }
  },
  "pending": [],
@@ -240,6 +240,12 @@
    "date": "2026-11-12",
    "realized": -101.84,
    "unrealized": 124.07,
+   "open": 6
+  },
+  {
+   "date": "2026-11-13",
+   "realized": -101.84,
+   "unrealized": 83.08,
    "open": 6
   }
  ]

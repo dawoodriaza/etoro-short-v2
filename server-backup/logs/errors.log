@@ -2427,3 +2427,4 @@
 [2026-11-12 05:30:22] [ERROR] ALERT [ETORO_MARKET_DATA_ENRICH]: eToro candle enrichment failed for QCOM: timeout of 15000ms exceeded. Falling back to Twelve Data for this symbol.
 [2026-11-12 05:30:49] [ERROR] ALERT (throttled, 1x since last send) [ETORO_MARKET_DATA_ENRICH]: eToro candle enrichment failed for MRVL: timeout of 15000ms exceeded. Falling back to Twelve Data for this symbol.
 [2026-11-12 16:30:25] [ERROR] ALERT [ETORO_MARKET_DATA_ENRICH]: eToro candle enrichment failed for MRVL: timeout of 15000ms exceeded. Falling back to Twelve Data for this symbol.
+[2026-11-13 20:21:08] [ERROR] ALERT [ETORO_MARKET_DATA_ENRICH]: eToro candle enrichment failed for HAWK: timeout of 15000ms exceeded. Falling back to Twelve Data for this symbol.
